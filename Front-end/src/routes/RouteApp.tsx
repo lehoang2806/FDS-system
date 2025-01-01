@@ -1,5 +1,9 @@
 import { createBrowserRouter, RouterProvider, To } from "react-router-dom";
 import { Fragment } from "react/jsx-runtime";
+import routeStatff from "./RouteStaff";
+import { NotFoundPage, UnauthorizedPage } from "../pages/System";
+import routeDonor from "./RouteDonor";
+import routeRecipient from "./RouteRecipient";
 
 export default function () {
     return (
@@ -13,6 +17,17 @@ export const routerRoot = createBrowserRouter([
     {
         path: "/",
         element: <h1>Home</h1>
+    },
+    ...routeStatff,
+    ...routeDonor,
+    ...routeRecipient,
+    {
+        path: "403",
+        element: <UnauthorizedPage />
+    },
+    {
+        path: "*",
+        element: <NotFoundPage />,
     }
 ], {
     future: {
