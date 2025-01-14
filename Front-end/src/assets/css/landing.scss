@@ -1,0 +1,46 @@
+#landing {
+    min-height: 100vh;
+
+    h1,
+    p,
+    li {
+        max-width: 600px;
+        color: var(--main-black);
+        font-size: 54px;
+        margin-bottom: 20px;
+    }
+
+    p, li {
+        font-size: 18px;
+    }
+
+    #landing-s1 {
+        background-color: var(--main-gray);
+
+        .ls1-container {
+            a {
+                text-decoration: none;
+            }
+
+            button {
+                margin-top: 20px;
+            }
+        }
+    }
+
+    #landing-s2 {
+        .ls2-container {
+            text-align: end;
+
+            h1, li {
+                margin-left: auto;
+                list-style: none;
+            }
+
+            span {
+                font-size: 20px;
+                font-weight: 800;
+            }
+        }
+    }
+}

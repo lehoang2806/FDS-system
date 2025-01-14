@@ -1,9 +1,10 @@
 import { createBrowserRouter, RouterProvider, To } from "react-router-dom";
 import { Fragment } from "react/jsx-runtime";
 import routeStatff from "./RouteStaff";
-import { NotFoundPage, UnauthorizedPage } from "../pages/System";
+import { LandingPage, NotFoundPage, UnauthorizedPage } from "../pages/System";
 import routeDonor from "./RouteDonor";
 import routeRecipient from "./RouteRecipient";
+import LandingBasicLayout from "../layout/System/LandingBasicLayout";
 
 export default function () {
     return (
@@ -15,8 +16,14 @@ export default function () {
 
 export const routerRoot = createBrowserRouter([
     {
-        path: "/",
-        element: <h1>Home</h1>
+        path: "",
+        element: <LandingBasicLayout/>,
+        children: [
+            {
+                path: "",
+                element: <LandingPage/>
+            }
+        ]
     },
     ...routeStatff,
     ...routeDonor,
