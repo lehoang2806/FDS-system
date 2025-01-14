@@ -1,0 +1,33 @@
+#header-landing {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 18px 20px;
+
+    .hl-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .hlcc2 {
+            button {
+                width: 120px;
+                height: 32px;
+                background: linear-gradient(#FF6C57, #FF922E);
+                color: #fff;
+                font-size: 14px;
+                font-weight: 800;
+                border: none;
+                border-radius: 12px;
+                margin-right: 20px;
+                cursor: pointer;
+            }
+
+            a {
+                color: #626262;
+                font-size: 14px;
+                font-weight: 800;
+                text-decoration: none;
+            }
+        }
+    }
+}
