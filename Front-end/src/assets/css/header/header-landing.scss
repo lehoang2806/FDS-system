@@ -13,17 +13,17 @@
                 width: 120px;
                 height: 32px;
                 background: linear-gradient(#FF6C57, #FF922E);
-                color: #fff;
+                color: var(--white-color);
                 font-size: 14px;
                 font-weight: 800;
                 border: none;
-                border-radius: 12px;
+                border-radius: var(--border-radius-12);
                 margin-right: 20px;
                 cursor: pointer;
             }
 
             a {
-                color: #626262;
+                color: var(--sc-black);
                 font-size: 14px;
                 font-weight: 800;
                 text-decoration: none;

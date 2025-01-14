@@ -48,11 +48,15 @@
 }
 
 :root {
-    --main-black: #29343d;
-    --main-color: #635bff;
-    --main-gray: #e0e6eb;
+    --main-black: #444444;
+    --sc-black: #626262;
+    --main-color: #FF9D2E;
+    --main-gray: #6f6f6f;
     --white-color: #fff;
-    --border-radius: 8px;
+    --border-radius-12: 12px;
+    --border-radius-16: 16px;
+    --border-radius-circle: 50%;
+    --light-orange: #FFF1E2
 }
 
 body {
@@ -66,7 +70,7 @@ h1, h2, h3, h4, h5, h6, p, a, div, span, button {
 }
 
 .landing-section {
-    padding: 100px 20px;
+    padding: 80px 20px;
 }
 
 .landing-container {
