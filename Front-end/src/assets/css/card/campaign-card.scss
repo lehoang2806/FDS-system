@@ -1,0 +1,28 @@
+.campaign-card {
+    .campaign-img, h4 {
+        margin-bottom: 16px;
+    }
+
+    h4, p {
+        margin-left: 16px;
+    }
+
+    .campaign-img {
+        width: 384px;
+        height: 384px;
+        border-radius: var(--border-radius-16);
+        background: red;
+    }
+
+    h4 {
+        font-size: 20px;
+        font-weight: 800;
+        color: var(--main-black);
+    }
+
+    p {
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--main-gray);
+    }
+}

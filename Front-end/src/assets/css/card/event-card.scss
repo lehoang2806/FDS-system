@@ -1,0 +1,58 @@
+.event-card-1 {
+    .ec1-img,
+    .ec1-name,
+    .ec1-date {
+        margin-bottom: 16px;
+    }
+
+    .ec1-img {
+        width: 556px;
+        height: 556px;
+        border-radius: var(--border-radius-16);
+        background: var(--main-black);
+    }
+
+    .ec1-name {
+        color: var(--main-black);
+        font-size: 30px;
+        font-weight: 600;
+    }
+
+    .ec1-date,
+    .ec1-address {
+        color: var(--main-gray);
+        font-size: 16px;
+        font-weight: 600;
+    }
+}
+
+.event-card-2 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .ec2-name,
+    .ec2-date {
+        margin-bottom: 16px;
+    }
+
+    .ec2-img {
+        width: 120px;
+        height: 120px;
+        border-radius: var(--border-radius-16);
+        background: var(--main-black);
+    }
+
+    .ec2-name {
+        color: var(--main-black);
+        font-size: 20px;
+        font-weight: 600;
+    }
+
+    .ec2-date,
+    .ec2-address {
+        color: var(--main-gray);
+        font-size: 14px;
+        font-weight: 600;
+    }
+}
