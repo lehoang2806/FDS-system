@@ -1,0 +1,27 @@
+.form {
+    .form-field {
+        margin-bottom: 16px;
+    }
+
+    .form-label {
+        font-size: 14px;
+        font-weight: 500;
+        color: #393939;
+    }
+
+    .form-input {
+        width: 100%;
+        border: 1px solid var(--main-gray);
+        border-radius: var(--border-radius-12);
+        padding: 14px;
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--main-black);
+        margin-top: 8px;
+
+        &:focus {
+            outline: none;
+            border: 1px solid var(--main-color);
+        }
+    }
+}

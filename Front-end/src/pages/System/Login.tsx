@@ -22,7 +22,7 @@ const LoginPage = () => {
                                 <Link to="">Quên mật khẩu</Link>
                                 <button className="sc-btn">Đăng nhập</button>
                             </form>
-                            <p>Bạn chưa có tài khoản? <span onClick={()=>navigateHook("")}>Đăng ký ngay</span></p>
+                            <p>Bạn chưa có tài khoản? <span onClick={()=>navigateHook("/register")}>Đăng ký ngay</span></p>
                         </div>
                     </div>
                 </div>

@@ -1,9 +1,9 @@
-#login {
-    #login-section {
-        .ls-container {
+#otp-auth {
+    #oa-section {
+        .oas-container {
             display: flex;
 
-            .lscc1 {
+            .oascc1 {
                 background-image: url("@/assets/images/bg-left.png");
                 background-repeat: no-repeat;
                 background-position: center;
@@ -11,11 +11,11 @@
                 min-height: 100vh;
             }
 
-            .lscc2 {
+            .oascc2 {
                 display: flex;
                 align-items: center;
 
-                .lscc2-main {
+                .oascc2-main {
                     max-width: 560px;
                     margin: 0 auto;
 

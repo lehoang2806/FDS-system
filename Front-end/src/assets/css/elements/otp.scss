@@ -1,0 +1,22 @@
+.otp-container {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+
+    .otp-input {
+        width: 50px;
+        height: 50px;
+        text-align: center;
+        font-size: 20px;
+        border: 2px solid #ccc;
+        border-radius: 8px;
+        transition: all 0.2s ease-in-out;
+        outline: none;
+    
+        &:focus {
+            border-color: #F54A00;
+            box-shadow: 0 0 10px rgba(245, 74, 0, 0.5);
+        }
+    }
+}
+
