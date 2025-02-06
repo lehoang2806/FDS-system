@@ -1,0 +1,88 @@
+#login {
+    #login-section {
+        .ls-container {
+            display: flex;
+
+            .lscc1 {
+                background-image: url("@/assets/images/bg-left.png");
+                background-repeat: no-repeat;
+                background-position: center;
+                background-size: cover;
+                min-height: 100vh;
+            }
+
+            .lscc2 {
+                display: flex;
+                align-items: center;
+
+                .lscc2-main {
+                    max-width: 560px;
+                    margin: 0 auto;
+
+                    h1 {
+                        font-size: 24px;
+                        font-weight: 800;
+                        color: #393939;
+                        margin-bottom: 20px;
+                    }
+
+                    .sc-btn {
+                        width: 100%;
+                        font-size: 17px;
+                        padding: 12px;
+                        margin-top: 20px;
+                        margin-bottom: 30px;
+                    }
+
+                    a {
+                        text-align: end;
+                        text-decoration: none;
+                        font-size: 14px;
+                        font-weight: 600;
+                        color: #F54A00;
+                    }
+
+                    p {
+                        color: var(--main-black);
+                        font-size: 17px;
+                        font-weight: 500;
+
+                        span {
+                            color: #F54A00;
+                            font-weight: 800;
+                            cursor: pointer;
+                        }
+                    }
+
+                    .form {
+                        .form-field {
+                            margin-bottom: 16px;
+                        }
+
+                        .form-label {
+                            font-size: 14px;
+                            font-weight: 500;
+                            color: #393939;
+                        }
+
+                        .form-input {
+                            width: 100%;
+                            border: 1px solid var(--main-gray);
+                            border-radius: var(--border-radius-12);
+                            padding: 14px;
+                            font-size: 14px;
+                            font-weight: 500;
+                            color: var(--main-black);
+                            margin-top: 8px;
+
+                            &:focus {
+                                outline: none;
+                                border: 1px solid var(--main-color);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

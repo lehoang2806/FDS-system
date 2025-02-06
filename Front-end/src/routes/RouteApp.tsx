@@ -1,7 +1,7 @@
 import { createBrowserRouter, RouterProvider, To } from "react-router-dom";
 import { Fragment } from "react/jsx-runtime";
 import routeStatff from "./RouteStaff";
-import { LandingPage, NotFoundPage, UnauthorizedPage } from "../pages/System";
+import { LandingPage, LoginPage, NotFoundPage, UnauthorizedPage } from "../pages/System";
 import routeDonor from "./RouteDonor";
 import routeRecipient from "./RouteRecipient";
 import LandingBasicLayout from "../layout/System/LandingBasicLayout";
@@ -35,6 +35,10 @@ export const routerRoot = createBrowserRouter([
     {
         path: "*",
         element: <NotFoundPage />,
+    },
+    {
+        path: "login",
+        element: <LoginPage/>
     }
 ], {
     future: {
