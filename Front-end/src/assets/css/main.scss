@@ -4,7 +4,11 @@
 
 @use "./login.scss";
 
+@use "./register.scss";
+
 @use "./header/header-landing.scss";
+
+@use "./form.scss";
 
 @use "./card/campaign-card.scss";
 @use "./card/hightlight-card.scss";
