@@ -33,7 +33,7 @@ const RegisterPage = () => {
                                         <option value="">Người thu nhập thấp</option>
                                     </select>
                                 </div>
-                                <button className="sc-btn">Tiếp tục</button>
+                                <button className="sc-btn" onClick={()=> navigateHook("/otp-auth")}>Tiếp tục</button>
                             </form>
                             <p>Bạn đã có tài khoản? <span onClick={() => navigateHook("/login")}>Đăng nhập</span></p>
                         </div>

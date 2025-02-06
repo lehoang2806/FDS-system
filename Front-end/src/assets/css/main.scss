@@ -6,6 +6,8 @@
 
 @use "./register.scss";
 
+@use "./otp-auth.scss";
+
 @use "./header/header-landing.scss";
 
 @use "./form.scss";
@@ -13,3 +15,5 @@
 @use "./card/campaign-card.scss";
 @use "./card/hightlight-card.scss";
 @use "./card/event-card.scss";
+
+@use "./elements/otp.scss";

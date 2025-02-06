@@ -1,7 +1,7 @@
 import { createBrowserRouter, RouterProvider, To } from "react-router-dom";
 import { Fragment } from "react/jsx-runtime";
 import routeStatff from "./RouteStaff";
-import { LandingPage, LoginPage, NotFoundPage, RegisterPage, UnauthorizedPage } from "../pages/System";
+import { LandingPage, LoginPage, NotFoundPage, OTPAuthPage, RegisterPage, UnauthorizedPage } from "../pages/System";
 import routeDonor from "./RouteDonor";
 import routeRecipient from "./RouteRecipient";
 import LandingBasicLayout from "../layout/System/LandingBasicLayout";
@@ -43,6 +43,10 @@ export const routerRoot = createBrowserRouter([
     {
         path: "register",
         element: <RegisterPage/>
+    },
+    {
+        path: "otp-auth",
+        element: <OTPAuthPage/>
     }
 ], {
     future: {
