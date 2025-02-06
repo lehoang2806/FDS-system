@@ -1,6 +1,6 @@
 @font-face {
     font-family: "Manrope";
-    src: url(@/assets/fonts/manrope/Manrope-ExtraLight.ttf);    
+    src: url(@/assets/fonts/manrope/Manrope-ExtraLight.ttf);
     font-weight: 200;
     font-style: normal;
 }
@@ -64,7 +64,18 @@ body {
     margin: 0;
 }
 
-h1, h2, h3, h4, h5, h6, p, a, div, span, button {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+a,
+div,
+span,
+button,
+input {
     margin: 0;
     box-sizing: border-box;
     font-family: "Manrope";
@@ -87,10 +98,21 @@ h1, h2, h3, h4, h5, h6, p, a, div, span, button {
     border-radius: var(--border-radius);
     padding: 20px 40px;
     cursor: pointer;
-    
+
     &:hover {
         opacity: 0.9;
     }
+}
+
+.sc-btn {
+    background: linear-gradient(#FF6C57, #FF922E);
+    color: var(--white-color);
+    font-size: 14px;
+    font-weight: 800;
+    border: none;
+    border-radius: var(--border-radius-12);
+    margin-right: 20px;
+    cursor: pointer;
 }
 
 .sec-btn {
@@ -102,3 +124,6 @@ h1, h2, h3, h4, h5, h6, p, a, div, span, button {
     }
 }
 
+.col-flex {
+    flex: 1;
+}
