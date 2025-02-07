@@ -5,6 +5,7 @@ import { LandingPage, LoginPage, NotFoundPage, OTPAuthPage, RegisterPage, Unauth
 import routeDonor from "./RouteDonor";
 import routeRecipient from "./RouteRecipient";
 import LandingBasicLayout from "../layout/System/LandingBasicLayout";
+import { ListCampaignPage } from "@/pages/System/Campaign";
 
 export default function () {
     return (
@@ -22,6 +23,10 @@ export const routerRoot = createBrowserRouter([
             {
                 path: "",
                 element: <LandingPage/>
+            },
+            {
+                path: "campaigns",
+                element: <ListCampaignPage/>
             }
         ]
     },
@@ -47,7 +52,7 @@ export const routerRoot = createBrowserRouter([
     {
         path: "otp-auth",
         element: <OTPAuthPage/>
-    }
+    },
 ], {
     future: {
         v7_fetcherPersist: true,
