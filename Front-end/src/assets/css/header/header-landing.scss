@@ -9,6 +9,22 @@
         align-items: center;
 
         .hlcc2 {
+            display: flex;
+            align-items: center;
+
+            .avatar-img {
+                width: 40px;
+                height: 40px;
+                background: red;
+                border: 2px solid var(--main-color);
+                border-radius: var(--border-radius-circle);
+                margin: 0 10px;
+            }
+
+            .menu-icon, .notification-icon {
+                cursor: pointer;
+            }
+
             button {
                 width: 120px;
                 height: 32px;
