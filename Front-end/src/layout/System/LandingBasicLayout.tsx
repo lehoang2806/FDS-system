@@ -5,7 +5,7 @@ import { FC } from "react"
 const LandingBasicLayout: FC = () => {
     return (
         <>
-            <HeaderLanding/>
+            <HeaderLanding isLogin={true}/>
             <main id="landing">
                 <Outlet/>
             </main>

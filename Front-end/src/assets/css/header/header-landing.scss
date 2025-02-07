@@ -1,18 +1,36 @@
 #header-landing {
-    max-width: 1200px;
-    margin: 0 auto;
     padding: 18px 20px;
+    border-bottom: 1px solid var(--main-gray);
 
     .hl-container {
+        max-width: 1200px;
+        margin: 0 auto;
         display: flex;
         justify-content: space-between;
         align-items: center;
 
         .hlcc2 {
+            display: flex;
+            align-items: center;
+
+            .avatar-img {
+                width: 40px;
+                height: 40px;
+                background: red;
+                border: 2px solid var(--main-color);
+                border-radius: var(--border-radius-circle);
+                margin: 0 10px;
+            }
+
+            .menu-icon,
+            .notification-icon {
+                cursor: pointer;
+            }
+
             button {
                 width: 120px;
                 height: 32px;
-                background: linear-gradient(#FF6C57, #FF922E);
+                background: linear-gradient(#ff6c57, #ff922e);
                 color: var(--white-color);
                 font-size: 14px;
                 font-weight: 800;

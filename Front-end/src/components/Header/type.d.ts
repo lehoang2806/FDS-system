@@ -1,0 +1,3 @@
+type LandingHeaderProps = {
+    isLogin?: boolean
+}
