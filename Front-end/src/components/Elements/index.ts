@@ -1,3 +1,4 @@
 import OTPInput from "./OTPInput";
+import Subscriber from "./Subscriber";
 
-export {OTPInput}
+export {OTPInput, Subscriber};

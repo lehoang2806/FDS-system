@@ -4,7 +4,10 @@ export const routes = {
     otp_auth: "/otp-auth",
     user: {
         home: "/",
-        campaign: "/campaigns",
+        campaign: {
+            list: "/campaigns",
+            detail: "/campaign/:id/detail"
+        }
         
     }
 }

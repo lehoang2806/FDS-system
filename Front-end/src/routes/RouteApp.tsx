@@ -5,7 +5,7 @@ import { LandingPage, LoginPage, NotFoundPage, OTPAuthPage, RegisterPage, Unauth
 import routeDonor from "./RouteDonor";
 import routeRecipient from "./RouteRecipient";
 import LandingBasicLayout from "../layout/System/LandingBasicLayout";
-import { ListCampaignPage } from "@/pages/System/Campaign";
+import { DetailCampaignPage, ListCampaignPage } from "@/pages/System/Campaign";
 
 export default function () {
     return (
@@ -27,6 +27,10 @@ export const routerRoot = createBrowserRouter([
             {
                 path: "campaigns",
                 element: <ListCampaignPage/>
+            },
+            {
+                path: "campaign/:id/detail",
+                element: <DetailCampaignPage/>
             }
         ]
     },

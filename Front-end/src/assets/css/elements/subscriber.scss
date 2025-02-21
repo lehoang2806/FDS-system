@@ -1,0 +1,42 @@
+.subscriber-container {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    margin: 10px 0;
+
+    .scc1 {
+        .s-figure {
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #FF5238;
+            border-radius: var(--border-radius-circle);
+            margin: 0;
+            margin-right: 16px;
+
+            .s-img {
+                width: 54px;
+                height: 54px;
+                background: var(--main-color);
+                border-radius: var(--border-radius-circle);
+            }
+        }
+    }
+
+    .scc2 {
+        h4 {
+            font-size: 14px;
+            font-weight: 500;
+            color: #393939;
+        }
+
+        p {
+            font-size: 14;
+            font-weight: 500;
+            font-style: italic;
+            color: #6f6f6f;
+        }
+    }
+}

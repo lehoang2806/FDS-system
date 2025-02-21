@@ -1,8 +1,14 @@
 import { Link } from "react-router-dom";
 import { CampaignCard, EventCard, HightlightCard } from "../../components/Card";
 import { routes } from "@/routes/routeName";
+import { navigateHook } from "@/routes/RouteApp";
 
 export default function () {
+    const handleToDetail = (campaignId: string) => {
+        const url = routes.user.campaign.detail.replace(":id", campaignId);
+        return navigateHook(url)
+    }
+
     return (
         <>
             <section id='landing-s1'>
@@ -15,10 +21,10 @@ export default function () {
                     <div className="ls2cr2">
                         <div className="ls2cr2r1">
                             <h3>Chiến dịch của tổ chức</h3>
-                            <Link to={routes.user.campaign} className="view-all">Xem tất cả</Link>
+                            <Link to={routes.user.campaign.list} className="view-all">Xem tất cả</Link>
                         </div>
                         <div className="ls2cr2r2">
-                            <CampaignCard />
+                            <CampaignCard onClickDetail={() => handleToDetail("1")}/>
                             <CampaignCard />
                             <CampaignCard />
                         </div>
