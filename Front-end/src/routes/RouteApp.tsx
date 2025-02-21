@@ -6,7 +6,7 @@ import routeDonor from "./RouteDonor";
 import routeRecipient from "./RouteRecipient";
 import LandingBasicLayout from "../layout/System/LandingBasicLayout";
 import { DetailCampaignPage, ListCampaignPage } from "@/pages/System/Campaign";
-import { ListSupporterPage } from "@/pages/System/Supporter";
+import { DetailSupporterPage, ListSupporterPage } from "@/pages/System/Supporter";
 
 export default function () {
     return (
@@ -36,7 +36,11 @@ export const routerRoot = createBrowserRouter([
             {
                 path: "supporters",
                 element: <ListSupporterPage/>
-            }
+            },
+            {
+                path: "supporter/:id/detail",
+                element: <DetailSupporterPage/>
+            },
         ]
     },
     ...routeStatff,

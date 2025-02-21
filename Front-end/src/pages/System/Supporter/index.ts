@@ -1,3 +1,4 @@
 import ListSupporterPage from "./List";
+import DetailSupporterPage from "./Detail";
 
-export {ListSupporterPage}
+export {ListSupporterPage, DetailSupporterPage}

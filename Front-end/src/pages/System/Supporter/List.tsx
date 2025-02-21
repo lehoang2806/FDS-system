@@ -1,8 +1,15 @@
 import { SupporterCard } from "@/components/Card";
+import { navigateHook } from "@/routes/RouteApp";
+import { routes } from "@/routes/routeName";
 import { useState } from "react";
 
 const ListSupporterPage = () => {
     const [activeTab, setActiveTab] = useState<"tochuc" | "canhan">("tochuc");
+
+    const handleToDetail = (campaignId: string) => {
+        const url = routes.user.supporter.detail.replace(":id", campaignId);
+        return navigateHook(url)
+    }
 
     return (
         <main id="list-supporter">
@@ -30,7 +37,7 @@ const ListSupporterPage = () => {
                     <div className="lssc-main">
                         {activeTab === "tochuc" && (
                             <>
-                                <SupporterCard />
+                                <SupporterCard onClickDetail={() => handleToDetail("1")}/>
                                 <SupporterCard />
                                 <SupporterCard />
                                 <SupporterCard />
