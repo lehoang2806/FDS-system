@@ -1,3 +1,4 @@
+import { routes } from "@/routes/routeName"
 import { navigateHook } from "../../routes/RouteApp"
 
 const RegisterPage = () => {
@@ -33,9 +34,9 @@ const RegisterPage = () => {
                                         <option value="">Người thu nhập thấp</option>
                                     </select>
                                 </div>
-                                <button className="sc-btn" onClick={()=> navigateHook("/otp-auth")}>Tiếp tục</button>
+                                <button className="sc-btn" onClick={()=> navigateHook(routes.otp_auth)}>Tiếp tục</button>
                             </form>
-                            <p>Bạn đã có tài khoản? <span onClick={() => navigateHook("/login")}>Đăng nhập</span></p>
+                            <p>Bạn đã có tài khoản? <span onClick={() => navigateHook(routes.login)}>Đăng nhập</span></p>
                         </div>
                     </div>
                 </div>

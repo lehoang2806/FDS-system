@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom"
 import { navigateHook } from "../../routes/RouteApp"
+import { routes } from "@/routes/routeName"
 
 const LoginPage = () => {
     return (
@@ -22,7 +23,7 @@ const LoginPage = () => {
                                 <Link to="">Quên mật khẩu</Link>
                                 <button className="sc-btn">Đăng nhập</button>
                             </form>
-                            <p>Bạn chưa có tài khoản? <span onClick={()=>navigateHook("/register")}>Đăng ký ngay</span></p>
+                            <p>Bạn chưa có tài khoản? <span onClick={()=>navigateHook(routes.register)}>Đăng ký ngay</span></p>
                         </div>
                     </div>
                 </div>
