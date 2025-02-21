@@ -10,6 +10,50 @@
         align-items: center;
 
         .hlcc2 {
+            .nav-list {
+                display: flex;
+                align-items: center;
+
+                .nav-item {
+                    position: relative;
+                    list-style: none;
+                    padding: 0 20px;
+                    cursor: pointer;
+
+                    .nav-link {
+                        font-style: 14px;
+                        font-weight: 500;
+                        color: #626262;
+                    }
+
+                    .sub-menu {
+                        position: absolute;
+                        min-width: 200px;
+                        top: 100%;
+                        left: 0;
+                        background: white;
+                        border: 1px solid #ddd;
+                        border-radius: var(--border-radius-12);
+                        list-style: none;
+                        padding: 0px 40px;
+
+                        .sub-item {
+                            margin: 30px 0px;
+                            
+                            span,
+                            a {
+                                text-decoration: none;
+                                font-size: 14px;
+                                font-weight: 500;
+                                color: #626262;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        .hlcc3 {
             display: flex;
             align-items: center;
 
