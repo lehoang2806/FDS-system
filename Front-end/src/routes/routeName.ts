@@ -10,6 +10,7 @@ export const routes = {
         },
         supporter: {
             list: "/supporters",
+            detail: "/supporter/:id/detail"
         }
     }
 }
