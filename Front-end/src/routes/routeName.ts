@@ -7,7 +7,9 @@ export const routes = {
         campaign: {
             list: "/campaigns",
             detail: "/campaign/:id/detail"
+        },
+        supporter: {
+            list: "/supporters",
         }
-        
     }
 }

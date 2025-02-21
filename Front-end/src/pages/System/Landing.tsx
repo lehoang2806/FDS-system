@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { CampaignCard, EventCard, HightlightCard } from "../../components/Card";
+import { CampaignCard, EventCard, HightlightCard } from "../../components/Card/index";
 import { routes } from "@/routes/routeName";
 import { navigateHook } from "@/routes/RouteApp";
 
@@ -90,7 +90,7 @@ export default function () {
                 <div className="landing-container ls4-container">
                     <div className="ls4cr1">
                         <h2>Các tổ chức, cá nhân nổi bật</h2>
-                        <Link to={"/"}>Xem tất cả</Link>
+                        <Link to={routes.user.supporter.list}>Xem tất cả</Link>
                     </div>
                     <div className="ls4cr2">
                         <HightlightCard />

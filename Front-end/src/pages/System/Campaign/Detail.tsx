@@ -1,5 +1,5 @@
-import { CampaignCard } from '@/components/Card';
-import { Subscriber } from '@/components/Elements'
+import { CampaignCard } from '@/components/Card/index';
+import { Subscriber } from '@/components/Elements/index'
 import { routes } from '@/routes/routeName';
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom';
