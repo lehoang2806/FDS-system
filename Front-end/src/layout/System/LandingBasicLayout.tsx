@@ -1,5 +1,5 @@
 import { Outlet } from "react-router-dom"
-import { HeaderLanding } from "../../components/Header"
+import { HeaderLanding } from "../../components/Header/index"
 import { FC } from "react"
 
 const LandingBasicLayout: FC = () => {

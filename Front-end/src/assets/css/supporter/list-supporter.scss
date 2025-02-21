@@ -1,0 +1,88 @@
+#list-supporter {
+    padding: 80px 20px;
+
+    #ls-section {
+        padding: 0 20px;
+
+        .lss-container {
+            max-width: 1400px;
+            margin: 0 auto;
+
+            h1 {
+                text-align: center;
+                font-size: 48px;
+                font-weight: 700;
+                color: #272d4e;
+                margin-bottom: 90px;
+            }
+
+            .ls-search-container {
+                display: flex;
+                align-items: center;
+                padding: 24px 32px;
+                box-shadow: 0px 1px 16px 0px rgba(0, 0, 0, 0.15);
+                border-radius: var(--border-radius-8);
+                margin-bottom: 120px;
+
+                .lssc-input {
+                    flex: 6;
+                    border: none;
+                    font-size: 16px;
+                    font-weight: 400;
+                    color: #757575;
+
+                    &:focus {
+                        outline: none;
+                    }
+                }
+
+                .sc-btn {
+                    font-size: 16px;
+                    font-weight: 800;
+                    padding: 20px 60px;
+                    border-radius: 40px;
+                }
+            }
+
+            .ls-tabs {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-bottom: 30px;
+
+                .ls-tabs-item {
+                    position: relative;
+                    padding: 15px 22px;
+                    font-size: 16px;
+                    font-weight: 500;
+                    color: var(--main-gray);
+                    cursor: pointer;
+                    transition: color 0.3s ease;
+
+                    &.ls-tabs-item-actived {
+                        color: var(--main-color);
+
+                        &::after {
+                            content: "";
+                            position: absolute;
+                            bottom: 0;
+                            left: 0;
+                            width: 100%;
+                            height: 3px;
+                            background-color: var(--main-color);
+                            transition: width 0.3s ease, left 0.3s ease;
+                        }
+                    }
+                }
+            }
+
+            .lssc-main {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-wrap: wrap;
+                gap: 35px;
+            }
+        }
+    }
+}

@@ -1,5 +1,5 @@
 import { SearchIcon } from '@/assets/icons'
-import { CampaignCard } from '@/components/Card'
+import { CampaignCard } from '@/components/Card/index'
 import { FC, useState } from 'react'
 
 const ListCampaignPage: FC = () => {

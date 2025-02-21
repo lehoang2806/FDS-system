@@ -1,11 +1,12 @@
 import { createBrowserRouter, RouterProvider, To } from "react-router-dom";
 import { Fragment } from "react/jsx-runtime";
 import routeStatff from "./RouteStaff";
-import { LandingPage, LoginPage, NotFoundPage, OTPAuthPage, RegisterPage, UnauthorizedPage } from "../pages/System";
+import { LandingPage, LoginPage, NotFoundPage, OTPAuthPage, RegisterPage, UnauthorizedPage } from "../pages/System/index";
 import routeDonor from "./RouteDonor";
 import routeRecipient from "./RouteRecipient";
 import LandingBasicLayout from "../layout/System/LandingBasicLayout";
 import { DetailCampaignPage, ListCampaignPage } from "@/pages/System/Campaign";
+import { ListSupporterPage } from "@/pages/System/Supporter";
 
 export default function () {
     return (
@@ -31,6 +32,10 @@ export const routerRoot = createBrowserRouter([
             {
                 path: "campaign/:id/detail",
                 element: <DetailCampaignPage/>
+            },
+            {
+                path: "supporters",
+                element: <ListSupporterPage/>
             }
         ]
     },

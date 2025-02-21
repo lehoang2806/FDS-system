@@ -15,9 +15,12 @@
 @use "./card/campaign-card.scss";
 @use "./card/hightlight-card.scss";
 @use "./card/event-card.scss";
+@use "./card/supporter-card.scss";
 
 @use "./elements/otp.scss";
 @use "./elements/subscriber.scss";
 
 @use "./campaign/list-campaigns.scss";
 @use "./campaign/detail-campaign.scss";
+
+@use "./supporter/list-supporter.scss";
