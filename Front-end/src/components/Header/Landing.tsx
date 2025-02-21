@@ -1,4 +1,6 @@
 import { MenuIcon, NotificationIcon } from "@/assets/icons"
+import { navigateHook } from "@/routes/RouteApp"
+import { routes } from "@/routes/routeName"
 import { FC } from "react"
 import { Link } from "react-router-dom"
 
@@ -7,12 +9,12 @@ const HeaderLanding: FC<LandingHeaderProps> = ({isLogin}) => {
         <header id="header-landing">
             <div className="hl-container">
                 <div className="hlcc1">
-                    <h1>Food Distribution System</h1>
+                    <h1 onClick={() => navigateHook(routes.user.home)}>Food Distribution System</h1>
                 </div>
                 <div className="hlcc2">
                     {!isLogin && (
                         <>
-                            <Link to="/login">Đăng nhập</Link>
+                            <Link to={routes.login}>Đăng nhập</Link>
                         </>
                     )}
                     {isLogin && (

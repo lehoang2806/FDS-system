@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { CampaignCard, EventCard, HightlightCard } from "../../components/Card";
+import { routes } from "@/routes/routeName";
 
 export default function () {
     return (
@@ -14,7 +15,7 @@ export default function () {
                     <div className="ls2cr2">
                         <div className="ls2cr2r1">
                             <h3>Chiến dịch của tổ chức</h3>
-                            <Link to={"/"} className="view-all">Xem tất cả</Link>
+                            <Link to={routes.user.campaign} className="view-all">Xem tất cả</Link>
                         </div>
                         <div className="ls2cr2r2">
                             <CampaignCard />
