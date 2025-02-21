@@ -17,5 +17,7 @@
 @use "./card/event-card.scss";
 
 @use "./elements/otp.scss";
+@use "./elements/subscriber.scss";
 
-@use "./campaign/list-campaigns.scss"
+@use "./campaign/list-campaigns.scss";
+@use "./campaign/detail-campaign.scss";
