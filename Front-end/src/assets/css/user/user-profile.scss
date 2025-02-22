@@ -1,0 +1,44 @@
+#use-profile {
+    padding: 80px 20px;
+
+    #up-section {
+        padding: 0 20px;
+
+        .ups-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            text-align: center;
+
+            .up-avatar {
+                width: 150px;
+                height: 150px;
+                border-radius: 60px;
+                background: #000;
+                margin: 0 auto;
+            }
+
+            p {
+                font-size: 16px;
+                font-weight: 400;
+                color: #0a0a0a;
+                text-align: center;
+                margin: 36px 0 26px;
+            }
+
+            .form {
+                display: grid;
+                grid-template-columns: 50% 50%;
+                gap: 20px;
+                margin-bottom: 20px;
+
+                .form-field {
+                    text-align: start;
+                }
+            }
+
+            .sc-btn {
+                padding: 12px 100px;
+            }
+        }
+    }
+}

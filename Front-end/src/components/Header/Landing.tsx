@@ -75,7 +75,7 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
                             {isSubMenuProfileOpen && (
                                 <div className="sub-menu-profile">
                                     <ul>
-                                        <li><Link to={""}>Thông tin cá nhân</Link></li>
+                                        <li><Link to={routes.user.profile}>Thông tin cá nhân</Link></li>
                                         <li><Link to={""}>Đổi mật khẩu</Link></li>
                                         <li><Link to={""}>Đăng xuất</Link></li>
                                     </ul>
