@@ -7,6 +7,8 @@ import { Link } from "react-router-dom"
 const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
     const [hoverIndex, setHoverIndex] = useState<number | null>(null);
 
+    const [isSubMenuProfileOpen, setIsSubMenuProfileOpen] = useState(false);
+
     const menuItems = [
         {
             name: "Ủng hộ",
@@ -69,7 +71,16 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
                         <>
                             <NotificationIcon width={30} height={30} className="notification-icon" />
                             <figure className="avatar-img"></figure>
-                            <MenuIcon width={30} height={30} className="menu-icon" />
+                            <MenuIcon width={30} height={30} className="menu-icon" onClick={() => setIsSubMenuProfileOpen(!isSubMenuProfileOpen)} />
+                            {isSubMenuProfileOpen && (
+                                <div className="sub-menu-profile">
+                                    <ul>
+                                        <li><Link to={""}>Thông tin cá nhân</Link></li>
+                                        <li><Link to={""}>Đổi mật khẩu</Link></li>
+                                        <li><Link to={""}>Đăng xuất</Link></li>
+                                    </ul>
+                                </div>
+                            )}
                         </>
                     )}
                 </div>
