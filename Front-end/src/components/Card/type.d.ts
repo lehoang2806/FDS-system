@@ -9,3 +9,7 @@ type CampaignCardProps = {
 type SupporterCardProps = {
     onClickDetail?: () => void,
 }
+
+type NewsCardProps = {
+    onClickDetail?: () => void,
+}

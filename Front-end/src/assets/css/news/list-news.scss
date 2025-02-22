@@ -1,0 +1,84 @@
+#list-news {
+    padding: 80px 20px;
+    background: #f3f3f3;
+    
+    #ln-section {
+        padding: 0 20px;
+
+        .lns-container {
+            max-width: 1400px;
+            margin: 0 auto;
+
+            .lnscr1 {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-bottom: 40px;
+
+                .line {
+                    width: 70px;
+                    height: 2px;
+                    background: var(--main-color);
+                }
+
+                h1 {
+                    font-size: 20px;
+                    font-weight: 700;
+                    color: #0a0a0a;
+                    margin: 0 10px;
+                }
+            }
+
+            .lnscr2 {
+                display: flex;
+                justify-content: end;
+                margin-bottom: 35px;
+
+                .ln-search-input {
+                    width: 500px;
+                    border: none;
+                    outline: none;
+                    border-radius: 32px;
+                    font-size: 14px;
+                    font-weight: 400;
+                    color: #ababab;
+                    padding: 13px 45px;
+                }
+            }
+
+            .lnscr3 {
+                .ln-tabs {
+                    display: flex;
+                    align-items: center;
+                    justify-content: start;
+                    margin-bottom: 30px;
+                    gap: 24px;
+    
+                    .ln-tabs-item {
+                        padding: 8px 12px;
+                        font-size: 14px;
+                        font-weight: 400;
+                        color: #525252;
+                        cursor: pointer;
+                        transition: color 0.3s ease;
+                        background: #ffffff;
+                        border-radius: var(--border-radius-8);
+    
+                        &.ln-tabs-item-actived {
+                            color: #ffffff;
+                            background: rgba(245, 74, 0, 0.7);
+                        }
+                    }
+                }
+
+                .ln-main {
+                    display: flex;
+                    flex-wrap: wrap;
+                    justify-content: center;
+                    align-items: center;
+                    gap: 32px;
+                }
+            }
+        }
+    }
+}

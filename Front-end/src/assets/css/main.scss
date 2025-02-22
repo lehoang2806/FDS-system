@@ -20,6 +20,7 @@
 @use "./card/hightlight-card.scss";
 @use "./card/event-card.scss";
 @use "./card/supporter-card.scss";
+@use "./card/news-card.scss";
 
 @use "./elements/otp.scss";
 @use "./elements/subscriber.scss";
@@ -29,3 +30,5 @@
 
 @use "./supporter/list-supporter.scss";
 @use "./supporter/detail-supporter.scss";
+
+@use "./news/list-news.scss"

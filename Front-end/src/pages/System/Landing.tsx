@@ -103,7 +103,7 @@ export default function () {
                 <div className="landing-container ls5-container">
                     <div className="ls5cr1">
                         <h2><span>Sự kiện </span>thiện nghiện</h2>
-                        <Link to={"/"} className="view-all">Xem tất cả</Link>
+                        <Link to={routes.user.news.list} className="view-all">Xem tất cả</Link>
                     </div>
                     <div className="ls5cr2">
                         <div className="ls5cr2c1">
