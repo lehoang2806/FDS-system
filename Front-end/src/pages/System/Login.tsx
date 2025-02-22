@@ -20,7 +20,7 @@ const LoginPage = () => {
                                     <label className="form-label">Mật Khẩu</label>
                                     <input type="text" className="form-input" />
                                 </div>
-                                <Link to="">Quên mật khẩu</Link>
+                                <Link to={routes.forgot_pass}>Quên mật khẩu</Link>
                                 <button className="sc-btn">Đăng nhập</button>
                             </form>
                             <p>Bạn chưa có tài khoản? <span onClick={()=>navigateHook(routes.register)}>Đăng ký ngay</span></p>
