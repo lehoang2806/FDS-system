@@ -3,6 +3,7 @@ export const routes = {
     register: "/register",
     otp_auth: "/otp-auth",
     forgot_pass: "/forgot-pass",
+    new_pass: "/new-pass",
     user: {
         home: "/",
         campaign: {
