@@ -15,7 +15,8 @@ export const routes = {
             detail: "/supporter/:id/detail"
         },
         news: {
-            list: "/news"
+            list: "/news",
+            detail: "/news/:id/detail"
         }
     }
 }

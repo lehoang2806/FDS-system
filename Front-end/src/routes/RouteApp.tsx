@@ -7,7 +7,7 @@ import routeRecipient from "./RouteRecipient";
 import LandingBasicLayout from "../layout/System/LandingBasicLayout";
 import { DetailCampaignPage, ListCampaignPage } from "@/pages/System/Campaign";
 import { DetailSupporterPage, ListSupporterPage } from "@/pages/System/Supporter";
-import { ListNewsPage } from "@/pages/System/News";
+import { DetailNewsPage, ListNewsPage } from "@/pages/System/News";
 
 export default function () {
     return (
@@ -45,6 +45,10 @@ export const routerRoot = createBrowserRouter([
             {
                 path: "news",
                 element: <ListNewsPage/>
+            },
+            {
+                path: "news/:id/detail",
+                element: <DetailNewsPage/>
             }
         ]
     },

@@ -1,0 +1,161 @@
+#detail-news {
+    background: #f3f3f3;
+    padding: 0 20px 80px;
+
+    #dn-section {
+        padding: 0 20px;
+
+        .dns-container {
+            background: #ffffff;
+            max-width: 1400px;
+            margin: 0 auto;
+
+            .dnscr1 {
+                background: linear-gradient(to bottom, #a05e44 0%, #ffbe99 0%, #ffffff 100%);
+
+                .dn-img {
+                    width: 950px;
+                    height: 460px;
+                    margin: 0 auto;
+                    border-radius: 0 0 16px 16px;
+                    background: var(--main-color);
+                }
+            }
+
+            .dnscr2 {
+                padding: 24px;
+
+                .dnscr2r1 {
+                    p {
+                        font-size: 20px;
+                        font-weight: 500;
+                        color: #ff5238;
+                    }
+
+                    h2 {
+                        font-size: 24px;
+                        font-weight: 700;
+                        color: #393939;
+                        text-align: start;
+                        margin-top: 12px;
+                        margin-bottom: 24px;
+                    }
+                }
+
+                .dnscr2r2 {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+
+                    p {
+                        position: relative;
+                        padding: 15px 22px;
+                        font-size: 16px;
+                        font-weight: 500;
+                        color: var(--main-color);
+
+                        &::after {
+                            content: "";
+                            position: absolute;
+                            bottom: 0;
+                            left: 0;
+                            width: 100%;
+                            height: 3px;
+                            background-color: var(--main-color);
+                        }
+                    }
+
+                    .sc-btn {
+                        padding: 12px 24px;
+                        font-size: 14px;
+                        font-weight: 500;
+                    }
+                }
+            }
+
+            .dnscr3 {
+                padding: 24px;
+
+                .dnscr3r1 {
+                    background: #f4f4f4;
+                    border-radius: var(--border-radius-16);
+                    padding: 16px;
+                    margin-bottom: 20px;
+
+                    p {
+                        font-size: 14px;
+                        font-weight: 400;
+                        color: #393939;
+
+                        span {
+                            font-weight: 500;
+                        }
+                    }
+                }
+
+                .dnscr3r2 {
+                    margin-bottom: 20px;
+
+                    h4 {
+                        font-size: 17px;
+                        font-weight: 500;
+                        color: #393939;
+                        margin-bottom: 8px;
+                    }
+
+                    p {
+                        font-size: 14px;
+                        font-weight: 400;
+                        color: #393939;
+                    }
+                }
+            }
+
+            .dnscr4 {
+                padding: 24px;
+
+                h4 {
+                    font-size: 17px;
+                    font-weight: 500;
+                    color: #393939;
+                    margin-bottom: 20px;
+                }
+
+                .dnscr4r2 {
+                    .comment-container {
+                        display: flex;
+                        justify-content: start;
+                        align-items: start;
+
+                        .cc-avatar {
+                            width: 40px;
+                            height: 40px;
+                            border-radius: var(--border-radius-circle);
+                            background: var(--main-color);
+                            margin-right: 20px;
+                        }
+
+                        .cc-name {
+                            font-size: 14px;
+                            font-weight: 700;
+                            color: #393939;
+                        }
+
+                        .cc-content {
+                            font-size: 14px;
+                            font-weight: 400;
+                            color: #393939;
+                            margin: 8px 0;
+                        }
+
+                        .cc-time {
+                            font-size: 12px;
+                            font-weight: 400;
+                            color: #6f6f6f;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

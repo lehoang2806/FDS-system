@@ -1,8 +1,15 @@
 import { NewsCard } from "@/components/Card";
+import { navigateHook } from "@/routes/RouteApp";
+import { routes } from "@/routes/routeName";
 import { useState } from "react";
 
 const ListNewsPage = () => {
     const [activeTab, setActiveTab] = useState<"noibat" | "theodoi">("noibat");
+
+    const handleToDetail = (campaignId: string) => {
+            const url = routes.user.news.detail.replace(":id", campaignId);
+            return navigateHook(url)
+        }
 
     return (
         <main id="list-news">
@@ -34,7 +41,7 @@ const ListNewsPage = () => {
                         <div className="ln-main">
                             {activeTab === "noibat" ? (
                                 <>
-                                    <NewsCard />
+                                    <NewsCard onClickDetail={() => handleToDetail("1")}/>
                                     <NewsCard />
                                     <NewsCard />
                                     <NewsCard />
