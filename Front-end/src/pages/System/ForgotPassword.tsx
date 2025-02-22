@@ -15,7 +15,7 @@ const ForgotPasswordPage = () => {
                                 <div className="form-field">
                                     <input type="text" className="form-input" placeholder="Nhập địa chỉ email"/>
                                 </div>
-                                <button className="sc-btn" onClick={() => navigateHook(routes.otp_auth)}>Xác thực</button>
+                                <button className="sc-btn" onClick={() => navigateHook(routes.new_pass)}>Xác thực</button>
                             </form>
                         </div>
                     </div>
