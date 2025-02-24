@@ -7,6 +7,7 @@ import { DetailCampaignPage, ListCampaignPage } from "@/pages/System/Campaign";
 import { DetailSupporterPage, ListSupporterPage } from "@/pages/System/Supporter";
 import { DetailNewsPage, ListNewsPage } from "@/pages/System/News";
 import routeUser from "./RouteUser";
+import { PostForumPage } from "@/pages/System/Post";
 
 export default function () {
     return (
@@ -48,6 +49,10 @@ export const routerRoot = createBrowserRouter([
             {
                 path: "news/:id/detail",
                 element: <DetailNewsPage/>
+            },
+            {
+                path: "posts",
+                element: <PostForumPage/>
             }
         ]
     },
@@ -80,7 +85,7 @@ export const routerRoot = createBrowserRouter([
     {
         path: "new-pass",
         element: <NewPasswordPage/>
-    }
+    },
 ], {
     future: {
         v7_fetcherPersist: true,

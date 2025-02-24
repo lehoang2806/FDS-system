@@ -26,6 +26,7 @@
 
 @use "./elements/otp.scss";
 @use "./elements/subscriber.scss";
+@use "./elements/post.scss";
 
 @use "./campaign/list-campaigns.scss";
 @use "./campaign/detail-campaign.scss";
@@ -39,3 +40,5 @@
 @use "./user/user-profile.scss";
 @use "./user/user-change-pass.scss";
 @use "./user/user-new-pass.scss";
+
+@use "./post/post-forum.scss"
