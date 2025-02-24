@@ -19,12 +19,21 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
                 },
                 {
                     title: "Tổ chức, cá nhân hỗ trợ",
-                    to: ""
+                    to: routes.user.supporter.list
                 }
             ]
         },
         { name: "Gây quỹ", subMenu: ["Bắt đầu"] },
-        { name: "Khám phá", subMenu: ["Bản tin", "Tin tức"] },
+        { name: "Khám phá", subMenu: [
+            {
+                title: "Tin tức",
+                to: routes.user.news.list
+            },
+            {
+                title: "Bản tin",
+                to: routes.user.post.forum
+            }
+        ] },
         { name: "Giới thiệu", subMenu: ["Về chúng tôi", "Liên hệ"] }
     ];
 
