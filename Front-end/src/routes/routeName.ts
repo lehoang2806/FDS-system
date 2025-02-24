@@ -18,6 +18,8 @@ export const routes = {
             list: "/news",
             detail: "/news/:id/detail"
         },
-        profile: "/user/profile"
+        profile: "/user/profile",
+        change_pass: "/user/change-pass",
+        new_pass: "/user/new-pass"
     }
 }
