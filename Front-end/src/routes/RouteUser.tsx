@@ -1,5 +1,5 @@
 import LandingBasicLayout from "@/layout/System/LandingBasicLayout";
-import { UserProfilePage } from "@/pages/User";
+import { UserChangePasswordPage, UserNewPasswordPage, UserProfilePage } from "@/pages/User";
 import { RouteObject } from "react-router-dom";
 
 const routeUser: RouteObject[] = [
@@ -16,6 +16,14 @@ const routeUser: RouteObject[] = [
                         element: <UserProfilePage/>
                     }
                 ]
+            },
+            {
+                path: "change-pass",
+                element: <UserChangePasswordPage/>
+            },
+            {
+                path: "new-pass",
+                element: <UserNewPasswordPage/>
             }
         ]
     }
