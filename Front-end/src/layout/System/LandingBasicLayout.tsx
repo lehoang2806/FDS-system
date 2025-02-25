@@ -6,7 +6,7 @@ import { FooterLanding } from "@/components/Footer"
 const LandingBasicLayout: FC = () => {
     return (
         <>
-            <HeaderLanding isLogin={true}/>
+            <HeaderLanding isLogin={false}/>
             <main id="landing">
                 <Outlet/>
             </main>

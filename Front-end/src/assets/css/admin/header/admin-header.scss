@@ -1,0 +1,45 @@
+#admin-header {
+    position: fixed;
+    top: 0px;
+    right: 0;
+    z-index: 1;
+    transform: translateY(0%);
+    padding: 15px;
+    background: #fff;
+    box-sizing: border-box;
+
+    &.ah-collapsed {
+        width: calc(100% - 256px);
+        transition: all 0.3s ease-in-out;
+    }
+
+    &.ah-expanded {
+        width: calc(100% - 80px);
+        transition: all 0.3s ease-in-out;
+    }
+
+    .ah-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        .ahcc1 {
+            display: flex;
+            align-items: center;
+            justify-content: start;
+        }
+
+        .ah-icon {
+            width: 20px;
+            height: 20px;
+            padding: 10px;
+            margin: 0 3px;
+            cursor: pointer;
+
+            &:hover {
+                background-color: rgba(99, 91, 255, 0.1);
+                border-radius: 50%;
+            }
+        }
+    }
+}
