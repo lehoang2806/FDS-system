@@ -12,4 +12,16 @@
         padding-left: 80px;
         transition: all 0.3s ease-in-out;
     }
+
+    .admin-section {
+        min-height: calc(100vh - 70px);
+        background-color: #f4f7fb;
+        border-radius: 20px;
+        padding: 30px;
+    }
+    
+    .admin-container {
+        max-width: 1100px;
+        margin: 0 auto;
+    }
 }

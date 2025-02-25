@@ -1,5 +1,5 @@
 import AdminBasicLayout from "@/layout/Admin/AdminBasicLayout";
-import { AdminDashboard } from "@/pages/Admin";
+import { AdminDashboardPage } from "@/pages/Admin";
 import { RouteObject } from "react-router-dom";
 
 const routeAdmin: RouteObject[] = [
@@ -9,7 +9,7 @@ const routeAdmin: RouteObject[] = [
         children: [
             {
                 path: "",
-                element: <AdminDashboard/>
+                element: <AdminDashboardPage/>
             }
         ]
     }
