@@ -24,5 +24,8 @@ export const routes = {
         profile: "/user/profile",
         change_pass: "/user/change-pass",
         new_pass: "/user/new-pass"
+    },
+    admin: {
+        dashboard: "/admin"
     }
 }

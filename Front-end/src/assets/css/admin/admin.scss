@@ -1,0 +1,15 @@
+#admin {
+    padding-top: 70px;
+    box-sizing: border-box;
+    position: relative;
+
+    &.admin-collapsed {
+        padding-left: 256px;
+        transition: all 0.3s ease-in-out;
+    }
+
+    &.admin-expanded {
+        padding-left: 80px;
+        transition: all 0.3s ease-in-out;
+    }
+}

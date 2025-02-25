@@ -8,6 +8,7 @@ import { DetailSupporterPage, ListSupporterPage } from "@/pages/System/Supporter
 import { DetailNewsPage, ListNewsPage } from "@/pages/System/News";
 import routeUser from "./RouteUser";
 import { PostForumPage } from "@/pages/System/Post";
+import routeAdmin from "./RouteAdmin";
 
 export default function () {
     return (
@@ -58,6 +59,7 @@ export const routerRoot = createBrowserRouter([
     },
     ...routeStatff,
     ...routeUser,
+    ...routeAdmin,
     {
         path: "403",
         element: <UnauthorizedPage />
