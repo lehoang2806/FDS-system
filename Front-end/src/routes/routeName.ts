@@ -26,6 +26,9 @@ export const routes = {
         new_pass: "/user/new-pass"
     },
     admin: {
-        dashboard: "/admin"
+        dashboard: "/admin",
+        staff: {
+            list: "/admin/staff/list"
+        }
     }
 }
