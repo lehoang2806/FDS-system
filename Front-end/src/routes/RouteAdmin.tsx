@@ -2,6 +2,7 @@ import AdminBasicLayout from "@/layout/Admin/AdminBasicLayout";
 import { AdminDashboardPage } from "@/pages/Admin";
 import { AdminDetailCampaignDonorPage, AdminListCampaignDonorPage } from "@/pages/Admin/Campaign/Donor";
 import { AdminDetailCampaignStaffPage, AdminListCampaignStaffPage } from "@/pages/Admin/Campaign/Staff";
+import { AdminDetailNewsPage, AdminListNewsPage } from "@/pages/Admin/News";
 import { AdminAddStaffPage, AdminDetailStaffPage, AdminListStaffPage } from "@/pages/Admin/Staff";
 import { RouteObject } from "react-router-dom";
 
@@ -42,6 +43,14 @@ const routeAdmin: RouteObject[] = [
                 path: "campaign/donor/:id/detail",
                 element: <AdminDetailCampaignDonorPage/>
             },
+            {
+                path: "news",
+                element: <AdminListNewsPage/>
+            },
+            {
+                path: "news/:id/detail",
+                element: <AdminDetailNewsPage/>
+            }
         ]
     }
 ]

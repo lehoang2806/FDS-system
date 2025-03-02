@@ -94,6 +94,17 @@ const AdminSidebar: FC = () => {
                             </div>
                         </Link>
                     </div>
+                    <Link
+                        to={routes.admin.news.list}
+                        className={classNames('ascr2-nav-item', {
+                            'nav-active': location.pathname.startsWith(routes.admin.news.list),
+                        })}
+                    >
+                        <div className="ascr2-nav-link">
+                            <DashboardtIcon className="ascr2-nav-icon" />
+                            <span>News</span>
+                        </div>
+                    </Link>
                 </div>
             </div>
         </nav>
