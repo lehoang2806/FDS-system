@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace FDSSystem.Models;
+namespace FDSSYSTEM.Models;
 
 public partial class Fooddonation
 {

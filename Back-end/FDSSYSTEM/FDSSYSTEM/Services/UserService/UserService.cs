@@ -1,0 +1,63 @@
+﻿
+using FDSSYSTEM.Models;
+using FDSSYSTEM.Repositories.UserRepository;
+using FDSSYSTEM.Services.UserService;
+using MongoDB.Bson;
+using System.Text;
+using System.Security.Cryptography;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
+using FDSSYSTEM.DTOs;
+
+
+namespace FDSSYSTEM.Services.UserService;
+
+
+public class UserService : IUserService
+{
+    private readonly IUserRepository _userRepository;
+
+    public UserService(IUserRepository userRepository)
+    {
+        _userRepository = userRepository;
+    }
+
+    public async Task AddUser(Account account)
+    {
+        account.Id = ObjectId.GenerateNewId().ToString();
+        await _userRepository.AddAsync(account);
+    }
+
+    public async Task<IEnumerable<Account>> GetAllUser()
+    {
+        return await _userRepository.GetAllAsync();
+    }
+
+    public async Task<Account> GetUserByUsernameAsync(string userEmail)
+    {
+        userEmail = userEmail.ToLower();
+        var allUser = await _userRepository.GetAllAsync();
+        return allUser.FirstOrDefault(x=> x.Email.ToLower().Equals(userEmail));
+    }
+
+    public async Task CreateUserAsync(RegisterUserDto user)
+    {
+        var passwordHash = HashPassword(user.Password);
+        var account = new Account
+        {
+            Email =user.UserEmail,
+            Password = passwordHash
+        };
+        await _userRepository.AddAsync(account);
+    }
+
+    public bool VerifyPassword(string enteredPassword, string storedHash)
+    {
+        var x = HashPassword(enteredPassword);
+        return HashPassword(enteredPassword) == storedHash;
+    }
+
+    private static string HashPassword(string password)
+    {
+      return  BCrypt.Net.BCrypt.HashPassword(password);
+    }
+}

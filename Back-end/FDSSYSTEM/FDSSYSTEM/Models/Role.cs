@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace FDSSystem.Models;
+namespace FDSSYSTEM.Models;
 
 public partial class Role
 {
-    public int RoleId { get; set; }
+    public int RoleId { get; set; } // "Admin", "Staff", "Donor", "Recipient"
 
     public string RoleName { get; set; } = null!;
 

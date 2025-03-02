@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Backend1\\FDSSYSTEM\\FDSSYSTEM\\FDSSYSTEM.csproj": {}
+    "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\FDSSYSTEM.csproj": {}
   },
   "projects": {
-    "D:\\Backend1\\FDSSYSTEM\\FDSSYSTEM\\FDSSYSTEM.csproj": {
+    "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\FDSSYSTEM.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Backend1\\FDSSYSTEM\\FDSSYSTEM\\FDSSYSTEM.csproj",
+        "projectUniqueName": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\FDSSYSTEM.csproj",
         "projectName": "FDSSYSTEM",
-        "projectPath": "D:\\Backend1\\FDSSYSTEM\\FDSSYSTEM\\FDSSYSTEM.csproj",
+        "projectPath": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\FDSSYSTEM.csproj",
         "packagesPath": "C:\\Users\\ADMIN\\.nuget\\packages\\",
-        "outputPath": "D:\\Backend1\\FDSSYSTEM\\FDSSYSTEM\\obj\\",
+        "outputPath": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\ADMIN\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -46,6 +46,22 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+            "BCrypt.Net-Next": {
+              "target": "Package",
+              "version": "[4.0.3, )"
+            },
+            "Microsoft.AspNetCore.Authentication.JwtBearer": {
+              "target": "Package",
+              "version": "[8.0.0, )"
+            },
+            "Microsoft.IdentityModel.Tokens": {
+              "target": "Package",
+              "version": "[8.6.0, )"
+            },
+            "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
+              "target": "Package",
+              "version": "[8.0.7, )"
+            },
             "MongoDB.Driver": {
               "target": "Package",
               "version": "[3.2.0, )"
@@ -53,6 +69,10 @@
             "Swashbuckle.AspNetCore": {
               "target": "Package",
               "version": "[6.4.0, )"
+            },
+            "System.IdentityModel.Tokens.Jwt": {
+              "target": "Package",
+              "version": "[8.6.0, )"
             }
           },
           "imports": [
