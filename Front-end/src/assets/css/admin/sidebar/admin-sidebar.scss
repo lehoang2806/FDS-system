@@ -11,6 +11,14 @@
         width: fit-content;
     }
 
+    .asrc2-nav-dropdown-content {
+        display: none;
+
+        &.open {
+            display: block;
+        }
+    }
+
     &.as-expanded {
         width: 256px !important;
 
@@ -41,6 +49,7 @@
                     .ascr2-nav-icon {
                         width: 18px !important;
                         height: 18px !important;
+                        fill: #29343d !important;
                         margin-right: 10px !important;
                         flex-shrink: 0 !important;
                     }
@@ -70,6 +79,14 @@
                     .ascr2-nav-link {
                         span {
                             color: #fff !important;
+                        }
+
+                        .ascr2-nav-icon {
+                            width: 18px !important;
+                            height: 18px !important;
+                            fill: none !important;
+                            margin-right: 10px !important;
+                            flex-shrink: 0 !important;
                         }
                     }
                 }

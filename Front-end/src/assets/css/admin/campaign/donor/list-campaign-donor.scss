@@ -1,0 +1,49 @@
+#admin-list-campaign-donor {
+    .alcd-container {
+        .alcdcr1 {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 30px;
+            background: #fff;
+            border-radius: var(--border-radius-12);
+            margin-bottom: 30px;
+
+            h1 {
+                font-size: 18px;
+                font-weight: 700;
+                color: #29343D;
+            }
+
+            p {
+                font-size: 14px;
+                font-weight: 400;
+                color: #29343D;
+
+                .admin-tag {
+                    font-size: 12px;
+                    font-weight: 500;
+                    color: #635BFF;
+                    padding: 10px 15px;
+                    background: rgba(99, 91, 255, 0.15);
+                    border-radius: var(--border-radius-12);
+                    margin-left: 10px;
+                }
+            }
+        }
+
+        .alcdcr2 {
+            display: flex;
+            justify-content: start;
+            align-items: center;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .alcdcr3 {
+            padding: 30px;
+            background: #fff;
+            border-radius: var(--border-radius-12);
+        }
+    }
+}
