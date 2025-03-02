@@ -8,7 +8,7 @@ const AdminAddStaffPage: FC = () => {
             <div className="admin-container aas-container">
                 <div className="aascr1">
                     <h1>Staff</h1>
-                    <p>Dashboard<span className="admin-tag">Staff</span></p>
+                    <p>Dashboard<span className="admin-tag">Add Staff</span></p>
                 </div>
                 <div className="aascr2">
                     <div className="aascr2r1">
