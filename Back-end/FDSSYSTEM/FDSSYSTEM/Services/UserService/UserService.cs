@@ -50,10 +50,9 @@ public class UserService : IUserService
         await _userRepository.AddAsync(account);
     }
 
-    public bool VerifyPassword(string enteredPassword, string storedHash)
+    public bool VerifyPassword(string enteredPassword, string hashPass)
     {
-        var x = HashPassword(enteredPassword);
-        return HashPassword(enteredPassword) == storedHash;
+       return  BCrypt.Net.BCrypt.Verify(enteredPassword, hashPass);
     }
 
     private static string HashPassword(string password)

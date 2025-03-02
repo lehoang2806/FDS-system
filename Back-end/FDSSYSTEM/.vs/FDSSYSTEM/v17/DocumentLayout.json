@@ -3,12 +3,36 @@
   "WorkspaceRootPath": "D:\\Backend1\\be\\FDSSYSTEM\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{F332701A-843C-4DC7-B3BB-47BB6F7101CC}|FDSSYSTEM\\FDSSYSTEM.csproj|d:\\backend1\\be\\fdssystem\\fdssystem\\dtos\\userprofiledto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F332701A-843C-4DC7-B3BB-47BB6F7101CC}|FDSSYSTEM\\FDSSYSTEM.csproj|solutionrelative:fdssystem\\dtos\\userprofiledto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F332701A-843C-4DC7-B3BB-47BB6F7101CC}|FDSSYSTEM\\FDSSYSTEM.csproj|d:\\backend1\\be\\fdssystem\\fdssystem\\controllers\\usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F332701A-843C-4DC7-B3BB-47BB6F7101CC}|FDSSYSTEM\\FDSSYSTEM.csproj|solutionrelative:fdssystem\\controllers\\usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F332701A-843C-4DC7-B3BB-47BB6F7101CC}|FDSSYSTEM\\FDSSYSTEM.csproj|d:\\backend1\\be\\fdssystem\\fdssystem\\models\\account.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F332701A-843C-4DC7-B3BB-47BB6F7101CC}|FDSSYSTEM\\FDSSYSTEM.csproj|solutionrelative:fdssystem\\models\\account.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{F332701A-843C-4DC7-B3BB-47BB6F7101CC}|FDSSYSTEM\\FDSSYSTEM.csproj|d:\\backend1\\be\\fdssystem\\fdssystem\\services\\userservice\\userservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{F332701A-843C-4DC7-B3BB-47BB6F7101CC}|FDSSYSTEM\\FDSSYSTEM.csproj|solutionrelative:fdssystem\\services\\userservice\\userservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{F332701A-843C-4DC7-B3BB-47BB6F7101CC}|FDSSYSTEM\\FDSSYSTEM.csproj|d:\\backend1\\be\\fdssystem\\fdssystem\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F332701A-843C-4DC7-B3BB-47BB6F7101CC}|FDSSYSTEM\\FDSSYSTEM.csproj|solutionrelative:fdssystem\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{F332701A-843C-4DC7-B3BB-47BB6F7101CC}|FDSSYSTEM\\FDSSYSTEM.csproj|d:\\backend1\\be\\fdssystem\\fdssystem\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{F332701A-843C-4DC7-B3BB-47BB6F7101CC}|FDSSYSTEM\\FDSSYSTEM.csproj|solutionrelative:fdssystem\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F332701A-843C-4DC7-B3BB-47BB6F7101CC}|FDSSYSTEM\\FDSSYSTEM.csproj|d:\\backend1\\be\\fdssystem\\fdssystem\\helper\\jwthelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F332701A-843C-4DC7-B3BB-47BB6F7101CC}|FDSSYSTEM\\FDSSYSTEM.csproj|solutionrelative:fdssystem\\helper\\jwthelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F332701A-843C-4DC7-B3BB-47BB6F7101CC}|FDSSYSTEM\\FDSSYSTEM.csproj|d:\\backend1\\be\\fdssystem\\fdssystem\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{F332701A-843C-4DC7-B3BB-47BB6F7101CC}|FDSSYSTEM\\FDSSYSTEM.csproj|solutionrelative:fdssystem\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{F332701A-843C-4DC7-B3BB-47BB6F7101CC}|FDSSYSTEM\\FDSSYSTEM.csproj|d:\\backend1\\be\\fdssystem\\fdssystem\\services\\userservice\\iuserservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -23,18 +47,6 @@
       "RelativeMoniker": "D:0:0:{F332701A-843C-4DC7-B3BB-47BB6F7101CC}|FDSSYSTEM\\FDSSYSTEM.csproj|solutionrelative:fdssystem\\dtos\\loginuserdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{F332701A-843C-4DC7-B3BB-47BB6F7101CC}|FDSSYSTEM\\FDSSYSTEM.csproj|d:\\backend1\\be\\fdssystem\\fdssystem\\helper\\jwthelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{F332701A-843C-4DC7-B3BB-47BB6F7101CC}|FDSSYSTEM\\FDSSYSTEM.csproj|solutionrelative:fdssystem\\helper\\jwthelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{F332701A-843C-4DC7-B3BB-47BB6F7101CC}|FDSSYSTEM\\FDSSYSTEM.csproj|d:\\backend1\\be\\fdssystem\\fdssystem\\dtos\\userdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{F332701A-843C-4DC7-B3BB-47BB6F7101CC}|FDSSYSTEM\\FDSSYSTEM.csproj|solutionrelative:fdssystem\\dtos\\userdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{F332701A-843C-4DC7-B3BB-47BB6F7101CC}|FDSSYSTEM\\FDSSYSTEM.csproj|d:\\backend1\\be\\fdssystem\\fdssystem\\models\\account.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{F332701A-843C-4DC7-B3BB-47BB6F7101CC}|FDSSYSTEM\\FDSSYSTEM.csproj|solutionrelative:fdssystem\\models\\account.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{F332701A-843C-4DC7-B3BB-47BB6F7101CC}|FDSSYSTEM\\FDSSYSTEM.csproj|d:\\backend1\\be\\fdssystem\\fdssystem\\database\\imongorepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{F332701A-843C-4DC7-B3BB-47BB6F7101CC}|FDSSYSTEM\\FDSSYSTEM.csproj|solutionrelative:fdssystem\\database\\imongorepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -43,24 +55,12 @@
       "RelativeMoniker": "D:0:0:{F332701A-843C-4DC7-B3BB-47BB6F7101CC}|FDSSYSTEM\\FDSSYSTEM.csproj|solutionrelative:fdssystem\\database\\mongorepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{F332701A-843C-4DC7-B3BB-47BB6F7101CC}|FDSSYSTEM\\FDSSYSTEM.csproj|d:\\backend1\\be\\fdssystem\\fdssystem\\controllers\\usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{F332701A-843C-4DC7-B3BB-47BB6F7101CC}|FDSSYSTEM\\FDSSYSTEM.csproj|solutionrelative:fdssystem\\controllers\\usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{F332701A-843C-4DC7-B3BB-47BB6F7101CC}|FDSSYSTEM\\FDSSYSTEM.csproj|d:\\backend1\\be\\fdssystem\\fdssystem\\controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{F332701A-843C-4DC7-B3BB-47BB6F7101CC}|FDSSYSTEM\\FDSSYSTEM.csproj|solutionrelative:fdssystem\\controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{F332701A-843C-4DC7-B3BB-47BB6F7101CC}|FDSSYSTEM\\FDSSYSTEM.csproj|d:\\backend1\\be\\fdssystem\\fdssystem\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{F332701A-843C-4DC7-B3BB-47BB6F7101CC}|FDSSYSTEM\\FDSSYSTEM.csproj|solutionrelative:fdssystem\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{F332701A-843C-4DC7-B3BB-47BB6F7101CC}|FDSSYSTEM\\FDSSYSTEM.csproj|d:\\backend1\\be\\fdssystem\\fdssystem\\options\\jwtsetting.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{F332701A-843C-4DC7-B3BB-47BB6F7101CC}|FDSSYSTEM\\FDSSYSTEM.csproj|solutionrelative:fdssystem\\options\\jwtsetting.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{F332701A-843C-4DC7-B3BB-47BB6F7101CC}|FDSSYSTEM\\FDSSYSTEM.csproj|d:\\backend1\\be\\fdssystem\\fdssystem\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{F332701A-843C-4DC7-B3BB-47BB6F7101CC}|FDSSYSTEM\\FDSSYSTEM.csproj|solutionrelative:fdssystem\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{F332701A-843C-4DC7-B3BB-47BB6F7101CC}|FDSSYSTEM\\FDSSYSTEM.csproj|d:\\backend1\\be\\fdssystem\\fdssystem\\repositories\\userrepository\\userrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -116,7 +116,7 @@
         },
         {
           "DockedWidth": 1180,
-          "SelectedChildIndex": 4,
+          "SelectedChildIndex": 3,
           "Children": [
             {
               "$type": "Document",
@@ -129,99 +129,65 @@
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAQAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-02-25T11:46:27.846Z",
-              "IsPinned": true,
-              "EditorCaption": ""
+              "IsPinned": true
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 8,
               "Title": "IUserService.cs",
               "DocumentMoniker": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\Services\\UserService\\IUserService.cs",
               "RelativeDocumentMoniker": "FDSSYSTEM\\Services\\UserService\\IUserService.cs",
               "ToolTip": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\Services\\UserService\\IUserService.cs",
               "RelativeToolTip": "FDSSYSTEM\\Services\\UserService\\IUserService.cs",
-              "ViewState": "AQIAAAkAAAAAAAAAAAAQwA8AAAABAAAA",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA4AAAAQAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-02-25T12:03:45.69Z",
-              "IsPinned": true,
-              "EditorCaption": ""
+              "IsPinned": true
             },
             {
               "$type": "Bookmark",
               "Name": "ST:1:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
             },
             {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
-            },
-            {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "UserService.cs",
-              "DocumentMoniker": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\Services\\UserService\\UserService.cs",
-              "RelativeDocumentMoniker": "FDSSYSTEM\\Services\\UserService\\UserService.cs",
-              "ToolTip": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\Services\\UserService\\UserService.cs",
-              "RelativeToolTip": "FDSSYSTEM\\Services\\UserService\\UserService.cs",
-              "ViewState": "AQIAACIAAAAAAAAAAIAzwC4AAAAiAAAA",
+              "Title": "UserProfileDto.cs",
+              "DocumentMoniker": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\DTOs\\UserProfileDto.cs",
+              "RelativeDocumentMoniker": "FDSSYSTEM\\DTOs\\UserProfileDto.cs",
+              "ToolTip": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\DTOs\\UserProfileDto.cs",
+              "RelativeToolTip": "FDSSYSTEM\\DTOs\\UserProfileDto.cs",
+              "ViewState": "AQIAAAUAAAAAAAAAAAAQwA0AAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-26T09:19:37.353Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "IMongoRepository.cs",
-              "DocumentMoniker": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\Database\\IMongoRepository.cs",
-              "RelativeDocumentMoniker": "FDSSYSTEM\\Database\\IMongoRepository.cs",
-              "ToolTip": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\Database\\IMongoRepository.cs",
-              "RelativeToolTip": "FDSSYSTEM\\Database\\IMongoRepository.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAqwAQAAAAZAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-26T08:24:42.715Z",
+              "WhenOpened": "2025-03-02T15:53:40.277Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 4,
-              "Title": "LoginUserDto.cs",
-              "DocumentMoniker": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\DTOs\\LoginUserDto.cs",
-              "RelativeDocumentMoniker": "FDSSYSTEM\\DTOs\\LoginUserDto.cs",
-              "ToolTip": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\DTOs\\LoginUserDto.cs",
-              "RelativeToolTip": "FDSSYSTEM\\DTOs\\LoginUserDto.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAQAAAAeAAAA",
+              "Title": "Program.cs",
+              "DocumentMoniker": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\Program.cs",
+              "RelativeDocumentMoniker": "FDSSYSTEM\\Program.cs",
+              "ToolTip": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\Program.cs",
+              "RelativeToolTip": "FDSSYSTEM\\Program.cs",
+              "ViewState": "AQIAABsAAAAAAAAAAAAowCYAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-28T17:06:41.299Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-02-28T16:54:36.747Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "AuthController.cs",
-              "DocumentMoniker": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\Controllers\\AuthController.cs",
-              "RelativeDocumentMoniker": "FDSSYSTEM\\Controllers\\AuthController.cs",
-              "ToolTip": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\Controllers\\AuthController.cs",
-              "RelativeToolTip": "FDSSYSTEM\\Controllers\\AuthController.cs",
-              "ViewState": "AQIAAAYAAAAAAAAAAAAAABcAAAAIAAAA",
+              "Title": "UserController.cs",
+              "DocumentMoniker": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\Controllers\\UserController.cs",
+              "RelativeDocumentMoniker": "FDSSYSTEM\\Controllers\\UserController.cs",
+              "ToolTip": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\Controllers\\UserController.cs",
+              "RelativeToolTip": "FDSSYSTEM\\Controllers\\UserController.cs",
+              "ViewState": "AQIAABsAAAAAAAAAAAAgwC8AAAA5AAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-28T17:05:14.971Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-02-28T16:54:39.575Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "UserDto.cs",
-              "DocumentMoniker": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\DTOs\\UserDto.cs",
-              "RelativeDocumentMoniker": "FDSSYSTEM\\DTOs\\UserDto.cs",
-              "ToolTip": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\DTOs\\UserDto.cs",
-              "RelativeToolTip": "FDSSYSTEM\\DTOs\\UserDto.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAQAAAAfAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-28T16:47:19.212Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 9,
               "Title": "RegisterUserDto.cs",
               "DocumentMoniker": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\DTOs\\RegisterUserDto.cs",
               "RelativeDocumentMoniker": "FDSSYSTEM\\DTOs\\RegisterUserDto.cs",
@@ -229,12 +195,47 @@
               "RelativeToolTip": "FDSSYSTEM\\DTOs\\RegisterUserDto.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAqwAIAAAARAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-28T17:16:44.512Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-02-28T17:16:44.512Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 5,
+              "Title": "AuthController.cs",
+              "DocumentMoniker": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\Controllers\\AuthController.cs",
+              "RelativeDocumentMoniker": "FDSSYSTEM\\Controllers\\AuthController.cs",
+              "ToolTip": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\Controllers\\AuthController.cs",
+              "RelativeToolTip": "FDSSYSTEM\\Controllers\\AuthController.cs",
+              "ViewState": "AQIAABYAAAAAAAAAAAAmwBcAAAAIAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-28T17:05:14.971Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Account.cs",
+              "DocumentMoniker": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\Models\\Account.cs",
+              "RelativeDocumentMoniker": "FDSSYSTEM\\Models\\Account.cs",
+              "ToolTip": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\Models\\Account.cs",
+              "RelativeToolTip": "FDSSYSTEM\\Models\\Account.cs",
+              "ViewState": "AQIAACEAAAAAAAAAAAAkwDEAAAAoAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-25T16:41:31.183Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "JwtHelper.cs",
+              "DocumentMoniker": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\Helper\\JwtHelper.cs",
+              "RelativeDocumentMoniker": "FDSSYSTEM\\Helper\\JwtHelper.cs",
+              "ToolTip": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\Helper\\JwtHelper.cs",
+              "RelativeToolTip": "FDSSYSTEM\\Helper\\JwtHelper.cs",
+              "ViewState": "AQIAAA0AAAAAAAAAAAAlwBQAAAAWAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-28T08:04:28.737Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
               "Title": "MongoRepository.cs",
               "DocumentMoniker": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\Database\\MongoRepository.cs",
               "RelativeDocumentMoniker": "FDSSYSTEM\\Database\\MongoRepository.cs",
@@ -242,64 +243,59 @@
               "RelativeToolTip": "FDSSYSTEM\\Database\\MongoRepository.cs",
               "ViewState": "AQIAAAkAAAAAAAAAAAAmwBUAAAAZAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-26T08:28:04.018Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-02-26T08:28:04.018Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "JwtHelper.cs",
-              "DocumentMoniker": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\Helper\\JwtHelper.cs",
-              "RelativeDocumentMoniker": "FDSSYSTEM\\Helper\\JwtHelper.cs",
-              "ToolTip": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\Helper\\JwtHelper.cs",
-              "RelativeToolTip": "FDSSYSTEM\\Helper\\JwtHelper.cs",
-              "ViewState": "AQIAABAAAAAAAAAAAAAAwB4AAAA9AAAA",
+              "DocumentIndex": 3,
+              "Title": "UserService.cs",
+              "DocumentMoniker": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\Services\\UserService\\UserService.cs",
+              "RelativeDocumentMoniker": "FDSSYSTEM\\Services\\UserService\\UserService.cs",
+              "ToolTip": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\Services\\UserService\\UserService.cs",
+              "RelativeToolTip": "FDSSYSTEM\\Services\\UserService\\UserService.cs",
+              "ViewState": "AQIAABcAAAAAAAAAAAAMwB0AAAApAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-28T08:04:28.737Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-02-26T09:19:37.353Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 7,
-              "Title": "Account.cs",
-              "DocumentMoniker": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\Models\\Account.cs",
-              "RelativeDocumentMoniker": "FDSSYSTEM\\Models\\Account.cs",
-              "ToolTip": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\Models\\Account.cs",
-              "RelativeToolTip": "FDSSYSTEM\\Models\\Account.cs",
-              "ViewState": "AQIAAAMAAAAAAAAAAAAqwA8AAAAXAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-25T16:41:31.183Z",
-              "EditorCaption": ""
+              "Title": "appsettings.json",
+              "DocumentMoniker": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\appsettings.json",
+              "RelativeDocumentMoniker": "FDSSYSTEM\\appsettings.json",
+              "ToolTip": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\appsettings.json",
+              "RelativeToolTip": "FDSSYSTEM\\appsettings.json",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAkAAABIAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-02-26T08:44:01.068Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 10,
-              "Title": "UserController.cs",
-              "DocumentMoniker": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\Controllers\\UserController.cs",
-              "RelativeDocumentMoniker": "FDSSYSTEM\\Controllers\\UserController.cs",
-              "ToolTip": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\Controllers\\UserController.cs",
-              "RelativeToolTip": "FDSSYSTEM\\Controllers\\UserController.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAALAAAAABAAAA",
+              "Title": "LoginUserDto.cs",
+              "DocumentMoniker": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\DTOs\\LoginUserDto.cs",
+              "RelativeDocumentMoniker": "FDSSYSTEM\\DTOs\\LoginUserDto.cs",
+              "ToolTip": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\DTOs\\LoginUserDto.cs",
+              "RelativeToolTip": "FDSSYSTEM\\DTOs\\LoginUserDto.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAQAAAAeAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-28T16:54:39.575Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 12,
-              "Title": "Program.cs",
-              "DocumentMoniker": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\Program.cs",
-              "RelativeDocumentMoniker": "FDSSYSTEM\\Program.cs",
-              "ToolTip": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\Program.cs",
-              "RelativeToolTip": "FDSSYSTEM\\Program.cs",
-              "ViewState": "AQIAAAwAAAAAAAAAAAAYwBwAAAA7AAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-28T16:54:36.747Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-02-28T17:06:41.299Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 11,
+              "Title": "IMongoRepository.cs",
+              "DocumentMoniker": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\Database\\IMongoRepository.cs",
+              "RelativeDocumentMoniker": "FDSSYSTEM\\Database\\IMongoRepository.cs",
+              "ToolTip": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\Database\\IMongoRepository.cs",
+              "RelativeToolTip": "FDSSYSTEM\\Database\\IMongoRepository.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAqwAQAAAAZAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-26T08:24:42.715Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
               "Title": "AccountController.cs",
               "DocumentMoniker": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\Controllers\\AccountController.cs",
               "RelativeDocumentMoniker": "FDSSYSTEM\\Controllers\\AccountController.cs",
@@ -307,12 +303,11 @@
               "RelativeToolTip": "FDSSYSTEM\\Controllers\\AccountController.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAACIAAAAqAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-25T16:10:51.51Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-02-25T16:10:51.51Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 14,
               "Title": "JwtSetting.cs",
               "DocumentMoniker": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\Options\\JwtSetting.cs",
               "RelativeDocumentMoniker": "FDSSYSTEM\\Options\\JwtSetting.cs",
@@ -320,21 +315,7 @@
               "RelativeToolTip": "FDSSYSTEM\\Options\\JwtSetting.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAqwAcAAAASAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-28T16:43:14.189Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 14,
-              "Title": "appsettings.json",
-              "DocumentMoniker": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\appsettings.json",
-              "RelativeDocumentMoniker": "FDSSYSTEM\\appsettings.json",
-              "ToolTip": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\appsettings.json",
-              "RelativeToolTip": "FDSSYSTEM\\appsettings.json",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAwAAAAWAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2025-02-26T08:44:01.068Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-02-28T16:43:14.189Z"
             },
             {
               "$type": "Document",
@@ -346,8 +327,7 @@
               "RelativeToolTip": "FDSSYSTEM\\Repositories\\UserRepository\\UserRepository.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAABQAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-26T08:24:02.654Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-02-26T08:24:02.654Z"
             },
             {
               "$type": "Document",
@@ -359,8 +339,7 @@
               "RelativeToolTip": "FDSSYSTEM\\appsettings.Development.json",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAMAAAAEAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2025-02-26T08:45:09.188Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-02-26T08:45:09.188Z"
             },
             {
               "$type": "Document",
@@ -372,8 +351,7 @@
               "RelativeToolTip": "FDSSYSTEM\\Database\\MongoDbContext.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAqwBIAAAAwAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-26T08:30:25.934Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-02-26T08:30:25.934Z"
             },
             {
               "$type": "Document",
@@ -385,8 +363,7 @@
               "RelativeToolTip": "FDSSYSTEM\\Properties\\launchSettings.json",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAABIAAAAvAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2025-02-26T08:45:43.674Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-02-26T08:45:43.674Z"
             },
             {
               "$type": "Document",
@@ -396,10 +373,9 @@
               "RelativeDocumentMoniker": "FDSSYSTEM\\Models\\MongoHelper.cs",
               "ToolTip": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\Models\\MongoHelper.cs",
               "RelativeToolTip": "FDSSYSTEM\\Models\\MongoHelper.cs",
-              "ViewState": "AQIAAAMAAAAAAAAAAIBJwBwAAAAJAAAA",
+              "ViewState": "AQIAAAAAAAAAAAAAAIBZwBwAAAAJAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-25T16:14:36.115Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-02-25T16:14:36.115Z"
             },
             {
               "$type": "Document",
@@ -411,8 +387,7 @@
               "RelativeToolTip": "FDSSYSTEM\\Models\\Order.cs",
               "ViewState": "AQIAAAoAAAAAAAAAAAAEwBgAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-25T16:09:48.906Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-02-25T16:09:48.906Z"
             },
             {
               "$type": "Document",
@@ -424,8 +399,7 @@
               "RelativeToolTip": "FDSSYSTEM\\Models\\MongoDBSchemaExtractor.cs",
               "ViewState": "AQIAABsAAAAAAAAAAAAowBoAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-25T11:52:17.012Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-02-25T11:52:17.012Z"
             },
             {
               "$type": "Document",
@@ -437,8 +411,11 @@
               "RelativeToolTip": "FDSSYSTEM\\Models\\Post.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAMAAAATAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-25T12:25:54.73Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-02-25T12:25:54.73Z"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
             }
           ]
         }
