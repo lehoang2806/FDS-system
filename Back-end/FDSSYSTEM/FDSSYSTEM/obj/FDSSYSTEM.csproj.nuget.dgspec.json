@@ -1,28 +1,25 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\FDSSYSTEM.csproj": {}
+    "D:\\Capstone\\FDS-system\\Back-end\\FDSSYSTEM\\FDSSYSTEM\\FDSSYSTEM.csproj": {}
   },
   "projects": {
-    "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\FDSSYSTEM.csproj": {
+    "D:\\Capstone\\FDS-system\\Back-end\\FDSSYSTEM\\FDSSYSTEM\\FDSSYSTEM.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\FDSSYSTEM.csproj",
+        "projectUniqueName": "D:\\Capstone\\FDS-system\\Back-end\\FDSSYSTEM\\FDSSYSTEM\\FDSSYSTEM.csproj",
         "projectName": "FDSSYSTEM",
-        "projectPath": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\FDSSYSTEM.csproj",
-        "packagesPath": "C:\\Users\\ADMIN\\.nuget\\packages\\",
-        "outputPath": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\obj\\",
+        "projectPath": "D:\\Capstone\\FDS-system\\Back-end\\FDSSYSTEM\\FDSSYSTEM\\FDSSYSTEM.csproj",
+        "packagesPath": "C:\\Users\\tuan0\\.nuget\\packages\\",
+        "outputPath": "D:\\Capstone\\FDS-system\\Back-end\\FDSSYSTEM\\FDSSYSTEM\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\ADMIN\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "C:\\Users\\tuan0\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -40,7 +37,8 @@
           "enableAudit": "true",
           "auditLevel": "low",
           "auditMode": "direct"
-        }
+        },
+        "SdkAnalysisLevel": "9.0.200"
       },
       "frameworks": {
         "net8.0": {
@@ -86,6 +84,24 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Ref",
+              "version": "[8.0.13, 8.0.13]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Host.win-x64",
+              "version": "[8.0.13, 8.0.13]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Ref",
+              "version": "[8.0.13, 8.0.13]"
+            },
+            {
+              "name": "Microsoft.WindowsDesktop.App.Ref",
+              "version": "[8.0.13, 8.0.13]"
+            }
+          ],
           "frameworkReferences": {
             "Microsoft.AspNetCore.App": {
               "privateAssets": "none"
@@ -94,7 +110,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.300/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.200/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

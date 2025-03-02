@@ -24,6 +24,7 @@
 @use "admin/table.scss";
 @use "admin/admin-dashboard.scss";
 @use "admin/staff/list-staff.scss";
+@use "admin/staff/add-staff.scss";
 
 @use "./card/campaign-card.scss";
 @use "./card/hightlight-card.scss";
@@ -34,6 +35,7 @@
 @use "./elements/otp.scss";
 @use "./elements/subscriber.scss";
 @use "./elements/post.scss";
+@use "./elements/slide-toggle.scss";
 
 @use "./campaign/list-campaigns.scss";
 @use "./campaign/detail-campaign.scss";

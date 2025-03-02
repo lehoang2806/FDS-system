@@ -1,4 +1,7 @@
 import { ActiveIcon, BlockIcon, TotalIcon } from "@/assets/icons"
+import { SlideToggle } from "@/components/Elements"
+import { navigateHook } from "@/routes/RouteApp"
+import { routes } from "@/routes/routeName"
 
 const AdminListStaffPage = () => {
     return (
@@ -38,7 +41,7 @@ const AdminListStaffPage = () => {
                     </div>
                 </div>
                 <div className="alscr3">
-                    <button className="admin-add-btn">Add Staff</button>
+                    <button className="admin-add-btn" onClick={() => navigateHook(routes.admin.staff.add)}>Add Staff</button>
                 </div>
                 <div className="alscr4">
                     <table className="table">
@@ -54,6 +57,9 @@ const AdminListStaffPage = () => {
                                     Create Date
                                 </th>
                                 <th className="table-head-cell">
+                                    Active
+                                </th>
+                                <th className="table-head-cell">
                                     Action
                                 </th>
                             </tr>
@@ -63,6 +69,20 @@ const AdminListStaffPage = () => {
                                 <td className='table-body-cell'>1</td>
                                 <td className='table-body-cell'>A</td>
                                 <td className='table-body-cell'>7/1</td>
+                                <td className='table-body-cell'>
+                                    <SlideToggle />
+                                </td>
+                                <td className="table-body-cell">
+                                    H
+                                </td>
+                            </tr>
+                            <tr className="table-body-row">
+                                <td className='table-body-cell'>1</td>
+                                <td className='table-body-cell'>A</td>
+                                <td className='table-body-cell'>7/1</td>
+                                <td className='table-body-cell'>
+                                    <SlideToggle />
+                                </td>
                                 <td className="table-body-cell">
                                     H
                                 </td>

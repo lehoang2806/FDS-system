@@ -1,6 +1,6 @@
 import AdminBasicLayout from "@/layout/Admin/AdminBasicLayout";
 import { AdminDashboardPage } from "@/pages/Admin";
-import { AdminListStaffPage } from "@/pages/Admin/Staff";
+import { AdminAddStaffPage, AdminListStaffPage } from "@/pages/Admin/Staff";
 import { RouteObject } from "react-router-dom";
 
 const routeAdmin: RouteObject[] = [
@@ -13,8 +13,12 @@ const routeAdmin: RouteObject[] = [
                 element: <AdminDashboardPage/>
             },
             {
-                path: "staff/list",
+                path: "staff",
                 element: <AdminListStaffPage/>
+            },
+            {
+                path: "staff/add",
+                element: <AdminAddStaffPage/>
             }
         ]
     }
