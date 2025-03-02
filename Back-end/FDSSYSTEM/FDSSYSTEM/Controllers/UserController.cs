@@ -1,8 +1,10 @@
 ﻿using FDSSYSTEM.Database;
+using FDSSYSTEM.DTOs;
 using FDSSYSTEM.Helpers;
 using FDSSYSTEM.Models;
 using FDSSYSTEM.Repositories.UserRepository;
 using FDSSYSTEM.Services.UserService;
+using Mapster;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
@@ -33,8 +35,17 @@ namespace FDSSYSTEM.Controllers
         {
             try
             {
+               // List<UserProfileDto> rs =new List<UserProfileDto>();
                 var users = await _userService.GetAllUser();
-                return Ok(users);
+                //foreach (var user in users)
+                //{
+                //    rs.Add(new UserProfileDto
+                //    {
+                //        Email = user.Email
+                //    });
+
+                //}
+                return Ok(users.Adapt<List<UserProfileDto>>());
             }
             catch (Exception ex)
             {

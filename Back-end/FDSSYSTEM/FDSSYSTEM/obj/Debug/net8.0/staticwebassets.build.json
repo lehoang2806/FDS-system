@@ -1,12 +1,11 @@
 {
   "Version": 1,
-  "Hash": "rC81TAg1kMo8GaWhEIuLES6u3+8tE1x//NHksvPpJfE=",
+  "Hash": "zZSApOTbIATFiw3vaIxXmMgwi35dwANdEicjETJKVJU=",
   "Source": "FDSSYSTEM",
   "BasePath": "_content/FDSSYSTEM",
   "Mode": "Default",
   "ManifestType": "Build",
   "ReferencedProjectsConfiguration": [],
   "DiscoveryPatterns": [],
-  "Assets": [],
-  "Endpoints": []
+  "Assets": []
 }
