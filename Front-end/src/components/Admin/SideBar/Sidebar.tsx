@@ -41,6 +41,17 @@ const AdminSidebar: FC = () => {
                             <span>Dashboard</span>
                         </div>
                     </Link>
+                    <Link
+                        to={routes.admin.staff.list}
+                        className={classNames('ascr2-nav-item', {
+                            'nav-active': location.pathname === routes.admin.staff.list,
+                        })}
+                    >
+                        <div className="ascr2-nav-link">
+                            <DashboardtIcon className="ascr2-nav-icon" />
+                            <span>Staff</span>
+                        </div>
+                    </Link>
                 </div>
             </div>
         </nav>
