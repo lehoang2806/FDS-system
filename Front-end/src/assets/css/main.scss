@@ -26,6 +26,10 @@
 @use "admin/staff/list-staff.scss";
 @use "admin/staff/add-staff.scss";
 @use "admin/staff/detail-staff.scss";
+@use "admin/campaign/staff/list-campaign-staff.scss";
+@use "admin/campaign/staff/detail-campaign-staff.scss";
+@use "admin/campaign/donor/list-campaign-donor.scss";
+@use "admin/campaign/donor/detail-campaign-donor.scss";
 
 @use "./card/campaign-card.scss";
 @use "./card/hightlight-card.scss";

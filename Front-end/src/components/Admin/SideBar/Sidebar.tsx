@@ -9,6 +9,15 @@ const AdminSidebar: FC = () => {
 
     const sidebarRef = useRef<HTMLDivElement | null>(null);
 
+    const dropdownRef = useRef<HTMLDivElement | null>(null);
+
+    const handleDropdownToggle = (event: React.MouseEvent<HTMLElement>) => {
+        const dropdown = event.currentTarget.nextElementSibling as HTMLElement;
+        dropdown.classList.toggle('open');
+
+        const arrowIcon = event.currentTarget.querySelector('.src2-arrow') as HTMLElement;
+        arrowIcon.classList.toggle('rotate-180');
+    };
 
     const handleHover = () => {
         if (sidebarRef.current && sidebarRef.current.classList.contains('sidebar-collapsed')) {
@@ -52,6 +61,39 @@ const AdminSidebar: FC = () => {
                             <span>Staff</span>
                         </div>
                     </Link>
+                    <div
+                        className="ascr2-nav-item asrc2-nav-dropdown"
+                        onClick={handleDropdownToggle}
+                    >
+                        <DashboardtIcon className="ascr2-nav-icon" />
+                        <span>Campaign</span>
+                    </div>
+                    <div ref={dropdownRef} className={classNames("asrc2-nav-dropdown-content", {
+                        'open': location.pathname.startsWith(routes.admin.campaign.staff.list || routes.admin.campaign.donor.list),
+                    })}>
+                        <Link
+                            to={routes.admin.campaign.staff.list}
+                            className={classNames('ascr2-nav-item', {
+                                'nav-active': location.pathname === routes.admin.campaign.staff.list,
+                            })}
+                        >
+                            <div className="ascr2-nav-link">
+                                <DashboardtIcon className="ascr2-nav-icon" />
+                                <span>Staff</span>
+                            </div>
+                        </Link>
+                        <Link
+                            to={routes.admin.campaign.donor.list}
+                            className={classNames('ascr2-nav-item', {
+                                'nav-active': location.pathname === routes.admin.campaign.donor.list,
+                            })}
+                        >
+                            <div className="ascr2-nav-link">
+                                <DashboardtIcon className="ascr2-nav-icon" />
+                                <span>Donor</span>
+                            </div>
+                        </Link>
+                    </div>
                 </div>
             </div>
         </nav>

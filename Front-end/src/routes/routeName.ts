@@ -31,6 +31,16 @@ export const routes = {
             list: "/admin/staff",
             add: "/admin/staff/add",
             detail: "/admin/staff/:id/detail"
+        },
+        campaign: {
+            staff: {
+                list: "/admin/campaign/staff",
+                detail: "/admin/campaign/staff/:id/detail"
+            },
+            donor: {
+                list: "/admin/campaign/donor",
+                detail: "/admin/campaign/donor/:id/detail"
+            }
         }
     }
 }
