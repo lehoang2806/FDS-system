@@ -44,7 +44,7 @@ const AdminSidebar: FC = () => {
                     <Link
                         to={routes.admin.staff.list}
                         className={classNames('ascr2-nav-item', {
-                            'nav-active': location.pathname === routes.admin.staff.list,
+                            'nav-active': location.pathname.startsWith(routes.admin.staff.list),
                         })}
                     >
                         <div className="ascr2-nav-link">

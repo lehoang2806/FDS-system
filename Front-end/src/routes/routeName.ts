@@ -28,7 +28,8 @@ export const routes = {
     admin: {
         dashboard: "/admin",
         staff: {
-            list: "/admin/staff/list"
+            list: "/admin/staff",
+            add: "/admin/staff/add"
         }
     }
 }
