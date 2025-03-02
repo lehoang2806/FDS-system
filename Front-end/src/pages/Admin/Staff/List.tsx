@@ -4,6 +4,11 @@ import { navigateHook } from "@/routes/RouteApp"
 import { routes } from "@/routes/routeName"
 
 const AdminListStaffPage = () => {
+    const handleToDetail = (campaignId: string) => {
+        const url = routes.admin.staff.detail.replace(":id", campaignId);
+        return navigateHook(url)
+    }
+
     return (
         <section id="admin-list-staff" className="admin-section">
             <div className="admin-container als-container">
@@ -41,7 +46,7 @@ const AdminListStaffPage = () => {
                     </div>
                 </div>
                 <div className="alscr3">
-                    <button className="admin-add-btn" onClick={() => navigateHook(routes.admin.staff.add)}>Add Staff</button>
+                    <button className="admin-add-btn" onClick={() => handleToDetail("1")}>Add Staff</button>
                 </div>
                 <div className="alscr4">
                     <table className="table">
@@ -73,7 +78,7 @@ const AdminListStaffPage = () => {
                                     <SlideToggle />
                                 </td>
                                 <td className="table-body-cell">
-                                    H
+                                    <button onClick={() => navigateHook(routes.admin.staff.detail)}>view</button>
                                 </td>
                             </tr>
                             <tr className="table-body-row">

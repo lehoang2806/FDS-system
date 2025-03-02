@@ -29,7 +29,8 @@ export const routes = {
         dashboard: "/admin",
         staff: {
             list: "/admin/staff",
-            add: "/admin/staff/add"
+            add: "/admin/staff/add",
+            detail: "/admin/staff/:id/detail"
         }
     }
 }
