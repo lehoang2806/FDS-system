@@ -1,5 +1,6 @@
 import AdminBasicLayout from "@/layout/Admin/AdminBasicLayout";
 import { AdminDashboardPage } from "@/pages/Admin";
+import { AdminDetailCampaignPage, AdminListCampaignPage } from "@/pages/Admin/Campaign";
 import { AdminDetailCampaignDonorPage, AdminListCampaignDonorPage } from "@/pages/Admin/Campaign/Donor";
 import { AdminDetailCampaignStaffPage, AdminListCampaignStaffPage } from "@/pages/Admin/Campaign/Staff";
 import { AdminDetailNewsPage, AdminListNewsPage } from "@/pages/Admin/News";
@@ -27,6 +28,14 @@ const routeAdmin: RouteObject[] = [
             {
                 path: "staff/:id/detail",
                 element: <AdminDetailStaffPage/>
+            },
+            {
+                path: "campaign",
+                element: <AdminListCampaignPage/>
+            },
+            {
+                path: "campaign/:id/detail",
+                element: <AdminDetailCampaignPage/>
             },
             {
                 path: "campaign/staff",

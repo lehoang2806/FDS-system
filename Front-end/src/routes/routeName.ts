@@ -33,6 +33,8 @@ export const routes = {
             detail: "/admin/staff/:id/detail"
         },
         campaign: {
+            list: "/admin/campaign",
+            detail: "/admin/campaign/:id/detail",
             staff: {
                 list: "/admin/campaign/staff",
                 detail: "/admin/campaign/staff/:id/detail"
