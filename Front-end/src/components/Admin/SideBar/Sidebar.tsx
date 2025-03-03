@@ -1,4 +1,4 @@
-import { DashboardtIcon } from '@/assets/icons';
+import { CampaignIcon, DashboardtIcon, ForumIcon, NewsIcon, PostIcon, StaffIcon, UserIcon } from '@/assets/icons';
 import { FC, useRef } from 'react'
 import { Link, useLocation } from 'react-router-dom';
 import classNames from 'classnames';
@@ -57,7 +57,7 @@ const AdminSidebar: FC = () => {
                         })}
                     >
                         <div className="ascr2-nav-link">
-                            <DashboardtIcon className="ascr2-nav-icon" />
+                            <StaffIcon className="ascr2-nav-icon" />
                             <span>Staff</span>
                         </div>
                     </Link>
@@ -65,7 +65,7 @@ const AdminSidebar: FC = () => {
                         className="ascr2-nav-item asrc2-nav-dropdown"
                         onClick={handleDropdownToggle}
                     >
-                        <DashboardtIcon className="ascr2-nav-icon" />
+                        <CampaignIcon className="ascr2-nav-icon" />
                         <span>Campaign</span>
                     </div>
                     <div ref={dropdownRef} className={classNames("asrc2-nav-dropdown-content", {
@@ -78,7 +78,7 @@ const AdminSidebar: FC = () => {
                             })}
                         >
                             <div className="ascr2-nav-link">
-                                <DashboardtIcon className="ascr2-nav-icon" />
+                                <StaffIcon className="ascr2-nav-icon" />
                                 <span>Staff</span>
                             </div>
                         </Link>
@@ -89,7 +89,7 @@ const AdminSidebar: FC = () => {
                             })}
                         >
                             <div className="ascr2-nav-link">
-                                <DashboardtIcon className="ascr2-nav-icon" />
+                                <UserIcon className="ascr2-nav-icon" />
                                 <span>Donor</span>
                             </div>
                         </Link>
@@ -101,7 +101,7 @@ const AdminSidebar: FC = () => {
                         })}
                     >
                         <div className="ascr2-nav-link">
-                            <DashboardtIcon className="ascr2-nav-icon" />
+                            <NewsIcon className="ascr2-nav-icon" />
                             <span>News</span>
                         </div>
                     </Link>
@@ -109,7 +109,7 @@ const AdminSidebar: FC = () => {
                         className="ascr2-nav-item asrc2-nav-dropdown"
                         onClick={handleDropdownToggle}
                     >
-                        <DashboardtIcon className="ascr2-nav-icon" />
+                        <PostIcon className="ascr2-nav-icon" />
                         <span>Post</span>
                     </div>
                     <div ref={dropdownRef} className={classNames("asrc2-nav-dropdown-content", {
@@ -122,7 +122,7 @@ const AdminSidebar: FC = () => {
                             })}
                         >
                             <div className="ascr2-nav-link">
-                                <DashboardtIcon className="ascr2-nav-icon" />
+                                <ForumIcon className="ascr2-nav-icon" />
                                 <span>Forum</span>
                             </div>
                         </Link>
@@ -133,7 +133,7 @@ const AdminSidebar: FC = () => {
                             })}
                         >
                             <div className="ascr2-nav-link">
-                                <DashboardtIcon className="ascr2-nav-icon" />
+                                <UserIcon className="ascr2-nav-icon" />
                                 <span>User</span>
                             </div>
                         </Link>
@@ -144,7 +144,7 @@ const AdminSidebar: FC = () => {
                             })}
                         >
                             <div className="ascr2-nav-link">
-                                <DashboardtIcon className="ascr2-nav-icon" />
+                                <StaffIcon className="ascr2-nav-icon" />
                                 <span>Staff</span>
                             </div>
                         </Link>
