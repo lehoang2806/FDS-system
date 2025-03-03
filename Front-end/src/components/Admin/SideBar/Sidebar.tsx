@@ -69,12 +69,25 @@ const AdminSidebar: FC = () => {
                         <span>Campaign</span>
                     </div>
                     <div ref={dropdownRef} className={classNames("asrc2-nav-dropdown-content", {
-                        'open': location.pathname.startsWith(routes.admin.campaign.staff.list || routes.admin.campaign.donor.list),
+                        'open': location.pathname.startsWith(routes.admin.campaign.list),
                     })}>
+                        <Link
+                            to={routes.admin.campaign.list}
+                            className={classNames('ascr2-nav-item', {
+                                'nav-active': location.pathname.startsWith(routes.admin.campaign.list) &&
+                                              !location.pathname.startsWith(routes.admin.campaign.staff.list) &&
+                                              !location.pathname.startsWith(routes.admin.campaign.donor.list),
+                            })}
+                        >
+                            <div className="ascr2-nav-link">
+                                <StaffIcon className="ascr2-nav-icon" />
+                                <span>All</span>
+                            </div>
+                        </Link>
                         <Link
                             to={routes.admin.campaign.staff.list}
                             className={classNames('ascr2-nav-item', {
-                                'nav-active': location.pathname === routes.admin.campaign.staff.list,
+                                'nav-active': location.pathname.startsWith(routes.admin.campaign.staff.list),
                             })}
                         >
                             <div className="ascr2-nav-link">
@@ -85,7 +98,7 @@ const AdminSidebar: FC = () => {
                         <Link
                             to={routes.admin.campaign.donor.list}
                             className={classNames('ascr2-nav-item', {
-                                'nav-active': location.pathname === routes.admin.campaign.donor.list,
+                                'nav-active': location.pathname.startsWith(routes.admin.campaign.donor.list),
                             })}
                         >
                             <div className="ascr2-nav-link">
