@@ -45,6 +45,11 @@ export const routes = {
         news: {
             list: "/admin/news",
             detail: "/admin/news/:id/detail"
+        },
+        post: {
+            forum: "/admin/post",
+            user: "/admin/post/user",
+            staff: "/admin/post/staff",
         }
     }
 }
