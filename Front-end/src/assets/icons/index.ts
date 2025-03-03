@@ -7,5 +7,27 @@ import DashboardtIcon from "./dashboard-icon.svg?react";
 import TotalIcon from "./total-icon.svg?react";
 import BlockIcon from "./block-icon.svg?react";
 import ActiveIcon from "./active-icon.svg?react";
+import CampaignIcon from "./campaign-icon.svg?react";
+import StaffIcon from "./staff-icon.svg?react";
+import UserIcon from "./user-icon.svg?react";
+import NewsIcon from "./news-icon.svg?react";
+import ForumIcon from "./forum-icon.svg?react";
+import PostIcon from "./post-icon.svg?react";
 
-export { MenuIcon, NotificationIcon, SearchIcon, FarvoriteIcon, CommentIcon, DashboardtIcon, TotalIcon, BlockIcon, ActiveIcon };
+export {
+    MenuIcon,
+    NotificationIcon,
+    SearchIcon,
+    FarvoriteIcon,
+    CommentIcon,
+    DashboardtIcon,
+    TotalIcon,
+    BlockIcon,
+    ActiveIcon,
+    CampaignIcon,
+    StaffIcon,
+    UserIcon,
+    NewsIcon,
+    ForumIcon,
+    PostIcon
+};
