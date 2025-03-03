@@ -3,6 +3,7 @@ import { AdminDashboardPage } from "@/pages/Admin";
 import { AdminDetailCampaignDonorPage, AdminListCampaignDonorPage } from "@/pages/Admin/Campaign/Donor";
 import { AdminDetailCampaignStaffPage, AdminListCampaignStaffPage } from "@/pages/Admin/Campaign/Staff";
 import { AdminDetailNewsPage, AdminListNewsPage } from "@/pages/Admin/News";
+import { AdminForumPostPage, AdminStaffPostPage, AdminUserPostPage } from "@/pages/Admin/Post";
 import { AdminAddStaffPage, AdminDetailStaffPage, AdminListStaffPage } from "@/pages/Admin/Staff";
 import { RouteObject } from "react-router-dom";
 
@@ -50,6 +51,18 @@ const routeAdmin: RouteObject[] = [
             {
                 path: "news/:id/detail",
                 element: <AdminDetailNewsPage/>
+            },
+            {
+                path: "post",
+                element: <AdminForumPostPage/>
+            },
+            {
+                path: "post/user",
+                element: <AdminUserPostPage/>
+            },
+            {
+                path: "post/staff",
+                element: <AdminStaffPostPage/>
             }
         ]
     }

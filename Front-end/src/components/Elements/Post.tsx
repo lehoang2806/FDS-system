@@ -1,6 +1,7 @@
 import { CommentIcon, FarvoriteIcon } from "@/assets/icons"
+import { FC } from "react"
 
-const Post = () => {
+const Post: FC<PostProps> = ({type = 1}) => {
     return (
         <div className="post-container">
             <div className="pcr1">
@@ -16,7 +17,8 @@ const Post = () => {
                 <div className="pcr2-content">Nội dung bài viết</div>
                 <div className="pcr2-img"></div>
             </div>
-            <div className="pcr3">
+            {type === 1 ? (
+                <div className="pcr3">
                 <div className="pcr3c1">
                     <FarvoriteIcon className="pcr3-icon"/>
                     <CommentIcon className="pcr3-icon"/>
@@ -27,6 +29,13 @@ const Post = () => {
                     <p>0 bình luận</p>
                 </div>
             </div>
+            ) : (
+                <div className="pcr3">
+                    <button className="reject-btn">Reject</button>
+                    <button className="approve-btn">Approve</button>
+                </div>
+            )}
+            
         </div>
     )
 }

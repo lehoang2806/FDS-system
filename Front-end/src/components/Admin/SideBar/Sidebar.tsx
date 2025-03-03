@@ -105,6 +105,50 @@ const AdminSidebar: FC = () => {
                             <span>News</span>
                         </div>
                     </Link>
+                    <div
+                        className="ascr2-nav-item asrc2-nav-dropdown"
+                        onClick={handleDropdownToggle}
+                    >
+                        <DashboardtIcon className="ascr2-nav-icon" />
+                        <span>Post</span>
+                    </div>
+                    <div ref={dropdownRef} className={classNames("asrc2-nav-dropdown-content", {
+                        'open': location.pathname.startsWith(routes.admin.post.forum),
+                    })}>
+                        <Link
+                            to={routes.admin.post.forum}
+                            className={classNames('ascr2-nav-item', {
+                                'nav-active': location.pathname === routes.admin.post.forum,
+                            })}
+                        >
+                            <div className="ascr2-nav-link">
+                                <DashboardtIcon className="ascr2-nav-icon" />
+                                <span>Forum</span>
+                            </div>
+                        </Link>
+                        <Link
+                            to={routes.admin.post.user}
+                            className={classNames('ascr2-nav-item', {
+                                'nav-active': location.pathname === routes.admin.post.user,
+                            })}
+                        >
+                            <div className="ascr2-nav-link">
+                                <DashboardtIcon className="ascr2-nav-icon" />
+                                <span>User</span>
+                            </div>
+                        </Link>
+                        <Link
+                            to={routes.admin.post.staff}
+                            className={classNames('ascr2-nav-item', {
+                                'nav-active': location.pathname === routes.admin.post.staff,
+                            })}
+                        >
+                            <div className="ascr2-nav-link">
+                                <DashboardtIcon className="ascr2-nav-icon" />
+                                <span>Staff</span>
+                            </div>
+                        </Link>
+                    </div>
                 </div>
             </div>
         </nav>
