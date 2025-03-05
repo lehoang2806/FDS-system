@@ -46,7 +46,7 @@ const AdminListStaffPage = () => {
                     </div>
                 </div>
                 <div className="alscr3">
-                    <button className="admin-add-btn" onClick={() => handleToDetail("1")}>Add Staff</button>
+                    <button className="admin-add-btn" onClick={() => navigateHook(routes.admin.staff.add)}>Add Staff</button>
                 </div>
                 <div className="alscr4">
                     <table className="table">
@@ -78,7 +78,7 @@ const AdminListStaffPage = () => {
                                     <SlideToggle />
                                 </td>
                                 <td className="table-body-cell">
-                                    <button onClick={() => navigateHook(routes.admin.staff.detail)}>view</button>
+                                    <button onClick={() => handleToDetail("1")}>view</button>
                                 </td>
                             </tr>
                             <tr className="table-body-row">
