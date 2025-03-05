@@ -1,83 +1,49 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using FDSSYSTEM.Models;
+using FDSSYSTEM.Services.NewService;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace FDSSYSTEM.Controllers
 {
+    [Route("api/news")]
+    [ApiController]
     public class NewController : Controller
     {
-        // GET: NewController
-        public ActionResult Index()
-        {
-            return View();
-        }
+        //private readonly INewsService _newsService;
 
-        // GET: NewController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
+        //public NewsController(INewsService newsService)
+        //{
+        //    _newsService = newsService;
+        //}
 
-        // GET: NewController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
+        //[HttpGet]
+        //public async Task<ActionResult<List<News>>> GetAll() =>
+        //    Ok(await _newsService.GetAll());
 
-        // POST: NewController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
+        //[HttpGet("{id}")]
+        //public async Task<ActionResult<News>> GetById(string id) =>
+        //    Ok(await _newsService.GetById(id));
 
-        // GET: NewController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
+        //[HttpPost]
+        //public async Task<IActionResult> Create([FromBody] News news)
+        //{
+        //    await _newsService.Create(news);
+        //    return CreatedAtAction(nameof(GetById), new { id = news.Id }, news);
+        //}
 
-        // POST: NewController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
+        //[HttpPut("{id}")]
+        //public async Task<IActionResult> Update(string id, [FromBody] News news)
+        //{
+        //    await _newsService.Update(id, news);
+        //    return NoContent();
+        //}
 
-        // GET: NewController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: NewController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
+        //[HttpDelete("{id}")]
+        //public async Task<IActionResult> Delete(string id)
+        //{
+        //    await _newsService.Delete(id);
+        //    return NoContent();
+        //}
     }
 }

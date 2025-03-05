@@ -4,7 +4,7 @@
     {
         public string Id { get; set; }
 
-        public int AccountId { get; set; }
+        public string AccountId { get; set; }
 
         public string Email { get; set; } = null!;
 

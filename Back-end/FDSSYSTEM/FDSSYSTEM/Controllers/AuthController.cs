@@ -1,6 +1,7 @@
 ﻿using FDSSYSTEM.DTOs;
 using FDSSYSTEM.Helpers;
 using FDSSYSTEM.Services.UserService;
+using Mapster;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.Scripting;
@@ -31,7 +32,8 @@ namespace FDSSYSTEM.Controllers
                 UserEmail =user.Email,
                 Role = user.RoleId.ToString()
             });
-            return Ok(new { token });
+
+            return Ok(new { token, UserInfo= user.Adapt<UserProfileDto>() });
         }
 
         [HttpPost("register")]

@@ -1,83 +1,38 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using FDSSYSTEM.Services.PostService;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FDSSYSTEM.Controllers
 {
-    public class AdminController1 : Controller
+    [Authorize(Roles = "Admin")]
+    public class AdminController : Controller
     {
-        // GET: AdminController1
-        public ActionResult Index()
-        {
-            return View();
-        }
+        //private readonly PostService _postService;
 
-        // GET: AdminController1/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
+        //public AdminController(PostService postService)
+        //{
+        //    _postService = postService;
+        //}
 
-        // GET: AdminController1/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
+        //public IActionResult PendingPosts()
+        //{
+        //    var posts = _postService.GetPendingPosts();
+        //    return View(posts);
+        //}
 
-        // POST: AdminController1/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
+        //[HttpPost]
+        //public IActionResult Approve(string id)
+        //{
+        //    _postService.ApprovePost(id);
+        //    return RedirectToAction("PendingPosts");
+        //}
 
-        // GET: AdminController1/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: AdminController1/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: AdminController1/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: AdminController1/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
+        //[HttpPost]
+        //public IActionResult Reject(string id)
+        //{
+        //    _postService.RejectPost(id);
+        //    return RedirectToAction("PendingPosts");
+        //}
     }
 }
