@@ -1,7 +1,11 @@
 import { Button, Card, Table } from 'flowbite-react';
 import { Breadcrumb } from 'flowbite-react';
 
+<<<<<<< HEAD
 export default function ViewUser() {
+=======
+export default function UserDetail() {
+>>>>>>> 34e7958a73a142ef7fd047997a61f60afc756b57
   return (
     <div className="p-6 bg-gray-100 min-h-screen">
       <Breadcrumb aria-label="Default breadcrumb example">
