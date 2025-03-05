@@ -9,6 +9,7 @@ import { DetailNewsPage, ListNewsPage } from "@/pages/System/News";
 import routeUser from "./RouteUser";
 import { PostForumPage } from "@/pages/System/Post";
 import routeAdmin from "./RouteAdmin";
+import { StaffLoginPage } from "@/pages/Statff/staff";
 
 export default function () {
     return (
@@ -71,6 +72,10 @@ export const routerRoot = createBrowserRouter([
     {
         path: "login",
         element: <LoginPage/>
+    },
+    {
+        path: "admin/login",
+        element: <StaffLoginPage/>
     },
     {
         path: "register",
