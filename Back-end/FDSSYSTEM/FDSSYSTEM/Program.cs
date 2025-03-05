@@ -1,7 +1,12 @@
 using FDSSYSTEM.Database;
 using FDSSYSTEM.Helpers;
 using FDSSYSTEM.Options;
+using FDSSYSTEM.Repositories.PostRepository;
+using FDSSYSTEM.Repositories.RoleRepository;
 using FDSSYSTEM.Repositories.UserRepository;
+using FDSSYSTEM.SeedData;
+using FDSSYSTEM.Services.PostService;
+using FDSSYSTEM.Services.RoleService;
 using FDSSYSTEM.Services.UserService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -14,6 +19,12 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSingleton<MongoDbContext>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
+
+builder.Services.AddScoped<IPostRepository, PostRepository>();
+builder.Services.AddScoped<IPostService, PostService>();
+
+builder.Services.AddScoped<IRoleRepository, RoleRepository>();
+builder.Services.AddScoped<IRoleService, RoleService>();
 
 builder.Services.Configure<JwtSetting>(builder.Configuration.GetSection("JwtSettings"));
 builder.Services.AddSingleton<JwtHelper>();
@@ -70,6 +81,13 @@ builder.Services.AddSwaggerGen(c =>
 
 
 var app = builder.Build();
+
+//Default data
+using (var scope = app.Services.CreateScope())
+{
+    var userService = scope.ServiceProvider.GetRequiredService<IUserService>();
+    await SeedData.Initialize(userService);
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

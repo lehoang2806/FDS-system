@@ -21,14 +21,8 @@
     <Folder Include="Repositories\AdminRepository\" />
     <Folder Include="Repositories\StatictisRepository\" />
     <Folder Include="Repositories\StaffRepository\" />
-    <Folder Include="Repositories\PostCommentRepository\" />
-    <Folder Include="Repositories\PostRepository\" />
-    <Folder Include="Repositories\NewRepository\" />
     <Folder Include="Services\AdminService\" />
     <Folder Include="Services\StatictisService\" />
-    <Folder Include="Services\PostCommentService\" />
-    <Folder Include="Services\PostService\" />
-    <Folder Include="Services\NewService\" />
     <Folder Include="Services\StaffService\" />
     <Folder Include="Views\Account\" />
   </ItemGroup>
