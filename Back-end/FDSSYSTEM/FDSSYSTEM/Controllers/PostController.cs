@@ -69,48 +69,26 @@ namespace FDSSYSTEM.Controllers
             }
         }
 
+        [HttpDelete("DeletePost/{id}")]
+        public async Task<ActionResult> DeletePost(string id, PostDto post)
+        {
+            try
+            {
+                var existingPost = await _postService.GetById(id);
+                if (existingPost == null)
+                {
+                    return NotFound();
+                }
 
-        //[HttpGet]
-        //public async Task<ActionResult<List<ForumPost>>> GetAll() =>
-        //    Ok(await _forumService.GetAll());
+                await _postService.Delete(id);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
 
-        //[HttpGet("{id}")]
-        //public async Task<ActionResult<ForumPost>> GetById(string id) =>
-        //    Ok(await _forumService.GetById(id));
 
-        //[HttpPost]
-        //public async Task<IActionResult> Create([FromBody] ForumPost forumPost)
-        //{
-        //    await _forumService.Create(forumPost);
-        //    return CreatedAtAction(nameof(GetById), new { id = forumPost.Id }, forumPost);
-        //}
-
-        //[HttpPut("{id}")]
-        //public async Task<IActionResult> Update(string id, [FromBody] ForumPost forumPost)
-        //{
-        //    await _forumService.Update(id, forumPost);
-        //    return NoContent();
-        //}
-
-        //[HttpDelete("{id}")]
-        //public async Task<IActionResult> Delete(string id)
-        //{
-        //    await _forumService.Delete(id);
-        //    return NoContent();
-        //}
-
-        //[HttpPost("like/{id}")]
-        //public async Task<IActionResult> LikePost(string id)
-        //{
-        //    await _forumService.LikePost(id, User.Identity.Name);
-        //    return Ok("Liked");
-        //}
-
-        //[HttpPost("save/{id}")]
-        //public async Task<IActionResult> SavePost(string id)
-        //{
-        //    await _forumService.SavePost(id, User.Identity.Name);
-        //    return Ok("Saved");
-        //}
     }
 }

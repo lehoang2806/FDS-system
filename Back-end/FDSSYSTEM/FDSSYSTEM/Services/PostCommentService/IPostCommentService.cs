@@ -1,11 +1,13 @@
-﻿using FDSSYSTEM.Models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-namespace FDSSYSTEM.Services.PostCommentService
+using FDSSYSTEM.DTOs;
+using FDSSYSTEM.Models;
+
+public interface IPostCommentService
 {
-    public interface IPostCommentService
-    {
-        Task<List<PostComment>> GetByPostId(string postId);
-        Task Create(PostComment postComment);
-    }
+    Task Create(PostCommentDto comment); // Tạo bình luận mới
+    Task<List<PostComment>> GetByPostId(string postId); // Lấy bình luận theo bài viết
+    Task<PostComment> GetById(string id); // Lấy bình luận theo ID
+    Task Update(string id, PostCommentDto comment); // Cập nhật bình luận
+    Task Delete(string id); // Xóa bình luận
 }

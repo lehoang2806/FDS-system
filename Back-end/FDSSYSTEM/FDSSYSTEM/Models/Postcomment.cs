@@ -9,7 +9,7 @@ public partial class PostComment
 
     public int AccountId { get; set; }
 
-    public int PostId { get; set; }
+    public required string PostId { get; set; }
 
     public string? Content { get; set; }
 
@@ -36,4 +36,5 @@ public partial class PostComment
     public virtual Account Account { get; set; } = null!;
 
     public virtual Post Post { get; set; } = null!;
+    public string CommentId { get; internal set; }
 }

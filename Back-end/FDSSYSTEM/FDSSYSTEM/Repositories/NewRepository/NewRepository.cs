@@ -1,33 +1,46 @@
 ﻿using FDSSYSTEM.Database;
 using FDSSYSTEM.Models;
+using FDSSYSTEM.Repositories.PostRepository;
 using MongoDB.Driver;
-
 
 namespace FDSSYSTEM.Repositories.NewRepository
 {
     public class NewRepository : INewRepository
     {
-        //private readonly IMongoCollection<News> _newsCollection;
+        public Task AddAsync(New entity)
+        {
+            throw new NotImplementedException();
+        }
 
-        //public NewsRepository(MongoDbContext context)
-        //{
-        //    _newsCollection = context.News;
-        //}
+        public Task DeleteAsync(string id)
+        {
+            throw new NotImplementedException();
+        }
 
-        //public async Task<List<News>> GetAll() =>
-        //    await _newsCollection.Find(news => true).ToListAsync();
+        public Task<IEnumerable<New>> GetAllAsync()
+        {
+            throw new NotImplementedException();
+        }
 
-        //public async Task<News> GetById(string id) =>
-        //    await _newsCollection.Find(news => news.Id == id).FirstOrDefaultAsync();
+        public Task<New> GetByIdAsync(string id)
+        {
+            throw new NotImplementedException();
+        }
 
-        //public async Task Create(News news) =>
-        //    await _newsCollection.InsertOneAsync(news);
+        public Task UpdateAsync(string id, New entity)
+        {
+            throw new NotImplementedException();
+        }
 
-        //public async Task Update(string id, News news) =>
-        //    await _newsCollection.ReplaceOneAsync(n => n.Id == id, news);
+        public class PostRepository : MongoRepository<New>, INewRepository
 
-        //public async Task Delete(string id) =>
-        //    await _newsCollection.DeleteOneAsync(n => n.Id == id);
+        {
+            MongoDbContext _dbContext;
+            public PostRepository(MongoDbContext dbContext) : base(dbContext.Database, "New")
+            {
+                _dbContext = dbContext;
+            }
+        }
+
     }
-
 }
