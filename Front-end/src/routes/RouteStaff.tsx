@@ -1,9 +1,4 @@
-import AddCampaign from "@/pages/Statff/staff/AddCampaign";
-import AddNewsPage from "@/pages/Statff/staff/AddNews";
-import CampaignDashboard from "@/pages/Statff/staff/CampaignDashboard";
-import ViewNews from "@/pages/Statff/staff/ViewNews";
-import ViewUser from "@/pages/Statff/staff/ViewUser";
-import { LoginPage } from "@/pages/System";
+import { StaffAddCampaignPage, StaffAddNewsPage, StaffCampaignDashboard, StaffUserDetailPage, StaffViewNewsPage } from "@/pages/Statff/staff";
 import { RouteObject } from "react-router-dom";
 
 const routeStatff: RouteObject[] = [
@@ -12,29 +7,24 @@ const routeStatff: RouteObject[] = [
         element: null,
         children: [
             {
-                path: "AddNews",
-                element: <AddNewsPage />,
-               
+                path: "campaign",
+                element: <StaffCampaignDashboard/>
             },
             {
-                path: "AddCampaign",
-                element: <AddCampaign/>
+                path: "campaign/add",
+                element: <StaffAddCampaignPage/>
             },
             {
-                path: "LoginPage",
-                element: <LoginPage/>
+                path: 'news',
+                element: <StaffViewNewsPage/>
             },
             {
-                path: "ViewNews",
-                element: <ViewNews/>
+                path: 'news/add',
+                element: <StaffAddNewsPage/>
             },
             {
-                path: "ViewUser",
-                element: <ViewUser/>
-            },
-            {
-                path: "CampaignDashboard",
-                element: <CampaignDashboard/>
+                path: 'user/:id/detail',
+                element: <StaffUserDetailPage/>
             }
         ]
     }

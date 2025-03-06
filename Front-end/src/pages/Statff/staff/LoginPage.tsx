@@ -1,6 +1,4 @@
-import React from "react";
-
-const LoginPage = () => {
+const StaffLoginPage = () => {
     return (
         <div className="flex h-screen">
             {/* Left side - Form */}
@@ -41,4 +39,4 @@ const LoginPage = () => {
     );
 };
 
-export default LoginPage;
+export default StaffLoginPage;

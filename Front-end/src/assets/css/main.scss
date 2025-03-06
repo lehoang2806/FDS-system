@@ -21,7 +21,21 @@
 @use "admin/header/admin-header.scss";
 @use "admin/sidebar/admin-sidebar.scss";
 @use "admin/admin.scss";
+@use "admin/table.scss";
 @use "admin/admin-dashboard.scss";
+@use "admin/staff/list-staff.scss";
+@use "admin/staff/add-staff.scss";
+@use "admin/staff/detail-staff.scss";
+@use "admin/campaign/admin-list-campaign.scss";
+@use "admin/campaign/admin-detail-campaign.scss";
+@use "admin/campaign/staff/list-campaign-staff.scss";
+@use "admin/campaign/staff/detail-campaign-staff.scss";
+@use "admin/campaign/donor/list-campaign-donor.scss";
+@use "admin/campaign/donor/detail-campaign-donor.scss";
+@use "admin/news/admin-list-news.scss";
+@use "admin/post/forum-post.scss";
+@use "admin/post/user-post.scss";
+@use "admin/post/staff-post.scss";
 
 @use "./card/campaign-card.scss";
 @use "./card/hightlight-card.scss";
@@ -32,6 +46,7 @@
 @use "./elements/otp.scss";
 @use "./elements/subscriber.scss";
 @use "./elements/post.scss";
+@use "./elements/slide-toggle.scss";
 
 @use "./campaign/list-campaigns.scss";
 @use "./campaign/detail-campaign.scss";

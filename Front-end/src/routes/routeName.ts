@@ -4,6 +4,7 @@ export const routes = {
     otp_auth: "/otp-auth",
     forgot_pass: "/forgot-pass",
     new_pass: "/new-pass",
+    admin_login: "/admin/login",
     user: {
         home: "/",
         campaign: {
@@ -26,6 +27,48 @@ export const routes = {
         new_pass: "/user/new-pass"
     },
     admin: {
-        dashboard: "/admin"
+        dashboard: "/admin",
+        staff: {
+            list: "/admin/staff",
+            add: "/admin/staff/add",
+            detail: "/admin/staff/:id/detail"
+        },
+        campaign: {
+            list: "/admin/campaign",
+            detail: "/admin/campaign/:id/detail",
+            staff: {
+                list: "/admin/campaign/staff",
+                detail: "/admin/campaign/staff/:id/detail"
+            },
+            donor: {
+                list: "/admin/campaign/donor",
+                detail: "/admin/campaign/donor/:id/detail"
+            }
+        },
+        news: {
+            list: "/admin/news",
+            detail: "/admin/news/:id/detail"
+        },
+        post: {
+            forum: "/admin/post",
+            user: "/admin/post/user",
+            staff: "/admin/post/staff",
+        }
+    },
+    staff: {
+        dashboard: "/staff",
+        campaign: {
+            list: "/staff/campaign",
+            add: "/staff/campaign/add",
+            detail: "/staff/campaign/:id/detail"
+        },
+        news: {
+            list: "/staff/news",
+            add: "/staff/news/add",
+            detail: "/staff/news/:id/detail"
+        },
+        user: {
+            detail: "/staff/user/:id/detail"
+        }
     }
 }

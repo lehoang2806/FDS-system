@@ -1,0 +1,120 @@
+#admin-detail-campaign-donor {
+    .adcd-container {
+        .adcdcr1 {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 30px;
+            background: #fff;
+            border-radius: var(--border-radius-12);
+            margin-bottom: 30px;
+
+            h1 {
+                font-size: 18px;
+                font-weight: 700;
+                color: #29343d;
+            }
+
+            p {
+                font-size: 14px;
+                font-weight: 400;
+                color: #29343d;
+
+                .admin-tag {
+                    font-size: 12px;
+                    font-weight: 500;
+                    color: #635bff;
+                    padding: 10px 15px;
+                    background: rgba(99, 91, 255, 0.15);
+                    border-radius: var(--border-radius-12);
+                    margin-left: 10px;
+                }
+            }
+        }
+
+        .adcdcr2 {
+            padding: 20px 30px;
+            background: #fff;
+            border-radius: var(--border-radius-12);
+            margin-bottom: 30px;
+
+            hr {
+                background: #e0e6eb;
+                margin: 24px 0;
+            }
+
+            .adcdcr2r1 {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+
+                h2 {
+                    font-size: 18px;
+                    font-weight: 700;
+                    color: #29343d;
+                }
+
+                .group-btn {
+                    button {
+                        padding: 15px 20px;
+                        font-size: 14px;
+                        font-weight: 500;
+                        color: #fff;
+                        border: none;
+                        border-radius: var(--border-radius-12);
+                        cursor: pointer;
+                        background: #ff6692;
+                    }
+                }
+            }
+
+            .adcdcr2r2 {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+
+                .adcdcr2r2c1,
+                .adcdcr2r2c2 {
+                    h3 {
+                        font-size: 15px;
+                        font-weight: 700;
+                        color: #29343d;
+                        margin-bottom: 10px;
+                    }
+
+                    p {
+                        font-size: 14px;
+                        font-weight: 500;
+                        color: #29343d;
+                    }
+                }
+            }
+
+            .adcdcr2r3 {
+                display: flex;
+                justify-content: space-between;
+                align-items: start;
+
+                .adcdcr2r3c1, .adcdcr2r3c2 {
+                    h3 {
+                        font-size: 15px;
+                        font-weight: 700;
+                        color: #29343d;
+                        margin-bottom: 10px;
+                    }
+
+                    p {
+                        font-size: 14px;
+                        font-weight: 500;
+                        color: #29343d;
+                        margin-bottom: 20px;
+                    }
+                }
+
+                .adcdcr2r3c2 {
+                    text-align: end;
+                }
+            }
+        }
+    }
+}
