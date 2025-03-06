@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace FDSSystem.Models;
+namespace FDSSYSTEM.Models;
 
 public partial class New
 {
@@ -34,6 +34,7 @@ public partial class New
     public string? UserDelete { get; set; }
 
     public DateTime? DateDelete { get; set; }
+    public string CreatedBy { get; set; }  // ID của Staff tạo bài viết
 
     public virtual Account Account { get; set; } = null!;
 
