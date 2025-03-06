@@ -1,17 +1,11 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
-using MongoDB.Bson;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
-namespace FDSSYSTEM.Models;
+namespace FDSSystem.Models;
 
 public partial class Account
 {
-    [BsonId] 
-    [BsonRepresentation(BsonType.ObjectId)] 
-    public string Id { get; set; }
-
-    public string AccountId { get; set; }
+    public int AccountId { get; set; }
 
     public string Email { get; set; } = null!;
 
@@ -48,4 +42,26 @@ public partial class Account
     public int RoleId { get; set; }
 
     public string? Address { get; set; }
+
+    public virtual Role AccountNavigation { get; set; } = null!;
+
+    public virtual ICollection<Event> Events { get; set; } = new List<Event>();
+
+    public virtual ICollection<Feedback> Feedbacks { get; set; } = new List<Feedback>();
+
+    public virtual ICollection<Fooddonation> Fooddonations { get; set; } = new List<Fooddonation>();
+
+    public virtual ICollection<New> News { get; set; } = new List<New>();
+
+    public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
+
+    public virtual ICollection<Postcomment> Postcomments { get; set; } = new List<Postcomment>();
+
+    public virtual ICollection<Postfavourite> Postfavourites { get; set; } = new List<Postfavourite>();
+
+    public virtual ICollection<Postlike> Postlikes { get; set; } = new List<Postlike>();
+
+    public virtual ICollection<Post> Posts { get; set; } = new List<Post>();
+
+    public virtual ICollection<Report> Reports { get; set; } = new List<Report>();
 }

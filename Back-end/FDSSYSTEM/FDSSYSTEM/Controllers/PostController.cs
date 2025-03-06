@@ -1,116 +1,83 @@
-﻿using FDSSYSTEM.DTOs;
-using FDSSYSTEM.Models;
-using FDSSYSTEM.Services.PostService;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+
 namespace FDSSYSTEM.Controllers
 {
-    [Route("api/forum")]
-    [ApiController]
     public class PostController : Controller
     {
-         private readonly IPostService _postService;
-
-        public PostController(IPostService postService)
+        // GET: PostController
+        public ActionResult Index()
         {
-            _postService = postService;
+            return View();
         }
 
-        [HttpPost("CreatePost")]
-        public async Task<ActionResult> CreatePost(PostDto post)
+        // GET: PostController/Details/5
+        public ActionResult Details(int id)
         {
-            try
-            {
-                await _postService.Create(post);
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                return BadRequest();
-            }
+            return View();
         }
 
-        [HttpGet("GetAllPost")]
-        public async Task<ActionResult> GetAllPost()
+        // GET: PostController/Create
+        public ActionResult Create()
         {
-            try
-            {
-                var posts = await _postService.GetAll();
-               
-                return Ok(posts);
-            }
-            catch (Exception ex)
-            {
-
-                return BadRequest();
-
-            }
+            return View();
         }
 
-        [HttpPut("UpdatePost/{id}")]
-        public async Task<ActionResult> UpdatePost(string id, PostDto post)
+        // POST: PostController/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Create(IFormCollection collection)
         {
             try
             {
-                var existingPost = await _postService.GetById(id);
-                if (existingPost == null)
-                {
-                    return NotFound();
-                }
-
-                await _postService.Update(id, post);
-                return Ok();
+                return RedirectToAction(nameof(Index));
             }
-            catch (Exception ex)
+            catch
             {
-                return BadRequest();
+                return View();
             }
         }
 
+        // GET: PostController/Edit/5
+        public ActionResult Edit(int id)
+        {
+            return View();
+        }
 
-        //[HttpGet]
-        //public async Task<ActionResult<List<ForumPost>>> GetAll() =>
-        //    Ok(await _forumService.GetAll());
+        // POST: PostController/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit(int id, IFormCollection collection)
+        {
+            try
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            catch
+            {
+                return View();
+            }
+        }
 
-        //[HttpGet("{id}")]
-        //public async Task<ActionResult<ForumPost>> GetById(string id) =>
-        //    Ok(await _forumService.GetById(id));
+        // GET: PostController/Delete/5
+        public ActionResult Delete(int id)
+        {
+            return View();
+        }
 
-        //[HttpPost]
-        //public async Task<IActionResult> Create([FromBody] ForumPost forumPost)
-        //{
-        //    await _forumService.Create(forumPost);
-        //    return CreatedAtAction(nameof(GetById), new { id = forumPost.Id }, forumPost);
-        //}
-
-        //[HttpPut("{id}")]
-        //public async Task<IActionResult> Update(string id, [FromBody] ForumPost forumPost)
-        //{
-        //    await _forumService.Update(id, forumPost);
-        //    return NoContent();
-        //}
-
-        //[HttpDelete("{id}")]
-        //public async Task<IActionResult> Delete(string id)
-        //{
-        //    await _forumService.Delete(id);
-        //    return NoContent();
-        //}
-
-        //[HttpPost("like/{id}")]
-        //public async Task<IActionResult> LikePost(string id)
-        //{
-        //    await _forumService.LikePost(id, User.Identity.Name);
-        //    return Ok("Liked");
-        //}
-
-        //[HttpPost("save/{id}")]
-        //public async Task<IActionResult> SavePost(string id)
-        //{
-        //    await _forumService.SavePost(id, User.Identity.Name);
-        //    return Ok("Saved");
-        //}
+        // POST: PostController/Delete/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Delete(int id, IFormCollection collection)
+        {
+            try
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            catch
+            {
+                return View();
+            }
+        }
     }
 }

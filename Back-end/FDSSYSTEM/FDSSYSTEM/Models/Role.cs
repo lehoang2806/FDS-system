@@ -1,18 +1,13 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
-using MongoDB.Bson;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
-namespace FDSSYSTEM.Models;
+namespace FDSSystem.Models;
 
 public partial class Role
 {
-    [BsonId]
-    [BsonRepresentation(BsonType.ObjectId)]
-    public string Id { get; set; }
-    public int RoleId { get; set; } 
+    public int RoleId { get; set; }
 
-    public string RoleName { get; set; } = null!;// "Admin", "Staff", "Donor", "Recipient"
+    public string RoleName { get; set; } = null!;
 
     public int? Status { get; set; }
 
@@ -30,4 +25,5 @@ public partial class Role
 
     public DateTime? DateDelete { get; set; }
 
+    public virtual Account? Account { get; set; }
 }

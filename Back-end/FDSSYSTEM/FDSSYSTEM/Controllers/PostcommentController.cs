@@ -1,31 +1,83 @@
-﻿using FDSSYSTEM.Models;
-using FDSSYSTEM.Services.PostCommentService;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+
 namespace FDSSYSTEM.Controllers
 {
-    [Route("api/forum/comments")]
-    [ApiController]
     public class PostcommentController : Controller
     {
-        //private readonly IPostCommentService _commentService;
+        // GET: PostcommentController
+        public ActionResult Index()
+        {
+            return View();
+        }
 
-        //public PostcommentController(IPostCommentService commentService)
-        //{
-        //    _commentService = commentService;
-        //}
+        // GET: PostcommentController/Details/5
+        public ActionResult Details(int id)
+        {
+            return View();
+        }
 
-        //[HttpGet("{postId}")]
-        //public async Task<ActionResult<List<PostComment>>> GetCommentsByPostId(string postId) =>
-        //    Ok(await _commentService.GetByPostId(postId));
+        // GET: PostcommentController/Create
+        public ActionResult Create()
+        {
+            return View();
+        }
 
-        //[HttpPost]
-        //public async Task<IActionResult> Create([FromBody] PostComment postComment)
-        //{
-        //    await _commentService.Create(postComment);
-        //    return CreatedAtAction(nameof(GetCommentsByPostId), new { postId = postComment.ForumPostId }, postComment);
-        //}
+        // POST: PostcommentController/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Create(IFormCollection collection)
+        {
+            try
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            catch
+            {
+                return View();
+            }
+        }
+
+        // GET: PostcommentController/Edit/5
+        public ActionResult Edit(int id)
+        {
+            return View();
+        }
+
+        // POST: PostcommentController/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit(int id, IFormCollection collection)
+        {
+            try
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            catch
+            {
+                return View();
+            }
+        }
+
+        // GET: PostcommentController/Delete/5
+        public ActionResult Delete(int id)
+        {
+            return View();
+        }
+
+        // POST: PostcommentController/Delete/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Delete(int id, IFormCollection collection)
+        {
+            try
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            catch
+            {
+                return View();
+            }
+        }
     }
 }

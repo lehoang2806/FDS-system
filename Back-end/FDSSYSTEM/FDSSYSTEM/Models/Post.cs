@@ -1,25 +1,19 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
-using MongoDB.Bson;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
-namespace FDSSYSTEM.Models;
+namespace FDSSystem.Models;
 
 public partial class Post
 {
-    [BsonId]
-    [BsonRepresentation(BsonType.ObjectId)]
-    public string Id { get; set; }
+    public int PostId { get; set; }
 
-    public string PostId { get; set; }
-
-    public string AccountId { get; set; }
+    public int AccountId { get; set; }
 
     public string? PostText { get; set; }
 
     public string? PostFile { get; set; }
 
-    public string Status { get; set; } = "Pending";  // Mặc định là chờ duyệt
+    public string? Status { get; set; }
 
     public string? UserCreated { get; set; }
 
@@ -36,5 +30,14 @@ public partial class Post
     public DateTime? DateDelete { get; set; }
 
     public int EventId { get; set; }
-    
+
+    public virtual Account Account { get; set; } = null!;
+
+    public virtual ICollection<Postcomment> Postcomments { get; set; } = new List<Postcomment>();
+
+    public virtual ICollection<Postfavourite> Postfavourites { get; set; } = new List<Postfavourite>();
+
+    public virtual ICollection<Postlike> Postlikes { get; set; } = new List<Postlike>();
+
+    public virtual ICollection<Report> Reports { get; set; } = new List<Report>();
 }

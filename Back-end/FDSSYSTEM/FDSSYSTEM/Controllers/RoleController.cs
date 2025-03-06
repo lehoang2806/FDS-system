@@ -1,30 +1,82 @@
-﻿using FDSSYSTEM.DTOs;
-using FDSSYSTEM.Services.RoleService;
-using FDSSYSTEM.Services.UserService;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FDSSYSTEM.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class RoleController : ControllerBase
+    public class RoleController : Controller
     {
-        private readonly IRoleService _roleService;
-        public RoleController(IRoleService roleService)
+        // GET: RoleController
+        public ActionResult Index()
         {
-            _roleService = roleService;
+            return View();
         }
-        [HttpGet("GetPublicRoles")]
-        public async Task<ActionResult> GetPublicRoles()
+
+        // GET: RoleController/Details/5
+        public ActionResult Details(int id)
+        {
+            return View();
+        }
+
+        // GET: RoleController/Create
+        public ActionResult Create()
+        {
+            return View();
+        }
+
+        // POST: RoleController/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Create(IFormCollection collection)
         {
             try
             {
-                return Ok(await _roleService.GetPublicRole());
+                return RedirectToAction(nameof(Index));
             }
-            catch (Exception ex)
+            catch
             {
-                return BadRequest();
+                return View();
+            }
+        }
+
+        // GET: RoleController/Edit/5
+        public ActionResult Edit(int id)
+        {
+            return View();
+        }
+
+        // POST: RoleController/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit(int id, IFormCollection collection)
+        {
+            try
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            catch
+            {
+                return View();
+            }
+        }
+
+        // GET: RoleController/Delete/5
+        public ActionResult Delete(int id)
+        {
+            return View();
+        }
+
+        // POST: RoleController/Delete/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Delete(int id, IFormCollection collection)
+        {
+            try
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            catch
+            {
+                return View();
             }
         }
     }

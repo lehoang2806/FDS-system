@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace FDSSYSTEM.Models;
+namespace FDSSystem.Models;
 
-public partial class PostComment
+public partial class Postcomment
 {
     public int PostCommentId { get; set; }
 
