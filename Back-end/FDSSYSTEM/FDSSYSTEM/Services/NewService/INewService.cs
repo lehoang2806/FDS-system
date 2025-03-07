@@ -1,14 +1,15 @@
-﻿using FDSSYSTEM.Models;
+﻿using FDSSYSTEM.DTOs;
+using FDSSYSTEM.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 namespace FDSSYSTEM.Services.NewService
 {
-    public interface INewsService
+    public interface INewService
     {
-        //Task<List<News>> GetAll();
-        //Task<News> GetById(string id);
-        //Task Create(News news);
-        //Task Update(string id, News news);
-        //Task Delete(string id);
+        Task<List<New>> GetAll();
+        Task<New> GetById(string id);
+        Task Create(NewDto post);
+        Task Update(string id, NewDto post);
+        Task Delete(string id);
     }
 }

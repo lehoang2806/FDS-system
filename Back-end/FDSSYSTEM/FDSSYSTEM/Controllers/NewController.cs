@@ -1,5 +1,7 @@
-﻿using FDSSYSTEM.Models;
+﻿using FDSSYSTEM.DTOs;
+using FDSSYSTEM.Models;
 using FDSSYSTEM.Services.NewService;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -8,42 +10,85 @@ namespace FDSSYSTEM.Controllers
 {
     [Route("api/news")]
     [ApiController]
-    public class NewController : Controller
+    public class NewsController : Controller
     {
-        //private readonly INewsService _newsService;
+        private readonly INewService _newService;
 
-        //public NewsController(INewsService newsService)
-        //{
-        //    _newsService = newsService;
-        //}
+        public NewsController(INewService newsService)
+        {
+            _newService = newsService;
+        }
 
-        //[HttpGet]
-        //public async Task<ActionResult<List<News>>> GetAll() =>
-        //    Ok(await _newsService.GetAll());
+        // Tạo bài viết tin tức
+        [HttpPost("CreateNews")]
+        public async Task<ActionResult> CreateNews(NewDto news)
+        {
+            try
+            {
+                await _newService.Create(news);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
 
-        //[HttpGet("{id}")]
-        //public async Task<ActionResult<News>> GetById(string id) =>
-        //    Ok(await _newsService.GetById(id));
+        // Lấy tất cả tin tức
+        [HttpGet("GetAllNews")]
+        public async Task<ActionResult> GetAllNews()
+        {
+            try
+            {
+                var newsList = await _newService.GetAll();
+                return Ok(newsList);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
 
-        //[HttpPost]
-        //public async Task<IActionResult> Create([FromBody] News news)
-        //{
-        //    await _newsService.Create(news);
-        //    return CreatedAtAction(nameof(GetById), new { id = news.Id }, news);
-        //}
+        // Cập nhật tin tức
+        [HttpPut("UpdateNews/{id}")]
+        public async Task<ActionResult> UpdateNews(string id, NewDto news)
+        {
+            try
+            {
+                var existingNews = await _newService.GetById(id);
+                if (existingNews == null)
+                {
+                    return NotFound();
+                }
 
-        //[HttpPut("{id}")]
-        //public async Task<IActionResult> Update(string id, [FromBody] News news)
-        //{
-        //    await _newsService.Update(id, news);
-        //    return NoContent();
-        //}
+                await _newService.Update(id, news);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
 
-        //[HttpDelete("{id}")]
-        //public async Task<IActionResult> Delete(string id)
-        //{
-        //    await _newsService.Delete(id);
-        //    return NoContent();
-        //}
+        // Xóa tin tức
+        [HttpDelete("DeleteNews/{id}")]
+        public async Task<ActionResult> DeleteNews(string id)
+        {
+            try
+            {
+                var existingNews = await _newService.GetById(id);
+                if (existingNews == null)
+                {
+                    return NotFound();
+                }
+
+                await _newService.Delete(id);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
     }
 }

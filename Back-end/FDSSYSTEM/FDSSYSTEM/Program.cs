@@ -1,14 +1,19 @@
-using FDSSYSTEM.Database;
+﻿using FDSSYSTEM.Database;
 using FDSSYSTEM.Helpers;
 using FDSSYSTEM.Options;
+using FDSSYSTEM.Repositories.NewRepository;
+using FDSSYSTEM.Repositories.PostCommentRepository;
 using FDSSYSTEM.Repositories.PostRepository;
 using FDSSYSTEM.Repositories.RoleRepository;
 using FDSSYSTEM.Repositories.UserRepository;
 using FDSSYSTEM.SeedData;
+using FDSSYSTEM.Services.NewService;
+using FDSSYSTEM.Services.PostCommentService;
 using FDSSYSTEM.Services.PostService;
 using FDSSYSTEM.Services.RoleService;
 using FDSSYSTEM.Services.UserService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
@@ -25,6 +30,12 @@ builder.Services.AddScoped<IPostService, PostService>();
 
 builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 builder.Services.AddScoped<IRoleService, RoleService>();
+
+builder.Services.AddScoped<INewRepository, NewRepository>();
+builder.Services.AddScoped<INewService, NewService>();
+
+builder.Services.AddScoped<IPostCommentRepository, PostCommentRepository>();
+builder.Services.AddScoped<IPostCommentService, PostCommentService>();
 
 builder.Services.Configure<JwtSetting>(builder.Configuration.GetSection("JwtSettings"));
 builder.Services.AddSingleton<JwtHelper>();
@@ -45,6 +56,20 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidAudience = jwtSettings.Audience
         };
     });
+
+
+
+// Thêm CORS (chỉ sử dụng builder, không khai báo lại)
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAllOrigins",
+        policy =>
+        {
+            policy.AllowAnyOrigin()
+                  .AllowAnyMethod()
+                  .AllowAnyHeader();
+        });
+});
 
 
 
@@ -95,6 +120,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+// sử dụng CORS
+app.UseCors("AllowAllOrigins");
 
 app.UseHttpsRedirection();
 
