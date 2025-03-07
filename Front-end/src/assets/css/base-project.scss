@@ -82,6 +82,14 @@ input {
     font-family: "Manrope";
 }
 
+input.is-error {
+    border: 1px solid #ff0000 !important;
+    &:hover, &:focus {
+        outline: unset !important;
+        outline-color: unset !important
+    }
+}
+
 .landing-section {
     padding: 80px 20px;
 }
