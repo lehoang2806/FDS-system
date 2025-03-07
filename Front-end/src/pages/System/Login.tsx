@@ -17,11 +17,11 @@ const LoginPage = () => {
     const dispatch = useAppDispatch();
     const isAuthenticated = useAppSelector(selectIsAuthenticated);
     const initialValues: ILoginEmail = {
-        email: "",
+        userEmail: "",
         password: "",
     };
     const schema = Yup.object().shape({
-        email: Yup.string().email("Invalid email").required("Required"),
+        userEmail: Yup.string().email("Invalid email").required("Required"),
         password: Yup.string().required("Required"),
     });
 
@@ -36,7 +36,7 @@ const LoginPage = () => {
             toast.success("Login successfully");
         }).catch((error) => {
             const errorData = get(error, 'data.message', null);
-            helpers.setErrors({ email: errorData });
+            helpers.setErrors({ userEmail: errorData });
             toast.error(errorData);
         }).finally(() => {
             helpers.setSubmitting(false);
@@ -67,11 +67,11 @@ const LoginPage = () => {
                                         {/* <form className="form"> */}
                                             <div className="form-field">
                                                 <label className="form-label">Email</label>
-                                                <Field name="email" type="email" placeholder="Hãy nhập email cảu bạn" className={classNames("form-input", { "is-error": errors.email && touched.email })} />
+                                                <Field name="userEmail" type="email" placeholder="Hãy nhập email cảu bạn" className={classNames("form-input", { "is-error": errors.userEmail && touched.userEmail })} />
                                             </div>
                                             <div className="form-field">
                                                 <label className="form-label">Mật Khẩu</label>
-                                                <Field name="password" type="password" placeholder="Hãy nhập mật khẩu cảu bạn" className={classNames("form-input", { "is-error": errors.email && touched.email })} />
+                                                <Field name="password" type="password" placeholder="Hãy nhập mật khẩu cảu bạn" className={classNames("form-input", { "is-error": errors.password && touched.password })} />
                                             </div>
                                             <Link to={routes.forgot_pass}>Quên mật khẩu</Link>
                                             <Button loading={isSubmitting} type="submit" title="Đăng nhập" />

@@ -7,7 +7,7 @@ import { AuthResponse, AuthState, UserProfile } from "@/types/auth";
 const initialState: AuthState = {
     isAuthenticated: false,
     token: null,
-    user: null
+    userInfo: null
 };
 
 export const authSlice = createSlice({
@@ -21,17 +21,19 @@ export const authSlice = createSlice({
             state.isAuthenticated = action.payload;
         },
         setUserLogin: (state, action: PayloadAction<UserProfile|null>) => {
-            state.user = action.payload;
+            state.userInfo = action.payload;
         }
     },
     extraReducers: builder => {
         builder.addCase(loginApiThunk.fulfilled, (state, action: PayloadAction<ResponseFromServer<AuthResponse>>) => {
-            let token = get(action, 'payload.data.access_token', null);
-            let dataUser = get(action, 'payload.data.data', null);
+            let token = get(action, 'payload.token', null);
+            let dataUser = get(action, 'payload.userInfo', null);
+
+            console.log(token)
             
             state.token = token;
             state.isAuthenticated = true;
-            state.user = dataUser;
+            state.userInfo = dataUser;
         });
     },
 });

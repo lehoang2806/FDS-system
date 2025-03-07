@@ -3,7 +3,7 @@ import { UserProfile } from "@/types/auth";
 import { RootState } from "./reducer";
 
 export const selectUserLogin: Selector<UserProfile|null> = (state: RootState) => {
-    return state.auth.user;
+    return state.auth.userInfo;
 }
 
 export const selectIsAuthenticated: Selector<boolean> = (state: RootState) => {

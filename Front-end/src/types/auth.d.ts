@@ -1,17 +1,17 @@
 export type AuthState = {
     isAuthenticated: boolean;
     token: string | null;
-    user: UserProfile | null;
+    userInfo: UserProfile | null;
 };
 
 interface ILoginEmail {
-    email: string;
+    userEmail: string;
     password: string;
 }
 
 export type AuthResponse = {
-    data: UserProfile;
-    access_token: string;
+    userInfo: UserProfile;
+    token: string;
 };
 
 export type UserProfile = {
