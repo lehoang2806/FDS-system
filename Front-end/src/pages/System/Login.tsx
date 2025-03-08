@@ -63,20 +63,18 @@ const LoginPage = () => {
                                     isSubmitting
                                 }) => (
                                     <Form onSubmit={handleSubmit} className="form">
-
-                                        {/* <form className="form"> */}
                                         <div className="form-field">
                                             <label className="form-label">Email</label>
                                             <Field name="userEmail" type="email" placeholder="Hãy nhập email cảu bạn" className={classNames("form-input", { "is-error": errors.userEmail && touched.userEmail })} />
+                                            {errors.userEmail && touched.userEmail && <span className="error">{errors.userEmail}</span>}
                                         </div>
                                         <div className="form-field">
                                             <label className="form-label">Mật Khẩu</label>
                                             <Field name="password" type="password" placeholder="Hãy nhập mật khẩu cảu bạn" className={classNames("form-input", { "is-error": errors.password && touched.password })} />
+                                            {errors.password && touched.password && <span className="error">{errors.password}</span>}
                                         </div>
                                         <Link to={routes.forgot_pass}>Quên mật khẩu</Link>
                                         <Button loading={isSubmitting} type="submit" title="Đăng nhập" />
-                                        {/* </form> */}
-
                                     </Form>
                                 )}
                             </Formik>
