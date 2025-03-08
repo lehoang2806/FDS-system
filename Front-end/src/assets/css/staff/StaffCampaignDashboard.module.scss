@@ -1,0 +1,74 @@
+.container {
+    padding: 24px;
+    background-color: #f8f9fa;
+    min-height: 100vh;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+
+    h2 {
+        font-size: 1.5rem;
+        font-weight: bold;
+    }
+}
+
+.createButton {
+    background-color: #6f42c1;
+    color: white;
+    padding: 10px 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    &:hover {
+        background-color: #5a32a3;
+    }
+}
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.tableBody {
+    .tableRow {
+        background-color: white;
+    }
+}
+
+.approve {
+    background-color: #28a745;
+    color: white;
+}
+
+.reject {
+    background-color: #dc3545;
+    color: white;
+}
+
+.pending {
+    background-color: #ffc107;
+    color: black;
+}
+
+.actionButton {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.icon {
+    width: 20px;
+    height: 20px;
+    color: #333;
+}
+
+.pagination {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 16px;
+}

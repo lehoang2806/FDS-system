@@ -1,44 +1,136 @@
-import { Button, Card } from 'flowbite-react';
+import "../../../assets/css/staff/StaffViewNewsPage.scss";
+
+import { Card, Table, Button, Pagination, TextInput } from "flowbite-react";
+import {
+  FaSearch,
+  FaPlus,
+  FaChevronLeft,
+  FaChevronRight,
+  FaEye,
+} from "react-icons/fa";
 
 export default function StaffViewNewsPage() {
-    return (
-        <div className="min-h-screen bg-gray-100 p-6">
-            <div className="max-w-5xl mx-auto bg-white p-6 shadow rounded-lg">
-                <h2 className="text-xl font-semibold mb-4">View News</h2>
+  return (
+    <div className="news-container">
+      {/* Tiêu đề */}
+      <h2 className="page-title">News</h2>
 
-                <Card>
-                    <div className="flex justify-between items-center">
-                        <span className="text-lg font-semibold">#101</span>
-                        <span className="text-sm text-gray-500">Created Date: Tuesday, February 25, 2025</span>
-                    </div>
+      {/* Thống kê */}
+      <div className="stats-container">
+        {statsData.map((stat) => (
+          <Card key={stat.id} className={`stat-card ${stat.className}`}>
+            <p className="stat-title">{stat.title}</p>
+            <p className="stat-number">{stat.number} News</p>
+          </Card>
+        ))}
+      </div>
 
-                    <div className="mt-4">
-                        <p><strong>Campaign Status:</strong> <span className="text-green-600">Approved</span></p>
-                    </div>
+      {/* Tìm kiếm và tạo tin mới */}
+      <div className="actions-container">
+        <TextInput
+          icon={FaSearch}
+          placeholder="Search News"
+          className="search-input"
+        />
+        <Button className="create-news-button">
+          <FaPlus className="icon" /> Create News
+        </Button>
+      </div>
 
-                    <div className="mt-4">
-                        <p className="font-semibold">News Information:</p>
-                        <p>Title: <span className="text-gray-700">Sample Title</span></p>
-                        <p>Content: <span className="text-gray-700">Lorem ipsum dolor sit amet...</span></p>
-                    </div>
+      {/* Bảng tin tức */}
+      <Card className="news-table-container">
+        <Table className="news-table">
+          <Table.Head>
+            <Table.HeadCell>
+              <input type="checkbox" />
+            </Table.HeadCell>
+            <Table.HeadCell>Id</Table.HeadCell>
+            <Table.HeadCell>Title</Table.HeadCell>
+            <Table.HeadCell>Content</Table.HeadCell>
+            <Table.HeadCell>Interested</Table.HeadCell>
+            <Table.HeadCell>Status</Table.HeadCell>
+            <Table.HeadCell>Action</Table.HeadCell>
+          </Table.Head>
+          <Table.Body>
+            {newsData.map((item) => (
+              <Table.Row key={item.id}>
+                <Table.Cell>
+                  <input type="checkbox" />
+                </Table.Cell>
+                <Table.Cell>{item.id}</Table.Cell>
+                <Table.Cell>{item.title}</Table.Cell>
+                <Table.Cell>{item.content}</Table.Cell>
+                <Table.Cell>{item.interested}</Table.Cell>
+                <Table.Cell>
+                  <span className={`status-badge ${item.status.toLowerCase()}`}>
+                    {item.status}
+                  </span>
+                </Table.Cell>
+                <Table.Cell>
+                  <FaEye className="action-icon" />
+                </Table.Cell>
+              </Table.Row>
+            ))}
+          </Table.Body>
+        </Table>
 
-                    <div className="mt-4">
-                        <p className="font-semibold">Interested Information:</p>
-                        <div className="border p-3 rounded-lg">
-                            <p><strong>User Name:</strong> Courage</p>
-                            <p><strong>Registration Date:</strong> 90</p>
-                        </div>
-                    </div>
-
-                    <div className="mt-6 flex justify-between items-center">
-                        <p className="text-lg font-bold">Grand Total: 99</p>
-                        <div className="flex space-x-3">
-                            <Button color="gray">Back to News</Button>
-                            <Button color="blue">Edit News</Button>
-                        </div>
-                    </div>
-                </Card>
-            </div>
+        {/* Thanh phân trang */}
+        <div className="pagination-container">
+          <button className="button pagination">
+            <FaChevronLeft className="mr-1" /> Previous
+          </button>
+          <button className="button pagination">
+            Next <FaChevronRight className="ml-1" />
+          </button>
         </div>
-    );
+      </Card>
+    </div>
+  );
 }
+
+// Dữ liệu thống kê
+const statsData = [
+  { id: 1, title: "Total", number: 7, className: "total" },
+  { id: 2, title: "Reject", number: 3, className: "reject" },
+  { id: 3, title: "Approve", number: 3, className: "approve" },
+  { id: 4, title: "Pending", number: 1, className: "pending" },
+];
+
+// Dữ liệu mẫu
+const newsData = [
+  {
+    id: 101,
+    title: "A",
+    content: "A@gmail.com",
+    interested: "Recipient",
+    status: "Approve",
+  },
+  {
+    id: 102,
+    title: "A",
+    content: "A@gmail.com",
+    interested: "Donor",
+    status: "Reject",
+  },
+  {
+    id: 103,
+    title: "A",
+    content: "A@gmail.com",
+    interested: "Donor",
+    status: "Reject",
+  },
+  {
+    id: 104,
+    title: "A",
+    content: "A@gmail.com",
+    interested: "Recipient",
+    status: "Pending",
+  },
+  {
+    id: 105,
+    title: "A",
+    content: "A@gmail.com",
+    interested: "Donor",
+    status: "Approve",
+  },
+];

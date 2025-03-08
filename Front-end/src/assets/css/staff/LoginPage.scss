@@ -1,0 +1,119 @@
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #1e1e80, #6a11cb);
+
+  // Hiệu ứng tam giác nhẹ nhàng
+  &::before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    background: linear-gradient(
+      -45deg,
+      rgba(255, 255, 255, 0.15) 15%,
+      transparent 15%,
+      transparent 50%,
+      rgba(255, 255, 255, 0.1) 50%,
+      rgba(255, 255, 255, 0.15) 65%,
+      transparent 65%
+    );
+    background-size: 250px 250px;
+    opacity: 0.2;
+  }
+
+  .login-card {
+    display: flex;
+    max-width: 800px;
+    width: 90%;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 16px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    z-index: 2;
+  }
+
+  .login-left, .login-right {
+    flex: 1;
+    padding: 40px;
+  }
+
+  .login-left {
+    border-right: 1px solid #ddd;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .login-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+
+  .login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    label {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    input {
+      width: 100%;
+      padding: 14px 16px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      outline: none;
+      transition: border 0.3s ease-in-out;
+
+      &:focus {
+        border-color: #6a11cb;
+        box-shadow: 0 0 8px rgba(106, 17, 203, 0.2);
+      }
+    }
+
+    .login-button {
+      background-color: #6a11cb;
+      color: white;
+      font-size: 16px;
+      padding: 12px;
+      border-radius: 10px;
+      text-align: center;
+      cursor: pointer;
+      transition: background 0.3s;
+
+      &:hover {
+        background-color: #4711a7;
+      }
+    }
+  }
+
+  .login-right {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .system-title {
+    font-size: 18px;
+    font-weight: bold;
+  }
+
+  .system-description {
+    font-size: 14px;
+    margin-top: 10px;
+    color: #555;
+  }
+}
