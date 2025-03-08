@@ -19,5 +19,5 @@ public partial class Feedback
 
     public virtual Account Account { get; set; } = null!;
 
-    public virtual Event FeedbackNavigation { get; set; } = null!;
+    public virtual Campaign FeedbackNavigation { get; set; } = null!;
 }

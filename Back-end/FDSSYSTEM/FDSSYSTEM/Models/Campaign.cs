@@ -1,11 +1,15 @@
-﻿using System;
+﻿using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Bson;
+using System;
 using System.Collections.Generic;
 
 namespace FDSSYSTEM.Models;
 
-public partial class Event
+public partial class Campaign
 {
-    public int EventId { get; set; }
+    [BsonId]
+    [BsonRepresentation(BsonType.ObjectId)]
+    public int CampaignId { get; set; }
 
     public int AccountId { get; set; }
 
@@ -22,12 +26,10 @@ public partial class Event
     public string? FeedbackId { get; set; }
 
     public string? Category { get; set; }
+    public string Status { get; set; } = "Pending";  // Trạng thái mặc định là Pending
 
     public virtual Account Account { get; set; } = null!;
 
-    public virtual ICollection<Eventorderitem> Eventorderitems { get; set; } = new List<Eventorderitem>();
 
-    public virtual Feedback? Feedback { get; set; }
-
-    public virtual Fooddonation Food { get; set; } = null!;
+ 
 }

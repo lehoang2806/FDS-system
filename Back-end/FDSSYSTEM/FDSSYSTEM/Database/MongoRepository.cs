@@ -1,4 +1,5 @@
 ﻿
+using FDSSYSTEM.Models;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
@@ -40,5 +41,10 @@ public class MongoRepository<T> : IMongoRepository<T> where T : class
     {
         var filter = Builders<T>.Filter.Eq("_id", ObjectId.Parse(id));
         await _collection.DeleteOneAsync(filter);
+    }
+
+    public async Task<IEnumerable<T>> GetAllAsync(FilterDefinition<T> filter)
+    {
+        return await _collection.Find(filter).ToListAsync();
     }
 }

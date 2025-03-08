@@ -1,4 +1,5 @@
-﻿using MongoDB.Driver;
+﻿using FDSSYSTEM.Models;
+using MongoDB.Driver;
 
 namespace FDSSYSTEM.Database;
 
@@ -17,4 +18,5 @@ public class MongoDbContext
     }
 
     public IMongoDatabase Database => _database;
+    public IMongoCollection<New> New => _database.GetCollection<New>("News");  // Đảm bảo News là IMongoCollection<News>
 }

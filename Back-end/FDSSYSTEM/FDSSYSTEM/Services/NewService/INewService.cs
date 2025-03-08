@@ -8,8 +8,10 @@ namespace FDSSYSTEM.Services.NewService
     {
         Task<List<New>> GetAll();
         Task<New> GetById(string id);
-        Task Create(NewDto post);
-        Task Update(string id, NewDto post);
+        Task Create(NewDto newDto);
+        Task Update(string id, NewDto newDto);
         Task Delete(string id);
+        Task Approve(string id);
+        Task Reject(string id);
     }
 }

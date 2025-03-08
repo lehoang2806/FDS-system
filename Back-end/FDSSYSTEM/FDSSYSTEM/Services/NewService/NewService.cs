@@ -1,55 +1,86 @@
-﻿using FDSSYSTEM.DTOs;
+﻿using FDSSYSTEM.Database;
+using FDSSYSTEM.DTOs;
 using FDSSYSTEM.Models;
+using FDSSYSTEM.Repositories.NewRepository;
 using FDSSYSTEM.Repositories.PostRepository;
 using FDSSYSTEM.Services.PostService;
+using Microsoft.Extensions.Hosting;
+using MongoDB.Driver;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 namespace FDSSYSTEM.Services.NewService
 {
     public class NewService : INewService
     {
-        private readonly INewService _newRepository;
+        private readonly INewRepository _newRepository;
+        private object _newsCollection;
 
-        public NewService(INewService newRepository)
+        public NewService(INewRepository newRepository)
         {
             _newRepository = newRepository;
         }
 
-        public async Task Create(PostDto post)
+      
+
+        public async Task Create(NewDto newDto)
         {
-            await _newRepository.AddAsync(new Post
+            await _newRepository.AddAsync(new New
             {
-                NewText = post.PostText,
+                PostText = newDto.PostText,
                 DateCreated = DateTime.Now,
-                NewId = Guid.NewGuid().ToString()
+                PostFile = newDto.PostFile,
+                Image = newDto.Image,
+                NewId = Guid.NewGuid().ToString(),
+                Content = newDto.Content,
+                Status = "Pending"
+
             });
         }
 
-        public Task Delete(string id)
+        public async Task Delete(string id)
         {
-            throw new NotImplementedException();
+            var filter = Builders<New>.Filter.Eq(news => news.NewId, id);
+            await _newRepository.DeleteAsync(filter);
         }
 
-        public async Task<List<Post>> GetAll()
+        public async Task<List<New>> GetAll()
         {
-            return (await _newRepository.GetAllAsync()).ToList();
+            var filter = Builders<New>.Filter.Eq(news => news.Status, "Approved");
+            return (List<New>)await _newRepository.GetAllAsync(filter);
         }
 
-        public Task<Post> GetById(string id)
+        public async Task<New> GetById(string id)
         {
-            throw new NotImplementedException();
+            return await _newRepository.GetByIdAsync(id);
         }
 
-        public async Task Update(string id, PostDto post)
+        public async Task Approve(string id)
         {
-            var existingPost = await _newRepository.GetByIdAsync(id);
-            if (existingPost != null)
-            {
-                existingPost.PostText = post.PostText;
+            //var filter = Builders<New>.Filter.Eq(news => news.NewId, id);
+            //var update = Builders<New>.Update.Set(news => news.Status, "Approved");
+            //await _newRepository.UpdateAsync(filter, update);
+        }
 
-                await _newRepository.UpdateAsync(id, existingPost);
-            }
+        // Reject a news post (set status to Rejected)
+        public async Task Reject(string id)
+        {
+            //var filter = Builders<New>.Filter.Eq(news => news.NewId, id);
+            //var update = Builders<New>.Update.Set(news => news.Status, "Rejected");
 
+            //await _newRepository.UpdateAsync(filter, update);
+        }
+
+        // Update an existing news post
+        public async Task Update(string id, NewDto newDto)
+        {
+            var news = await _newRepository.GetByIdAsync(id);
+            news.PostFile = newDto.PostFile;
+            news.Image = newDto.Image;
+            news.Content = newDto.Content;
+            news.PostText = newDto.PostText;
+
+           await _newRepository.UpdateAsync(id, news);
+            
         }
     }
 }

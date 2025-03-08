@@ -25,8 +25,6 @@ namespace FDSSYSTEM.Services.PostCommentService
                 PostId = comment.PostId,
                 AccountId = comment.AccountId,
                 Content = comment.Content,
-                DateCreated = DateTime.Now,
-                DateUpdated = null,
                 FileComment = Guid.NewGuid().ToString()
             });
         }
