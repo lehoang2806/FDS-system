@@ -1,0 +1,85 @@
+.staff-add-news {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f4f4f9;
+
+    .card-container {
+        background: rgba(255, 255, 255, 0.95);
+        padding: 30px;
+        border-radius: 16px;
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+        max-width: 800px;
+        width: 90%;
+    }
+
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 2px solid #ddd;
+        padding-bottom: 15px;
+        margin-bottom: 20px;
+        font-size: 20px;
+        font-weight: bold;
+    }
+
+    .status-container {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 25px;
+        font-size: 16px;
+        color: #444;
+        font-weight: 500;
+    }
+
+    .input-group {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .input-group input, .input-group textarea {
+        width: 100%;
+        padding: 12px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        font-size: 16px;
+    }
+
+    .buttons {
+        display: flex;
+        justify-content: flex-end;
+        gap: 15px;
+        margin-top: 25px;
+    }
+
+    button {
+        border-radius: 20px;
+        padding: 12px 20px;
+        font-size: 16px;
+        font-weight: bold;
+        border: none;
+        cursor: pointer;
+        transition: background 0.3s ease-in-out;
+    }
+
+    .cancel-button {
+        background-color: #ff4d4f;
+        color: white;
+    }
+
+    .cancel-button:hover {
+        background-color: #d9363e;
+    }
+
+    .create-button {
+        background-color: #52c41a;
+        color: white;
+    }
+
+    .create-button:hover {
+        background-color: #389e0d;
+    }
+}
