@@ -1,15 +1,20 @@
-﻿using System;
+﻿using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Bson;
+using System;
 using System.Collections.Generic;
 
-namespace FDSSystem.Models;
+namespace FDSSYSTEM.Models;
 
 public partial class New
 {
-    public int NewId { get; set; }
+    [BsonId]
+    [BsonRepresentation(BsonType.ObjectId)]
+    public string Id { get; set; }
+    public string NewId { get; set; }
 
-    public int NewCategoryId { get; set; }
+    public string NewCategoryId { get; set; }
 
-    public int AccountId { get; set; }
+    public string AccountId { get; set; }
 
     public string Title { get; set; } = null!;
 
@@ -19,7 +24,7 @@ public partial class New
 
     public string Content { get; set; } = null!;
 
-    public string? Status { get; set; }
+    public string Status { get; set; } = "Pending";  // Trạng thái mặc định là Pending
 
     public string? UserCreated { get; set; }
 
@@ -35,7 +40,10 @@ public partial class New
 
     public DateTime? DateDelete { get; set; }
 
-    public virtual Account Account { get; set; } = null!;
+    public string? PostText { get; set; }
 
-    public virtual Newcategory NewCategory { get; set; } = null!;
+    public string? PostFile { get; set; }
+
+    public string PostId { get; set; }
+  
 }

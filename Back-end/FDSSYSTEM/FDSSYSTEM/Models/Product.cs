@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace FDSSystem.Models;
+namespace FDSSYSTEM.Models;
 
 public partial class Product
 {
@@ -19,7 +19,5 @@ public partial class Product
 
     public string? Img { get; set; }
 
-    public virtual ICollection<Orderitem> Orderitems { get; set; } = new List<Orderitem>();
 
-    public virtual ICollection<Stock> Stocks { get; set; } = new List<Stock>();
 }

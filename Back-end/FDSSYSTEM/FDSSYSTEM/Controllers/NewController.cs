@@ -1,82 +1,93 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using FDSSYSTEM.DTOs;
+using FDSSYSTEM.Models;
+using FDSSYSTEM.Services.NewService;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace FDSSYSTEM.Controllers
 {
-    public class NewController : Controller
+    [Route("api/news")]
+    [ApiController]
+    public class NewsController : Controller
     {
-        // GET: NewController
-        public ActionResult Index()
+        private readonly INewService _newService;
+
+        public NewsController(INewService newsService)
         {
-            return View();
+            _newService = newsService;
         }
 
-        // GET: NewController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
-        // GET: NewController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: NewController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        // Tạo bài viết tin tức
+        [HttpPost("CreateNews")]
+        public async Task<ActionResult> CreateNews(NewDto news)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                await _newService.Create(news);
+                return Ok();
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                return BadRequest();
             }
         }
 
-        // GET: NewController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: NewController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        // Lấy tất cả tin tức
+        [HttpGet("GetAllNews")]
+        public async Task<ActionResult> GetAllNews()
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                var newsList = await _newService.GetAll();
+                return Ok(newsList);
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                return BadRequest();
             }
         }
 
-        // GET: NewController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: NewController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        // Cập nhật tin tức
+        [HttpPut("UpdateNews/{id}")]
+        public async Task<ActionResult> UpdateNews(string id, NewDto news)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                var existingNews = await _newService.GetById(id);
+                if (existingNews == null)
+                {
+                    return NotFound();
+                }
+
+                await _newService.Update(id, news);
+                return Ok();
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                return BadRequest();
+            }
+        }
+
+        // Xóa tin tức
+        [HttpDelete("DeleteNews/{id}")]
+        public async Task<ActionResult> DeleteNews(string id)
+        {
+            try
+            {
+                var existingNews = await _newService.GetById(id);
+                if (existingNews == null)
+                {
+                    return NotFound();
+                }
+
+                await _newService.Delete(id);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
             }
         }
     }

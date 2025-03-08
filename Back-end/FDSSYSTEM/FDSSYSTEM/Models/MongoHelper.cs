@@ -1,18 +1,31 @@
 ﻿using MongoDB.Driver;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
 
-public class MongoDBConnection
+namespace FDSSYSTEM.Models
 {
-    private readonly IMongoDatabase _database;
-
-    public MongoDBConnection()
+    public class MongoHelper
     {
-        string connectionString = "mongodb://localhost:27017";
-        var client = new MongoClient(connectionString);
-        _database = client.GetDatabase("FDSSystem");
-    }
+       public static IMongoClient client { get; set; } 
+       public static IMongoDatabase database { get; set; }
+       public static string MongoConnection = "localhost:27017";
+       public static string MongoDatabase = "FDSSystem";
 
-    public IMongoCollection<T> GetCollection<T>(string collectionName)
-    {
-        return _database.GetCollection<T>(collectionName);
+       public static IMongoCollection<Models.Account> accounts_collection { get; set; }
+        internal static void ConnectToMongoService()
+        {
+            try
+            {
+                client = new MongoClient(MongoConnection);
+                database = client.GetDatabase(MongoDatabase);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
     }
 }

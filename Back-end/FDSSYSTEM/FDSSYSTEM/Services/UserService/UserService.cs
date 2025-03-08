@@ -35,9 +35,11 @@ public class UserService : IUserService
 
     public async Task<Account> GetUserByUsernameAsync(string userEmail)
     {
+
         userEmail = userEmail.ToLower();
         var allUser = await _userRepository.GetAllAsync();
-        return allUser.FirstOrDefault(x=> x.Email.ToLower().Equals(userEmail));
+        return allUser.FirstOrDefault(x => x.Email?.ToLower() == userEmail);
+
     }
 
     public async Task CreateUserAsync(RegisterUserDto user)

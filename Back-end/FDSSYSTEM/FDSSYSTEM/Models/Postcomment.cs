@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace FDSSystem.Models;
+namespace FDSSYSTEM.Models;
 
-public partial class Postcomment
+public partial class PostComment
 {
     public int PostCommentId { get; set; }
 
     public int AccountId { get; set; }
 
-    public int PostId { get; set; }
+    public required string PostId { get; set; }
 
     public string? Content { get; set; }
 
@@ -36,4 +36,5 @@ public partial class Postcomment
     public virtual Account Account { get; set; } = null!;
 
     public virtual Post Post { get; set; } = null!;
+    public string CommentId { get; internal set; }
 }

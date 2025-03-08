@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace FDSSystem.Models;
+namespace FDSSYSTEM.Models;
 
 public partial class Feedback
 {
@@ -19,5 +19,5 @@ public partial class Feedback
 
     public virtual Account Account { get; set; } = null!;
 
-    public virtual Event FeedbackNavigation { get; set; } = null!;
+    public virtual Campaign FeedbackNavigation { get; set; } = null!;
 }
