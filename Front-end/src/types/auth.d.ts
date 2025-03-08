@@ -9,10 +9,22 @@ interface ILoginEmail {
     password: string;
 }
 
+interface IRegisterEmail {
+    fullName: string;
+    userEmail: string;
+    password: string;
+    phone: string;
+    roleId: number;
+}
+
 export type AuthResponse = {
     userInfo: UserProfile;
     token: string;
 };
+
+export type TextResponse = {
+    message: string;
+}
 
 export type UserProfile = {
     _id: string;

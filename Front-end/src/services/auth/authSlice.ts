@@ -25,7 +25,8 @@ export const authSlice = createSlice({
         }
     },
     extraReducers: builder => {
-        builder.addCase(loginApiThunk.fulfilled, (state, action: PayloadAction<ResponseFromServer<AuthResponse>>) => {
+        builder
+        .addCase(loginApiThunk.fulfilled, (state, action: PayloadAction<ResponseFromServer<AuthResponse>>) => {
             let token = get(action, 'payload.token', null);
             let dataUser = get(action, 'payload.userInfo', null);
 
@@ -34,7 +35,7 @@ export const authSlice = createSlice({
             state.token = token;
             state.isAuthenticated = true;
             state.userInfo = dataUser;
-        });
+        })
     },
 });
 

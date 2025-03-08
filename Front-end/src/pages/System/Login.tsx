@@ -65,16 +65,16 @@ const LoginPage = () => {
                                     <Form onSubmit={handleSubmit} className="form">
 
                                         {/* <form className="form"> */}
-                                            <div className="form-field">
-                                                <label className="form-label">Email</label>
-                                                <Field name="userEmail" type="email" placeholder="Hãy nhập email cảu bạn" className={classNames("form-input", { "is-error": errors.userEmail && touched.userEmail })} />
-                                            </div>
-                                            <div className="form-field">
-                                                <label className="form-label">Mật Khẩu</label>
-                                                <Field name="password" type="password" placeholder="Hãy nhập mật khẩu cảu bạn" className={classNames("form-input", { "is-error": errors.password && touched.password })} />
-                                            </div>
-                                            <Link to={routes.forgot_pass}>Quên mật khẩu</Link>
-                                            <Button loading={isSubmitting} type="submit" title="Đăng nhập" />
+                                        <div className="form-field">
+                                            <label className="form-label">Email</label>
+                                            <Field name="userEmail" type="email" placeholder="Hãy nhập email cảu bạn" className={classNames("form-input", { "is-error": errors.userEmail && touched.userEmail })} />
+                                        </div>
+                                        <div className="form-field">
+                                            <label className="form-label">Mật Khẩu</label>
+                                            <Field name="password" type="password" placeholder="Hãy nhập mật khẩu cảu bạn" className={classNames("form-input", { "is-error": errors.password && touched.password })} />
+                                        </div>
+                                        <Link to={routes.forgot_pass}>Quên mật khẩu</Link>
+                                        <Button loading={isSubmitting} type="submit" title="Đăng nhập" />
                                         {/* </form> */}
 
                                     </Form>
