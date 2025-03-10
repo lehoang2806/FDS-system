@@ -1,51 +1,48 @@
-import {
-  StaffAddCampaignPage,
-  StaffAddNewsPage,
-  StaffCampaignDashboard,
-  StaffUserListPage,
-  StaffUserDetailPage,
-  StaffViewNewsPage,
-  LoginPage,
-} from "@/pages/Statff/staff";
+// import {
+//   StaffAddCampaignPage,
+//   StaffAddNewsPage,
+//   StaffCampaignDashboard,
+//   StaffUserListPage,
+//   StaffUserDetailPage,
+//   StaffViewNewsPage,
+// } from "@/pages/Statff/staff";
 import { RouteObject } from "react-router-dom";
-import LandingBasicLayout from "../layout/System/LandingBasicLayout";
-// import StaffUserDetailPage from "@/pages/Statff/staff/UserDetail";
+import StaffBasicLayout from "@/layout/Staff/StaffBasicLayout";
+import { StaffDashboardPage } from "@/pages/Statff";
+import { StaffDetailUserPage, StaffListUserPage } from "@/pages/Statff/User";
+import { StaffAddCampaignStaffPage, StaffDetailCampaignStaffPage, StaffListCampaignStaffPage } from "@/pages/Statff/Campaign/Staff";
 
 const routeStatff: RouteObject[] = [
-  {
-    path: "staff",
-    element: <LandingBasicLayout />,
-    children: [
-      {
-        path: "Login",
-        element: <LoginPage />,
-      },
-      {
-        path: "campaign",
-        element: <StaffCampaignDashboard />,
-      },
-      {
-        path: "campaign/add",
-        element: <StaffAddCampaignPage />,
-      },
-      {
-        path: "news",
-        element: <StaffViewNewsPage />,
-      },
-      {
-        path: "news/add",
-        element: <StaffAddNewsPage />,
-      },
-      {
-        path: "user",
-        element: <StaffUserListPage />,
-      },
-      {
-        path: "user/detail",
-        element: <StaffUserDetailPage />,
-      },
-    ],
-  },
+    {
+        path: "staff",
+        element: <StaffBasicLayout />,
+        children: [
+            {
+                path: "",
+                element: <StaffDashboardPage />,
+            },
+            {
+                path: "user",
+                element: <StaffListUserPage />,
+            },
+            {
+                path: "user/:id/detail",
+                element: <StaffDetailUserPage />,
+            },
+            {
+                path: "campaign/staff",
+                element: <StaffListCampaignStaffPage />,
+            },
+            {
+                path: "campaign/staff/add",
+                element: <StaffAddCampaignStaffPage />,
+            },
+            {
+                path: "campaign/staff/:id/detail",
+                element: <StaffDetailCampaignStaffPage />,
+            }
+        ],
+    },
 ];
 
 export default routeStatff;

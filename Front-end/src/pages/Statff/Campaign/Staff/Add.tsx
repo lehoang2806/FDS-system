@@ -1,0 +1,62 @@
+import { navigateHook } from "@/routes/RouteApp"
+import { routes } from "@/routes/routeName"
+import { FC } from "react"
+import classNames from "classnames";
+import Button from "@/components/Elements/Button";
+
+const StaffAddCampaignStaffPage: FC = () => {
+    return (
+        <section id="staff-add-campaign-staff" className="staff-section">
+            <div className="staff-container sacs-container">
+                <div className="sacscr1">
+                    <h1>Staff</h1>
+                    <p>Dashboard<span className="staff-tag">Add Staff</span></p>
+                </div>
+                <div className="sacscr2">
+                    <div className="sacscr2r1">
+                        <h2>#1</h2>
+                        <div className="group-btn">
+                            <button onClick={() => navigateHook(routes.staff.campaign.staff.list)}>Cancel</button>
+                            <Button type="submit" title="Create Staff" />
+                        </div>
+                    </div>
+                    <hr />
+                    <div className="sacscr2r2">
+                        <div className="sacscr2r2c1">
+                            <h3>Staff Status:</h3>
+                            <p>Active</p>
+                        </div>
+                        <div className="sacscr2r2c2">
+                            <h3>Created Date:</h3>
+                            <p>25-02-2025</p>
+                        </div>
+                    </div>
+                    <hr />
+                    <div className="sacscr2r3">
+                        <form className="form">
+                            <div className="form-field">
+                                <label className="form-label">Email</label>
+                                <input name="userEmail" type="email" placeholder="Hãy nhập email của bạn" className={classNames("form-input")} />
+                            </div>
+                            <div className="form-field">
+                                <label className="form-label">Username</label>
+                                <input name="fullName" type="text" placeholder="Hãy nhập tên người dung" className={classNames("form-input")} />
+                            </div>
+                            <div className="form-field">
+                                <label className="form-label">Password</label>
+                                <input name="password" type="password" placeholder="Hãy nhập mật khẩu" className={classNames("form-input")} />
+                            </div>
+                            <div className="form-field">
+                                <label className="form-label">Phone</label>
+                                <input name="phone" type="text" placeholder="Hãy nhập số diện thoại" className={classNames("form-input")} />
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+    )
+}
+
+export default StaffAddCampaignStaffPage
