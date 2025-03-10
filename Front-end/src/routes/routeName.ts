@@ -71,6 +71,11 @@ export const routes = {
         user: {
             list: "/staff/user",
             detail: "/staff/user/:id/detail",
+        },
+        news: {
+            list: "/staff/news",
+            add: "/staff/news/add",
+            detail: "/staff/news/:id/detail",
         }
     }
 }
