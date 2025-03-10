@@ -82,6 +82,17 @@ const StaffSidebar: FC = () => {
                                 <span>Staff</span>
                             </div>
                         </Link>
+                        <Link
+                            to={routes.staff.campaign.user.list}
+                            className={classNames('sscr2-nav-item', {
+                                'nav-active': location.pathname.startsWith(routes.staff.campaign.user.list)
+                            })}
+                        >
+                            <div className="sscr2-nav-link">
+                                <UserIcon className="sscr2-nav-icon" />
+                                <span>User</span>
+                            </div>
+                        </Link>
                     </div>
                     {/* <div
                         className="sscr2-nav-item asrc2-nav-dropdown"
