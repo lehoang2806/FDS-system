@@ -1,4 +1,3 @@
-import AdminForumPostPage from "./Forum";
-import AdminUserPostPage from "./User";
+import StaffListPostPage from "./List";
 
-export { AdminForumPostPage, AdminUserPostPage }
+export { StaffListPostPage }

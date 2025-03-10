@@ -1,4 +1,4 @@
-import { CampaignIcon, DashboardtIcon, NewsIcon, StaffIcon, UserIcon } from '@/assets/icons';
+import { CampaignIcon, DashboardtIcon, NewsIcon, PostIcon, StaffIcon, UserIcon } from '@/assets/icons';
 import { FC, useRef } from 'react'
 import { Link, useLocation } from 'react-router-dom';
 import classNames from 'classnames';
@@ -103,6 +103,17 @@ const StaffSidebar: FC = () => {
                         <div className="sscr2-nav-link">
                             <NewsIcon className="sscr2-nav-icon" />
                             <span>News</span>
+                        </div>
+                    </Link>
+                    <Link
+                        to={routes.staff.post}
+                        className={classNames('sscr2-nav-item', {
+                            'nav-active': location.pathname.startsWith(routes.staff.post),
+                        })}
+                    >
+                        <div className="sscr2-nav-link">
+                            <PostIcon className="sscr2-nav-icon" />
+                            <span>Post</span>
                         </div>
                     </Link>
                     {/* <div
