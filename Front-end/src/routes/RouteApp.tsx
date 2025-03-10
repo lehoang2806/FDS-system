@@ -1,7 +1,7 @@
 import { createBrowserRouter, RouterProvider, To } from "react-router-dom";
 import { Fragment } from "react/jsx-runtime";
 import routeStatff from "./RouteStaff";
-import { ForgotPasswordPage, LandingPage, LoginPage, NewPasswordPage, NotFoundPage, OTPAuthPage, RegisterPage, UnauthorizedPage } from "../pages/System/index";
+import { ForgotPasswordPage, LandingPage, LoginPage, ManageLogin, NewPasswordPage, NotFoundPage, OTPAuthPage, RegisterPage, UnauthorizedPage } from "../pages/System/index";
 import LandingBasicLayout from "../layout/System/LandingBasicLayout";
 import { DetailCampaignPage, ListCampaignPage } from "@/pages/System/Campaign";
 import { DetailSupporterPage, ListSupporterPage } from "@/pages/System/Supporter";
@@ -9,7 +9,6 @@ import { DetailNewsPage, ListNewsPage } from "@/pages/System/News";
 import routeUser from "./RouteUser";
 import { PostForumPage } from "@/pages/System/Post";
 import routeAdmin from "./RouteAdmin";
-import { StaffLoginPage } from "@/pages/Statff/staff";
 
 export default function () {
     return (
@@ -74,8 +73,8 @@ export const routerRoot = createBrowserRouter([
         element: <LoginPage/>
     },
     {
-        path: "admin/login",
-        element: <StaffLoginPage/>
+        path: "manage/login",
+        element: <ManageLogin/>
     },
     {
         path: "register",

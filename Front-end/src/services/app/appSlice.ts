@@ -1,5 +1,6 @@
 import { AppGlobalState } from "@/types/app";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import _ from "lodash";
 
 const initialState: AppGlobalState = {
     loading: false
@@ -13,7 +14,7 @@ export const appSlice = createSlice({
             state.loading = action.payload;
         },
     },
-    extraReducers: builder => {},
+    extraReducers: _ => {},
 });
 
 export const { setLoading } = appSlice.actions;

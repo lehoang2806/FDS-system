@@ -58,17 +58,25 @@ export const routes = {
     staff: {
         dashboard: "/staff",
         campaign: {
-            list: "/staff/campaign",
-            add: "/staff/campaign/add",
-            detail: "/staff/campaign/:id/detail"
+            staff: {
+                list: "/staff/campaign/staff",
+                detail: "/staff/campaign/staff/:id/detail",
+                add: "/staff/campaign/staff/add"
+            },
+            user: {
+                list: "/staff/campaign/user",
+                detail: "/staff/campaign/user/:id/detail"
+            }
+        },
+        user: {
+            list: "/staff/user",
+            detail: "/staff/user/:id/detail",
         },
         news: {
             list: "/staff/news",
             add: "/staff/news/add",
-            detail: "/staff/news/:id/detail"
+            detail: "/staff/news/:id/detail",
         },
-        user: {
-            detail: "/staff/user/:id/detail"
-        }
+        post: "/staff/post"
     }
 }

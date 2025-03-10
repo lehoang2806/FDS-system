@@ -6,3 +6,14 @@ export type UserUpdate = {
     phone?: string;
     gender?: string;
 };
+
+interface AddStaff {
+    fullName: string;
+    phone: string;
+    password: string;
+    userEmail: string;
+}
+
+interface AdminStaffState {
+    message: string;
+}
