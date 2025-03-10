@@ -3,6 +3,7 @@
 @use "./base-project.scss";
 
 @use "./login.scss";
+@use "./manage-login.scss";
 
 @use "./register.scss";
 
@@ -64,4 +65,12 @@
 
 @use "./post/post-forum.scss";
 
-@use "./staff/LoginPage.scss";
+@use "./staff/staff.scss";
+@use "./staff/header/staff-header.scss";
+@use "./staff/sidebar/staff-sidebar.scss";
+@use "./staff/staff-dashboard.scss";
+@use "./staff/user/staff-list-user.scss";
+@use "./staff/user/staff-detail-user.scss";
+@use "./staff/campaign/staff/staff-list-campaign-staff.scss";
+@use "./staff/campaign/staff/staff-detail-campaign-staff.scss";
+@use "./staff/campaign/staff/staff-add-campaign-staff.scss";
