@@ -6,6 +6,6 @@ namespace FDSSYSTEM.Repositories.PostRepository
 {
     public interface IPostRepository : IMongoRepository<Post>
     {
-        Task<Post> GetMostAsync();
+       // Task<Post> GetMostAsync();
     }
 }

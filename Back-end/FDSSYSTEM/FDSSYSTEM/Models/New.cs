@@ -45,5 +45,6 @@ public partial class New
     public string? PostFile { get; set; }
 
     public string PostId { get; set; }
-  
+    public string ApproveComment { get; set; }
+
 }

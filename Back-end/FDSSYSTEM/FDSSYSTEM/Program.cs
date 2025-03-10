@@ -1,16 +1,19 @@
 ﻿using FDSSYSTEM.Database;
 using FDSSYSTEM.Helpers;
 using FDSSYSTEM.Options;
+using FDSSYSTEM.Repositories.CampaignRepository;
 using FDSSYSTEM.Repositories.NewRepository;
 using FDSSYSTEM.Repositories.PostCommentRepository;
 using FDSSYSTEM.Repositories.PostRepository;
 using FDSSYSTEM.Repositories.RoleRepository;
 using FDSSYSTEM.Repositories.UserRepository;
 using FDSSYSTEM.SeedData;
+using FDSSYSTEM.Services.CampaignService;
 using FDSSYSTEM.Services.NewService;
 using FDSSYSTEM.Services.PostCommentService;
 using FDSSYSTEM.Services.PostService;
 using FDSSYSTEM.Services.RoleService;
+using FDSSYSTEM.Services.UserContextService;
 using FDSSYSTEM.Services.UserService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.DependencyInjection;
@@ -36,6 +39,12 @@ builder.Services.AddScoped<INewService, NewService>();
 
 builder.Services.AddScoped<IPostCommentRepository, PostCommentRepository>();
 builder.Services.AddScoped<IPostCommentService, PostCommentService>();
+
+builder.Services.AddScoped<ICampaignRepository, CampaignRepository>();
+builder.Services.AddScoped<ICampaignService, CampaignService>();
+
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+builder.Services.AddScoped<IUserContextService, UserContextService>();
 
 builder.Services.Configure<JwtSetting>(builder.Configuration.GetSection("JwtSettings"));
 builder.Services.AddSingleton<JwtHelper>();

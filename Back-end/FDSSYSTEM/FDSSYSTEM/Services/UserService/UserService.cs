@@ -74,7 +74,7 @@ public class UserService : IUserService
             FullName = staffDto.FullName,
             Phone = staffDto.Phone,
             Password = staffDto.Password,
-
+            UserEmail = staffDto.UserEmail,
             RoleId =2
         };
         await CreateUserAsync(staff);

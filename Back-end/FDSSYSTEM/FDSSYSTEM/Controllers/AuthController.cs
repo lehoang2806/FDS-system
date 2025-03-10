@@ -1,5 +1,6 @@
 ﻿using FDSSYSTEM.DTOs;
 using FDSSYSTEM.Helpers;
+using FDSSYSTEM.Services.RoleService;
 using FDSSYSTEM.Services.UserService;
 using Mapster;
 using Microsoft.AspNetCore.Http;
@@ -13,10 +14,12 @@ namespace FDSSYSTEM.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IUserService _userService;
+        private readonly IRoleService _roleService;
         private readonly JwtHelper _jwtHelper;
-        public AuthController(IUserService userService, JwtHelper jwtHelper)
+        public AuthController(IUserService userService, IRoleService roleService, JwtHelper jwtHelper)
         {
             _userService = userService;
+            _roleService = roleService;
             _jwtHelper = jwtHelper;
         }
 
@@ -27,13 +30,16 @@ namespace FDSSYSTEM.Controllers
             if (user == null || !_userService.VerifyPassword(loginRequest.Password, user.Password))
                 return Unauthorized("Invalid credentials.");
 
-            var token = _jwtHelper.GenerateToken(new UserDto
+            var role = await _roleService.GetRoleById(user.RoleId);
+
+            var token = _jwtHelper.GenerateToken(new UserTokenDto
             {
-                UserEmail =user.Email,
-                Role = user.RoleId.ToString()
+                Id = user.AccountId,
+                UserEmail = user.Email,
+                Role = role.RoleName
             });
 
-            return Ok(new { token, UserInfo= user.Adapt<UserProfileDto>() });
+            return Ok(new { token, UserInfo = user.Adapt<UserProfileDto>() });
         }
 
         [HttpPost("register")]

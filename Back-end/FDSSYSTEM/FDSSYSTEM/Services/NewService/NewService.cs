@@ -54,21 +54,7 @@ namespace FDSSYSTEM.Services.NewService
             return await _newRepository.GetByIdAsync(id);
         }
 
-        public async Task Approve(string id)
-        {
-            //var filter = Builders<New>.Filter.Eq(news => news.NewId, id);
-            //var update = Builders<New>.Update.Set(news => news.Status, "Approved");
-            //await _newRepository.UpdateAsync(filter, update);
-        }
-
-        // Reject a news post (set status to Rejected)
-        public async Task Reject(string id)
-        {
-            //var filter = Builders<New>.Filter.Eq(news => news.NewId, id);
-            //var update = Builders<New>.Update.Set(news => news.Status, "Rejected");
-
-            //await _newRepository.UpdateAsync(filter, update);
-        }
+       
 
         // Update an existing news post
         public async Task Update(string id, NewDto newDto)
@@ -81,6 +67,16 @@ namespace FDSSYSTEM.Services.NewService
 
            await _newRepository.UpdateAsync(id, news);
             
+        }
+
+        public async Task Approve(ApproveNewDto approveNewDto)
+        {
+            var filter = Builders<New>.Filter.Eq(c => c.NewId, approveNewDto.NewId);
+            var news = (await _newRepository.GetAllAsync(filter)).FirstOrDefault();
+
+            news.Status = approveNewDto.Type;
+            news.ApproveComment = approveNewDto.Comment;
+            await _newRepository.UpdateAsync(news.Id, news);
         }
     }
 }

@@ -1,18 +1,15 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
-using MongoDB.Bson;
-using System;
-
-namespace FDSSYSTEM.Models
+﻿namespace FDSSYSTEM.DTOs
 {
-    public class Campaign
+    public class CampaignWithCreatorDto
     {
-        [BsonId]
-        [BsonRepresentation(BsonType.ObjectId)]
-        public string Id { get; set; }
-
         public string CampaignId { get; set; }
 
         public string AccountId { get; set; }
+        public string FullName { get; set; }
+        public string Email { get; set; }
+        public string Phone { get; set; }
+
+        public int RoleId { get; set; }
 
         public string NameCampaign { get; set; }
 
@@ -31,8 +28,6 @@ namespace FDSSYSTEM.Models
         public DateTime? DateUpdated { get; set; }
 
         public bool? IsDeleted { get; set; }
-        public string Status { get; set; } = "Pending";  // Mặc định là chờ duyệt
-
-        public string ApproveComment { get; set; }
+        public string Status { get; set; } = "Pending";
     }
 }

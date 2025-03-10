@@ -51,5 +51,16 @@ namespace FDSSYSTEM.Services.PostService
             }
           
         }
+
+        public async Task Approve(ApprovePostDto approvePostDto)
+        {
+            var filter = Builders<Post>.Filter.Eq(c => c.PostId, approvePostDto.PostId);
+            var post = (await _postRepository.GetAllAsync(filter)).FirstOrDefault();
+
+            post.Status = approvePostDto.Type;
+            post.ApproveComment = approvePostDto.Comment;
+            await _postRepository.UpdateAsync(post.Id, post);
+        }
+
     }
 }

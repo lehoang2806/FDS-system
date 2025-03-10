@@ -49,6 +49,20 @@ namespace FDSSYSTEM.Controllers
             }
         }
 
+        [HttpPost("Approve")]
+        public async Task<ActionResult> Approve(ApproveNewDto approveNewDto)
+        {
+            try
+            {
+                await _newService.Approve(approveNewDto);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
+
         // Cập nhật tin tức
         [HttpPut("UpdateNews/{id}")]
         public async Task<ActionResult> UpdateNews(string id, NewDto news)

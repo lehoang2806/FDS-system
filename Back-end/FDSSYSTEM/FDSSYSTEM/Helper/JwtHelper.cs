@@ -18,7 +18,7 @@ namespace FDSSYSTEM.Helpers
             _jwtSettings = jwtSettings.Value;
         }
 
-        public string GenerateToken(UserDto user)
+        public string GenerateToken(UserTokenDto user)
         {
             var x = _jwtSettings.Issuer;
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -27,8 +27,9 @@ namespace FDSSYSTEM.Helpers
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new[]
-                {
-                    new Claim(ClaimTypes.Name, user.UserEmail),
+                {   
+                    new Claim(ClaimTypes.NameIdentifier, user.Id),
+                    new Claim(ClaimTypes.Email, user.UserEmail),
                     new Claim(ClaimTypes.Role, user.Role)
                 }),
                 Expires = DateTime.UtcNow.AddMinutes(_jwtSettings.ExpirationMinutes),
