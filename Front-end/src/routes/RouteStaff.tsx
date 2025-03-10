@@ -11,6 +11,7 @@ import StaffBasicLayout from "@/layout/Staff/StaffBasicLayout";
 import { StaffDashboardPage } from "@/pages/Statff";
 import { StaffDetailUserPage, StaffListUserPage } from "@/pages/Statff/User";
 import { StaffAddCampaignStaffPage, StaffDetailCampaignStaffPage, StaffListCampaignStaffPage } from "@/pages/Statff/Campaign/Staff";
+import { StaffDetailCampaignUserPage, StaffListCampaignUserPage } from "@/pages/Statff/Campaign/User";
 
 const routeStatff: RouteObject[] = [
     {
@@ -40,6 +41,14 @@ const routeStatff: RouteObject[] = [
             {
                 path: "campaign/staff/:id/detail",
                 element: <StaffDetailCampaignStaffPage />,
+            },
+            {
+                path: "campaign/user",
+                element: <StaffListCampaignUserPage />,
+            },
+            {
+                path: "campaign/user/:id/detail",
+                element: <StaffDetailCampaignUserPage />,
             }
         ],
     },

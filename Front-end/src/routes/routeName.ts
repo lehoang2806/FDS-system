@@ -62,6 +62,10 @@ export const routes = {
                 list: "/staff/campaign/staff",
                 detail: "/staff/campaign/staff/:id/detail",
                 add: "/staff/campaign/staff/add"
+            },
+            user: {
+                list: "/staff/campaign/user",
+                detail: "/staff/campaign/user/:id/detail"
             }
         },
         user: {
