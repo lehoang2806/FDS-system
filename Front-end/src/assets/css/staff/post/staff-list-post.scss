@@ -1,0 +1,82 @@
+#staff-list-post {
+    .slp-container {
+        .slpcr1 {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 30px;
+            background: #fff;
+            border-radius: var(--border-radius-12);
+            margin-bottom: 30px;
+
+            h1 {
+                font-size: 18px;
+                font-weight: 700;
+                color: #29343D;
+            }
+
+            p {
+                font-size: 14px;
+                font-weight: 400;
+                color: #29343D;
+
+                .staff-tag {
+                    font-size: 12px;
+                    font-weight: 500;
+                    color: #635BFF;
+                    padding: 10px 15px;
+                    background: rgba(99, 91, 255, 0.15);
+                    border-radius: var(--border-radius-12);
+                    margin-left: 10px;
+                }
+            }
+        }
+
+        .slpcr2 {
+            background: #fff;
+            border-radius: var(--border-radius-12);
+            display: flex;
+
+            .slpcr2c1 {
+                flex: 2;
+                padding: 20px 25px;
+                border-right: 1px solid #E0E6EB;
+
+                .slp-tab {
+                    width: 100%;
+                    padding: 24px;
+                    font-size: 16px;
+                    font-weight: 700;
+                    color: #29343D;
+                    cursor: pointer;
+                    border-radius: var(--border-radius-12);
+                    margin: 10px 0;
+                    
+                    &:hover {
+                        background: rgba(99, 91, 255, 0.15);
+                    }
+
+                    &.slp-tab-actived {
+                        background: rgba(99, 91, 255, 1);
+                        color: #fff;
+                    }
+                }
+            }
+
+            .slpcr2c2 {
+                flex: 5;
+                padding: 30px 15px;
+                max-height: 900px;
+                overflow-y: auto;
+    
+                &::-webkit-scrollbar {
+                    display: none;
+                }
+
+                .post-container {
+                    margin: 30px 0;
+                }
+            }
+        }
+    }
+}

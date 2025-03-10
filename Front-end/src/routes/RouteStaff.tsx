@@ -5,6 +5,7 @@ import { StaffDetailUserPage, StaffListUserPage } from "@/pages/Statff/User";
 import { StaffAddCampaignStaffPage, StaffDetailCampaignStaffPage, StaffListCampaignStaffPage } from "@/pages/Statff/Campaign/Staff";
 import { StaffDetailCampaignUserPage, StaffListCampaignUserPage } from "@/pages/Statff/Campaign/User";
 import { StaffAddNewsPage, StaffDetailNewsPage, StaffListNewsPage } from "@/pages/Statff/News";
+import { StaffListPostPage } from "@/pages/Statff/Post";
 
 const routeStatff: RouteObject[] = [
     {
@@ -54,6 +55,10 @@ const routeStatff: RouteObject[] = [
             {
                 path: "news/:id/detail",
                 element: <StaffDetailNewsPage />
+            },
+            {
+                path: "post",
+                element: <StaffListPostPage />
             }
         ],
     },

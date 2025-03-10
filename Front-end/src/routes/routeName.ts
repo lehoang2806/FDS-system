@@ -76,6 +76,7 @@ export const routes = {
             list: "/staff/news",
             add: "/staff/news/add",
             detail: "/staff/news/:id/detail",
-        }
+        },
+        post: "/staff/post"
     }
 }
