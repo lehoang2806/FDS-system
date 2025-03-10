@@ -1,17 +1,10 @@
-// import {
-//   StaffAddCampaignPage,
-//   StaffAddNewsPage,
-//   StaffCampaignDashboard,
-//   StaffUserListPage,
-//   StaffUserDetailPage,
-//   StaffViewNewsPage,
-// } from "@/pages/Statff/staff";
 import { RouteObject } from "react-router-dom";
 import StaffBasicLayout from "@/layout/Staff/StaffBasicLayout";
 import { StaffDashboardPage } from "@/pages/Statff";
 import { StaffDetailUserPage, StaffListUserPage } from "@/pages/Statff/User";
 import { StaffAddCampaignStaffPage, StaffDetailCampaignStaffPage, StaffListCampaignStaffPage } from "@/pages/Statff/Campaign/Staff";
 import { StaffDetailCampaignUserPage, StaffListCampaignUserPage } from "@/pages/Statff/Campaign/User";
+import { StaffAddNewsPage, StaffDetailNewsPage, StaffListNewsPage } from "@/pages/Statff/News";
 
 const routeStatff: RouteObject[] = [
     {
@@ -49,6 +42,18 @@ const routeStatff: RouteObject[] = [
             {
                 path: "campaign/user/:id/detail",
                 element: <StaffDetailCampaignUserPage />,
+            },
+            {
+                path: "news",
+                element: <StaffListNewsPage />
+            },
+            {
+                path: "news/add",
+                element: <StaffAddNewsPage />
+            },
+            {
+                path: "news/:id/detail",
+                element: <StaffDetailNewsPage />
             }
         ],
     },
