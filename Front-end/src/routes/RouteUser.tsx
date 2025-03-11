@@ -1,5 +1,5 @@
 import LandingBasicLayout from "@/layout/System/LandingBasicLayout";
-import { UserChangePasswordPage, UserNewPasswordPage, UserProfilePage } from "@/pages/User";
+import { UserChangePasswordPage, UserNewPasswordPage, UserProfilePage, UserSubmitCertificatePage } from "@/pages/User";
 import { RouteObject } from "react-router-dom";
 
 const routeUser: RouteObject[] = [
@@ -14,6 +14,16 @@ const routeUser: RouteObject[] = [
                     {
                         path: "",
                         element: <UserProfilePage/>
+                    }
+                ]
+            },
+            {
+                path: "submit-certificate",
+                element: <LandingBasicLayout />,
+                children: [
+                    {
+                        path: "",
+                        element: <UserSubmitCertificatePage/>
                     }
                 ]
             },

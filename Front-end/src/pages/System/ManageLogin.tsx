@@ -16,18 +16,23 @@ const ManageLogin = () => {
     const dispatch = useAppDispatch();
     const isAuthenticated = useAppSelector(selectIsAuthenticated);
     const userProfile = useAppSelector(selectUserLogin);
+
     const initialValues: ILoginEmail = {
         userEmail: "",
         password: "",
     };
+
     const schema = Yup.object().shape({
-        email: Yup.string().email("Invalid email").required("Required"),
+        userEmail: Yup.string().email("Invalid email").required("Required"),
         password: Yup.string().required("Required"),
     });
 
     useEffect(() => {
         if (isAuthenticated && userProfile?.roleId === 1) {
             navigateHook(routes.admin.dashboard);
+        }
+        if (isAuthenticated && userProfile?.roleId === 2) {
+            navigateHook(routes.staff.dashboard);
         }
     }, [isAuthenticated]);
 
@@ -43,57 +48,42 @@ const ManageLogin = () => {
         });
     };
 
-
     return (
         <main id="manage-login">
             <section id="ml-section">
                 <div className="mls-container">
-                    <Formik
-                        initialValues={initialValues}
-                        onSubmit={onSubmit}
-                        validationSchema={schema}
-                    >
-                        {({
-                            handleSubmit,
-                            errors,
-                            touched,
-                            isSubmitting
-                        }) => (
-                            <Form onSubmit={handleSubmit} className='col-flex form'>
-                                <div className="mlsc1">
-                                    <figure className="mlsc1-logo">
-                                        Logo
-                                    </figure>
-                                    <h1>Let's get you signed in</h1>
-                                    <div className="form">
-                                        <div className="form-field">
-                                            <label className="form-label">Email</label>
-                                            <Field
-                                                name="userEmail"
-                                                type="email"
-                                                placeholder="admin@mail.com"
-                                                className={classNames("form-input", { "is-error": errors.userEmail && touched.userEmail })}
-                                            />
-                                        </div>
-                                        <div className="form-field">
-                                            <label className="form-label">Password</label>
-                                            <Field
-                                                name="password"
-                                                type="password"
-                                                placeholder="Nhập mật khẩu"
-                                                className={classNames("form-input", { "is-error": errors.password && touched.password })}
-                                            />
-                                        </div>
-                                        <Button
-                                            loading={isSubmitting}
-                                            title="Đăng nhập"
-                                            type="submit"
-                                        />
+                    <div className="mlsc1">
+                        <figure className="mlsc1-logo">
+                            Logo
+                        </figure>
+                        <h1>Let's get you signed in</h1>
+                        <Formik
+                            initialValues={initialValues}
+                            onSubmit={onSubmit}
+                            validationSchema={schema}
+                        >
+                            {({
+                                handleSubmit,
+                                errors,
+                                touched,
+                                isSubmitting
+                            }) => (
+                                <Form onSubmit={handleSubmit} className="form">
+                                    <div className="form-field">
+                                        <label className="form-label">Email</label>
+                                        <Field name="userEmail" type="email" placeholder="Hãy nhập email của bạn" className={classNames("form-input", { "is-error": errors.userEmail && touched.userEmail })} />
+                                        {errors.userEmail && touched.userEmail && <span className="error">{errors.userEmail}</span>}
                                     </div>
-                                </div>
-                            </Form>
-                        )}
-                    </Formik>
+                                    <div className="form-field">
+                                        <label className="form-label">Mật Khẩu</label>
+                                        <Field name="password" type="password" placeholder="Hãy nhập mật khẩu của bạn" className={classNames("form-input", { "is-error": errors.password && touched.password })} />
+                                        {errors.password && touched.password && <span className="error">{errors.password}</span>}
+                                    </div>
+                                    <Button loading={isSubmitting} type="submit" title="Đăng nhập" />
+                                </Form>
+                            )}
+                        </Formik>
+                    </div>
                     <div className="col-flex mlsc2">
                         <figure className="mlsc2-img">
                         </figure>

@@ -1,9 +1,26 @@
+import { selectGetAllUser } from "@/app/selector"
+import { useAppDispatch, useAppSelector } from "@/app/store"
 import { ActiveIcon, BlockIcon, TotalIcon } from "@/assets/icons"
 import { SlideToggle } from "@/components/Elements"
 import { navigateHook } from "@/routes/RouteApp"
 import { routes } from "@/routes/routeName"
+import { getAllUserApiThunk } from "@/services/user/userThunk"
+import { useEffect } from "react"
 
 const StaffListUserPage = () => {
+    const dispatch = useAppDispatch();
+
+    const users = useAppSelector(selectGetAllUser);
+    const accountsWithoutStaff = users.filter(user => user.roleId !== 2);
+
+    useEffect(() => {
+        dispatch(getAllUserApiThunk())
+            .unwrap()
+            .catch(() => {
+            }).finally(() => {
+            });
+    }, []);
+
     const handleToDetail = (campaignId: string) => {
         const url = routes.staff.user.detail.replace(":id", campaignId);
         return navigateHook(url)
@@ -59,16 +76,19 @@ const StaffListUserPage = () => {
                         <thead className="table-head">
                             <tr className="table-head-row">
                                 <th className="table-head-cell">
-                                    ID
+                                    Email
                                 </th>
                                 <th className="table-head-cell">
-                                    Name
+                                    Full Name
                                 </th>
                                 <th className="table-head-cell">
-                                    Create Date
+                                    Phone
                                 </th>
                                 <th className="table-head-cell">
-                                    Active
+                                    Address
+                                </th>
+                                <th className="table-head-cell">
+                                    Role
                                 </th>
                                 <th className="table-head-cell">
                                     Action
@@ -76,28 +96,18 @@ const StaffListUserPage = () => {
                             </tr>
                         </thead>
                         <tbody className="table-body">
-                            <tr className="table-body-row">
-                                <td className='table-body-cell'>1</td>
-                                <td className='table-body-cell'>A</td>
-                                <td className='table-body-cell'>7/1</td>
-                                <td className='table-body-cell'>
-                                    <SlideToggle />
-                                </td>
-                                <td className="table-body-cell">
-                                    <button onClick={() => handleToDetail("1")} className="view-btn">view</button>
-                                </td>
-                            </tr>
-                            <tr className="table-body-row">
-                                <td className='table-body-cell'>1</td>
-                                <td className='table-body-cell'>A</td>
-                                <td className='table-body-cell'>7/1</td>
-                                <td className='table-body-cell'>
-                                    <SlideToggle />
-                                </td>
-                                <td className="table-body-cell">
-                                    H
-                                </td>
-                            </tr>
+                            {accountsWithoutStaff.map((row, index) => (
+                                <tr key={index} className="table-body-row">
+                                    <td className='table-body-cell'>{row.email}</td>
+                                    <td className='table-body-cell'>{row.fullName}</td>
+                                    <td className='table-body-cell'>{row.phone}</td>
+                                    <td className='table-body-cell'>{row.address}</td>
+                                    <td className='table-body-cell'>{row.roleId === 3 ? "Donor" : "Recipient"}</td>
+                                    <td className="table-body-cell">
+                                        <button className="view-btn" onClick={() => handleToDetail(row.id)}>View</button>
+                                    </td>
+                                </tr>
+                            ))}
                         </tbody>
                     </table>
                 </div>
