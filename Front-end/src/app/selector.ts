@@ -19,3 +19,8 @@ export const selectToken: Selector<string|null> = (state: RootState) => {
 export const selectGetAllUser: Selector<UserInfo[]> = (state: RootState) => {
     return state.user.listUser;
 }
+
+//Campaign
+export const selectGetAllCampaign: Selector<CampaignInfo[]> = (state: RootState) => {
+    return state.campaign.listCampaigns;
+}

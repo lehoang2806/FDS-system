@@ -170,3 +170,23 @@ input.is-error {
     color: red !important;
     margin: 0 !important;
 }
+
+.status-approve, .status-reject, .status-pending {
+    font-size: 14px;
+    font-weight: 400;
+    color: #fff;
+    padding: 2px 14px;
+    border-radius: 24px;
+}
+
+.status-approve {
+    background: #36C76C;
+}
+
+.status-reject {
+    background: #FF6692;
+}
+
+.status-pending {
+    background: #F8C20A;
+}
