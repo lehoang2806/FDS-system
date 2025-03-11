@@ -33,6 +33,6 @@ namespace FDSSYSTEM.Models
         public bool? IsDeleted { get; set; }
         public string Status { get; set; } = "Pending";  // Mặc định là chờ duyệt
 
-        public string ApproveComment { get; set; }
+        public string RejectComment { get; set; }
     }
 }

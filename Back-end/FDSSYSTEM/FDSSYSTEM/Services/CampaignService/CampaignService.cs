@@ -127,8 +127,17 @@ namespace FDSSYSTEM.Services.CampaignService
             var filter = Builders<Campaign>.Filter.Eq(c => c.CampaignId, approveCampaignDto.CampaignId);
             var campain = (await _campaignRepository.GetAllAsync(filter)).FirstOrDefault();
 
-            campain.Status = approveCampaignDto.Type;
-            campain.ApproveComment = approveCampaignDto.Comment;
+            campain.Status = "Approved";
+            await _campaignRepository.UpdateAsync(campain.Id, campain);
+        }
+
+        public async Task Reject(RejectCampaignDto rejectCampaignDto)
+        {
+            var filter = Builders<Campaign>.Filter.Eq(c => c.CampaignId, rejectCampaignDto.CampaignId);
+            var campain = (await _campaignRepository.GetAllAsync(filter)).FirstOrDefault();
+
+            campain.Status = "Rejected";
+            campain.RejectComment = rejectCampaignDto.Comment;
             await _campaignRepository.UpdateAsync(campain.Id, campain);
         }
     }

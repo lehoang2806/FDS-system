@@ -42,8 +42,19 @@ namespace FDSSYSTEM.Controllers
             return Ok(new { token, UserInfo = user.Adapt<UserProfileDto>() });
         }
 
-        [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] RegisterUserDto user)
+        //[HttpPost("register")]
+        //public async Task<IActionResult> Register([FromBody] RegisterUserDto user)
+        //{
+        //    var existingUser = await _userService.GetUserByUsernameAsync(user.UserEmail);
+        //    if (existingUser != null) return BadRequest("Username already exists.");
+
+        //    await _userService.CreateUserAsync(user);
+
+        //    return Ok("User registered successfully.");
+        //}
+
+        [HttpPost("register/PersonalDonor")]
+        public async Task<IActionResult> PersonalDonor([FromBody] RegisterPersonalDonorDto user)
         {
             var existingUser = await _userService.GetUserByUsernameAsync(user.UserEmail);
             if (existingUser != null) return BadRequest("Username already exists.");
@@ -52,5 +63,27 @@ namespace FDSSYSTEM.Controllers
 
             return Ok("User registered successfully.");
         }
+
+        [HttpPost("register/OrganizationDonor")]
+        public async Task<IActionResult> OrganizationDonor([FromBody] RegisterOrganizationDonorDto user)
+        {
+            var existingUser = await _userService.GetUserByUsernameAsync(user.UserEmail);
+            if (existingUser != null) return BadRequest("Username already exists.");
+
+            await _userService.CreateUserAsync(user);
+
+            return Ok("User registered successfully.");
+        }
+
+        [HttpPost("register/Recipient")]
+        public async Task<IActionResult> Recipient([FromBody] RegisterRecipientDto user)
+        {
+            var existingUser = await _userService.GetUserByUsernameAsync(user.UserEmail);
+            if (existingUser != null) return BadRequest("Username already exists.");
+
+            await _userService.CreateUserAsync(user);
+            return Ok("User registered successfully.");
+        }
+
     }
 }

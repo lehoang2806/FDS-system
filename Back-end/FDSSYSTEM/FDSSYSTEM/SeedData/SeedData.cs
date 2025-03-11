@@ -14,13 +14,14 @@ namespace FDSSYSTEM.SeedData
 
             if (admin == null)
             {
-                var newAdmin = new DTOs.RegisterUserDto
+                var newAdmin = new Account
                 {
-                    UserEmail = "admin@gmail.com",
+                    Email = "admin@gmail.com",
                     Password = "123",
                     RoleId = 1,
-                    FullName ="Admin",
-                    Phone="123456789"
+                    FullName = "Admin",
+                    Phone = "123456789",
+                    IsConfirm = true
                 };
 
                 // Lưu tài khoản admin vào MongoDB

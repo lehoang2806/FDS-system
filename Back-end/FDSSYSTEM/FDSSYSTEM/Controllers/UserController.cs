@@ -83,7 +83,23 @@ namespace FDSSYSTEM.Controllers
             }
         }
 
+        [HttpPut("Confirm/{id}")]
+        public async Task<ActionResult> Confirm(string id)
+        {
+            try
+            {
+                await _userService.Confirm(id);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
 
-        
+                return BadRequest();
+
+            }
+        }
+
+
+
     }
 }

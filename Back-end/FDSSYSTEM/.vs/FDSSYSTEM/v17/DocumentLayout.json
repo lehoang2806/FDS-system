@@ -3,44 +3,64 @@
   "WorkspaceRootPath": "D:\\Backend1\\be\\FDSSYSTEM\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{F332701A-843C-4DC7-B3BB-47BB6F7101CC}|FDSSYSTEM\\FDSSYSTEM.csproj|d:\\backend1\\be\\fdssystem\\fdssystem\\controllers\\postcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{F332701A-843C-4DC7-B3BB-47BB6F7101CC}|FDSSYSTEM\\FDSSYSTEM.csproj|solutionrelative:fdssystem\\controllers\\postcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{F332701A-843C-4DC7-B3BB-47BB6F7101CC}|FDSSYSTEM\\FDSSYSTEM.csproj|d:\\backend1\\be\\fdssystem\\fdssystem\\services\\postservice\\postservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F332701A-843C-4DC7-B3BB-47BB6F7101CC}|FDSSYSTEM\\FDSSYSTEM.csproj|solutionrelative:fdssystem\\services\\postservice\\postservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{F332701A-843C-4DC7-B3BB-47BB6F7101CC}|FDSSYSTEM\\FDSSYSTEM.csproj|d:\\backend1\\be\\fdssystem\\fdssystem\\controllers\\postcommentcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{F332701A-843C-4DC7-B3BB-47BB6F7101CC}|FDSSYSTEM\\FDSSYSTEM.csproj|solutionrelative:fdssystem\\controllers\\postcommentcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{F332701A-843C-4DC7-B3BB-47BB6F7101CC}|FDSSYSTEM\\FDSSYSTEM.csproj|d:\\backend1\\be\\fdssystem\\fdssystem\\controllers\\postcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F332701A-843C-4DC7-B3BB-47BB6F7101CC}|FDSSYSTEM\\FDSSYSTEM.csproj|solutionrelative:fdssystem\\controllers\\postcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{F332701A-843C-4DC7-B3BB-47BB6F7101CC}|FDSSYSTEM\\FDSSYSTEM.csproj|d:\\backend1\\be\\fdssystem\\fdssystem\\repositories\\postrepository\\postrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{F332701A-843C-4DC7-B3BB-47BB6F7101CC}|FDSSYSTEM\\FDSSYSTEM.csproj|solutionrelative:fdssystem\\repositories\\postrepository\\postrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{F332701A-843C-4DC7-B3BB-47BB6F7101CC}|FDSSYSTEM\\FDSSYSTEM.csproj|d:\\backend1\\be\\fdssystem\\fdssystem\\repositories\\newrepository\\newrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F332701A-843C-4DC7-B3BB-47BB6F7101CC}|FDSSYSTEM\\FDSSYSTEM.csproj|solutionrelative:fdssystem\\repositories\\newrepository\\newrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{F332701A-843C-4DC7-B3BB-47BB6F7101CC}|FDSSYSTEM\\FDSSYSTEM.csproj|d:\\backend1\\be\\fdssystem\\fdssystem\\repositories\\postrepository\\ipostrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{F332701A-843C-4DC7-B3BB-47BB6F7101CC}|FDSSYSTEM\\FDSSYSTEM.csproj|solutionrelative:fdssystem\\repositories\\postrepository\\ipostrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{F332701A-843C-4DC7-B3BB-47BB6F7101CC}|FDSSYSTEM\\FDSSYSTEM.csproj|d:\\backend1\\be\\fdssystem\\fdssystem\\dtos\\approvepostdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{F332701A-843C-4DC7-B3BB-47BB6F7101CC}|FDSSYSTEM\\FDSSYSTEM.csproj|solutionrelative:fdssystem\\dtos\\approvepostdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{F332701A-843C-4DC7-B3BB-47BB6F7101CC}|FDSSYSTEM\\FDSSYSTEM.csproj|d:\\backend1\\be\\fdssystem\\fdssystem\\repositories\\newrepository\\inewrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F332701A-843C-4DC7-B3BB-47BB6F7101CC}|FDSSYSTEM\\FDSSYSTEM.csproj|solutionrelative:fdssystem\\repositories\\newrepository\\inewrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{F332701A-843C-4DC7-B3BB-47BB6F7101CC}|FDSSYSTEM\\FDSSYSTEM.csproj|d:\\backend1\\be\\fdssystem\\fdssystem\\dtos\\approvenewdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{F332701A-843C-4DC7-B3BB-47BB6F7101CC}|FDSSYSTEM\\FDSSYSTEM.csproj|solutionrelative:fdssystem\\dtos\\approvenewdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{F332701A-843C-4DC7-B3BB-47BB6F7101CC}|FDSSYSTEM\\FDSSYSTEM.csproj|d:\\backend1\\be\\fdssystem\\fdssystem\\database\\mongorepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F332701A-843C-4DC7-B3BB-47BB6F7101CC}|FDSSYSTEM\\FDSSYSTEM.csproj|solutionrelative:fdssystem\\database\\mongorepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{F332701A-843C-4DC7-B3BB-47BB6F7101CC}|FDSSYSTEM\\FDSSYSTEM.csproj|d:\\backend1\\be\\fdssystem\\fdssystem\\dtos\\approvecampaigndto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{F332701A-843C-4DC7-B3BB-47BB6F7101CC}|FDSSYSTEM\\FDSSYSTEM.csproj|solutionrelative:fdssystem\\dtos\\approvecampaigndto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{F332701A-843C-4DC7-B3BB-47BB6F7101CC}|FDSSYSTEM\\FDSSYSTEM.csproj|d:\\backend1\\be\\fdssystem\\fdssystem\\controllers\\newcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F332701A-843C-4DC7-B3BB-47BB6F7101CC}|FDSSYSTEM\\FDSSYSTEM.csproj|solutionrelative:fdssystem\\controllers\\newcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{F332701A-843C-4DC7-B3BB-47BB6F7101CC}|FDSSYSTEM\\FDSSYSTEM.csproj|d:\\backend1\\be\\fdssystem\\fdssystem\\controllers\\campaigncontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{F332701A-843C-4DC7-B3BB-47BB6F7101CC}|FDSSYSTEM\\FDSSYSTEM.csproj|solutionrelative:fdssystem\\controllers\\campaigncontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{F332701A-843C-4DC7-B3BB-47BB6F7101CC}|FDSSYSTEM\\FDSSYSTEM.csproj|d:\\backend1\\be\\fdssystem\\fdssystem\\services\\newservice\\newservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F332701A-843C-4DC7-B3BB-47BB6F7101CC}|FDSSYSTEM\\FDSSYSTEM.csproj|solutionrelative:fdssystem\\services\\newservice\\newservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{F332701A-843C-4DC7-B3BB-47BB6F7101CC}|FDSSYSTEM\\FDSSYSTEM.csproj|d:\\backend1\\be\\fdssystem\\fdssystem\\services\\postservice\\postservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{F332701A-843C-4DC7-B3BB-47BB6F7101CC}|FDSSYSTEM\\FDSSYSTEM.csproj|solutionrelative:fdssystem\\services\\postservice\\postservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{F332701A-843C-4DC7-B3BB-47BB6F7101CC}|FDSSYSTEM\\FDSSYSTEM.csproj|d:\\backend1\\be\\fdssystem\\fdssystem\\services\\campaignservice\\campaignservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F332701A-843C-4DC7-B3BB-47BB6F7101CC}|FDSSYSTEM\\FDSSYSTEM.csproj|solutionrelative:fdssystem\\services\\campaignservice\\campaignservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{F332701A-843C-4DC7-B3BB-47BB6F7101CC}|FDSSYSTEM\\FDSSYSTEM.csproj|d:\\backend1\\be\\fdssystem\\fdssystem\\services\\campaignservice\\icampaignservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{F332701A-843C-4DC7-B3BB-47BB6F7101CC}|FDSSYSTEM\\FDSSYSTEM.csproj|solutionrelative:fdssystem\\services\\campaignservice\\icampaignservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{F332701A-843C-4DC7-B3BB-47BB6F7101CC}|FDSSYSTEM\\FDSSYSTEM.csproj|d:\\backend1\\be\\fdssystem\\fdssystem\\models\\post.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F332701A-843C-4DC7-B3BB-47BB6F7101CC}|FDSSYSTEM\\FDSSYSTEM.csproj|solutionrelative:fdssystem\\models\\post.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F332701A-843C-4DC7-B3BB-47BB6F7101CC}|FDSSYSTEM\\FDSSYSTEM.csproj|d:\\backend1\\be\\fdssystem\\fdssystem\\models\\new.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F332701A-843C-4DC7-B3BB-47BB6F7101CC}|FDSSYSTEM\\FDSSYSTEM.csproj|solutionrelative:fdssystem\\models\\new.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F332701A-843C-4DC7-B3BB-47BB6F7101CC}|FDSSYSTEM\\FDSSYSTEM.csproj|d:\\backend1\\be\\fdssystem\\fdssystem\\services\\newservice\\inewservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F332701A-843C-4DC7-B3BB-47BB6F7101CC}|FDSSYSTEM\\FDSSYSTEM.csproj|solutionrelative:fdssystem\\services\\newservice\\inewservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F332701A-843C-4DC7-B3BB-47BB6F7101CC}|FDSSYSTEM\\FDSSYSTEM.csproj|d:\\backend1\\be\\fdssystem\\fdssystem\\dtos\\postdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F332701A-843C-4DC7-B3BB-47BB6F7101CC}|FDSSYSTEM\\FDSSYSTEM.csproj|solutionrelative:fdssystem\\dtos\\postdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F332701A-843C-4DC7-B3BB-47BB6F7101CC}|FDSSYSTEM\\FDSSYSTEM.csproj|d:\\backend1\\be\\fdssystem\\fdssystem\\dtos\\newdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F332701A-843C-4DC7-B3BB-47BB6F7101CC}|FDSSYSTEM\\FDSSYSTEM.csproj|solutionrelative:fdssystem\\dtos\\newdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -60,8 +80,16 @@
         },
         {
           "DockedWidth": 1180,
-          "SelectedChildIndex": 8,
+          "SelectedChildIndex": 9,
           "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:129:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
             {
               "$type": "Bookmark",
               "Name": "ST:1:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
@@ -72,54 +100,15 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 4,
               "Title": "IPostRepository.cs",
               "DocumentMoniker": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\Repositories\\PostRepository\\IPostRepository.cs",
               "RelativeDocumentMoniker": "FDSSYSTEM\\Repositories\\PostRepository\\IPostRepository.cs",
               "ToolTip": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\Repositories\\PostRepository\\IPostRepository.cs",
               "RelativeToolTip": "FDSSYSTEM\\Repositories\\PostRepository\\IPostRepository.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAgAAAAJAAAA",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAkAAAAcAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-10T16:39:55.854Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "ApproveCampaignDto.cs",
-              "DocumentMoniker": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\DTOs\\ApproveCampaignDto.cs",
-              "RelativeDocumentMoniker": "FDSSYSTEM\\DTOs\\ApproveCampaignDto.cs",
-              "ToolTip": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\DTOs\\ApproveCampaignDto.cs",
-              "RelativeToolTip": "FDSSYSTEM\\DTOs\\ApproveCampaignDto.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-10T16:33:57.799Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "ApprovePostDto.cs",
-              "DocumentMoniker": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\DTOs\\ApprovePostDto.cs",
-              "RelativeDocumentMoniker": "FDSSYSTEM\\DTOs\\ApprovePostDto.cs",
-              "ToolTip": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\DTOs\\ApprovePostDto.cs",
-              "RelativeToolTip": "FDSSYSTEM\\DTOs\\ApprovePostDto.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAIAAAARAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-10T16:33:46.386Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "ApproveNewDto.cs",
-              "DocumentMoniker": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\DTOs\\ApproveNewDto.cs",
-              "RelativeDocumentMoniker": "FDSSYSTEM\\DTOs\\ApproveNewDto.cs",
-              "ToolTip": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\DTOs\\ApproveNewDto.cs",
-              "RelativeToolTip": "FDSSYSTEM\\DTOs\\ApproveNewDto.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-10T16:33:54.555Z",
+              "WhenOpened": "2025-03-11T17:04:01.584Z",
               "EditorCaption": ""
             },
             {
@@ -130,74 +119,178 @@
               "RelativeDocumentMoniker": "FDSSYSTEM\\Repositories\\PostRepository\\PostRepository.cs",
               "ToolTip": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\Repositories\\PostRepository\\PostRepository.cs",
               "RelativeToolTip": "FDSSYSTEM\\Repositories\\PostRepository\\PostRepository.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAqwBIAAAAFAAAA",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA8AAAAJAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-10T16:32:51.419Z",
+              "WhenOpened": "2025-03-11T17:03:59.138Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "CampaignController.cs",
-              "DocumentMoniker": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\Controllers\\CampaignController.cs",
-              "RelativeDocumentMoniker": "FDSSYSTEM\\Controllers\\CampaignController.cs",
-              "ToolTip": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\Controllers\\CampaignController.cs",
-              "RelativeToolTip": "FDSSYSTEM\\Controllers\\CampaignController.cs",
-              "ViewState": "AQIAACQAAAAAAAAAAAAowDoAAABDAAAA",
+              "DocumentIndex": 3,
+              "Title": "NewRepository.cs",
+              "DocumentMoniker": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\Repositories\\NewRepository\\NewRepository.cs",
+              "RelativeDocumentMoniker": "FDSSYSTEM\\Repositories\\NewRepository\\NewRepository.cs",
+              "ToolTip": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\Repositories\\NewRepository\\NewRepository.cs",
+              "RelativeToolTip": "FDSSYSTEM\\Repositories\\NewRepository\\NewRepository.cs",
+              "ViewState": "AQIAAAoAAAAAAAAAAAApwBgAAAAsAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-10T16:25:59.624Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "PostController.cs",
-              "DocumentMoniker": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\Controllers\\PostController.cs",
-              "RelativeDocumentMoniker": "FDSSYSTEM\\Controllers\\PostController.cs",
-              "ToolTip": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\Controllers\\PostController.cs",
-              "RelativeToolTip": "FDSSYSTEM\\Controllers\\PostController.cs",
-              "ViewState": "AQIAABUAAAAAAAAAAAAwwC4AAAAkAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-10T15:18:09.386Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "PostCommentController.cs",
-              "DocumentMoniker": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\Controllers\\PostCommentController.cs",
-              "RelativeDocumentMoniker": "FDSSYSTEM\\Controllers\\PostCommentController.cs",
-              "ToolTip": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\Controllers\\PostCommentController.cs",
-              "RelativeToolTip": "FDSSYSTEM\\Controllers\\PostCommentController.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAoAAAAOAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-10T16:40:25.744Z",
+              "WhenOpened": "2025-03-11T17:03:32.99Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 9,
-              "Title": "ICampaignService.cs",
-              "DocumentMoniker": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\Services\\CampaignService\\ICampaignService.cs",
-              "RelativeDocumentMoniker": "FDSSYSTEM\\Services\\CampaignService\\ICampaignService.cs",
-              "ToolTip": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\Services\\CampaignService\\ICampaignService.cs",
-              "RelativeToolTip": "FDSSYSTEM\\Services\\CampaignService\\ICampaignService.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAqwA0AAAAIAAAA",
+              "Title": "CampaignService.cs",
+              "DocumentMoniker": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\Services\\CampaignService\\CampaignService.cs",
+              "RelativeDocumentMoniker": "FDSSYSTEM\\Services\\CampaignService\\CampaignService.cs",
+              "ToolTip": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\Services\\CampaignService\\CampaignService.cs",
+              "RelativeToolTip": "FDSSYSTEM\\Services\\CampaignService\\CampaignService.cs",
+              "ViewState": "AQIAAIkAAAAAAAAAAAAAwAAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-10T15:45:25.504Z",
+              "WhenOpened": "2025-03-11T16:56:02.994Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 10,
+              "Title": "Post.cs",
+              "DocumentMoniker": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\Models\\Post.cs",
+              "RelativeDocumentMoniker": "FDSSYSTEM\\Models\\Post.cs",
+              "ToolTip": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\Models\\Post.cs",
+              "RelativeToolTip": "FDSSYSTEM\\Models\\Post.cs",
+              "ViewState": "AQIAABYAAAAAAAAAAAAowCoAAAAwAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-11T16:47:33.101Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
               "Title": "PostService.cs",
               "DocumentMoniker": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\Services\\PostService\\PostService.cs",
               "RelativeDocumentMoniker": "FDSSYSTEM\\Services\\PostService\\PostService.cs",
               "ToolTip": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\Services\\PostService\\PostService.cs",
               "RelativeToolTip": "FDSSYSTEM\\Services\\PostService\\PostService.cs",
-              "ViewState": "AQIAAC0AAAAAAAAAAAAmwDwAAAA5AAAA",
+              "ViewState": "AQIAACAAAAAAAAAAAAApwCgAAAAJAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-10T15:18:09.37Z",
+              "WhenOpened": "2025-03-11T16:14:30.807Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "PostController.cs",
+              "DocumentMoniker": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\Controllers\\PostController.cs",
+              "RelativeDocumentMoniker": "FDSSYSTEM\\Controllers\\PostController.cs",
+              "ToolTip": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\Controllers\\PostController.cs",
+              "RelativeToolTip": "FDSSYSTEM\\Controllers\\PostController.cs",
+              "ViewState": "AQIAAFsAAAAAAAAAAAAMwGAAAAAIAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-11T16:11:48.553Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "MongoRepository.cs",
+              "DocumentMoniker": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\Database\\MongoRepository.cs",
+              "RelativeDocumentMoniker": "FDSSYSTEM\\Database\\MongoRepository.cs",
+              "ToolTip": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\Database\\MongoRepository.cs",
+              "RelativeToolTip": "FDSSYSTEM\\Database\\MongoRepository.cs",
+              "ViewState": "AQIAAAoAAAAAAAAAAAAewBYAAAAZAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-11T17:03:39.258Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "INewRepository.cs",
+              "DocumentMoniker": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\Repositories\\NewRepository\\INewRepository.cs",
+              "RelativeDocumentMoniker": "FDSSYSTEM\\Repositories\\NewRepository\\INewRepository.cs",
+              "ToolTip": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\Repositories\\NewRepository\\INewRepository.cs",
+              "RelativeToolTip": "FDSSYSTEM\\Repositories\\NewRepository\\INewRepository.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAoAAAAqAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-11T17:04:06.391Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "New.cs",
+              "DocumentMoniker": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\Models\\New.cs",
+              "RelativeDocumentMoniker": "FDSSYSTEM\\Models\\New.cs",
+              "ToolTip": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\Models\\New.cs",
+              "RelativeToolTip": "FDSSYSTEM\\Models\\New.cs",
+              "ViewState": "AQIAAAsAAAAAAAAAAAAQwBgAAAAwAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-11T16:47:27.124Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "PostDto.cs",
+              "DocumentMoniker": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\DTOs\\PostDto.cs",
+              "RelativeDocumentMoniker": "FDSSYSTEM\\DTOs\\PostDto.cs",
+              "ToolTip": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\DTOs\\PostDto.cs",
+              "RelativeToolTip": "FDSSYSTEM\\DTOs\\PostDto.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-11T16:46:29.021Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "NewDto.cs",
+              "DocumentMoniker": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\DTOs\\NewDto.cs",
+              "RelativeDocumentMoniker": "FDSSYSTEM\\DTOs\\NewDto.cs",
+              "ToolTip": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\DTOs\\NewDto.cs",
+              "RelativeToolTip": "FDSSYSTEM\\DTOs\\NewDto.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-11T16:46:26.864Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "INewService.cs",
+              "DocumentMoniker": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\Services\\NewService\\INewService.cs",
+              "RelativeDocumentMoniker": "FDSSYSTEM\\Services\\NewService\\INewService.cs",
+              "ToolTip": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\Services\\NewService\\INewService.cs",
+              "RelativeToolTip": "FDSSYSTEM\\Services\\NewService\\INewService.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-11T16:39:27.096Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "NewService.cs",
+              "DocumentMoniker": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\Services\\NewService\\NewService.cs",
+              "RelativeDocumentMoniker": "FDSSYSTEM\\Services\\NewService\\NewService.cs",
+              "ToolTip": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\Services\\NewService\\NewService.cs",
+              "RelativeToolTip": "FDSSYSTEM\\Services\\NewService\\NewService.cs",
+              "ViewState": "AQIAAFMAAAAAAAAAAAAuwDoAAAAsAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-11T16:14:29.716Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "NewController.cs",
+              "DocumentMoniker": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\Controllers\\NewController.cs",
+              "RelativeDocumentMoniker": "FDSSYSTEM\\Controllers\\NewController.cs",
+              "ToolTip": "D:\\Backend1\\be\\FDSSYSTEM\\FDSSYSTEM\\Controllers\\NewController.cs",
+              "RelativeToolTip": "FDSSYSTEM\\Controllers\\NewController.cs",
+              "ViewState": "AQIAAC8AAAAAAAAAAAAIwDYAAAAIAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-11T15:44:01.135Z",
               "EditorCaption": ""
             }
           ]

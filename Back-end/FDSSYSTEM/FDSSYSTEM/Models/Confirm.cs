@@ -1,6 +1,6 @@
 ﻿namespace FDSSYSTEM.Models
 {
-    public class PersonalDonorInfo
+    public class Confirm
     {
     }
 }

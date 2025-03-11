@@ -1,13 +1,9 @@
 ﻿
 using FDSSYSTEM.Models;
 using FDSSYSTEM.Repositories.UserRepository;
-using FDSSYSTEM.Services.UserService;
 using MongoDB.Bson;
-using System.Text;
-using System.Security.Cryptography;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using FDSSYSTEM.DTOs;
-using Mapster;
+using MongoDB.Driver;
 
 
 namespace FDSSYSTEM.Services.UserService;
@@ -42,17 +38,22 @@ public class UserService : IUserService
 
     }
 
-    public async Task CreateUserAsync(RegisterUserDto user)
+    public async Task CreateUserAsync(Account user)
     {
         var passwordHash = HashPassword(user.Password);
         var account = new Account
         {
             AccountId = Guid.NewGuid().ToString(),
-            Email =user.UserEmail,
+            Email =user.Email,
             Password = passwordHash,
             FullName = user.FullName,
             Phone = user.Phone,
-            RoleId = user.RoleId
+            RoleId = user.RoleId,
+            CCCD = user.CCCD,
+            TaxIdentificationNumber = user.TaxIdentificationNumber,
+            OrganizationName = user.OrganizationName,
+            Status = user.Status,
+            IsConfirm = user.IsConfirm,
         };
         await _userRepository.AddAsync(account);
     }
@@ -69,14 +70,73 @@ public class UserService : IUserService
 
     public async Task AddStaff(AddStaffDto staffDto)
     {
-        var staff = new RegisterUserDto
+        var staff = new Account
         {
             FullName = staffDto.FullName,
             Phone = staffDto.Phone,
             Password = staffDto.Password,
-            UserEmail = staffDto.UserEmail,
-            RoleId =2
+            Email = staffDto.UserEmail,
+            RoleId =2,
+            IsConfirm =true
         };
         await CreateUserAsync(staff);
+    }
+
+    public async Task CreateUserAsync(RegisterPersonalDonorDto user)
+    {
+        var personalDonor = new Account
+        {
+            FullName = user.FullName,
+            Phone = user.Phone,
+            Password = user.Password,
+            Email = user.UserEmail,
+            RoleId = 3,
+            Status ="Pending",
+            CCCD = user.CCCD,
+            IsConfirm = false
+        };
+        await CreateUserAsync(personalDonor);
+    }
+
+    public async Task CreateUserAsync(RegisterOrganizationDonorDto user)
+    {
+        var organizationDonor = new Account
+        {
+            FullName = user.FullName,
+            Phone = user.Phone,
+            Password = user.Password,
+            Email = user.UserEmail,
+            RoleId = 3,
+            Status = "Pending",
+            OrganizationName = user.OrganizationName,
+            TaxIdentificationNumber = user.TaxIdentificationNumber,
+            IsConfirm = false
+        };
+        await CreateUserAsync(organizationDonor);
+    }
+
+    public async Task CreateUserAsync(RegisterRecipientDto user)
+    {
+        var recipient = new Account
+        {
+            FullName = user.FullName,
+            Phone = user.Phone,
+            Password = user.Password,
+            Email = user.UserEmail,
+            RoleId = 4,
+            Status = "Pending",
+            CCCD = user.CCCD,
+            IsConfirm = false
+        };
+        await CreateUserAsync(recipient);
+    }
+
+    public async Task Confirm(string id)
+    {
+        var filter = Builders<Account>.Filter.Eq(c => c.AccountId, id);
+        var account = (await _userRepository.GetAllAsync(filter)).FirstOrDefault();
+
+        account.IsConfirm =true;
+        await _userRepository.UpdateAsync(account.Id, account);
     }
 }
