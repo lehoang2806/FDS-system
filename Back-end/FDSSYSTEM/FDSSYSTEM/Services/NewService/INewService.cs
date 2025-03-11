@@ -11,7 +11,6 @@ namespace FDSSYSTEM.Services.NewService
         Task Create(NewDto newDto);
         Task Update(string id, NewDto newDto);
         Task Delete(string id);
-        Task Approve(string id);
-        Task Reject(string id);
+        Task Approve(ApproveNewDto approveNewDto);
     }
 }

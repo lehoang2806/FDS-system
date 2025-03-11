@@ -15,10 +15,6 @@ namespace FDSSYSTEM.Repositories.PostRepository
             _dbContext = dbContext;
         }
 
-        public async Task<Post> GetMostAsync()
-        {
-            var all = await GetAllAsync();
-            return all.OrderByDescending(x => x.EventId).FirstOrDefault();
-        }
+    
     }
 }

@@ -1,5 +1,5 @@
 ﻿using FDSSYSTEM.DTOs;
-using FDSSYSTEM.Repositories.PostRepository;
+using FDSSYSTEM.Models;
 using FDSSYSTEM.Repositories.RoleRepository;
 using Mapster;
 
@@ -17,6 +17,12 @@ namespace FDSSYSTEM.Services.RoleService
         {
             var allRole = await _roleRepository.GetAllAsync();
             return allRole.Where(x => x.RoleName == "Donor" || x.RoleName == "Recipient").ToList().Adapt<List<RoleDto>>();
+        }
+
+        public async Task<Role> GetRoleById(int roleId)
+        {
+            var allRole = await _roleRepository.GetAllAsync();
+            return allRole.FirstOrDefault(x => x.RoleId == roleId);
         }
     }
 }

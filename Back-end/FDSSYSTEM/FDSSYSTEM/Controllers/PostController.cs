@@ -49,6 +49,20 @@ namespace FDSSYSTEM.Controllers
             }
         }
 
+        [HttpPost("Approve")]
+        public async Task<ActionResult> Approve(ApprovePostDto approvePostDto)
+        {
+            try
+            {
+                await _postService.Approve(approvePostDto);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
+
         [HttpPut("UpdatePost/{id}")]
         public async Task<ActionResult> UpdatePost(string id, PostDto post)
         {

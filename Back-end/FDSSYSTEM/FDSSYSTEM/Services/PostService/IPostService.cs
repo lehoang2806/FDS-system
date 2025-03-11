@@ -11,5 +11,6 @@ namespace FDSSYSTEM.Services.PostService
         Task Create(PostDto post);
         Task Update(string id, PostDto post);
         Task Delete(string id);
+        Task Approve(ApprovePostDto approvePostDto);
     }
 }

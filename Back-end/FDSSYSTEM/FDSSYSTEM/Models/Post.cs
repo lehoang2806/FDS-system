@@ -35,6 +35,7 @@ public partial class Post
 
     public DateTime? DateDelete { get; set; }
 
-    public int EventId { get; set; }
-    
+    public int Campaign { get; set; }
+    public string ApproveComment { get; set; }
+
 }

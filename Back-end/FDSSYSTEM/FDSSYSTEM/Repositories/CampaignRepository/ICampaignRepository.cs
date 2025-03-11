@@ -1,6 +1,12 @@
-﻿namespace FDSSYSTEM.Repositories.CampaignRepository
+﻿using FDSSYSTEM.Database;
+using FDSSYSTEM.Models;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+namespace FDSSYSTEM.Repositories.CampaignRepository
 {
-    public interface ICampaignRepository
+    public interface ICampaignRepository : IMongoRepository<Campaign>
     {
+        Task<Campaign> GetLatestAsync();
     }
 }

@@ -3,27 +3,24 @@ using FDSSYSTEM.DTOs;
 using FDSSYSTEM.Helpers;
 using FDSSYSTEM.Models;
 using FDSSYSTEM.Repositories.UserRepository;
+using FDSSYSTEM.Services.UserContextService;
 using FDSSYSTEM.Services.UserService;
 using Mapster;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
+using System.Security.Claims;
 namespace FDSSYSTEM.Controllers
 {
     [Route("api/user")]
-    [ApiController]
-    [Authorize]
-    public class UserController : Controller
+    [Authorize(Roles ="Admin,Staff")]
+    public class UserController : BaseController
     {
         private readonly IUserService _userService;
         private readonly IConfiguration _configuration;
-
-
-
        
         public UserController(IConfiguration configuration, IUserService userService)
-        {
-           
+        {          
             _configuration = configuration;
             _userService = userService;
         }
@@ -32,6 +29,11 @@ namespace FDSSYSTEM.Controllers
         [HttpGet("GetAllUser")]
         public async Task<ActionResult> GetAllUser()
         {
+            var email = User.FindFirst(ClaimTypes.Name)?.Value; // Lấy UserId
+            var role = User.FindFirst(ClaimTypes.Role)?.Value; // Lấy Email
+            var username = User.Identity?.Name; // Lấy Username
+
+           
             try
             {
              
