@@ -3,27 +3,34 @@ import { navigateHook } from "@/routes/RouteApp"
 import { routes } from "@/routes/routeName"
 import { FC, useState } from "react"
 import { Link } from "react-router-dom"
+import { SubmitCertificateModal } from "../Modal"
 
 const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
     const [hoverIndex, setHoverIndex] = useState<number | null>(null);
 
     const [isSubMenuProfileOpen, setIsSubMenuProfileOpen] = useState(false);
 
+    const [isSubmitCertificateModalOpen, setIsSubmitCertificateModalOpen] = useState(false);
+
     const menuItems = [
         {
-            name: "Ủng hộ",
+            name: "Chiến dịch",
             subMenu: [
                 {
-                    title: "Chiến dịch",
+                    title: "Tất cả",
                     to: routes.user.campaign.list
                 },
                 {
-                    title: "Tổ chức, cá nhân hỗ trợ",
-                    to: routes.user.supporter.list
+                    title: "Tổ chức",
+                    to: routes.user.campaign.list
+                },
+                {
+                    title: "Cá nhân",
+                    to: routes.user.campaign.list
                 }
             ]
         },
-        { name: "Gây quỹ", subMenu: ["Bắt đầu"] },
+        { name: "Tin tức", subMenu: [{ title: "Tất cả", to: routes.user.news.list }] },
         { name: "Khám phá", subMenu: [
             {
                 title: "Tin tức",
@@ -78,6 +85,7 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
                     )}
                     {isLogin && (
                         <>
+                            <button onClick={() => setIsSubmitCertificateModalOpen(true)} className="sc-btn">Tạo chiến dịch</button>
                             <NotificationIcon width={30} height={30} className="notification-icon" />
                             <figure className="avatar-img"></figure>
                             <MenuIcon width={30} height={30} className="menu-icon" onClick={() => setIsSubMenuProfileOpen(!isSubMenuProfileOpen)} />
@@ -86,6 +94,7 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
                                     <ul>
                                         <li><Link to={routes.user.profile}>Thông tin cá nhân</Link></li>
                                         <li><Link to={routes.user.change_pass}>Đổi mật khẩu</Link></li>
+                                        <li><Link to={routes.user.submit_certificate}>Chứng chỉ</Link></li>
                                         <li><Link to={""}>Đăng xuất</Link></li>
                                     </ul>
                                 </div>
@@ -94,6 +103,7 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
                     )}
                 </div>
             </div>
+            <SubmitCertificateModal isOpen={isSubmitCertificateModalOpen} setIsOpen={setIsSubmitCertificateModalOpen} />
         </header>
     )
 }

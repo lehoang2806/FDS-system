@@ -28,30 +28,16 @@ export default function () {
                             <CampaignCard />
                             <CampaignCard />
                         </div>
-                        <div className="pagination-lists">
-                            <span className="pagination-item pagination-item-active"></span>
-                            <span className="pagination-item"></span>
-                            <span className="pagination-item"></span>
-                            <span className="pagination-item"></span>
-                            <span className="pagination-item"></span>
-                        </div>
                     </div>
                     <div className="ls2cr3">
                         <div className="ls2cr3r1">
-                            <h3>Chiến dịch của tổ chức</h3>
+                            <h3>Chiến dịch của Cá nhân</h3>
                             <Link to={"/"} className="view-all">Xem tất cả</Link>
                         </div>
                         <div className="ls2cr3r2">
                             <CampaignCard />
                             <CampaignCard />
                             <CampaignCard />
-                        </div>
-                        <div className="pagination-lists">
-                            <span className="pagination-item pagination-item-active"></span>
-                            <span className="pagination-item"></span>
-                            <span className="pagination-item"></span>
-                            <span className="pagination-item"></span>
-                            <span className="pagination-item"></span>
                         </div>
                     </div>
                 </div>

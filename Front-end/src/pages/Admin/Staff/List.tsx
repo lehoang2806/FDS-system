@@ -1,11 +1,27 @@
+import { selectGetAllUser } from "@/app/selector"
+import { useAppDispatch, useAppSelector } from "@/app/store"
 import { ActiveIcon, BlockIcon, TotalIcon } from "@/assets/icons"
-import { SlideToggle } from "@/components/Elements"
 import { navigateHook } from "@/routes/RouteApp"
 import { routes } from "@/routes/routeName"
+import { getAllUserApiThunk } from "@/services/user/userThunk"
+import { useEffect } from "react"
 
 const AdminListStaffPage = () => {
-    const handleToDetail = (campaignId: string) => {
-        const url = routes.admin.staff.detail.replace(":id", campaignId);
+    const dispatch = useAppDispatch();
+
+    const users = useAppSelector(selectGetAllUser);
+    const accountStaffs = users.filter(user => user.roleId === 2);
+
+    useEffect(() => {
+        dispatch(getAllUserApiThunk())
+            .unwrap()
+            .catch(() => {
+            }).finally(() => {
+            });
+    }, []);
+
+    const handleToDetail = (staffId: string) => {
+        const url = routes.admin.staff.detail.replace(":id", staffId);
         return navigateHook(url)
     }
 
@@ -53,16 +69,16 @@ const AdminListStaffPage = () => {
                         <thead className="table-head">
                             <tr className="table-head-row">
                                 <th className="table-head-cell">
-                                    ID
+                                    Email
                                 </th>
                                 <th className="table-head-cell">
-                                    Name
+                                    Full Name
                                 </th>
                                 <th className="table-head-cell">
-                                    Create Date
+                                    Phone
                                 </th>
                                 <th className="table-head-cell">
-                                    Active
+                                    Address
                                 </th>
                                 <th className="table-head-cell">
                                     Action
@@ -70,28 +86,17 @@ const AdminListStaffPage = () => {
                             </tr>
                         </thead>
                         <tbody className="table-body">
-                            <tr className="table-body-row">
-                                <td className='table-body-cell'>1</td>
-                                <td className='table-body-cell'>A</td>
-                                <td className='table-body-cell'>7/1</td>
-                                <td className='table-body-cell'>
-                                    <SlideToggle />
-                                </td>
-                                <td className="table-body-cell">
-                                    <button onClick={() => handleToDetail("1")}>view</button>
-                                </td>
-                            </tr>
-                            <tr className="table-body-row">
-                                <td className='table-body-cell'>1</td>
-                                <td className='table-body-cell'>A</td>
-                                <td className='table-body-cell'>7/1</td>
-                                <td className='table-body-cell'>
-                                    <SlideToggle />
-                                </td>
-                                <td className="table-body-cell">
-                                    H
-                                </td>
-                            </tr>
+                            {accountStaffs.map((row, index) => (
+                                <tr key={index} className="table-body-row">
+                                    <td className='table-body-cell'>{row.email}</td>
+                                    <td className='table-body-cell'>{row.fullName}</td>
+                                    <td className='table-body-cell'>{row.phone}</td>
+                                    <td className='table-body-cell'>{row.address}</td>
+                                    <td className="table-body-cell">
+                                        <button className="view-btn" onClick={() => handleToDetail(row.id)}>View</button>
+                                    </td>
+                                </tr>
+                            ))}
                         </tbody>
                     </table>
                 </div>
