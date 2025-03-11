@@ -6,11 +6,13 @@ namespace FDSSYSTEM.Services.NewService
 {
     public interface INewService
     {
-        Task<List<New>> GetAll();
+        Task<List<New>> GetAllNewsApproved();
+        Task<List<New>> GetAllNewsPending();
         Task<New> GetById(string id);
-        Task Create(NewDto newDto);
-        Task Update(string id, NewDto newDto);
+        Task Create(NewDto news);
+        Task Update(string id, NewDto news);
         Task Delete(string id);
         Task Approve(ApproveNewDto approveNewDto);
+        Task Reject(RejectNewDto rejectNewDto);
     }
 }

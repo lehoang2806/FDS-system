@@ -35,21 +35,21 @@ namespace FDSSYSTEM.Services.PostService
            return (await _postRepository.GetAllAsync()).ToList();
         }
 
-        public Task<Post> GetById(string id)
+        public async Task<Post> GetById(string id)
         {
-            throw new NotImplementedException();
+            return await _postRepository.GetByPostIdAsync(id);
         }
 
-        public async Task Update(string id, PostDto post)
+        public async Task Update(string id, PostDto postDto)
         {
-            var existingPost = await _postRepository.GetByIdAsync(id);
-            if (existingPost != null)
-            {
-                existingPost.PostText = post.PostText;
+            var post = await _postRepository.GetByPostIdAsync(id);
+            post.PostFile = postDto.PostFile;
+            post.Image = postDto.Image;
+            post.Content = postDto.Content;
+            post.PostText = postDto.PostText;
 
-                await _postRepository.UpdateAsync(id, existingPost);
-            }
-          
+            await _postRepository.UpdateAsync(post.Id, post);
+
         }
 
         public async Task Approve(ApprovePostDto approvePostDto)
@@ -57,9 +57,30 @@ namespace FDSSYSTEM.Services.PostService
             var filter = Builders<Post>.Filter.Eq(c => c.PostId, approvePostDto.PostId);
             var post = (await _postRepository.GetAllAsync(filter)).FirstOrDefault();
 
-            post.Status = approvePostDto.Type;
-            post.ApproveComment = approvePostDto.Comment;
+            post.Status = "Approved";
             await _postRepository.UpdateAsync(post.Id, post);
+        }
+
+        public async Task Reject(RejectPostDto rejectPostDto)
+        {
+            var filter = Builders<Post>.Filter.Eq(c => c.PostId, rejectPostDto.PostId);
+            var post = (await _postRepository.GetAllAsync(filter)).FirstOrDefault();
+
+            post.Status = "Rejected";
+            post.RejectComment = rejectPostDto.Comment;
+            await _postRepository.UpdateAsync(post.Id, post);
+        }
+
+        public async Task<List<Post>> GetAllPostsApproved()
+        {
+            var filter = Builders<Post>.Filter.Eq(posts => posts.Status, "Approved");
+            return (await _postRepository.GetAllAsync(filter)).ToList();
+        }
+
+        public async Task<List<Post>> GetAllPostsPending()
+        {
+            var filter = Builders<Post>.Filter.Eq(posts => posts.Status, "Pending");
+            return (await _postRepository.GetAllAsync(filter)).ToList();
         }
 
     }

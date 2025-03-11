@@ -15,6 +15,11 @@ namespace FDSSYSTEM.Repositories.PostRepository
             _dbContext = dbContext;
         }
 
-    
+        public async Task<Post> GetByPostIdAsync(string id)
+        {
+            var filter = Builders<Post>.Filter.Eq(p => p.PostId, id);
+            var getbyId = await GetAllAsync(filter);
+            return getbyId.FirstOrDefault();
+        }
     }
 }

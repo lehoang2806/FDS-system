@@ -1,6 +1,7 @@
 ﻿using FDSSYSTEM.DTOs;
 using FDSSYSTEM.Models;
 using FDSSYSTEM.Services.NewService;
+using Mapster;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -35,13 +36,13 @@ namespace FDSSYSTEM.Controllers
         }
 
         // Lấy tất cả tin tức
-        [HttpGet("GetAllNews")]
-        public async Task<ActionResult> GetAllNews()
+        [HttpGet("GetAllNewsApproved")]
+        public async Task<ActionResult> GetAllNewsApproved()
         {
             try
             {
-                var newsList = await _newService.GetAll();
-                return Ok(newsList);
+                var news = await _newService.GetAllNewsApproved();
+                return Ok(news.Adapt<List<NewDto>>());
             }
             catch (Exception ex)
             {
@@ -49,12 +50,40 @@ namespace FDSSYSTEM.Controllers
             }
         }
 
-        [HttpPost("Approve")]
+        [HttpGet("GetAllNewsPending")]
+        public async Task<ActionResult> GetAllNewsPending()
+        {
+            try
+            {
+                var news = await _newService.GetAllNewsPending();
+                return Ok(news.Adapt<List<NewDto>>());
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpPut("Approve")]
         public async Task<ActionResult> Approve(ApproveNewDto approveNewDto)
         {
             try
             {
                 await _newService.Approve(approveNewDto);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpPut("Reject")]
+        public async Task<ActionResult> Reject(RejectNewDto rejectNewDto)
+        {
+            try
+            {
+                await _newService.Reject(rejectNewDto);
                 return Ok();
             }
             catch (Exception ex)

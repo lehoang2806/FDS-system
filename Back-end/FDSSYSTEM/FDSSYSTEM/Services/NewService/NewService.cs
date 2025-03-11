@@ -20,7 +20,7 @@ namespace FDSSYSTEM.Services.NewService
             _newRepository = newRepository;
         }
 
-      
+
 
         public async Task Create(NewDto newDto)
         {
@@ -43,18 +43,14 @@ namespace FDSSYSTEM.Services.NewService
             await _newRepository.DeleteAsync(filter);
         }
 
-        public async Task<List<New>> GetAll()
-        {
-            var filter = Builders<New>.Filter.Eq(news => news.Status, "Approved");
-            return (List<New>)await _newRepository.GetAllAsync(filter);
-        }
+       
 
         public async Task<New> GetById(string id)
         {
             return await _newRepository.GetByIdAsync(id);
         }
 
-       
+
 
         // Update an existing news post
         public async Task Update(string id, NewDto newDto)
@@ -65,8 +61,8 @@ namespace FDSSYSTEM.Services.NewService
             news.Content = newDto.Content;
             news.PostText = newDto.PostText;
 
-           await _newRepository.UpdateAsync(id, news);
-            
+            await _newRepository.UpdateAsync(news.Id, news);
+
         }
 
         public async Task Approve(ApproveNewDto approveNewDto)
@@ -74,9 +70,32 @@ namespace FDSSYSTEM.Services.NewService
             var filter = Builders<New>.Filter.Eq(c => c.NewId, approveNewDto.NewId);
             var news = (await _newRepository.GetAllAsync(filter)).FirstOrDefault();
 
-            news.Status = approveNewDto.Type;
-            news.ApproveComment = approveNewDto.Comment;
+            news.Status = "Approved";
             await _newRepository.UpdateAsync(news.Id, news);
+        }
+
+        public async Task Reject(RejectNewDto rejectNewDto)
+        {
+            var filter = Builders<New>.Filter.Eq(c => c.NewId, rejectNewDto.NewId);
+            var news = (await _newRepository.GetAllAsync(filter)).FirstOrDefault();
+
+            news.Status = "Rejected";
+            news.RejectComment = rejectNewDto.Comment;
+            await _newRepository.UpdateAsync(news.Id, news);
+        }
+
+     
+        public async Task<List<New>> GetAllNewsApproved()
+        {
+            var filter = Builders<New>.Filter.Eq(news => news.Status, "Approved");
+            return (await _newRepository.GetAllAsync(filter)).ToList();
+        }
+
+        public async Task<List<New>> GetAllNewsPending()
+        {
+            var filter = Builders<New>.Filter.Eq(news => news.Status, "Pending");
+            return (await _newRepository.GetAllAsync(filter)).ToList();
         }
     }
 }
+

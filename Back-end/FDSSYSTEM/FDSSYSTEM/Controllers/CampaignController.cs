@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace FDSSYSTEM.Controllers
 {
     [Route("api/campaign")]
-    [Authorize(Roles = "Donor,Staff")]
+   
     public class CampaignController : BaseController
     {
         private readonly ICampaignService _campaignService;
@@ -23,6 +23,7 @@ namespace FDSSYSTEM.Controllers
         }
 
         [HttpPost("CreateCampaign")]
+        [Authorize(Roles = "Donor,Staff")]
         public async Task<ActionResult> CreateCampaign(CampaignDto campaign)
         {
             try
@@ -37,6 +38,7 @@ namespace FDSSYSTEM.Controllers
         }
 
         [HttpGet("GetAllCampaigns")]
+        [Authorize(Roles = "Staff,Admin")]
         public async Task<ActionResult> GetAllCampaigns()
         {
             try
@@ -51,7 +53,8 @@ namespace FDSSYSTEM.Controllers
         }
 
 
-        [HttpPost("Approve")]
+        [HttpPut("Approve")]
+        [Authorize(Roles = "Staff,Admin")]
         public async Task<ActionResult> Approve(ApproveCampaignDto approveCampaignDto)
         {
             try
@@ -65,7 +68,23 @@ namespace FDSSYSTEM.Controllers
             }
         }
 
+        [HttpPut("Reject")]
+        [Authorize(Roles = "Staff,Admin")]
+        public async Task<ActionResult> Reject(RejectCampaignDto rejectCampaignDto)
+        {
+            try
+            {
+                await _campaignService.Reject(rejectCampaignDto);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
+
         [HttpPut("UpdateCampaign/{id}")]
+        [Authorize(Roles = "Staff,Admin")]
         public async Task<ActionResult> UpdateCampaign(string id, CampaignDto campaign)
         {
             try
@@ -86,6 +105,7 @@ namespace FDSSYSTEM.Controllers
         }
 
         [HttpDelete("DeleteCampaign/{id}")]
+        [Authorize(Roles = "Staff,Admin")]
         public async Task<ActionResult> DeleteCampaign(string id)
         {
             try

@@ -1,6 +1,7 @@
 ﻿using FDSSYSTEM.DTOs;
 using FDSSYSTEM.Models;
 using FDSSYSTEM.Services.PostService;
+using Mapster;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -32,29 +33,57 @@ namespace FDSSYSTEM.Controllers
             }
         }
 
-        [HttpGet("GetAllPost")]
-        public async Task<ActionResult> GetAllPost()
+        // Lấy tất cả post
+        [HttpGet("GetAllPostsApproved")]
+        public async Task<ActionResult> GetAllPostsApproved()
         {
             try
             {
-                var posts = await _postService.GetAll();
-               
-                return Ok(posts);
+                var posts = await _postService.GetAllPostsApproved();
+                return Ok(posts.Adapt<List<PostDto>>());
             }
             catch (Exception ex)
             {
-
                 return BadRequest();
-
             }
         }
 
-        [HttpPost("Approve")]
+        [HttpGet("GetAllPostsPending")]
+        public async Task<ActionResult> GetAllPostsPending()
+        {
+            try
+            {
+                var posts = await _postService.GetAllPostsPending();
+                return Ok(posts.Adapt<List<PostDto>>());
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
+
+
+        [HttpPut("Approve")]
         public async Task<ActionResult> Approve(ApprovePostDto approvePostDto)
         {
             try
             {
                 await _postService.Approve(approvePostDto);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpPut("Reject")]
+        public async Task<ActionResult> Reject(RejectPostDto rejectPostDto)
+        {
+            try
+            {
+                await _postService.Reject(rejectPostDto);
                 return Ok();
             }
             catch (Exception ex)

@@ -48,4 +48,11 @@ public partial class Account
     public int RoleId { get; set; }
 
     public string? Address { get; set; }
+
+    public string CCCD { get; set; }
+    public string TaxIdentificationNumber { get; set; }
+    public string OrganizationName { get; set; }
+
+    public bool IsConfirm { get; set; }
+
 }
