@@ -23,6 +23,7 @@ export const routes = {
             forum: "/posts"
         },
         profile: "/user/profile",
+        personal: "/user/personal",
         submit_certificate: "/user/submit-certificate",
         change_pass: "/user/change-pass",
         new_pass: "/user/new-pass"

@@ -1,0 +1,127 @@
+#user-personal-page {
+    #upp-s1 {
+        background-image: url("@/assets/images/ls1.svg");
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: cover;
+        height: 500px;
+    }
+
+    #upp-s2 {
+        background: #f6f6fa;
+        padding-bottom: 30px;
+        
+        .upps2-container {
+            .upps2cr1 {
+                max-width: 1400px;
+                margin: 0 auto;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 36px 32px;
+                background: var(--white-color);
+
+                .upps2cr1c1 {
+                    display: flex;
+                    align-items: center;
+                    justify-content: start;
+                    gap: 60px;
+
+                    .upp-avatar {
+                        width: 200px;
+                        height: 200px;
+                        border-radius: var(--border-radius-circle);
+                        margin-top: -125px;
+                    }
+
+                    h2 {
+                        font-size: 24px;
+                        font-weight: 700;
+                        color: #343434;
+                    }
+
+                    p {
+                        font-size: 16px;
+                        font-weight: 400;
+                        color: #343434;
+                    }
+                }
+
+                .upps2cr1c2 {
+                    .pr-btn {
+                        font-size: 14px;
+                        font-weight: 700;
+                        padding: 12px 25px;
+                        border-radius: var(--border-radius-12);
+                    }
+                }
+            }
+
+            .upps2cr2 {
+                max-width: 1400px;
+                margin: 0 auto;
+                padding: 0 32px;
+                background: var(--white-color);
+                border-radius: 0px 0px 16px 16px;
+
+                .upp-tabs {
+                    display: flex;
+                    align-items: center;
+                    justify-content: start;
+
+                    .upp-tabs-item {
+                        position: relative;
+                        padding: 15px 22px;
+                        font-size: 16px;
+                        font-weight: 500;
+                        color: var(--main-gray);
+                        cursor: pointer;
+                        transition: color 0.3s ease;
+
+                        &.upp-tabs-item-actived {
+                            color: var(--main-color);
+
+                            &::after {
+                                content: "";
+                                position: absolute;
+                                bottom: 0;
+                                left: 0;
+                                width: 100%;
+                                height: 3px;
+                                background-color: var(--main-color);
+                                transition: width 0.3s ease, left 0.3s ease;
+                            }
+                        }
+                    }
+                }
+            }
+
+            .upps2cr3 {
+                max-width: 1000px;
+                margin: 0 auto;
+                margin-top: 30px;
+                background: var(--white-color);
+                border-radius: var(--border-radius-16);
+                padding: 24px;
+                
+                figure {
+                    display: flex;
+                    justify-content: center;
+                }
+
+                h1 {
+                    text-align: center;
+                    font-size: 23px;
+                    font-weight: 400;
+                    color: #858585;
+                    margin-top: 30px;
+                }
+
+                .pr-btn {
+                    padding: 12px 25px;
+                    border-radius: var(--border-radius-12);
+                }
+            }
+        }
+    }
+}

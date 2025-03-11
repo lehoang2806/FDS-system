@@ -31,16 +31,18 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
             ]
         },
         { name: "Tin tức", subMenu: [{ title: "Tất cả", to: routes.user.news.list }] },
-        { name: "Khám phá", subMenu: [
-            {
-                title: "Tin tức",
-                to: routes.user.news.list
-            },
-            {
-                title: "Bản tin",
-                to: routes.user.post.forum
-            }
-        ] },
+        {
+            name: "Khám phá", subMenu: [
+                {
+                    title: "Tin tức",
+                    to: routes.user.news.list
+                },
+                {
+                    title: "Bản tin",
+                    to: routes.user.post.forum
+                }
+            ]
+        },
         { name: "Giới thiệu", subMenu: ["Về chúng tôi", "Liên hệ"] }
     ];
 
@@ -92,7 +94,8 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
                             {isSubMenuProfileOpen && (
                                 <div className="sub-menu-profile">
                                     <ul>
-                                        <li><Link to={routes.user.profile}>Thông tin cá nhân</Link></li>
+                                        <li><Link to={routes.user.personal}>Xem trang cá nhân</Link></li>
+                                        <li><Link to={routes.user.profile}>Chỉnh sửa thông tin</Link></li>
                                         <li><Link to={routes.user.change_pass}>Đổi mật khẩu</Link></li>
                                         <li><Link to={routes.user.submit_certificate}>Chứng chỉ</Link></li>
                                         <li><Link to={""}>Đăng xuất</Link></li>

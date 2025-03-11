@@ -21,7 +21,7 @@ export default function () {
                     <div className="ls2cr2">
                         <div className="ls2cr2r1">
                             <h3>Chiến dịch của tổ chức</h3>
-                            <Link to={routes.user.campaign.list} className="view-all">Xem tất cả</Link>
+                            <Link to={`${routes.user.campaign.list}?tab=1`} className="view-all">Xem tất cả</Link>
                         </div>
                         <div className="ls2cr2r2">
                             <CampaignCard onClickDetail={() => handleToDetail("1")}/>
@@ -32,7 +32,7 @@ export default function () {
                     <div className="ls2cr3">
                         <div className="ls2cr3r1">
                             <h3>Chiến dịch của Cá nhân</h3>
-                            <Link to={"/"} className="view-all">Xem tất cả</Link>
+                            <Link to={`${routes.user.campaign.list}?tab=2`} className="view-all">Xem tất cả</Link>
                         </div>
                         <div className="ls2cr3r2">
                             <CampaignCard />
