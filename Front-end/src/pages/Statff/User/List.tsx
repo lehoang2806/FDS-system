@@ -1,7 +1,6 @@
 import { selectGetAllUser } from "@/app/selector"
 import { useAppDispatch, useAppSelector } from "@/app/store"
 import { ActiveIcon, BlockIcon, TotalIcon } from "@/assets/icons"
-import { SlideToggle } from "@/components/Elements"
 import { navigateHook } from "@/routes/RouteApp"
 import { routes } from "@/routes/routeName"
 import { getAllUserApiThunk } from "@/services/user/userThunk"

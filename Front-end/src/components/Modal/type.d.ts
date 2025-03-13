@@ -1,3 +1,5 @@
+import { RejectCertificate } from "@/types/user";
+
 interface ModalProps {
     isOpen: boolean;
     setIsOpen: (arg: boolean) => void;
@@ -15,3 +17,7 @@ interface SubmitCertificateModalProps extends ModalCommonProps {}
 interface PersonalDonorModalProps extends ModalCommonProps {}
 
 interface OrganizationDonorModalProps extends ModalCommonProps {}
+
+interface RejectCertificateModalProps extends ModalCommonProps {
+    selectedCertificate?: RejectCertificate | null;
+}

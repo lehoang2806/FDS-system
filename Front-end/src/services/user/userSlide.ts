@@ -1,9 +1,10 @@
-import { UserInfo, UserState } from "@/types/user";
+import { DonorCertificate, UserInfo, UserState } from "@/types/user";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { getAllUserApiThunk } from "./userThunk";
+import { getAllDonorCertificateApiThunk, getAllUserApiThunk } from "./userThunk";
 
 const initialState: UserState = {
-    listUser: []
+    listUser: [],
+    listDonorCertificate: []
 };
 
 export const userSlice = createSlice({
@@ -15,6 +16,9 @@ export const userSlice = createSlice({
         builder
         .addCase(getAllUserApiThunk.fulfilled, (state, action: PayloadAction<UserInfo[]>) => {
             state.listUser = action.payload;
+        })
+        .addCase(getAllDonorCertificateApiThunk.fulfilled, (state, action: PayloadAction<DonorCertificate[]>) => {
+            state.listDonorCertificate = action.payload;
         })
     },
 });

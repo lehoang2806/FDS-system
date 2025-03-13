@@ -6,6 +6,7 @@ import { StaffAddCampaignStaffPage, StaffDetailCampaignStaffPage, StaffListCampa
 import { StaffDetailCampaignUserPage, StaffListCampaignUserPage } from "@/pages/Statff/Campaign/User";
 import { StaffAddNewsPage, StaffDetailNewsPage, StaffListNewsPage } from "@/pages/Statff/News";
 import { StaffListPostPage } from "@/pages/Statff/Post";
+import { StaffListDonorCertificate } from "@/pages/Statff/Certificate/Donor";
 
 const routeStatff: RouteObject[] = [
     {
@@ -59,6 +60,10 @@ const routeStatff: RouteObject[] = [
             {
                 path: "post",
                 element: <StaffListPostPage />
+            },
+            {
+                path: "certificate/donor",
+                element: <StaffListDonorCertificate />
             }
         ],
     },

@@ -1,4 +1,4 @@
-import { CampaignIcon, DashboardtIcon, NewsIcon, PostIcon, StaffIcon, UserIcon } from '@/assets/icons';
+import { CampaignIcon, CertificateIcon, DashboardtIcon, NewsIcon, PostIcon, StaffIcon, UserIcon } from '@/assets/icons';
 import { FC, useRef } from 'react'
 import { Link, useLocation } from 'react-router-dom';
 import classNames from 'classnames';
@@ -14,9 +14,6 @@ const StaffSidebar: FC = () => {
     const handleDropdownToggle = (event: React.MouseEvent<HTMLElement>) => {
         const dropdown = event.currentTarget.nextElementSibling as HTMLElement;
         dropdown.classList.toggle('open');
-
-        const arrowIcon = event.currentTarget.querySelector('.src2-arrow') as HTMLElement;
-        arrowIcon.classList.toggle('rotate-180');
     };
 
     const handleHover = () => {
@@ -69,7 +66,7 @@ const StaffSidebar: FC = () => {
                         <span>Campaign</span>
                     </div>
                     <div ref={dropdownRef} className={classNames("ssrc2-nav-dropdown-content", {
-                        'open': location.pathname.startsWith(routes.admin.campaign.list),
+                        'open': location.pathname.startsWith(routes.staff.campaign.staff.list || routes.staff.campaign.user.list),
                     })}>
                         <Link
                             to={routes.staff.campaign.staff.list}
@@ -116,6 +113,28 @@ const StaffSidebar: FC = () => {
                             <span>Post</span>
                         </div>
                     </Link>
+                    <div
+                        className="sscr2-nav-item asrc2-nav-dropdown"
+                        onClick={handleDropdownToggle}
+                    >
+                        <CertificateIcon className="sscr2-nav-icon" />
+                        <span>Certificate</span>
+                    </div>
+                    <div ref={dropdownRef} className={classNames("ssrc2-nav-dropdown-content", {
+                        'open': location.pathname.startsWith(routes.staff.certificate.donor.list),
+                    })}>
+                        <Link
+                            to={routes.staff.certificate.donor.list}
+                            className={classNames('sscr2-nav-item', {
+                                'nav-active': location.pathname.startsWith(routes.staff.certificate.donor.list)
+                            })}
+                        >
+                            <div className="sscr2-nav-link">
+                                <StaffIcon className="sscr2-nav-icon" />
+                                <span>Donor</span>
+                            </div>
+                        </Link>
+                    </div>
                     {/* <div
                         className="sscr2-nav-item asrc2-nav-dropdown"
                         onClick={handleDropdownToggle}

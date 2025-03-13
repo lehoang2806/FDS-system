@@ -10,7 +10,7 @@ const LandingBasicLayout: FC = () => {
 
     return (
         <>
-            <HeaderLanding isLogin={true}/>
+            <HeaderLanding isLogin={isAuthenticated}/>
             <main id="landing">
                 <Outlet/>
             </main>

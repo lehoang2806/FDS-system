@@ -63,6 +63,7 @@
 @use "./user/user-change-pass.scss";
 @use "./user/user-new-pass.scss";
 @use "./user/user-submit-certificate.scss";
+@use "./user/user-personal.scss";
 
 @use "./post/post-forum.scss";
 
@@ -81,8 +82,10 @@
 @use "./staff/news/staff-detail-news.scss";
 @use "./staff/news/staff-add-news.scss";
 @use "./staff/post/staff-list-post.scss";
+@use "./staff/certificate/donor/staff-list-donor-certificate.scss";
 
 @use "./modal/modal.scss";
 @use "./modal/submit-certificate-modal.scss";
 @use "./modal/personal-donor-modal.scss";
 @use "./modal/organization-donor-modal.scss";
+@use "./modal/reject-certificate-modal.scss";

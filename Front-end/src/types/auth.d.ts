@@ -47,4 +47,6 @@ export type UserProfile = {
     dateDelete?: string | null;
     roleId: number;
     address?: string | null;
+    isConfirm?: boolean | null;
+    type?: string | null;
 };

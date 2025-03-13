@@ -1,9 +1,27 @@
-import { SearchIcon } from '@/assets/icons'
-import { CampaignCard } from '@/components/Card/index'
-import { FC, useState } from 'react'
+import { SearchIcon } from '@/assets/icons';
+import { CampaignCard } from '@/components/Card/index';
+import { FC, useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const ListCampaignPage: FC = () => {
-    const [activeTab, setActiveTab] = useState(0)
+    const location = useLocation();
+    const navigate = useNavigate();
+    
+    const getActiveTabFromURL = () => {
+        const params = new URLSearchParams(location.search);
+        return Number(params.get('tab')) || 0;
+    };
+
+    const [activeTab, setActiveTab] = useState<number>(getActiveTabFromURL());
+
+    const handleTabChange = (tabIndex: number) => {
+        setActiveTab(tabIndex);
+        navigate(`?tab=${tabIndex}`);
+    };
+
+    useEffect(() => {
+        setActiveTab(getActiveTabFromURL());
+    }, [location.search]);
 
     return (
         <main id="campaigns">
@@ -12,9 +30,9 @@ const ListCampaignPage: FC = () => {
                     <div className="cscr1">
                         <h1>Danh sách chiến dịch gây quỹ</h1>
                         <div className="cs-tabs">
-                            <h2 className={`cs-tab ${activeTab === 0 ? 'cs-tab-active' : ''}`} onClick={() => setActiveTab(0)}>Tất cả</h2>
-                            <h2 className={`cs-tab ${activeTab === 1 ? 'cs-tab-active' : ''}`} onClick={() => setActiveTab(1)}>Cá nhân</h2>
-                            <h2 className={`cs-tab ${activeTab === 2 ? 'cs-tab-active' : ''}`} onClick={() => setActiveTab(2)}>Tổ chức</h2>
+                            <h2 className={`cs-tab ${activeTab === 0 ? 'cs-tab-active' : ''}`} onClick={() => handleTabChange(0)}>Tất cả</h2>
+                            <h2 className={`cs-tab ${activeTab === 1 ? 'cs-tab-active' : ''}`} onClick={() => handleTabChange(1)}>Cá nhân</h2>
+                            <h2 className={`cs-tab ${activeTab === 2 ? 'cs-tab-active' : ''}`} onClick={() => handleTabChange(2)}>Tổ chức</h2>
                         </div>
                     </div>
                     <div className="cscr2">
@@ -61,7 +79,7 @@ const ListCampaignPage: FC = () => {
                 </div>
             </section>
         </main>
-    )
-}
+    );
+};
 
-export default ListCampaignPage
+export default ListCampaignPage;

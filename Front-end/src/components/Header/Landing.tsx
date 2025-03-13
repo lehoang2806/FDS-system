@@ -4,13 +4,23 @@ import { routes } from "@/routes/routeName"
 import { FC, useState } from "react"
 import { Link } from "react-router-dom"
 import { SubmitCertificateModal } from "../Modal"
+import { useAppSelector } from "@/app/store"
+import { selectUserLogin } from "@/app/selector"
 
 const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
+    const userLogin = useAppSelector(selectUserLogin)
+
     const [hoverIndex, setHoverIndex] = useState<number | null>(null);
 
     const [isSubMenuProfileOpen, setIsSubMenuProfileOpen] = useState(false);
 
     const [isSubmitCertificateModalOpen, setIsSubmitCertificateModalOpen] = useState(false);
+
+    const handleCreateCampaign = () => {
+        if (userLogin?.isConfirm === false) {
+            setIsSubmitCertificateModalOpen(true)
+        }
+    }
 
     const menuItems = [
         {
@@ -31,16 +41,18 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
             ]
         },
         { name: "Tin tức", subMenu: [{ title: "Tất cả", to: routes.user.news.list }] },
-        { name: "Khám phá", subMenu: [
-            {
-                title: "Tin tức",
-                to: routes.user.news.list
-            },
-            {
-                title: "Bản tin",
-                to: routes.user.post.forum
-            }
-        ] },
+        {
+            name: "Khám phá", subMenu: [
+                {
+                    title: "Tin tức",
+                    to: routes.user.news.list
+                },
+                {
+                    title: "Bản tin",
+                    to: routes.user.post.forum
+                }
+            ]
+        },
         { name: "Giới thiệu", subMenu: ["Về chúng tôi", "Liên hệ"] }
     ];
 
@@ -85,14 +97,15 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
                     )}
                     {isLogin && (
                         <>
-                            <button onClick={() => setIsSubmitCertificateModalOpen(true)} className="sc-btn">Tạo chiến dịch</button>
+                            <button onClick={handleCreateCampaign} className="sc-btn">Tạo chiến dịch</button>
                             <NotificationIcon width={30} height={30} className="notification-icon" />
                             <figure className="avatar-img"></figure>
                             <MenuIcon width={30} height={30} className="menu-icon" onClick={() => setIsSubMenuProfileOpen(!isSubMenuProfileOpen)} />
                             {isSubMenuProfileOpen && (
                                 <div className="sub-menu-profile">
                                     <ul>
-                                        <li><Link to={routes.user.profile}>Thông tin cá nhân</Link></li>
+                                        <li><Link to={routes.user.personal}>Xem trang cá nhân</Link></li>
+                                        <li><Link to={routes.user.profile}>Chỉnh sửa thông tin</Link></li>
                                         <li><Link to={routes.user.change_pass}>Đổi mật khẩu</Link></li>
                                         <li><Link to={routes.user.submit_certificate}>Chứng chỉ</Link></li>
                                         <li><Link to={""}>Đăng xuất</Link></li>

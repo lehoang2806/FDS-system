@@ -23,6 +23,7 @@ export const routes = {
             forum: "/posts"
         },
         profile: "/user/profile",
+        personal: "/user/personal",
         submit_certificate: "/user/submit-certificate",
         change_pass: "/user/change-pass",
         new_pass: "/user/new-pass"
@@ -78,6 +79,11 @@ export const routes = {
             add: "/staff/news/add",
             detail: "/staff/news/:id/detail",
         },
-        post: "/staff/post"
+        post: "/staff/post",
+        certificate: {
+            donor: {
+                list: "/staff/certificate/donor",
+            }
+        }
     }
 }

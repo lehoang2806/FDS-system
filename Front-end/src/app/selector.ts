@@ -1,7 +1,7 @@
 import { Selector } from "@/types/app";
 import { UserProfile } from "@/types/auth";
 import { RootState } from "./reducer";
-import { UserInfo } from "@/types/user";
+import { DonorCertificate, UserInfo } from "@/types/user";
 
 export const selectUserLogin: Selector<UserProfile|null> = (state: RootState) => {
     return state.auth.userInfo;
@@ -18,4 +18,13 @@ export const selectToken: Selector<string|null> = (state: RootState) => {
 //User
 export const selectGetAllUser: Selector<UserInfo[]> = (state: RootState) => {
     return state.user.listUser;
+}
+
+export const selectGetAllDonorCertificate: Selector<DonorCertificate[]> = (state: RootState) => {
+    return state.user.listDonorCertificate;
+}
+
+//Campaign
+export const selectGetAllCampaign: Selector<CampaignInfo[]> = (state: RootState) => {
+    return state.campaign.listCampaigns;
 }
