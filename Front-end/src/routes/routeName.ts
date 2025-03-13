@@ -79,6 +79,11 @@ export const routes = {
             add: "/staff/news/add",
             detail: "/staff/news/:id/detail",
         },
-        post: "/staff/post"
+        post: "/staff/post",
+        certificate: {
+            donor: {
+                list: "/staff/certificate/donor",
+            }
+        }
     }
 }

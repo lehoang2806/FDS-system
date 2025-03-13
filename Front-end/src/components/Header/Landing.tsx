@@ -4,13 +4,23 @@ import { routes } from "@/routes/routeName"
 import { FC, useState } from "react"
 import { Link } from "react-router-dom"
 import { SubmitCertificateModal } from "../Modal"
+import { useAppSelector } from "@/app/store"
+import { selectUserLogin } from "@/app/selector"
 
 const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
+    const userLogin = useAppSelector(selectUserLogin)
+
     const [hoverIndex, setHoverIndex] = useState<number | null>(null);
 
     const [isSubMenuProfileOpen, setIsSubMenuProfileOpen] = useState(false);
 
     const [isSubmitCertificateModalOpen, setIsSubmitCertificateModalOpen] = useState(false);
+
+    const handleCreateCampaign = () => {
+        if (userLogin?.isConfirm === false) {
+            setIsSubmitCertificateModalOpen(true)
+        }
+    }
 
     const menuItems = [
         {
@@ -87,7 +97,7 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
                     )}
                     {isLogin && (
                         <>
-                            <button onClick={() => setIsSubmitCertificateModalOpen(true)} className="sc-btn">Tạo chiến dịch</button>
+                            <button onClick={handleCreateCampaign} className="sc-btn">Tạo chiến dịch</button>
                             <NotificationIcon width={30} height={30} className="notification-icon" />
                             <figure className="avatar-img"></figure>
                             <MenuIcon width={30} height={30} className="menu-icon" onClick={() => setIsSubMenuProfileOpen(!isSubMenuProfileOpen)} />
