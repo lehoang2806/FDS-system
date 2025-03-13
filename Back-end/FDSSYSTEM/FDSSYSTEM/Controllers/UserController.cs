@@ -82,22 +82,22 @@ namespace FDSSYSTEM.Controllers
             }
         }
 
-        [HttpPut("Confirm/{id}")]
+        [HttpPut("Confirm")]
         [Authorize(Roles = "Admin,Staff")]
-        public async Task<ActionResult> Confirm(string id)
+        public async Task<ActionResult> Confirm([FromBody] ConfirmUserDto confirmUserDto)
         {
             try
             {
-                await _userService.Confirm(id);
+                await _userService.Confirm(confirmUserDto);  // Gọi phương thức Confirm với DTO
                 return Ok();
             }
             catch (Exception ex)
             {
-
-                return BadRequest();
-
+                // Xử lý lỗi và trả về phản hồi
+                return BadRequest(ex.Message);
             }
         }
+
 
         [HttpPost("CreatePersonalDonorCertificate")]
         [Authorize(Roles = "Donor")]

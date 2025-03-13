@@ -66,12 +66,13 @@ public class UserService : IUserService
             FullName = user.FullName,
             Phone = user.Phone,
             RoleId = user.RoleId,
-            Status = "Pending"
+            Status = "Pending",
             //CCCD = user.CCCD,
             //TaxIdentificationNumber = user.TaxIdentificationNumber,
             //OrganizationName = user.OrganizationName,
             //Status = user.Status,
-            //IsConfirm = user.IsConfirm,
+            /*IsConfirm = user.IsConfirm,*/
+            /*type = user.type,*/
         };
         await _userRepository.AddAsync(account);
     }
@@ -148,14 +149,24 @@ public class UserService : IUserService
     //    await CreateUserAsync(recipient);
     //}
 
-    public async Task Confirm(string id)
+    public async Task Confirm(ConfirmUserDto confirmUserDto)
     {
-        var filter = Builders<Account>.Filter.Eq(c => c.AccountId, id);
+        var filter = Builders<Account>.Filter.Eq(c => c.AccountId, confirmUserDto.AccountId);
         var account = (await _userRepository.GetAllAsync(filter)).FirstOrDefault();
 
-        account.IsConfirm = true;
-        await _userRepository.UpdateAsync(account.Id, account);
+        if (account != null)
+        {
+            account.IsConfirm = true;
+            account.Type = confirmUserDto.Type; // Thêm type từ DTO vào account
+            await _userRepository.UpdateAsync(account.Id, account);
+        }
+        else
+        {
+            // Xử lý nếu không tìm thấy account
+            throw new Exception("Account not found");
+        }
     }
+
 
     public async Task CreateOrganizationDonorCertificate(CreateOrganizationDonorCertificateDto certificateDto)
     {

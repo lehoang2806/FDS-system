@@ -12,7 +12,7 @@ public interface IUserService
     public Task<Account> GetUserByUsernameAsync(string userEmail);
     public Task CreateUserAsync(RegisterUserDto account);
     public bool VerifyPassword(string enteredPassword, string storedHash);
-    Task Confirm(string id);
+    Task Confirm(ConfirmUserDto confirmUserDto);
 
     Task CreateOrganizationDonorCertificate(CreateOrganizationDonorCertificateDto certificateDto);
     Task CreatePersonalDonorCertificate(CreatePersonalDonorCertificateDto certificateDto);
