@@ -2,6 +2,7 @@
 using FDSSYSTEM.Models;
 using FDSSYSTEM.Services.NewService;
 using Mapster;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -22,6 +23,7 @@ namespace FDSSYSTEM.Controllers
 
         // Tạo bài viết tin tức
         [HttpPost("CreateNews")]
+        [Authorize(Roles = "Staff")]
         public async Task<ActionResult> CreateNews(NewDto news)
         {
             try
@@ -36,7 +38,24 @@ namespace FDSSYSTEM.Controllers
         }
 
         // Lấy tất cả tin tức
+
+        [HttpGet("GetAllNews")]
+        [Authorize(Roles = "Admin,Staff,Donor,Staff")]
+        public async Task<ActionResult> GetAllNews()
+        {
+            try
+            {
+                var news = await _newService.GetAllNews();
+                return Ok(news.Adapt<List<NewDto>>());
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
+
         [HttpGet("GetAllNewsApproved")]
+        [Authorize(Roles = "Admin,Staff,Donor,Staff")]
         public async Task<ActionResult> GetAllNewsApproved()
         {
             try
@@ -65,6 +84,7 @@ namespace FDSSYSTEM.Controllers
         }
 
         [HttpPut("Approve")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> Approve(ApproveNewDto approveNewDto)
         {
             try
@@ -79,6 +99,7 @@ namespace FDSSYSTEM.Controllers
         }
 
         [HttpPut("Reject")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> Reject(RejectNewDto rejectNewDto)
         {
             try
@@ -94,6 +115,7 @@ namespace FDSSYSTEM.Controllers
 
         // Cập nhật tin tức
         [HttpPut("UpdateNews/{id}")]
+        [Authorize(Roles = "Admin,Staff")]
         public async Task<ActionResult> UpdateNews(string id, NewDto news)
         {
             try
@@ -115,6 +137,7 @@ namespace FDSSYSTEM.Controllers
 
         // Xóa tin tức
         [HttpDelete("DeleteNews/{id}")]
+        [Authorize(Roles = "Admin,Staff")]
         public async Task<ActionResult> DeleteNews(string id)
         {
             try

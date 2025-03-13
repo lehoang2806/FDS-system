@@ -18,14 +18,4 @@ public class UserRepository : MongoRepository<Account>, IUserRepository
     {
         _dbContext = dbContext; 
     }
-
-
-    #region king - LOGIN/REGISTER/FORGOR PASSWORD/GETINFO/ UPDATE USER/ CHANGE PASSWORD
-
-
-
-
-
-    #endregion
-
 }

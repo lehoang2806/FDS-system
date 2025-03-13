@@ -1,5 +1,6 @@
 ﻿using FDSSYSTEM.Database;
 using FDSSYSTEM.DTOs;
+using FDSSYSTEM.DTOs.Certificates;
 using FDSSYSTEM.Helpers;
 using FDSSYSTEM.Models;
 using FDSSYSTEM.Repositories.UserRepository;
@@ -13,7 +14,7 @@ using System.Security.Claims;
 namespace FDSSYSTEM.Controllers
 {
     [Route("api/user")]
-    [Authorize(Roles ="Admin,Staff")]
+  
     public class UserController : BaseController
     {
         private readonly IUserService _userService;
@@ -27,13 +28,9 @@ namespace FDSSYSTEM.Controllers
 
 
         [HttpGet("GetAllUser")]
+        [Authorize(Roles = "Admin,Staff")]
         public async Task<ActionResult> GetAllUser()
         {
-            var email = User.FindFirst(ClaimTypes.Name)?.Value; // Lấy UserId
-            var role = User.FindFirst(ClaimTypes.Role)?.Value; // Lấy Email
-            var username = User.Identity?.Name; // Lấy Username
-
-           
             try
             {
              
@@ -51,6 +48,7 @@ namespace FDSSYSTEM.Controllers
 
 
         [HttpPost("AddUser")]
+        [Authorize(Roles = "Admin,Staff")]
         public async Task<ActionResult> AddUser(Account account)
         {
             try
@@ -68,6 +66,7 @@ namespace FDSSYSTEM.Controllers
 
 
         [HttpPost("AddStaff")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> AddStaff(AddStaffDto staffDto)
         {
             try
@@ -84,6 +83,7 @@ namespace FDSSYSTEM.Controllers
         }
 
         [HttpPut("Confirm/{id}")]
+        [Authorize(Roles = "Admin,Staff")]
         public async Task<ActionResult> Confirm(string id)
         {
             try
@@ -99,7 +99,110 @@ namespace FDSSYSTEM.Controllers
             }
         }
 
+        [HttpPost("CreatePersonalDonorCertificate")]
+        [Authorize(Roles = "Donor")]
+        public async Task<ActionResult> CreatePersonalDonorCertificate(CreatePersonalDonorCertificateDto cert)
+        {
+            try
+            {
+                await _userService.CreatePersonalDonorCertificate(cert);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpPost("CreateOrganizationDonorCertificate")]
+        [Authorize(Roles = "Donor")]
+        public async Task<ActionResult> CreateOrganizationDonorCertificate(CreateOrganizationDonorCertificateDto cert)
+        {
+            try
+            {
+                await _userService.CreateOrganizationDonorCertificate(cert);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpPost("CreateRecipientCertificate")]
+        [Authorize(Roles = "Recipient")]
+        public async Task<ActionResult> CreateRecipientCertificate(CreateRecipientCertificateDto cert)
+        {
+            try
+            {
+                await _userService.CreateRecipientCertificate(cert);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
 
 
+        [HttpGet("GetAllDonorCertificate")]
+        [Authorize(Roles = "Admin,Staff,Donor")]
+        public async Task<ActionResult> GetAllDonorCertificate()
+        {
+            try
+            {
+                var cert = await _userService.GetAllDonorCertificat();
+                return Ok(cert);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpGet("GetAllRecipientCertificate")]
+        [Authorize(Roles = "Admin,Staff,Recipient")]
+        public async Task<ActionResult> GetAllRecipientCertificate()
+        {
+            try
+            {
+                var cert = await _userService.GetAllRecipientCertificat();
+                return Ok(cert);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpPut("ApproveCertificate")]
+        [Authorize(Roles = "Staff")]
+        public async Task<ActionResult> ApproveDonorCertificate(ApproveCertificateDto approveCertificateDto)
+        {
+            try
+            {
+                await _userService.ApproveCertificate(approveCertificateDto);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPut("RejectCertificate")]
+        [Authorize(Roles = "Staff")]
+        public async Task<ActionResult> RejectCertificate(RejectCertificateDto rejectCertificateDto)
+        {
+            try
+            {
+                await _userService.RejectCertificate(rejectCertificateDto);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

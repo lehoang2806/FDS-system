@@ -11,13 +11,10 @@ public partial class Feedback
 
     public string? FeedbackText { get; set; }
 
-    public string? FeedbackType { get; set; }
 
     public DateTime? DateSubmitted { get; set; }
 
-    public int EventId { get; set; }
+    public int CampaignId { get; set; }
 
-    public virtual Account Account { get; set; } = null!;
-
-    public virtual Campaign FeedbackNavigation { get; set; } = null!;
+ 
 }

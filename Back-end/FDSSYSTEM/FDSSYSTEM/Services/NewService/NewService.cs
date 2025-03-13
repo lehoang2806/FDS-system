@@ -96,6 +96,12 @@ namespace FDSSYSTEM.Services.NewService
             var filter = Builders<New>.Filter.Eq(news => news.Status, "Pending");
             return (await _newRepository.GetAllAsync(filter)).ToList();
         }
+
+        public async Task<List<New>> GetAllNews()
+        {
+            return (await _newRepository.GetAllAsync()).ToList();
+        }
+
     }
 }
 

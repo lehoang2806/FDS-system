@@ -2,6 +2,7 @@
 using FDSSYSTEM.Models;
 using FDSSYSTEM.Services.PostService;
 using Mapster;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -20,6 +21,7 @@ namespace FDSSYSTEM.Controllers
         }
 
         [HttpPost("CreatePost")]
+        [Authorize(Roles = "Donor,Staff")]
         public async Task<ActionResult> CreatePost(PostDto post)
         {
             try
@@ -34,7 +36,24 @@ namespace FDSSYSTEM.Controllers
         }
 
         // Lấy tất cả post
+
+        [HttpGet("GetAllPosts")]
+        [Authorize(Roles = "Admin,Staff,Donor,Staff")]
+        public async Task<ActionResult> GetAllPosts()
+        {
+            try
+            {
+                var posts = await _postService.GetAllPosts();
+                return Ok(posts.Adapt<List<PostDto>>());
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
+
         [HttpGet("GetAllPostsApproved")]
+ 
         public async Task<ActionResult> GetAllPostsApproved()
         {
             try
@@ -65,6 +84,7 @@ namespace FDSSYSTEM.Controllers
 
 
         [HttpPut("Approve")]
+        [Authorize(Roles = "Admin,Staff")]
         public async Task<ActionResult> Approve(ApprovePostDto approvePostDto)
         {
             try
@@ -79,6 +99,7 @@ namespace FDSSYSTEM.Controllers
         }
 
         [HttpPut("Reject")]
+        [Authorize(Roles = "Admin,Staff")]
         public async Task<ActionResult> Reject(RejectPostDto rejectPostDto)
         {
             try
@@ -93,6 +114,7 @@ namespace FDSSYSTEM.Controllers
         }
 
         [HttpPut("UpdatePost/{id}")]
+        [Authorize(Roles = "Donor,Staff")]
         public async Task<ActionResult> UpdatePost(string id, PostDto post)
         {
             try
@@ -113,6 +135,7 @@ namespace FDSSYSTEM.Controllers
         }
 
         [HttpDelete("DeletePost/{id}")]
+        [Authorize(Roles = "Admin,Staff,Donor,Staff")]
         public async Task<ActionResult> DeletePost(string id, PostDto post)
         {
             try
