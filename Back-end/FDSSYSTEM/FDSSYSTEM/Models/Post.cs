@@ -35,7 +35,7 @@ public partial class Post
 
     public DateTime? DateDelete { get; set; }
 
-    public int Campaign { get; set; }
+ 
     public string RejectComment { get; set; }
 
     public string? Image { get; set; }

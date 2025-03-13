@@ -6,6 +6,7 @@ namespace FDSSYSTEM.Services.NewService
 {
     public interface INewService
     {
+        Task<List<New>> GetAllNews();
         Task<List<New>> GetAllNewsApproved();
         Task<List<New>> GetAllNewsPending();
         Task<New> GetById(string id);

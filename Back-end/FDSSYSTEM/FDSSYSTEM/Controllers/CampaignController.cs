@@ -38,7 +38,7 @@ namespace FDSSYSTEM.Controllers
         }
 
         [HttpGet("GetAllCampaigns")]
-        [Authorize(Roles = "Staff,Admin")]
+        [Authorize(Roles = "Staff,Admin,Donor,Recipient")]
         public async Task<ActionResult> GetAllCampaigns()
         {
             try
@@ -84,7 +84,7 @@ namespace FDSSYSTEM.Controllers
         }
 
         [HttpPut("UpdateCampaign/{id}")]
-        [Authorize(Roles = "Staff,Admin")]
+        [Authorize(Roles = "Staff,Admin,Recipient")]
         public async Task<ActionResult> UpdateCampaign(string id, CampaignDto campaign)
         {
             try
@@ -105,7 +105,7 @@ namespace FDSSYSTEM.Controllers
         }
 
         [HttpDelete("DeleteCampaign/{id}")]
-        [Authorize(Roles = "Staff,Admin")]
+        [Authorize(Roles = "Staff,Admin,Recipient")]
         public async Task<ActionResult> DeleteCampaign(string id)
         {
             try

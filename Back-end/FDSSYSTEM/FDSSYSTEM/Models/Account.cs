@@ -49,10 +49,12 @@ public partial class Account
 
     public string? Address { get; set; }
 
-    public string CCCD { get; set; }
+    public string CitizenId { get; set; }
     public string TaxIdentificationNumber { get; set; }
     public string OrganizationName { get; set; }
 
     public bool IsConfirm { get; set; }
+    public string type { get; set; }
+
 
 }

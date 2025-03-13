@@ -3,8 +3,10 @@ using FDSSYSTEM.Helpers;
 using FDSSYSTEM.Options;
 using FDSSYSTEM.Repositories.CampaignRepository;
 using FDSSYSTEM.Repositories.NewRepository;
+using FDSSYSTEM.Repositories.OrganizationDonorCertificateRepository;
 using FDSSYSTEM.Repositories.PostCommentRepository;
 using FDSSYSTEM.Repositories.PostRepository;
+using FDSSYSTEM.Repositories.RecipientCertificateRepository;
 using FDSSYSTEM.Repositories.RoleRepository;
 using FDSSYSTEM.Repositories.UserRepository;
 using FDSSYSTEM.SeedData;
@@ -45,6 +47,10 @@ builder.Services.AddScoped<ICampaignService, CampaignService>();
 
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddScoped<IUserContextService, UserContextService>();
+
+builder.Services.AddScoped<IOrganizationDonorCertificateRepository, OrganizationDonorCertificateRepository>();
+builder.Services.AddScoped<IPersonalDonorCertificateRepository, PersonalDonorCertificateRepository>();
+builder.Services.AddScoped<IRecipientCertificateRepository, RecipientCertificateRepository>();
 
 builder.Services.Configure<JwtSetting>(builder.Configuration.GetSection("JwtSettings"));
 builder.Services.AddSingleton<JwtHelper>();

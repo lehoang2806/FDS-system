@@ -83,5 +83,10 @@ namespace FDSSYSTEM.Services.PostService
             return (await _postRepository.GetAllAsync(filter)).ToList();
         }
 
+        public async Task<List<Post>> GetAllPosts()
+        {
+            return (await _postRepository.GetAllAsync()).ToList();
+        }
+
     }
 }

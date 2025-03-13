@@ -2,7 +2,7 @@
 
 namespace FDSSYSTEM.Database;
 
-public interface IMongoRepository<T> where T:class
+public interface IMongoRepository<T> where T : class
 {
     Task<IEnumerable<T>> GetAllAsync(FilterDefinition<T> filter);
     Task<IEnumerable<T>> GetAllAsync();
