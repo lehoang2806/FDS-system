@@ -1,9 +1,0 @@
-﻿################################################################################
-# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
-################################################################################
-
-/FDSSYSTEM/bin
-/.vs
-/FDSSYSTEM/obj/Debug/net8.0
-/FDSSYSTEM/obj/Release/net8.0
-/FDSSYSTEM/obj
