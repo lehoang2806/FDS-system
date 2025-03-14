@@ -190,3 +190,23 @@ input.is-error {
 .status-pending {
     background: #F8C20A;
 }
+
+.reject-btn, .approve-btn, .view-btn {
+    font-size: 14px;
+    font-weight: 400;
+    color: #fff;
+    padding: 8px 12px;
+    margin: 0 8px;
+    border-radius: var(--border-radius-12);
+    background: #FF6692;
+    border: none;
+    cursor: pointer;
+}
+
+.approve-btn {
+    background: #36C76C;
+}
+
+.view-btn {
+    background: #635BFF;
+}

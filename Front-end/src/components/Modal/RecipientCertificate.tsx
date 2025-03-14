@@ -1,22 +1,20 @@
-import { FC } from 'react'
-import Modal from './Modal'
-import { useAppDispatch } from '@/app/store'
-import { Field, Form, Formik, FormikHelpers } from 'formik';
-import { PersonalDonor } from '@/types/user';
+import { useAppDispatch } from '@/app/store';
 import * as Yup from "yup";
 import Button from '../Elements/Button';
 import classNames from "classnames";
-import { createPersonalDonorCertificateApiThunk } from '@/services/user/userThunk';
+import { AddRecipientCertificate } from '@/types/user';
+import { Field, Form, Formik, FormikHelpers } from 'formik';
+import { createRecipientCertificateApiThunk, getAllRecipientCertificateApiThunk } from '@/services/user/userThunk';
 import { toast } from 'react-toastify';
+import { FC } from 'react';
+import { RecipientCertificateModalProps } from './type';
+import Modal from './Modal';
 import { get } from 'lodash';
-import { navigateHook } from '@/routes/RouteApp';
-import { routes } from '@/routes/routeName';
-import { PersonalDonorModalProps } from './type';
 
-const PersonalDonorModal: FC<PersonalDonorModalProps> = ({ isOpen, setIsOpen }) => {
+const RecipientCertificateModal: FC<RecipientCertificateModalProps> = ({isOpen, setIsOpen}) => {
     const dispatch = useAppDispatch();
 
-    const initialValues: PersonalDonor = {
+    const initialValues: AddRecipientCertificate = {
         citizenId: '',
     };
 
@@ -28,11 +26,11 @@ const PersonalDonorModal: FC<PersonalDonorModalProps> = ({ isOpen, setIsOpen }) 
             .max(12, 'Citizen ID must be at most 12 characters'),
     });
 
-    const onSubmit = async (values: PersonalDonor, helpers: FormikHelpers<PersonalDonor>) => {
-        await dispatch(createPersonalDonorCertificateApiThunk(values)).unwrap().then(() => {
+    const onSubmit = async (values: AddRecipientCertificate, helpers: FormikHelpers<AddRecipientCertificate>) => {
+        await dispatch(createRecipientCertificateApiThunk(values)).unwrap().then(() => {
             toast.success("Nộp chứng chỉ thành công");
             setIsOpen(false);
-            navigateHook(`${routes.user.personal}?tab=chungchi`);
+            dispatch(getAllRecipientCertificateApiThunk());
         }).catch((error) => {
             const errorData = get(error, 'data.message', null);
             helpers.setErrors({ citizenId: errorData });
@@ -43,10 +41,10 @@ const PersonalDonorModal: FC<PersonalDonorModalProps> = ({ isOpen, setIsOpen }) 
     }
 
     return (
-        <Modal isOpen={isOpen} setIsOpen={setIsOpen} title="Personal Donor">
-            <section id="personal-donor-modal">
-                <div className="pdm-container">
-                    <h1>Đăng ký thành cá nhân ủng hộ</h1>
+        <Modal isOpen={isOpen} setIsOpen={setIsOpen} title="Recipient Certificate">
+            <section id="recipient-certificate-modal">
+                <div className="rcm-container">
+                    <h1>Đăng ký chứng chỉ thu nhập thấp</h1>
                     <Formik
                         initialValues={initialValues}
                         onSubmit={onSubmit}
@@ -74,4 +72,4 @@ const PersonalDonorModal: FC<PersonalDonorModalProps> = ({ isOpen, setIsOpen }) 
     )
 }
 
-export default PersonalDonorModal
+export default RecipientCertificateModal

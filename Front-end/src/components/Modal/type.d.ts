@@ -21,3 +21,15 @@ interface OrganizationDonorModalProps extends ModalCommonProps {}
 interface RejectCertificateModalProps extends ModalCommonProps {
     selectedCertificate?: RejectCertificate | null;
 }
+
+interface CreateCampaignModalProps extends ModalCommonProps {}
+
+interface RejectCampaignModalProps extends ModalCommonProps {
+    selectedCampaign?: RejectCampaign | null;
+}
+
+interface RejectReasonModalProps extends ModalCommonProps {
+    reason: string;
+}
+
+interface RecipientCertificateModalProps extends ModalCommonProps {}

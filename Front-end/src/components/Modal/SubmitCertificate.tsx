@@ -2,6 +2,7 @@ import { FC } from 'react'
 import Modal from './Modal'
 import { navigateHook } from '@/routes/RouteApp'
 import { routes } from '@/routes/routeName'
+import { SubmitCertificateModalProps } from './type'
 
 const SubmitCertificateModal: FC<SubmitCertificateModalProps> = ({ isOpen, setIsOpen }) => {
     return (

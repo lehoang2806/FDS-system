@@ -97,7 +97,9 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
                     )}
                     {isLogin && (
                         <>
-                            <button onClick={handleCreateCampaign} className="sc-btn">Tạo chiến dịch</button>
+                            {userLogin?.roleId === 3 && (
+                                <button onClick={handleCreateCampaign} className="sc-btn">Tạo chiến dịch</button>
+                            )}
                             <NotificationIcon width={30} height={30} className="notification-icon" />
                             <figure className="avatar-img"></figure>
                             <MenuIcon width={30} height={30} className="menu-icon" onClick={() => setIsSubMenuProfileOpen(!isSubMenuProfileOpen)} />
@@ -107,7 +109,6 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
                                         <li><Link to={routes.user.personal}>Xem trang cá nhân</Link></li>
                                         <li><Link to={routes.user.profile}>Chỉnh sửa thông tin</Link></li>
                                         <li><Link to={routes.user.change_pass}>Đổi mật khẩu</Link></li>
-                                        <li><Link to={routes.user.submit_certificate}>Chứng chỉ</Link></li>
                                         <li><Link to={""}>Đăng xuất</Link></li>
                                     </ul>
                                 </div>

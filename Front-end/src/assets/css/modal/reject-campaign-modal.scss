@@ -1,0 +1,25 @@
+#reject-campaign-modal {
+    padding: 0 30px;
+
+    .rcm-container {
+        text-align: center;
+
+        h1 {
+            font-size: 30px;
+            font-weight: 800;
+            color: #272d4e;
+            margin-bottom: 40px;
+        }
+
+        .form {
+            .form-field {
+                text-align: start;
+            }
+        }
+
+        .sc-btn {
+            margin-top: 30px;
+            padding: 10px 30px;
+        }
+    }
+}

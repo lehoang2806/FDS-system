@@ -2,10 +2,10 @@ import { FC, useState } from 'react'
 import Modal from './Modal'
 import { toast } from 'react-toastify';
 import { useAppDispatch } from '@/app/store';
-import { RejectCertificateModalProps } from './type';
-import { getAllDonorCertificateApiThunk, getAllRecipientCertificateApiThunk, rejectCertificateApiThunk } from '@/services/user/userThunk';
+import { RejectCampaignModalProps } from './type';
+import { getAllCampaignApiThunk, rejectCampaignApiThunk } from '@/services/campaign/campaignThunk';
 
-const RejectCertificateModal: FC<RejectCertificateModalProps> = ({ isOpen, setIsOpen, selectedCertificate }) => {
+const RejectCampaignModal: FC<RejectCampaignModalProps> = ({ isOpen, setIsOpen, selectedCampaign }) => {
     const dispatch = useAppDispatch();
     const [reason, setReason] = useState("");
 
@@ -16,19 +16,16 @@ const RejectCertificateModal: FC<RejectCertificateModalProps> = ({ isOpen, setIs
             return;
         }
 
-        if (!selectedCertificate) return;
+        if (!selectedCampaign) return;
 
         try {
-            await dispatch(rejectCertificateApiThunk({
-                certificateId: selectedCertificate.certificateId,
-                type: selectedCertificate.type,
+            await dispatch(rejectCampaignApiThunk({
+                campaignId: selectedCampaign.campaignId,
                 comment: reason
             })).unwrap();
-
-            toast.success("Reject Certificate successfully.");
+            toast.success("Reject Campaign successfully.");
             setIsOpen(false);
-            dispatch(getAllDonorCertificateApiThunk());
-            dispatch(getAllRecipientCertificateApiThunk());
+            dispatch(getAllCampaignApiThunk());
         } catch (error) {
             toast.error("An error occurred while rejecting the certificate.");
             console.error(error);
@@ -36,17 +33,16 @@ const RejectCertificateModal: FC<RejectCertificateModalProps> = ({ isOpen, setIs
     };
 
     return (
-        <Modal isOpen={isOpen} setIsOpen={setIsOpen} title="Reject Certificate">
-            <section id="reject-certificate-modal">
+        <Modal isOpen={isOpen} setIsOpen={setIsOpen} title="Reject Campaign">
+            <section id="reject-campaign-modal">
                 <div className="rcm-container">
-                    <h1>Từ chối chứng chỉ</h1>
                     <form className="form" onSubmit={handleSubmit}>
                         <div className="form-field">
                             <label className="form-label">Lý do từ chối</label>
                             <input
                                 type="text"
                                 className="form-input"
-                                placeholder="Vui lòng nhập lý do từ chối chứng chỉ"
+                                placeholder="Vui lòng nhập lý do từ chối chiến dịch này"
                                 value={reason}
                                 onChange={(e) => setReason(e.target.value)}
                             />
@@ -60,4 +56,4 @@ const RejectCertificateModal: FC<RejectCertificateModalProps> = ({ isOpen, setIs
 };
 
 
-export default RejectCertificateModal
+export default RejectCampaignModal

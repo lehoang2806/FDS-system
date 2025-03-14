@@ -83,6 +83,9 @@ export const routes = {
         certificate: {
             donor: {
                 list: "/staff/certificate/donor",
+            },
+            recipient: {
+                list: "/staff/certificate/recipient",
             }
         }
     }

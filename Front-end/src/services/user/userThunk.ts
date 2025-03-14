@@ -1,6 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { approveCertificateApi, confirmUserApi, createPersonalDonorCertificateApi, getAllDonorCertificateApi, getAllUserApi, rejectCertificateApi } from "./userApi";
-import { ApproveCertificate, ConfirmUser, DonorCertificate, PersonalDonor, RejectCertificate, UserInfo } from "@/types/user";
+import { approveCertificateApi, confirmUserApi, createPersonalDonorCertificateApi, createRecipientCertificateApi, getAllDonorCertificateApi, getAllRecipientCertificateApi, getAllUserApi, rejectCertificateApi } from "./userApi";
+import { AddRecipientCertificate, ApproveCertificate, ConfirmUser, DonorCertificate, PersonalDonor, RecipientCertificate, RejectCertificate, UserInfo } from "@/types/user";
 import { TextResponse } from "@/types/auth";
 import { ResponseFromServer } from "@/types/app";
 
@@ -10,6 +10,8 @@ const GET_ALL_DONOR_CERTIFICATE = 'GET_ALL_DONOR_CERTIFICATE';
 const APPROVE_CERTIFICATE = 'APPROVE_CERTIFICATE';
 const REJECT_CERTIFICATE = 'REJECT_CERTIFICATE';
 const CONFIRM_USER = 'CONFIRM_USER';
+const CREATE_RECIPIENT_CERTIFICATE = 'CREATE_RECIPIENT_CERTIFICATE';
+const GET_ALL_RECIPIENT_CERTIFICATE = 'GET_ALL_RECIPIENT_CERTIFICATE';
 
 export const getAllUserApiThunk = createAsyncThunk<UserInfo[]>(
     GET_ALL_USER,
@@ -91,6 +93,36 @@ export const confirmUserApiThunk = createAsyncThunk<ResponseFromServer<TextRespo
     async (payload, { rejectWithValue }) => {
         try {
             const response = await confirmUserApi(payload);
+            return response;
+        } catch (err: any) {
+            return rejectWithValue({
+                errorMessage: err.message,
+                data: err.response.data,
+            });
+        }
+    },
+);
+
+export const createRecipientCertificateApiThunk = createAsyncThunk<ResponseFromServer<TextResponse>, AddRecipientCertificate>(
+    CREATE_RECIPIENT_CERTIFICATE,
+    async (payload, { rejectWithValue }) => {
+        try {
+            const response = await createRecipientCertificateApi(payload);
+            return response;
+        } catch (err: any) {
+            return rejectWithValue({
+                errorMessage: err.message,
+                data: err.response.data,
+            });
+        }
+    },
+);
+
+export const getAllRecipientCertificateApiThunk = createAsyncThunk<RecipientCertificate[]>(
+    GET_ALL_RECIPIENT_CERTIFICATE,
+    async (_, { rejectWithValue }) => {
+        try {
+            const response = await getAllRecipientCertificateApi();
             return response;
         } catch (err: any) {
             return rejectWithValue({
