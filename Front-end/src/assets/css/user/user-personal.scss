@@ -10,7 +10,7 @@
     #upp-s2 {
         background: #f6f6fa;
         padding-bottom: 30px;
-        
+
         .upps2-container {
             .upps2cr1 {
                 max-width: 1400px;
@@ -35,6 +35,7 @@
                     }
 
                     h2 {
+                        text-align: start;
                         font-size: 24px;
                         font-weight: 700;
                         color: #343434;
@@ -97,13 +98,13 @@
             }
 
             .upps2cr3 {
-                max-width: 1000px;
+                max-width: 1200px;
                 margin: 0 auto;
                 margin-top: 30px;
                 background: var(--white-color);
                 border-radius: var(--border-radius-16);
                 padding: 24px;
-                
+
                 figure {
                     display: flex;
                     justify-content: center;

@@ -121,7 +121,7 @@ const StaffSidebar: FC = () => {
                         <span>Certificate</span>
                     </div>
                     <div ref={dropdownRef} className={classNames("ssrc2-nav-dropdown-content", {
-                        'open': location.pathname.startsWith(routes.staff.certificate.donor.list),
+                        'open': location.pathname.startsWith(routes.staff.certificate.donor.list || routes.staff.certificate.recipient.list),
                     })}>
                         <Link
                             to={routes.staff.certificate.donor.list}
@@ -132,6 +132,17 @@ const StaffSidebar: FC = () => {
                             <div className="sscr2-nav-link">
                                 <StaffIcon className="sscr2-nav-icon" />
                                 <span>Donor</span>
+                            </div>
+                        </Link>
+                        <Link
+                            to={routes.staff.certificate.recipient.list}
+                            className={classNames('sscr2-nav-item', {
+                                'nav-active': location.pathname.startsWith(routes.staff.certificate.recipient.list)
+                            })}
+                        >
+                            <div className="sscr2-nav-link">
+                                <StaffIcon className="sscr2-nav-icon" />
+                                <span>Recipient</span>
                             </div>
                         </Link>
                     </div>

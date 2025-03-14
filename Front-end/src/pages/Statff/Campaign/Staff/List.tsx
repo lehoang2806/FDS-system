@@ -18,8 +18,6 @@ const StaffListCampaignStaffPage: FC = () => {
 
     const staffCampaigns = campaigns.filter(campaign => campaign.roleId === 2)
 
-    console.log(staffCampaigns)
-
     useEffect(() => {
         dispatch(getAllCampaignApiThunk())
             .unwrap()
@@ -115,7 +113,7 @@ const StaffListCampaignStaffPage: FC = () => {
                                     <td className='table-body-cell'>{campaign.description}</td>
                                     <td className='table-body-cell'>{campaign.giftQuantity}</td>
                                     <td className='table-body-cell'>{campaign.giftType}</td>
-                                    <td className='table-body-cell'>{campaign.status === "Pending" ? <span className='status-pending'>Pending</span> : campaign.status === "Approved" ? <span className='status-approved'>Approve</span> : <span className='status-reject'>Reject</span>}</td>
+                                    <td className='table-body-cell'>{campaign.status === "Pending" ? <span className='status-pending'>Pending</span> : campaign.status === "Approved" ? <span className='status-approve'>Approve</span> : <span className='status-reject'>Reject</span>}</td>
                                     <td className="table-body-cell">
                                         <button className='view-btn' onClick={() => handleToDetail(campaign.campaignId)}>View</button>
                                     </td>

@@ -44,6 +44,7 @@ interface AdminStaffState {
 interface UserState {
     listUser: UserInfo[];
     listDonorCertificate: DonorCertificate[];
+    listRecipientCertificate: RecipientCertificate[];
 }
 
 interface PersonalDonor {
@@ -55,6 +56,10 @@ interface OrganizationDonor {
     taxIdentificationNumber: string;
 }
 
+interface AddRecipientCertificate {
+    citizenId: string;
+}
+
 interface DonorCertificate {
     donorCertificateId: string;
     donorId: string;
@@ -63,6 +68,17 @@ interface DonorCertificate {
     phone: string;
     organizationName?: string | null;
     taxIdentificationNumber?: string | null;
+    citizenId?: string | null;
+    status: string;
+    rejectComment?: string | null;
+}
+
+interface RecipientCertificate {
+    recipientCertificateId: string;
+    recipientId: string;
+    email: string;
+    fullName: string;
+    phone: string;
     citizenId?: string | null;
     status: string;
     rejectComment?: string | null;

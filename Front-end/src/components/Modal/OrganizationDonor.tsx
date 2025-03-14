@@ -1,5 +1,6 @@
 import { FC } from 'react'
 import Modal from './Modal'
+import { OrganizationDonorModalProps } from './type'
 
 const OrganizationDonorModal: FC<OrganizationDonorModalProps> = ({ isOpen, setIsOpen }) => {
     return (

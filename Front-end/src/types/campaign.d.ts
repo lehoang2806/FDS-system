@@ -29,3 +29,12 @@ interface CampaignInfo {
 interface CampaignState {
     listCampaigns: CampaignInfo[]
 }
+
+interface ApproveCampaign {
+    campaignId: string
+}
+
+interface RejectCampaign {
+    campaignId: string;
+    comment: string
+}
