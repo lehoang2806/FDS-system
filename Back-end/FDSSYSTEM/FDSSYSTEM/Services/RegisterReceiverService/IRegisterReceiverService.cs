@@ -1,0 +1,13 @@
+﻿using FDSSYSTEM.DTOs;
+using FDSSYSTEM.Models;
+
+namespace FDSSYSTEM.Services.RegisterReceiverService
+{
+    public interface IRegisterReceiverService
+    {
+        Task<List<RegisterReceiverWithRecipientDto>> GetAll();
+        Task<RegisterReceiver> GetById(string id);
+        Task Create(RegisterReceiverDto registerReceiver);
+        Task Update(string id, RegisterReceiverDto registerReceiver);
+    }
+}

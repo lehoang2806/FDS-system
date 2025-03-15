@@ -46,6 +46,22 @@ namespace FDSSYSTEM.Controllers
             }
         }
 
+        [HttpGet("GetAccountById")]
+        [Authorize(Roles = "Admin,Staff")]
+        public async Task<ActionResult<Account>> GetAccountById(string accountId)
+        {
+            try
+            {
+                var account = await _userService.GetAccountById(accountId);
+                return Ok(account);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+
 
         [HttpPost("AddUser")]
         [Authorize(Roles = "Admin,Staff")]

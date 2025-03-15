@@ -34,5 +34,8 @@ namespace FDSSYSTEM.Models
         public string Status { get; set; } = "Pending";  // Mặc định là chờ duyệt
 
         public string RejectComment { get; set; }
+        public int LimitedQuantity { get; set; }
+        public string Comment  { get; set; }
+        public string Type { get; set; }//staff , personal, organization
     }
 }

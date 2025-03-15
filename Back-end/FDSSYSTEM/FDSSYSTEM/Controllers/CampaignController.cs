@@ -84,12 +84,12 @@ namespace FDSSYSTEM.Controllers
         }
 
         [HttpPut("UpdateCampaign/{id}")]
-        [Authorize(Roles = "Staff,Admin,Recipient")]
+        [Authorize(Roles = "Staff,Admin,Recipient,Donor")]
         public async Task<ActionResult> UpdateCampaign(string id, CampaignDto campaign)
         {
             try
             {
-                var existingCampaign = await _campaignService.GetById(id);
+                var existingCampaign = await _campaignService.GetCampaignById(id);
                 if (existingCampaign == null)
                 {
                     return NotFound();
@@ -105,12 +105,12 @@ namespace FDSSYSTEM.Controllers
         }
 
         [HttpDelete("DeleteCampaign/{id}")]
-        [Authorize(Roles = "Staff,Admin,Recipient")]
+        [Authorize(Roles = "Staff,Admin,Recipient,Donor")]
         public async Task<ActionResult> DeleteCampaign(string id)
         {
             try
             {
-                var existingCampaign = await _campaignService.GetById(id);
+                var existingCampaign = await _campaignService.GetCampaignById(id);
                 if (existingCampaign == null)
                 {
                     return NotFound();
@@ -124,5 +124,32 @@ namespace FDSSYSTEM.Controllers
                 return BadRequest();
             }
         }
+
+        [HttpGet("GetCampaignById/{id}")]
+        [Authorize(Roles = "Staff,Admin,Donor,Recipient")]
+        public async Task<ActionResult> GetCampaignById(string id)
+        {
+            try
+            {
+                // Gọi service để lấy chiến dịch theo ID
+                var campaign = await _campaignService.GetCampaignById(id);
+
+                // Nếu chiến dịch không tìm thấy, trả về lỗi NotFound
+                if (campaign == null)
+                {
+                    return NotFound(new { message = "Campaign not found" });
+                }
+
+                // Trả về thông tin chi tiết của chiến dịch
+                return Ok(campaign);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+
+
     }
 }

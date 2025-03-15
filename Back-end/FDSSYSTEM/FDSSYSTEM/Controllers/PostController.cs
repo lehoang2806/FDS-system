@@ -84,7 +84,7 @@ namespace FDSSYSTEM.Controllers
 
 
         [HttpPut("Approve")]
-        [Authorize(Roles = "Admin,Staff")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> Approve(ApprovePostDto approvePostDto)
         {
             try

@@ -1,20 +1,21 @@
-﻿using System;
+﻿using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Bson;
+using System;
 using System.Collections.Generic;
 
 namespace FDSSYSTEM.Models;
 
 public partial class Feedback
 {
-    public int AccountId { get; set; }
+    [BsonId]
+    [BsonRepresentation(BsonType.ObjectId)]
+    public string AccountId { get; set; }
 
-    public int FeedbackId { get; set; }
+    public string FeedbackId { get; set; }
 
-    public string? FeedbackText { get; set; }
+    public string Image {get; set; }
 
-
-    public DateTime? DateSubmitted { get; set; }
-
-    public int CampaignId { get; set; }
+    public string CampaignId { get; set; }
 
  
 }

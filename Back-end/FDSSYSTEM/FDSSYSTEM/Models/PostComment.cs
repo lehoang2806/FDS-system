@@ -1,13 +1,19 @@
-﻿using System;
+﻿using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Bson;
+using System;
 using System.Collections.Generic;
 
 namespace FDSSYSTEM.Models;
 
 public partial class PostComment
 {
-    public int PostCommentId { get; set; }
+    [BsonId]
+    [BsonRepresentation(BsonType.ObjectId)]
+    public string Id { get; set; }  
 
-    public int AccountId { get; set; }
+    public string PostCommentId { get; set; }
+
+    public string AccountId { get; set; }
 
     public required string PostId { get; set; }
 

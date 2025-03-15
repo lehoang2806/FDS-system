@@ -1,6 +1,8 @@
 ﻿using FDSSYSTEM.DTOs;
 using FDSSYSTEM.Models;
 using FDSSYSTEM.Repositories.PostCommentRepository;
+using FDSSYSTEM.Services.UserContextService;
+using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,10 +13,13 @@ namespace FDSSYSTEM.Services.PostCommentService
     public class PostCommentService : IPostCommentService
     {
         private readonly IPostCommentRepository _postCommentRepository;
+        private readonly IUserContextService _userContextService;
 
-        public PostCommentService(IPostCommentRepository postCommentRepository)
+        public PostCommentService(IPostCommentRepository postCommentRepository,
+              IUserContextService userContextService)
         {
             _postCommentRepository = postCommentRepository;
+            _userContextService = userContextService;
         }
 
         // Tạo bình luận mới
@@ -23,8 +28,9 @@ namespace FDSSYSTEM.Services.PostCommentService
             await _postCommentRepository.AddAsync(new PostComment
             {
                 PostId = comment.PostId,
-                AccountId = comment.AccountId,
+                AccountId = _userContextService.UserId ?? "",
                 Content = comment.Content,
+                DateCreated = DateTime.Now,
                 FileComment = Guid.NewGuid().ToString()
             });
         }
@@ -38,13 +44,15 @@ namespace FDSSYSTEM.Services.PostCommentService
         // Lấy bình luận theo Id
         public async Task<PostComment> GetById(string id)
         {
-            return await _postCommentRepository.GetByIdAsync(id);
+            var filter = Builders<PostComment>.Filter.Eq(c => c.PostCommentId, id);
+            var getbyId = await _postCommentRepository.GetAllAsync(filter);
+            return getbyId.FirstOrDefault();
         }
 
         // Cập nhật bình luận
         public async Task Update(string id, PostCommentDto comment)
         {
-            var existingComment = await _postCommentRepository.GetByIdAsync(id);
+            var existingComment = await GetById(id);
             if (existingComment != null)
             {
                 existingComment.Content = comment.Content;

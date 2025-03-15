@@ -54,7 +54,7 @@ public partial class Account
     public string OrganizationName { get; set; }
 
     public bool IsConfirm { get; set; }
+
     public string Type { get; set; }
-
-
+    public string DonorType { get; set; }
 }

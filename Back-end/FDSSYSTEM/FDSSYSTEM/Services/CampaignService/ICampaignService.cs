@@ -8,7 +8,7 @@ namespace FDSSYSTEM.Services.CampaignService
     public interface ICampaignService
     {
         Task<List<CampaignWithCreatorDto>> GetAll();
-        Task<Campaign> GetById(string id);
+        Task<Campaign> GetCampaignById(string campaign);  // Thêm phương thức này để lấy chiến dịch theo ID
         Task Create(CampaignDto campaign);
         Task Update(string id, CampaignDto campaign);
         Task Approve(ApproveCampaignDto approveCampaignDto);

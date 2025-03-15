@@ -8,5 +8,8 @@
         public int GiftQuantity { get; set; }
         public string Address { get; set; }
         public DateTime ReceiveDate { get; set; }
+        public int LimitedQuantity { get; set; }
+
+
     }
 }

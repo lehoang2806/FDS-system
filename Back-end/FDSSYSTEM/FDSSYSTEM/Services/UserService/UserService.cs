@@ -223,9 +223,12 @@ public class UserService : IUserService
         foreach (var donor in rs)
         {
             var cretor = allCreator.FirstOrDefault(x => x.AccountId == donor.DonorId);
-            donor.FullName = cretor?.FullName;
-            donor.Phone = cretor.Phone;
-            donor.Email = cretor.Email;
+            if(cretor != null)
+            {
+                donor.FullName = cretor?.FullName;
+                donor.Phone = cretor.Phone;
+                donor.Email = cretor.Email;
+            }
         }
 
         return rs;
@@ -244,9 +247,12 @@ public class UserService : IUserService
         foreach (var rep in rs)
         {
             var cretor = allCreator.FirstOrDefault(x => x.AccountId == rep.RecipientId);
-            rep.FullName = cretor?.FullName;
-            rep.Phone = cretor.Phone;
-            rep.Email = cretor.Email;
+            if(cretor != null)
+            {
+                rep.FullName = cretor?.FullName;
+                rep.Phone = cretor.Phone;
+                rep.Email = cretor.Email;
+            }
         }
 
         return rs;
@@ -357,12 +363,27 @@ public class UserService : IUserService
                 if (pcert == null) throw new Exception("Certificate Not found");
                 pcert.Status = "Approved";
                 await _personalDonorCertificateRepository.UpdateAsync(pcert.Id,pcert);
+                //Update Donnor Type
+                var puser = await GetAccountById(pcert.DonorId);
+                if (puser != null)
+                {
+                    puser.DonorType = "Personal Donor";
+                    await _userRepository.UpdateAsync(puser.Id, puser);
+                }
+
                 break;
             case ApproveCertificateType.OrganizationDonor:
                 var ogcert = await _organizationDonorCertificateRepository.GetOrganizationDonorCertificateByIdAsync(approveCertificateDto.CertificateId);
                 if (ogcert == null) throw new Exception("Certificate Not found");
                 ogcert.Status = "Approved";
                 await _organizationDonorCertificateRepository.UpdateAsync(ogcert.Id, ogcert);
+                //Update Donnor Type
+                var ouser = await GetAccountById(ogcert.DonorId);
+                if (ouser != null)
+                {
+                    ouser.DonorType = "Organization Donor";
+                    await _userRepository.UpdateAsync(ouser.Id, ouser);
+                }
                 break;
             case ApproveCertificateType.Recipient:
                 var rcert = await _recipientCertificateRepository.GetRecipientCertificateByIdAsync(approveCertificateDto.CertificateId);
@@ -404,5 +425,17 @@ public class UserService : IUserService
                 throw new Exception("Type not found");
         }
     }
+
+    public async Task<Account> GetAccountById(string accountId)
+    {
+        var filter = Builders<Account>.Filter.Eq(c => c.AccountId, accountId);
+        var account = (await _userRepository.GetAllAsync(filter)).FirstOrDefault();
+        if (account == null)
+        {
+            throw new Exception("Account not found");
+        }
+        return account;
+    }
+
 
 }

@@ -7,16 +7,20 @@ using FDSSYSTEM.Repositories.OrganizationDonorCertificateRepository;
 using FDSSYSTEM.Repositories.PostCommentRepository;
 using FDSSYSTEM.Repositories.PostRepository;
 using FDSSYSTEM.Repositories.RecipientCertificateRepository;
+using FDSSYSTEM.Repositories.RegisterReceiverRepository;
 using FDSSYSTEM.Repositories.RoleRepository;
 using FDSSYSTEM.Repositories.UserRepository;
+
 using FDSSYSTEM.SeedData;
 using FDSSYSTEM.Services.CampaignService;
 using FDSSYSTEM.Services.NewService;
 using FDSSYSTEM.Services.PostCommentService;
 using FDSSYSTEM.Services.PostService;
+using FDSSYSTEM.Services.RegisterReceiverService;
 using FDSSYSTEM.Services.RoleService;
 using FDSSYSTEM.Services.UserContextService;
 using FDSSYSTEM.Services.UserService;
+
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
@@ -44,6 +48,9 @@ builder.Services.AddScoped<IPostCommentService, PostCommentService>();
 
 builder.Services.AddScoped<ICampaignRepository, CampaignRepository>();
 builder.Services.AddScoped<ICampaignService, CampaignService>();
+
+builder.Services.AddScoped<IRegisterReceiverRepository, RegisterReceiverRepository>();
+builder.Services.AddScoped<IRegisterReceiverService, RegisterReceiverService>();
 
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddScoped<IUserContextService, UserContextService>();

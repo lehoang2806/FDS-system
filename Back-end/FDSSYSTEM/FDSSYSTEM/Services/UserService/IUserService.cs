@@ -24,4 +24,5 @@ public interface IUserService
 
     Task ApproveCertificate(ApproveCertificateDto approveCertificateDto);
     Task RejectCertificate(RejectCertificateDto rejectCertificateDto);
+    Task<Account> GetAccountById(string accountId);
 }

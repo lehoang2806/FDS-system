@@ -29,5 +29,8 @@
 
         public bool? IsDeleted { get; set; }
         public string Status { get; set; } = "Pending";
+        public string Type { get; set; }
+        public string LimitedQuantity { get; set; }
+        public string RejectComment { get; set; }
     }
 }

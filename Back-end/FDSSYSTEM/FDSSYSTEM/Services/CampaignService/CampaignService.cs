@@ -3,6 +3,7 @@ using FDSSYSTEM.Models;
 using FDSSYSTEM.Repositories.CampaignRepository;
 using FDSSYSTEM.Repositories.UserRepository;
 using FDSSYSTEM.Services.UserContextService;
+using FDSSYSTEM.Services.UserService;
 using Mapster;
 using MongoDB.Driver;
 using System;
@@ -15,22 +16,34 @@ namespace FDSSYSTEM.Services.CampaignService
     {
         private readonly ICampaignRepository _campaignRepository;
         private readonly IUserRepository _userRepository;
+        private readonly IUserService _userService;
         private readonly IUserContextService _userContextService;
 
         public CampaignService(ICampaignRepository campaignRepository, IUserRepository userRepository
-            , IUserContextService userContextService)
+            , IUserContextService userContextService, IUserService userService)
         {
             _campaignRepository = campaignRepository;
             _userRepository = userRepository;
             _userContextService = userContextService;
+            _userService = userService;
         }
 
         public async Task Create(CampaignDto campaign)
         {
+            var donorType = _userContextService.Role ?? "";
+            if (!string.IsNullOrEmpty(donorType) && donorType.Equals("Donor"))
+            {
+               var user = await  _userService.GetAccountById(_userContextService.UserId ?? "");
+                if (user != null)
+                {
+                    donorType = user.DonorType;
+                }
+            }
+
             await _campaignRepository.AddAsync(new Campaign
             {
                 CampaignId = Guid.NewGuid().ToString(),
-                AccountId = _userContextService.UserId??"",
+                AccountId = _userContextService.UserId ?? "",
                 NameCampaign = campaign.NameCampaign,
                 Description = campaign.Description,
                 GiftType = campaign.GiftType,
@@ -39,7 +52,8 @@ namespace FDSSYSTEM.Services.CampaignService
                 ReceiveDate = campaign.ReceiveDate,
                 DateCreated = DateTime.Now,
                 IsDeleted = false,
-                Status = "Pending" // Nếu không truyền, mặc định là "Pending"
+                Status = "Pending",// Nếu không truyền, mặc định là "Pending",
+                Type = donorType, //staff, personal , organization
             });
         }
 
@@ -72,7 +86,7 @@ namespace FDSSYSTEM.Services.CampaignService
 
         public async Task Update(string id, CampaignDto campaign)
         {
-            var existingCampaign = await _campaignRepository.GetByIdAsync(id);
+            var existingCampaign = await GetCampaignById(id);
             if (existingCampaign != null)
             {
                 existingCampaign.NameCampaign = campaign.NameCampaign;
@@ -83,7 +97,7 @@ namespace FDSSYSTEM.Services.CampaignService
                 existingCampaign.ReceiveDate = campaign.ReceiveDate;
                 existingCampaign.DateUpdated = DateTime.Now;
 
-                await _campaignRepository.UpdateAsync(id, existingCampaign);
+                await _campaignRepository.UpdateAsync(existingCampaign.Id, existingCampaign);
             }
         }
 
@@ -92,30 +106,34 @@ namespace FDSSYSTEM.Services.CampaignService
             await _campaignRepository.DeleteAsync(id);
         }
 
-        public Task<Campaign> GetById(string id)
+        public async Task<Campaign> GetCampaignById(string id)
         {
-            throw new NotImplementedException();
+            var filter = Builders<Campaign>.Filter.Eq(c => c.CampaignId, id);
+            var getbyId = await _campaignRepository.GetAllAsync(filter);
+            return getbyId.FirstOrDefault();
         }
 
         public async Task<List<CampaignWithCreatorDto>> GetAll()
         {
             var rs = new List<CampaignWithCreatorDto>();
 
-            var allCampaign =await _campaignRepository.GetAllAsync();
+            var allCampaign = await _campaignRepository.GetAllAsync();
             var listCreatorId = allCampaign.Select(c => c.AccountId).Distinct().ToList();
 
             var creatorFilter = Builders<Account>.Filter.In(c => c.AccountId, listCreatorId);
             var allCreator = await _userRepository.GetAllAsync(creatorFilter);
 
-            foreach(var cp in allCampaign)
+            foreach (var cp in allCampaign)
             {
                 var cpDto = cp.Adapt<CampaignWithCreatorDto>();
-                var cretor =allCreator.FirstOrDefault(x=>x.AccountId == cp.AccountId);
-                cpDto.FullName =cretor?.FullName;
-                cpDto.Phone = cretor.Phone;
-                cpDto.Email = cretor.Email;
-                cpDto.RoleId = cretor.RoleId;
-
+                var cretor = allCreator.FirstOrDefault(x => x.AccountId == cp.AccountId);
+                if(cretor != null)
+                {
+                    cpDto.FullName = cretor?.FullName;
+                    cpDto.Phone = cretor.Phone;
+                    cpDto.Email = cretor.Email;
+                    cpDto.RoleId = cretor.RoleId;
+                }
                 rs.Add(cpDto);
             }
 
@@ -140,5 +158,9 @@ namespace FDSSYSTEM.Services.CampaignService
             campain.RejectComment = rejectCampaignDto.Comment;
             await _campaignRepository.UpdateAsync(campain.Id, campain);
         }
+
+        
+
+
     }
 }
