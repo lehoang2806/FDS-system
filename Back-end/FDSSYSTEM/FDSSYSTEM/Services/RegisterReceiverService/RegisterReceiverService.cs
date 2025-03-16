@@ -73,7 +73,8 @@ namespace FDSSYSTEM.Services.RegisterReceiverService
                 RegisterReceiverName = registerReceiver.RegisterReceiverName,
                 Quantity = registerReceiver.Quantity,
                 CreatAt = registerReceiver.CreatAt,
-                RegisterReceiverId = Guid.NewGuid().ToString()
+                RegisterReceiverId = Guid.NewGuid().ToString(),
+                CampaignId = registerReceiver.CampaignId,
             });
         }
 
@@ -87,7 +88,7 @@ namespace FDSSYSTEM.Services.RegisterReceiverService
                 existingRegisterReceiver.Quantity = registerReceiver.Quantity;
                 existingRegisterReceiver.CreatAt = registerReceiver.CreatAt;
                 existingRegisterReceiver.DateUpdated = DateTime.Now;
-
+                existingRegisterReceiver.CampaignId = registerReceiver.CampaignId;
                 await _registerReceiverRepository.UpdateAsync(existingRegisterReceiver.Id, existingRegisterReceiver);
             }
         }
