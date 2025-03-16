@@ -15,5 +15,6 @@ namespace FDSSYSTEM.Models
         public int Quantity { get; set; }
         public string CreatAt { get; set; }
         public DateTime? DateUpdated { get; set; }
+        public string CampaignId { get; set; }
     }
 }

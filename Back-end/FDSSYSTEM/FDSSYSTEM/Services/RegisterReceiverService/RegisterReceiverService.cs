@@ -83,6 +83,7 @@ namespace FDSSYSTEM.Services.RegisterReceiverService
             var existingRegisterReceiver = await GetById(id);
             if (existingRegisterReceiver != null)
             {
+                existingRegisterReceiver.RegisterReceiverName = registerReceiver.RegisterReceiverName;
                 existingRegisterReceiver.Quantity = registerReceiver.Quantity;
                 existingRegisterReceiver.CreatAt = registerReceiver.CreatAt;
                 existingRegisterReceiver.DateUpdated = DateTime.Now;

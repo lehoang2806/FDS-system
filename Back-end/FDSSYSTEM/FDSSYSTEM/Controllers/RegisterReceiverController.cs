@@ -23,7 +23,7 @@ namespace FDSSYSTEM.Controllers
 
         // Lấy tất cả RegisterReceiver
         [HttpGet("GetAllRegisterReceivers")]
-        [Authorize(Roles = "Admin,Staff,Recipient")]
+        /*[Authorize(Roles = "Admin,Staff,Recipient")]*/
         public async Task<ActionResult> GetAllRegisterReceivers()
         {
             try
@@ -39,7 +39,7 @@ namespace FDSSYSTEM.Controllers
 
         // Lấy RegisterReceiver theo ID
         [HttpGet("GetRegisterReceiverById/{id}")]
-        [Authorize(Roles = "Admin,Staff,Recipient")]
+       /* [Authorize(Roles = "Admin,Staff,Recipient")]*/
         public async Task<ActionResult> GetRegisterReceiverById(string id)
         {
             try

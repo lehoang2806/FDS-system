@@ -28,7 +28,7 @@ namespace FDSSYSTEM.Controllers
 
 
         [HttpGet("GetAllUser")]
-        [Authorize(Roles = "Admin,Staff")]
+        /*[Authorize(Roles = "Admin,Staff")]*/
         public async Task<ActionResult> GetAllUser()
         {
             try
@@ -47,7 +47,7 @@ namespace FDSSYSTEM.Controllers
         }
 
         [HttpGet("GetAccountById")]
-        [Authorize(Roles = "Admin,Staff")]
+        /*[Authorize(Roles = "Admin,Staff")]*/
         public async Task<ActionResult<Account>> GetAccountById(string accountId)
         {
             try

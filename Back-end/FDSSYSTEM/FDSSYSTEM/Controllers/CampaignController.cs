@@ -38,7 +38,7 @@ namespace FDSSYSTEM.Controllers
         }
 
         [HttpGet("GetAllCampaigns")]
-        [Authorize(Roles = "Staff,Admin,Donor,Recipient")]
+        /*[Authorize(Roles = "Staff,Admin,Donor,Recipient")]*/
         public async Task<ActionResult> GetAllCampaigns()
         {
             try
@@ -126,7 +126,7 @@ namespace FDSSYSTEM.Controllers
         }
 
         [HttpGet("GetCampaignById/{id}")]
-        [Authorize(Roles = "Staff,Admin,Donor,Recipient")]
+       /* [Authorize(Roles = "Staff,Admin,Donor,Recipient")]*/
         public async Task<ActionResult> GetCampaignById(string id)
         {
             try
