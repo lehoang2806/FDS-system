@@ -1,40 +1,65 @@
 interface AddCampaign {
-    nameCampaign: string,
-    description: string,
-    giftType: string,
-    giftQuantity: number,
-    address: string,
-    receiveDate: string
+    nameCampaign: string;
+    description: string;
+    giftType: string;
+    giftQuantity: number;
+    address: string;
+    receiveDate: string;
+    limitedQuantity: number;
 }
 
 interface CampaignInfo {
-    accountId: string;
-    address: string;
     campaignId: string;
+    accountId: string;
+    fullName: string;
+    email: string;
+    phone: string;
+    roleId: number;
+    nameCampaign: string;
+    description: string;
+    giftType: string;
+    giftQuantity: number;
+    address: string;
+    receiveDate: string;
     dateCreated: string;
     dateUpdated: string | null;
-    description: string;
-    email: string;
-    fullName: string;
-    giftQuantity: number;
-    giftType: string;
     isDeleted: boolean;
+    status: string;
+    type: string;
+    limitedQuantity: number | string;
+    rejectComment: string | null;
+}
+
+interface CurrentCampaign {
+    id: string;
+    campaignId: string;
+    accountId: string;
     nameCampaign: string;
-    phone: string;
+    description: string;
+    giftType: string;
+    giftQuantity: number;
+    address: string;
     receiveDate: string;
-    roleId: number;
-    status: "Pending" | "Approved" | "Rejected";
+    dateCreated: string;
+    dateUpdated: string | null;
+    isDeleted: boolean;
+    status: string;
+    rejectComment: string | null;
+    limitedQuantity: number;
+    comment: string | null;
+    type: string;
 }
 
 interface CampaignState {
-    listCampaigns: CampaignInfo[]
+    listCampaigns: CampaignInfo[];
+    currentCampaign: CurrentCampaign | null;
 }
 
 interface ApproveCampaign {
-    campaignId: string
+    campaignId: string;
 }
 
 interface RejectCampaign {
     campaignId: string;
-    comment: string
+    comment: string;
 }

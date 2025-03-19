@@ -1,10 +1,11 @@
-import { selectGetAllCampaign, selectGetAllDonorCertificate, selectGetAllRecipientCertificate, selectUserLogin } from "@/app/selector";
+import { selectGetAllCampaign, selectGetAllDonorCertificate, selectGetAllRecipientCertificate, selectGetAllRegisterReceivers, selectUserLogin } from "@/app/selector";
 import { useAppDispatch, useAppSelector } from "@/app/store";
 import { AvatarUser, NoResult } from "@/assets/images"
-import { CreateCampaignModal, RecipientCertificateModal, SubmitCertificateModal } from "@/components/Modal";
+import { CreateCampaignModal, RecipientCertificateModal, RejectReasonModal, SubmitCertificateModal } from "@/components/Modal";
 import { navigateHook } from "@/routes/RouteApp";
 import { routes } from "@/routes/routeName";
 import { getAllCampaignApiThunk } from "@/services/campaign/campaignThunk";
+import { getAllRegisterReceiversApiThunk } from "@/services/registerReceive/registerReceiveThunk";
 import { getAllDonorCertificateApiThunk, getAllRecipientCertificateApiThunk } from "@/services/user/userThunk";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -13,6 +14,10 @@ const UserPersonalPage = () => {
     const dispatch = useAppDispatch();
 
     const userLogin = useAppSelector(selectUserLogin);
+
+    const [selectedReason, setSelectReason] = useState<string | null>('');
+
+    const [isRejectReasonModalOpen, setIsRejectReasonModalOpen] = useState(false);
 
     const donorCertificates = useAppSelector(selectGetAllDonorCertificate);
 
@@ -25,6 +30,10 @@ const UserPersonalPage = () => {
     const currentDonorCertificates = donorCertificates.filter((donorCertificate) => donorCertificate.donorId === userLogin?.accountId);
 
     const currentRecipientCertificates = recipientCertificates.filter((recipientCertificate) => recipientCertificate.recipientId === userLogin?.accountId);
+
+    const registerReceivers = useAppSelector(selectGetAllRegisterReceivers);
+
+    const currentRegisterReceivers = registerReceivers.filter((registerReceiver) => registerReceiver.accountId === userLogin?.accountId);
 
     const [isSubmitCertificateModalOpen, setIsSubmitCertificateModalOpen] = useState(false);
     const [isRecipientCertificateModalOpen, setIsRecipientCertificateModalOpen] = useState(false);
@@ -57,6 +66,7 @@ const UserPersonalPage = () => {
     }, [location.search]);
 
     useEffect(() => {
+        dispatch(getAllRegisterReceiversApiThunk())
         dispatch(getAllDonorCertificateApiThunk())
         dispatch(getAllRecipientCertificateApiThunk())
         dispatch(getAllCampaignApiThunk())
@@ -73,6 +83,16 @@ const UserPersonalPage = () => {
         if (userLogin?.isConfirm === true) {
             setIsCreateCampaignModalOpen(true)
         }
+    }
+
+    const handleViewReason = (comment: string | null) => {
+        setSelectReason(comment);
+        setIsRejectReasonModalOpen(true);
+    };
+
+    const handleToDetail = (campaignId: string) => {
+        const url = routes.user.campaign.detail.replace(":id", campaignId);
+        return navigateHook(url)
     }
 
     return (
@@ -164,8 +184,8 @@ const UserPersonalPage = () => {
                                                             <td className='table-body-cell'>{campaign.giftType}</td>
                                                             <td className='table-body-cell'>{campaign.status === "Pending" ? <span className='status-pending'>Pending</span> : campaign.status === "Approved" ? <span className='status-approve'>Approve</span> : <span className='status-reject'>Reject</span>}</td>
                                                             <td className="table-body-cell">
-                                                                <button className='view-btn'>View</button>
-                                                                {campaign.status === "Rejected" && <button className='reject-btn'>View Reason</button>}
+                                                                {campaign.status === "Approved" && <button className='view-btn' onClick={() => handleToDetail(campaign.campaignId)}>Go to Campaign</button>}
+                                                                {campaign.status === "Rejected" && <button className='reject-btn' onClick={() => handleViewReason(campaign.rejectComment)}>View Reason</button>}
                                                             </td>
                                                         </tr>
                                                     ))}
@@ -188,7 +208,7 @@ const UserPersonalPage = () => {
                                                 <thead className="table-head">
                                                     <tr className="table-head-row">
                                                         <th className="table-head-cell">
-                                                            CCCD
+                                                            Type
                                                         </th>
                                                         <th className="table-head-cell">
                                                             Full Name
@@ -207,7 +227,7 @@ const UserPersonalPage = () => {
                                                 <tbody className="table-body">
                                                     {currentDonorCertificates.map((row, index) => (
                                                         <tr key={index} className="table-body-row">
-                                                            <td className='table-body-cell'>{row.citizenId}</td>
+                                                            <td className='table-body-cell'>{row.citizenId === null ? "Organization" : "Personal"}</td>
                                                             <td className='table-body-cell'>{row.fullName}</td>
                                                             <td className='table-body-cell'>{row.phone}</td>
                                                             <td className='table-body-cell'>{row.status === "Pending" ? <span className='status-pending'>Pending</span> : row.status === "Approved" ? <span className='status-approve'>Approve</span> : <span className='status-reject'>Reject</span>}</td>
@@ -245,11 +265,45 @@ const UserPersonalPage = () => {
                             <div className="upps2cr3">
                                 {activeTab === "chiendich" ? (
                                     <div className="upp-content">
-                                        <button className="pr-btn" onClick={handleCreateCampaign}>Tạo chiến dịch</button>
-                                        <figure>
-                                            <img src={NoResult} alt="" />
-                                        </figure>
-                                        <h1>Chưa có dữ liệu</h1>
+                                        {currentRegisterReceivers.length === 0 ? (
+                                            <>
+                                                <figure>
+                                                    <img src={NoResult} alt="" />
+                                                </figure>
+                                                <h1>Chưa có dữ liệu</h1>
+                                            </>
+                                        ) : (
+                                            <table className="table">
+                                                <thead className="table-head">
+                                                    <tr className="table-head-row">
+                                                        <th className="table-head-cell">
+                                                            Name Receiver
+                                                        </th>
+                                                        <th className="table-head-cell">
+                                                            Quantity
+                                                        </th>
+                                                        <th className="table-head-cell">
+                                                            Register Date
+                                                        </th>
+                                                        <th className="table-head-cell">
+                                                            Action
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody className="table-body">
+                                                    {currentRegisterReceivers.map((registerReceiver, index) => (
+                                                        <tr className="table-body-row" key={index}>
+                                                            <td className='table-body-cell'>{registerReceiver.registerReceiverName}</td>
+                                                            <td className='table-body-cell'>{registerReceiver.quantity}</td>
+                                                            <td className='table-body-cell'>{registerReceiver.creatAt}</td>
+                                                            <td className='table-body-cell'>
+                                                                <button className="view-btn" onClick={() => handleToDetail(registerReceiver.campaignId)}>Go to Campaign</button>
+                                                            </td>
+                                                        </tr>
+                                                    ))}
+                                                </tbody>
+                                            </table>
+                                        )}
                                     </div>
                                 ) : (
                                     <div className="upp-content">
@@ -307,6 +361,7 @@ const UserPersonalPage = () => {
             <SubmitCertificateModal isOpen={isSubmitCertificateModalOpen} setIsOpen={setIsSubmitCertificateModalOpen} />
             <CreateCampaignModal isOpen={isCreateCampaignModalOpen} setIsOpen={setIsCreateCampaignModalOpen} />
             <RecipientCertificateModal isOpen={isRecipientCertificateModalOpen} setIsOpen={setIsRecipientCertificateModalOpen} />
+            <RejectReasonModal isOpen={isRejectReasonModalOpen} setIsOpen={setIsRejectReasonModalOpen} reason={selectedReason} />
         </main>
     )
 }

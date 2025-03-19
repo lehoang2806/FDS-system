@@ -7,5 +7,19 @@ import CreateCampaignModal from "./CreateCampaign";
 import RejectCampaignModal from "./RejectCampaign";
 import RejectReasonModal from "./RejectReason";
 import RecipientCertificateModal from "./RecipientCertificate";
+import RemindCertificateModal from "./RemindCertificates";
+import RegisterReceiverModal from "./RegisterReceiver";
 
-export { Modal, SubmitCertificateModal, PersonalDonorModal, OrganizationDonorModal, RejectCertificateModal, CreateCampaignModal, RejectCampaignModal, RejectReasonModal, RecipientCertificateModal }
+export {
+    Modal,
+    SubmitCertificateModal,
+    PersonalDonorModal,
+    OrganizationDonorModal,
+    RejectCertificateModal,
+    CreateCampaignModal,
+    RejectCampaignModal,
+    RejectReasonModal,
+    RecipientCertificateModal,
+    RemindCertificateModal,
+    RegisterReceiverModal
+};

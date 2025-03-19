@@ -4,7 +4,7 @@ export const routes = {
     otp_auth: "/otp-auth",
     forgot_pass: "/forgot-pass",
     new_pass: "/new-pass",
-    admin_login: "/admin/login",
+    admin_login: "/manage/login",
     user: {
         home: "/",
         campaign: {

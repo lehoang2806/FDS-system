@@ -12,7 +12,8 @@ const StaffListCampaignUserPage: FC = () => {
     const dispatch = useAppDispatch()
 
     const [selectedCampaign, setSelectedCampaign] = useState<RejectCampaign | null>(null);
-    const [selectedReason, setSelectReason] = useState<string>('');
+    
+    const [selectedReason, setSelectReason] = useState<string | null>('');
 
     const [isRejectCampaignModalOpen, setIsRejectCampaignModalOpen] = useState(false);
 
@@ -52,9 +53,9 @@ const StaffListCampaignUserPage: FC = () => {
         setIsRejectCampaignModalOpen(true);
     };
 
-    const handleViewReason = (comment: string) => {
+    const handleViewReason = (comment: string | null) => {
         setSelectReason(comment);
-        setIsRejectCampaignModalOpen(true);
+        setIsRejectReasonModalOpen(true);
     };
 
     return (
@@ -142,7 +143,7 @@ const StaffListCampaignUserPage: FC = () => {
                                                 <button className='reject-btn' onClick={() => handleRejectCampaign(campaign.campaignId)}>Reject</button>
                                             </>
                                         )}
-                                        {campaign.status === "Rejected" && <button className='reject-btn'>View Reason</button>}
+                                        {campaign.status === "Rejected" && <button className='reject-btn' onClick={() => handleViewReason(campaign.rejectComment)}>View Reason</button>}
                                     </td>
                                 </tr>
                             ))}
