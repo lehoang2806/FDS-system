@@ -1,12 +1,43 @@
+import { selectGetAllCampaign } from '@/app/selector';
+import { useAppDispatch, useAppSelector } from '@/app/store';
 import { SearchIcon } from '@/assets/icons';
 import { CampaignCard } from '@/components/Card/index';
+import { navigateHook } from '@/routes/RouteApp';
+import { routes } from '@/routes/routeName';
+import { getAllCampaignApiThunk } from '@/services/campaign/campaignThunk';
 import { FC, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 const ListCampaignPage: FC = () => {
+    const dispatch = useAppDispatch();
+
+    const handleToDetail = (campaignId: string) => {
+        const url = routes.user.campaign.detail.replace(":id", campaignId);
+        return navigateHook(url)
+    }
+
+    const campaigns = useAppSelector(selectGetAllCampaign)
+
+    const approvedCampaigns = campaigns.filter((campaign) => campaign.status === "Approved");
+
+    const personalCampaigns = approvedCampaigns.filter((campaign) => campaign.type === "Personal Donor");
+
+    const organizationCampaigns = approvedCampaigns.filter((campaign) => campaign.type === "Organization Donor");
+
+    console.log(personalCampaigns)
+    console.log(organizationCampaigns)
+
+    useEffect(() => {
+        dispatch(getAllCampaignApiThunk())
+            .unwrap()
+            .catch(() => {
+            }).finally(() => {
+            });
+    }, [])
+
     const location = useLocation();
     const navigate = useNavigate();
-    
+
     const getActiveTabFromURL = () => {
         const params = new URLSearchParams(location.search);
         return Number(params.get('tab')) || 0;
@@ -49,30 +80,47 @@ const ListCampaignPage: FC = () => {
                         </div>
                         <div className="cscr2r2">
                             {activeTab === 0 && (
-                                <>
-                                    <CampaignCard />
-                                    <CampaignCard />
-                                    <CampaignCard />
-                                    <CampaignCard />
-                                    <CampaignCard />
-                                    <CampaignCard />
-                                </>
+                                approvedCampaigns.length > 0 ? (
+                                    approvedCampaigns.map((campaign) => (
+                                        <CampaignCard
+                                            campaign={campaign}
+                                            key={campaign.campaignId}
+                                            onClickDetail={() => handleToDetail(campaign.campaignId)}
+                                        />
+                                    ))
+                                ) : (
+                                    <h1>Chưa có dữ liệu</h1>
+                                )
                             )}
+
                             {activeTab === 1 && (
-                                <>
-                                    <CampaignCard />
-                                    <CampaignCard />
-                                    <CampaignCard />
-                                </>
+                                organizationCampaigns.length > 0 ? (
+                                    organizationCampaigns.map((campaign) => (
+                                        <CampaignCard
+                                            campaign={campaign}
+                                            key={campaign.campaignId}
+                                            onClickDetail={() => handleToDetail(campaign.campaignId)}
+                                        />
+                                    ))
+                                ) : (
+                                    <h1>Chưa có dữ liệu</h1>
+                                )
                             )}
+
                             {activeTab === 2 && (
-                                <>
-                                    <CampaignCard />
-                                    <CampaignCard />
-                                    <CampaignCard />
-                                    <CampaignCard />
-                                </>
+                                personalCampaigns.length > 0 ? (
+                                    personalCampaigns.map((campaign) => (
+                                        <CampaignCard
+                                            campaign={campaign}
+                                            key={campaign.campaignId}
+                                            onClickDetail={() => handleToDetail(campaign.campaignId)}
+                                        />
+                                    ))
+                                ) : (
+                                    <h1>Chưa có dữ liệu</h1>
+                                )
                             )}
+
                         </div>
                         <button className="view-more">Xem thêm</button>
                     </div>

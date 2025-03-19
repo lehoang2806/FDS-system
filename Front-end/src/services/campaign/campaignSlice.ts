@@ -1,8 +1,9 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { getAllCampaignApiThunk } from "./campaignThunk";
+import { getAllCampaignApiThunk, getCampaignByIdApiThunk } from "./campaignThunk";
 
 const initialState: CampaignState = {
-    listCampaigns: []
+    listCampaigns: [],
+    currentCampaign: null
 };
 
 export const campaignSlice = createSlice({
@@ -14,6 +15,9 @@ export const campaignSlice = createSlice({
         builder
         .addCase(getAllCampaignApiThunk.fulfilled, (state, action: PayloadAction<CampaignInfo[]>) => {
             state.listCampaigns = action.payload;
+        })
+        .addCase(getCampaignByIdApiThunk.fulfilled, (state, action: PayloadAction<CurrentCampaign>) => {
+            state.currentCampaign = action.payload;
         })
     },
 });

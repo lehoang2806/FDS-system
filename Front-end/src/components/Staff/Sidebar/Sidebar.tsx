@@ -1,8 +1,9 @@
-import { CampaignIcon, CertificateIcon, DashboardtIcon, NewsIcon, PostIcon, StaffIcon, UserIcon } from '@/assets/icons';
+import { CampaignIcon, CertificateIcon, DashboardtIcon, LogoutIcon, NewsIcon, PostIcon, StaffIcon, UserIcon } from '@/assets/icons';
 import { FC, useRef } from 'react'
 import { Link, useLocation } from 'react-router-dom';
 import classNames from 'classnames';
 import { routes } from '@/routes/routeName';
+import { logoutManager } from '@/utils/helper';
 
 const StaffSidebar: FC = () => {
     const location = useLocation();
@@ -146,6 +147,16 @@ const StaffSidebar: FC = () => {
                             </div>
                         </Link>
                     </div>
+                    <Link
+                        to={""}
+                        onClick={logoutManager}
+                        className='sscr2-nav-item'
+                    >
+                        <div className="sscr2-nav-link">
+                            <LogoutIcon className="sscr2-nav-icon" />
+                            <span>Logout</span>
+                        </div>
+                    </Link>
                     {/* <div
                         className="sscr2-nav-item asrc2-nav-dropdown"
                         onClick={handleDropdownToggle}

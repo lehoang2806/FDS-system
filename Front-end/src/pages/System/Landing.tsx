@@ -2,12 +2,37 @@ import { Link } from "react-router-dom";
 import { CampaignCard, EventCard, HightlightCard } from "../../components/Card/index";
 import { routes } from "@/routes/routeName";
 import { navigateHook } from "@/routes/RouteApp";
+import { useAppDispatch, useAppSelector } from "@/app/store";
+import { selectGetAllCampaign } from "@/app/selector";
+import { useEffect } from "react";
+import { getAllCampaignApiThunk } from "@/services/campaign/campaignThunk";
 
 export default function () {
+    const dispatch = useAppDispatch();
+
     const handleToDetail = (campaignId: string) => {
         const url = routes.user.campaign.detail.replace(":id", campaignId);
         return navigateHook(url)
     }
+
+    const campaigns = useAppSelector(selectGetAllCampaign)
+
+    const approvedCampaigns = campaigns.filter((campaign) => campaign.status === "Approved");
+
+    const personalCampaigns = approvedCampaigns.filter((campaign) => campaign.type === "Personal Donor");
+
+    const organizationCampaigns = approvedCampaigns.filter((campaign) => campaign.type === "Organization Donor");
+
+    console.log(personalCampaigns)
+    console.log(organizationCampaigns)
+
+    useEffect(() => {
+        dispatch(getAllCampaignApiThunk())
+            .unwrap()
+            .catch(() => {
+            }).finally(() => {
+            });
+    }, [])
 
     return (
         <>
@@ -24,9 +49,11 @@ export default function () {
                             <Link to={`${routes.user.campaign.list}?tab=1`} className="view-all">Xem tất cả</Link>
                         </div>
                         <div className="ls2cr2r2">
-                            <CampaignCard onClickDetail={() => handleToDetail("1")}/>
-                            <CampaignCard />
-                            <CampaignCard />
+                            {organizationCampaigns.length > 0 ? organizationCampaigns.map((campaign) => (
+                                <CampaignCard campaign={campaign} key={campaign.campaignId} onClickDetail={() => handleToDetail(campaign.campaignId)} />
+                            )) : (
+                                <h1>Chưa có dữ liệu</h1>
+                            )}
                         </div>
                     </div>
                     <div className="ls2cr3">
@@ -35,9 +62,11 @@ export default function () {
                             <Link to={`${routes.user.campaign.list}?tab=2`} className="view-all">Xem tất cả</Link>
                         </div>
                         <div className="ls2cr3r2">
-                            <CampaignCard />
-                            <CampaignCard />
-                            <CampaignCard />
+                            {personalCampaigns.length > 0 ? personalCampaigns.map((campaign) => (
+                                <CampaignCard campaign={campaign} key={campaign.campaignId} onClickDetail={() => handleToDetail(campaign.campaignId)} />
+                            )) : (
+                                <h1>Chưa có dữ liệu</h1>
+                            )}
                         </div>
                     </div>
                 </div>

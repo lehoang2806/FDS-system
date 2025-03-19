@@ -4,6 +4,7 @@ type EventCardProps = {
 
 type CampaignCardProps = {
     onClickDetail?: () => void,
+    campaign: CampaignInfo
 }
 
 type SupporterCardProps = {

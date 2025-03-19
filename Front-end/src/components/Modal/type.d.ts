@@ -29,7 +29,14 @@ interface RejectCampaignModalProps extends ModalCommonProps {
 }
 
 interface RejectReasonModalProps extends ModalCommonProps {
-    reason: string;
+    reason?: string | null;
 }
 
 interface RecipientCertificateModalProps extends ModalCommonProps {}
+
+interface RemindCertificateModalProps extends ModalCommonProps {}
+
+interface RegisterReceiverModalProps extends ModalCommonProps {
+    limitedQuantity: number;
+    campaignId: string | undefined;
+}

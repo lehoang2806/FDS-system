@@ -32,3 +32,12 @@ export const selectGetAllRecipientCertificate: Selector<RecipientCertificate[]> 
 export const selectGetAllCampaign: Selector<CampaignInfo[]> = (state: RootState) => {
     return state.campaign.listCampaigns;
 }
+
+export const selectCurrentCampaign: Selector<CurrentCampaign | null> = (state: RootState) => {
+    return state.campaign.currentCampaign;
+}
+
+//RegisterReciver
+export const selectGetAllRegisterReceivers: Selector<RegisterReceiver[]> = (state: RootState) => {
+    return state.registerReceiver.listRegisterReceivers;
+}

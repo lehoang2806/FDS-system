@@ -14,6 +14,7 @@ import NewsIcon from "./news-icon.svg?react";
 import ForumIcon from "./forum-icon.svg?react";
 import PostIcon from "./post-icon.svg?react";
 import CertificateIcon from "./certificate-icon.svg?react";
+import LogoutIcon from "./logout-icon.svg?react";
 
 export {
     MenuIcon,
@@ -31,5 +32,6 @@ export {
     NewsIcon,
     ForumIcon,
     PostIcon,
-    CertificateIcon
+    CertificateIcon,
+    LogoutIcon
 };
