@@ -34,8 +34,20 @@ namespace FDSSYSTEM.Models
         public string Status { get; set; } = "Pending";  // Mặc định là chờ duyệt
 
         public string RejectComment { get; set; }
-        public int LimitedQuantity { get; set; }
         public string Comment  { get; set; }
-        public string Type { get; set; }//staff , personal, organization
+        public string TypeAccount { get; set; } //staff, personal, organization
+        public bool TypeCampaign { get; set; } // giới hạn quà tặng, đăng ký thoải mái
+        public bool IsReceiveMulti { get; set; }
+        public List<CampainNotificaiton> ReviewComments { get; set; }
+        public string CancelComment { get; set; }
+        public string StartRegisterDate { get; set; }
+        public string EndRegisterDate { get; set; }
+        public string Image {  get; set; }
+    }
+
+    public class CampainNotificaiton
+    {
+        public DateTime CreatedDate { get; set; }
+        public string Content { get; set; }
     }
 }

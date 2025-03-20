@@ -53,7 +53,12 @@ namespace FDSSYSTEM.Services.CampaignService
                 DateCreated = DateTime.Now,
                 IsDeleted = false,
                 Status = "Pending",// Nếu không truyền, mặc định là "Pending",
-                Type = donorType, //staff, personal , organization
+                TypeAccount = donorType, //staff, personal , organization
+                IsReceiveMulti = campaign.IsReceiveMulti,
+                StartRegisterDate = campaign.StartRegisterDate,
+                EndRegisterDate = campaign.EndRegisterDate,
+                Image = campaign.Image,
+                TypeCampaign = campaign.TypeCampaign,
             });
         }
 
@@ -96,6 +101,11 @@ namespace FDSSYSTEM.Services.CampaignService
                 existingCampaign.Address = campaign.Address;
                 existingCampaign.ReceiveDate = campaign.ReceiveDate;
                 existingCampaign.DateUpdated = DateTime.Now;
+                existingCampaign.IsReceiveMulti = campaign.IsReceiveMulti;
+                existingCampaign.StartRegisterDate = campaign.StartRegisterDate;
+                existingCampaign.EndRegisterDate = campaign.EndRegisterDate;
+                existingCampaign.Image = campaign.Image;
+                existingCampaign.TypeCampaign = campaign.TypeCampaign;
 
                 await _campaignRepository.UpdateAsync(existingCampaign.Id, existingCampaign);
             }
@@ -159,8 +169,35 @@ namespace FDSSYSTEM.Services.CampaignService
             await _campaignRepository.UpdateAsync(campain.Id, campain);
         }
 
-        
+        public async Task AddReviewComment(ReviewCommentCampaignDto reviewCommentCampaignDto)
+        {
+            var filter = Builders<Campaign>.Filter.Eq(c => c.CampaignId, reviewCommentCampaignDto.CampaignId);
+            var campain = (await _campaignRepository.GetAllAsync(filter)).FirstOrDefault();
 
+            if (campain != null)
+            {
+                if (campain.ReviewComments == null)
+                {
+                    campain.ReviewComments = new List<CampainNotificaiton>();
+                }
+                campain.ReviewComments.Add(new CampainNotificaiton
+                {
+                    Content= reviewCommentCampaignDto.Content,
+                    CreatedDate = DateTime.Now
+                });
+            }
+            await _campaignRepository.UpdateAsync(campain.Id, campain);
+            //TODO: Send Email / SMS
+        }
 
+        public async Task Cancel(CancelCampaignDto cancelCampaignDto)
+        {
+            var filter = Builders<Campaign>.Filter.Eq(c => c.CampaignId, cancelCampaignDto.CampaignId);
+            var campain = (await _campaignRepository.GetAllAsync(filter)).FirstOrDefault();
+
+            campain.Status = "Canceled";
+            campain.CancelComment = cancelCampaignDto.Comment;
+            await _campaignRepository.UpdateAsync(campain.Id, campain);
+        }
     }
 }

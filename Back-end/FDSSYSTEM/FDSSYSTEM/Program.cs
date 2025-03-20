@@ -3,6 +3,7 @@ using FDSSYSTEM.Helpers;
 using FDSSYSTEM.Options;
 using FDSSYSTEM.Repositories.CampaignRepository;
 using FDSSYSTEM.Repositories.NewRepository;
+using FDSSYSTEM.Repositories.NotificationCampaignRepository;
 using FDSSYSTEM.Repositories.OrganizationDonorCertificateRepository;
 using FDSSYSTEM.Repositories.PostCommentRepository;
 using FDSSYSTEM.Repositories.PostRepository;
@@ -11,9 +12,12 @@ using FDSSYSTEM.Repositories.RegisterReceiverRepository;
 using FDSSYSTEM.Repositories.RoleRepository;
 using FDSSYSTEM.Repositories.UserRepository;
 
+
+
 using FDSSYSTEM.SeedData;
 using FDSSYSTEM.Services.CampaignService;
 using FDSSYSTEM.Services.NewService;
+using FDSSYSTEM.Services.NotificationCampaignService;
 using FDSSYSTEM.Services.PostCommentService;
 using FDSSYSTEM.Services.PostService;
 using FDSSYSTEM.Services.RegisterReceiverService;
@@ -51,6 +55,9 @@ builder.Services.AddScoped<ICampaignService, CampaignService>();
 
 builder.Services.AddScoped<IRegisterReceiverRepository, RegisterReceiverRepository>();
 builder.Services.AddScoped<IRegisterReceiverService, RegisterReceiverService>();
+
+builder.Services.AddScoped<INotificationCampaignRepostoy, NotificationCampaignRepository>();
+builder.Services.AddScoped<INotificationCampaignService, NotificationCampaignService>();
 
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddScoped<IUserContextService, UserContextService>();

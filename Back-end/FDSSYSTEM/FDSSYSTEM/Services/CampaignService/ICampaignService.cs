@@ -14,5 +14,7 @@ namespace FDSSYSTEM.Services.CampaignService
         Task Approve(ApproveCampaignDto approveCampaignDto);
         Task Reject(RejectCampaignDto rejectCampaignDto);
         Task Delete(string id);
+        Task AddReviewComment (ReviewCommentCampaignDto reviewCommentCampaignDto);
+        Task Cancel (CancelCampaignDto cancelCampaignDto);
     }
 }

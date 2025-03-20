@@ -11,11 +11,11 @@ using System.Threading.Tasks;
 namespace FDSSYSTEM.Controllers
 {
     [Route("api/campaign")]
-   
+
     public class CampaignController : BaseController
     {
         private readonly ICampaignService _campaignService;
-       
+
 
         public CampaignController(ICampaignService campaignService)
         {
@@ -126,7 +126,7 @@ namespace FDSSYSTEM.Controllers
         }
 
         [HttpGet("GetCampaignById/{id}")]
-       /* [Authorize(Roles = "Staff,Admin,Donor,Recipient")]*/
+        /* [Authorize(Roles = "Staff,Admin,Donor,Recipient")]*/
         public async Task<ActionResult> GetCampaignById(string id)
         {
             try
@@ -149,7 +149,35 @@ namespace FDSSYSTEM.Controllers
             }
         }
 
+        [HttpPost("CommentCampaign")]
+        [Authorize(Roles = "Admin,Staff")]
+        public async Task<ActionResult> CommentCampaign(ReviewCommentCampaignDto campaign)
+        {
+            try
+            {
+                await _campaignService.AddReviewComment(campaign);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
 
+        [HttpPut("CancelCampaign")]
+        [Authorize(Roles = "Staff,Donor")]
+        public async Task<ActionResult> Cancel(CancelCampaignDto cancelCampaignDto)
+        {
+            try
+            {
+                await _campaignService.Cancel(cancelCampaignDto);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
 
     }
 }
