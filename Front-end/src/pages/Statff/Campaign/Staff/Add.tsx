@@ -1,6 +1,6 @@
 import { navigateHook } from "@/routes/RouteApp"
 import { routes } from "@/routes/routeName"
-import { FC } from "react"
+import { ChangeEvent, FC } from "react"
 import classNames from "classnames";
 import Button from "@/components/Elements/Button";
 import { Field, Form, Formik, FormikHelpers } from "formik";
@@ -10,6 +10,7 @@ import { useAppDispatch } from "@/app/store";
 import { addCampaignApiThunk } from "@/services/campaign/campaignThunk";
 import { toast } from "react-toastify";
 import { get } from "lodash";
+import { format } from "date-fns";
 
 const StaffAddCampaignStaffPage: FC = () => {
     const dispatch = useAppDispatch();
@@ -21,6 +22,7 @@ const StaffAddCampaignStaffPage: FC = () => {
         giftQuantity: 0,
         address: "",
         receiveDate: "",
+        limitedQuantity: 0
     };
 
     const schema = Yup.object().shape({
@@ -49,10 +51,22 @@ const StaffAddCampaignStaffPage: FC = () => {
                 const minDate = moment().add(2, "days").startOf("day");
                 return selectedDate.isAfter(minDate);
             }),
+
+        limitedQuantity: Yup.number()
+            .required("Số lượng giới hạn nhận quà không được để trống")
+            .min(1, "Số lượng giới hạn nhận quà phải lớn hơn 0"),
     });
 
     const onSubmit = async (values: AddCampaign, helpers: FormikHelpers<AddCampaign>) => {
-        await dispatch(addCampaignApiThunk(values)).unwrap().then(() => {
+        const localDate = new Date(values.receiveDate);
+        const offset = localDate.getTimezoneOffset();
+
+        const formattedValues = {
+            ...values,
+            receiveDate: new Date(localDate.getTime() - offset * 60000).toISOString(),
+        };
+
+        await dispatch(addCampaignApiThunk(formattedValues)).unwrap().then(() => {
             toast.success("Add Campaign successfully");
             helpers.resetForm();
         }).catch((error) => {
@@ -73,7 +87,9 @@ const StaffAddCampaignStaffPage: FC = () => {
                 handleSubmit,
                 errors,
                 touched,
-                isSubmitting
+                isSubmitting,
+                values,
+                setFieldValue
             }) => (
                 <Form onSubmit={handleSubmit}>
                     <section id="staff-add-campaign-staff" className="staff-section">
@@ -125,9 +141,20 @@ const StaffAddCampaignStaffPage: FC = () => {
                                             {errors.address && touched.address && <span className="text-error">{errors.address}</span>}
                                         </div>
                                         <div className="form-field">
-                                            <label className="form-label">Receive Date</label>
-                                            <Field name="receiveDate" type="date" placeholder="Hãy nhập ngày nhận quà tặng" className={classNames("form-input", { "is-error": errors.receiveDate && touched.receiveDate })} />
+                                            <label className="form-label">Thời gian và ngày nhận quà</label>
+                                            <Field
+                                                name="receiveDate"
+                                                type="datetime-local"
+                                                value={values.receiveDate ? format(new Date(values.receiveDate), "yyyy-MM-dd'T'HH:mm") : ""}
+                                                onChange={(e: ChangeEvent<HTMLInputElement>) => setFieldValue("receiveDate", e.target.value)}
+                                                className={classNames("form-input", { "is-error": errors.receiveDate && touched.receiveDate })}
+                                            />
                                             {errors.receiveDate && touched.receiveDate && <span className="text-error">{errors.receiveDate}</span>}
+                                        </div>
+                                        <div className="form-field">
+                                            <label className="form-label">Số lượng giới hạn cho từng người nhận</label>
+                                            <Field name="limitedQuantity" type="number" placeholder="Hãy nhập số lượng giới hạn nhận quà" className={classNames("form-input", { "is-error": errors.limitedQuantity && touched.limitedQuantity })} />
+                                            {errors.limitedQuantity && touched.limitedQuantity && <span className="text-error">{errors.limitedQuantity}</span>}
                                         </div>
                                     </div>
                                 </div>

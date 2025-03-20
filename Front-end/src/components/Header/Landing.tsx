@@ -3,9 +3,10 @@ import { navigateHook } from "@/routes/RouteApp"
 import { routes } from "@/routes/routeName"
 import { FC, useState } from "react"
 import { Link } from "react-router-dom"
-import { SubmitCertificateModal } from "../Modal"
+import { CreateCampaignModal, SubmitCertificateModal } from "../Modal"
 import { useAppSelector } from "@/app/store"
 import { selectUserLogin } from "@/app/selector"
+import { logout } from "@/utils/helper"
 
 const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
     const userLogin = useAppSelector(selectUserLogin)
@@ -16,9 +17,14 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
 
     const [isSubmitCertificateModalOpen, setIsSubmitCertificateModalOpen] = useState(false);
 
+    const [isCreateCampaignModalOpen, setIsCreateCampaignModalOpen] = useState(false);
+
     const handleCreateCampaign = () => {
         if (userLogin?.isConfirm === false) {
             setIsSubmitCertificateModalOpen(true)
+        }
+        if (userLogin?.isConfirm === true) {
+            setIsCreateCampaignModalOpen(true)
         }
     }
 
@@ -109,7 +115,7 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
                                         <li><Link to={routes.user.personal}>Xem trang cá nhân</Link></li>
                                         <li><Link to={routes.user.profile}>Chỉnh sửa thông tin</Link></li>
                                         <li><Link to={routes.user.change_pass}>Đổi mật khẩu</Link></li>
-                                        <li><Link to={""}>Đăng xuất</Link></li>
+                                        <li><Link to={""} onClick={logout}>Đăng xuất</Link></li>
                                     </ul>
                                 </div>
                             )}
@@ -118,6 +124,7 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
                 </div>
             </div>
             <SubmitCertificateModal isOpen={isSubmitCertificateModalOpen} setIsOpen={setIsSubmitCertificateModalOpen} />
+            <CreateCampaignModal isOpen={isCreateCampaignModalOpen} setIsOpen={setIsCreateCampaignModalOpen} />
         </header>
     )
 }

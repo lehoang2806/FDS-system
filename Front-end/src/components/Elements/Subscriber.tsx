@@ -1,4 +1,6 @@
-const Subscriber = () => {
+import { FC } from "react"
+
+const Subscriber: FC<SubcriberProps> = ({ registerReceiver }) => {
     return (
         <div className='subscriber-container'>
             <div className="scc1">
@@ -7,8 +9,8 @@ const Subscriber = () => {
                 </figure>
             </div>
             <div className="scc2">
-                <h4>Tên người đăng ký</h4>
-                <p>Số phần đăng ký</p>
+                <h4>Tên người đăng ký: {registerReceiver.registerReceiverName}</h4>
+                <p>Số phần đăng ký: {registerReceiver.quantity}</p>
             </div>
         </div>
     )

@@ -10,6 +10,11 @@ export const getAllCampaignApi = async () => {
     return data.data;
 };
 
+export const getCampaignByIdApi = async (id: string) => {
+    const data = await request.get(`api/campaign/GetCampaignById/${id}`);
+    return data.data;
+}
+
 export const approveCampaignApi = async (params: ApproveCampaign) => {
     const data = await request.put('api/campaign/Approve', params);
     return data.data;

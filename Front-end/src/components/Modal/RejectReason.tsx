@@ -4,7 +4,7 @@ import { RejectReasonModalProps } from "./type"
 
 const RejectReasonModal: FC<RejectReasonModalProps> = ({isOpen, setIsOpen, reason}) => {
     return (
-        <Modal isOpen={isOpen} setIsOpen={setIsOpen} title="Reject Campaign">
+        <Modal isOpen={isOpen} setIsOpen={setIsOpen} title="Reason Reject">
             <section id="reject-campaign-modal">
                 <div className="rcm-container">
                     <h1>{reason}</h1>

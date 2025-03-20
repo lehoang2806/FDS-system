@@ -26,21 +26,22 @@ const StaffListDonorCertificate = () => {
 
     const handleApproveCertificate = async (values: ApproveCertificate, confirmValues: ConfirmUser) => {
         try {
-            await dispatch(confirmUserApiThunk(confirmValues)).unwrap();
-
-            await dispatch(approveCertificateApiThunk(values)).unwrap();
-
+            await Promise.all([
+                dispatch(confirmUserApiThunk(confirmValues)).unwrap(),
+                dispatch(approveCertificateApiThunk(values)).unwrap()
+            ]);
+    
             toast.success("Approve Certificate Successfully");
-
+    
             dispatch(getAllDonorCertificateApiThunk());
         } catch (error) {
             console.error("Error in approval process:", error);
             toast.error("An error occurred while approving the certificate.");
         }
-    };
+    };    
 
 
-    const handleRejectCertificate = (certificateId: string , type: number) => {
+    const handleRejectCertificate = (certificateId: string, type: number) => {
         setSelectedCertificate({ certificateId, type, comment: "" });
         setIsRejectCertificateModalOpen(true);
     };
@@ -100,9 +101,6 @@ const StaffListDonorCertificate = () => {
                         <thead className="table-head">
                             <tr className="table-head-row">
                                 <th className="table-head-cell">
-                                    CCCD
-                                </th>
-                                <th className="table-head-cell">
                                     Full Name
                                 </th>
                                 <th className="table-head-cell">
@@ -122,7 +120,6 @@ const StaffListDonorCertificate = () => {
                         <tbody className="table-body">
                             {donorCertificates.map((row, index) => (
                                 <tr key={index} className="table-body-row">
-                                    <td className='table-body-cell'>{row.citizenId}</td>
                                     <td className='table-body-cell'>{row.fullName}</td>
                                     <td className='table-body-cell'>{row.phone}</td>
                                     <td className='table-body-cell'>{row.citizenId === null ? "Organization" : "Personal"}</td>
@@ -132,8 +129,21 @@ const StaffListDonorCertificate = () => {
                                         {row.status === "Pending" ? (
                                             <>
                                                 <button className="view-btn">View</button>
-                                                <button className="approve-btn" onClick={() => handleApproveCertificate({ certificateId: row.donorCertificateId, type: 1 }, { accountId: row.donorId, type: "1" })}>Approve</button>
-                                                <button className="reject-btn" onClick={() => handleRejectCertificate(row.donorCertificateId, 1)}>Reject</button>
+                                                <button
+                                                    className="approve-btn"
+                                                    onClick={() => {
+                                                        row.citizenId === null
+                                                            ? handleApproveCertificate({ certificateId: row.donorCertificateId, type: 2 }, { accountId: row.donorId, type: "2" })
+                                                            : handleApproveCertificate({ certificateId: row.donorCertificateId, type: 1 }, { accountId: row.donorId, type: "1" });
+                                                    }}
+                                                >
+                                                    Approve
+                                                </button>
+                                                <button className="reject-btn" onClick={() => {
+                                                    row.citizenId === null
+                                                        ? handleRejectCertificate(row.donorCertificateId, 2)
+                                                        : handleRejectCertificate(row.donorCertificateId, 1);
+                                                }}>Reject</button>
                                             </>
                                         ) : (
                                             <button className="view-btn">View</button>

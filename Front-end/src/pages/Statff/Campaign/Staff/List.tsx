@@ -91,12 +91,6 @@ const StaffListCampaignStaffPage: FC = () => {
                                     Description
                                 </th>
                                 <th className="table-head-cell">
-                                    Gift Quantity
-                                </th>
-                                <th className="table-head-cell">
-                                    Gift Type
-                                </th>
-                                <th className="table-head-cell">
                                     Status
                                 </th>
                                 <th className="table-head-cell">
@@ -111,8 +105,6 @@ const StaffListCampaignStaffPage: FC = () => {
                                     <td className='table-body-cell'>{campaign.address}</td>
                                     <td className='table-body-cell'>{campaign.receiveDate}</td>
                                     <td className='table-body-cell'>{campaign.description}</td>
-                                    <td className='table-body-cell'>{campaign.giftQuantity}</td>
-                                    <td className='table-body-cell'>{campaign.giftType}</td>
                                     <td className='table-body-cell'>{campaign.status === "Pending" ? <span className='status-pending'>Pending</span> : campaign.status === "Approved" ? <span className='status-approve'>Approve</span> : <span className='status-reject'>Reject</span>}</td>
                                     <td className="table-body-cell">
                                         <button className='view-btn' onClick={() => handleToDetail(campaign.campaignId)}>View</button>

@@ -1,8 +1,9 @@
-import { CampaignIcon, DashboardtIcon, ForumIcon, NewsIcon, PostIcon, StaffIcon, UserIcon } from '@/assets/icons';
+import { CampaignIcon, DashboardtIcon, ForumIcon, LogoutIcon, NewsIcon, PostIcon, StaffIcon, UserIcon } from '@/assets/icons';
 import { FC, useRef } from 'react'
 import { Link, useLocation } from 'react-router-dom';
 import classNames from 'classnames';
 import { routes } from '@/routes/routeName';
+import { logoutManager } from '@/utils/helper';
 
 const AdminSidebar: FC = () => {
     const location = useLocation();
@@ -162,6 +163,16 @@ const AdminSidebar: FC = () => {
                             </div>
                         </Link>
                     </div>
+                    <Link
+                        to={""}
+                        onClick={logoutManager}
+                        className='ascr2-nav-item'
+                    >
+                        <div className="ascr2-nav-link">
+                            <LogoutIcon className="ascr2-nav-icon" />
+                            <span>Logout</span>
+                        </div>
+                    </Link>
                 </div>
             </div>
         </nav>
