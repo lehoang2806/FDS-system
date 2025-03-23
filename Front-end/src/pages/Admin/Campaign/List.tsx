@@ -4,6 +4,7 @@ import { ActiveIcon, BlockIcon, TotalIcon } from '@/assets/icons'
 import { RejectCampaignModal, RejectReasonModal } from '@/components/Modal'
 import { navigateHook } from '@/routes/RouteApp'
 import { routes } from '@/routes/routeName'
+import { setLoading } from '@/services/app/appSlice'
 import { approveCampaignApiThunk, getAllCampaignApiThunk } from '@/services/campaign/campaignThunk'
 import { FC, useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
@@ -22,12 +23,16 @@ const AdminListCampaignPage: FC = () => {
     const [isRejectReasonModalOpen, setIsRejectReasonModalOpen] = useState(false);
 
     useEffect(() => {
+        dispatch(setLoading(true));
         dispatch(getAllCampaignApiThunk())
             .unwrap()
             .catch(() => {
             }).finally(() => {
+                setTimeout(() => {
+                    dispatch(setLoading(false));
+                }, 1000)
             });
-    }, []);
+    }, [dispatch]);
 
     const handleToDetail = (campaignId: string) => {
         const url = routes.admin.campaign.detail.replace(":id", campaignId);

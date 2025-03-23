@@ -9,10 +9,15 @@ import { DetailNewsPage, ListNewsPage } from "@/pages/System/News";
 import routeUser from "./RouteUser";
 import { PostForumPage } from "@/pages/System/Post";
 import routeAdmin from "./RouteAdmin";
+import { useAppSelector } from "@/app/store";
+import { selectLoading } from "@/app/selector";
+import { Loading } from "@/components/Elements";
 
 export default function () {
+    const loading = useAppSelector(selectLoading);
     return (
         <Fragment>
+            <Loading loading={loading} isFullPage />
             <RouterProvider router={routerRoot} />
         </Fragment>
     )

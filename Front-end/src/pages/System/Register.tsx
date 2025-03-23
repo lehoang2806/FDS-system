@@ -25,6 +25,7 @@ const RegisterPage = () => {
     };
 
     useEffect(() => {
+        document.title = "Đăng ký";
         if (isAuthenticated) {
             navigateHook(routes.user.home);
         }

@@ -45,7 +45,7 @@ const OrganizationDonorModal: FC<OrganizationDonorModalProps> = ({ isOpen, setIs
         <Modal isOpen={isOpen} setIsOpen={setIsOpen} title="Organization Donor">
             <section id="organization-donor-modal">
                 <div className="odm-container">
-                    <h1>Đăng ký thành tổ chức ủng hộ</h1>
+                    <h1>Trở thành tài khoản tổ chức</h1>
                     <Formik
                         initialValues={initialValues}
                         onSubmit={onSubmit}
@@ -67,6 +67,14 @@ const OrganizationDonorModal: FC<OrganizationDonorModalProps> = ({ isOpen, setIs
                                     <label className="form-label">Mã số thuế</label>
                                     <Field name="taxIdentificationNumber" type="text" placeholder="Hãy nhập mã số thuế của bạn" className={classNames("form-input", { "is-error": errors.taxIdentificationNumber && touched.taxIdentificationNumber })} />
                                     {errors.taxIdentificationNumber && touched.taxIdentificationNumber && <span className="error">{errors.taxIdentificationNumber}</span>}
+                                </div>
+                                <div className="form-field">
+                                    <label className="form-label">Tên người đại diện</label>
+                                    <Field name="taxIdentificationNumber" type="text" placeholder="Hãy nhập tên người đại diện" className={classNames("form-input", { "is-error": errors.taxIdentificationNumber && touched.taxIdentificationNumber })} />
+                                </div>
+                                <div className="form-field">
+                                    <label className="form-label">Số điện thoại người đại diện</label>
+                                    <Field name="taxIdentificationNumber" type="text" placeholder="Hãy nhập số điện thoại của người đại diện" className={classNames("form-input", { "is-error": errors.taxIdentificationNumber && touched.taxIdentificationNumber })} />
                                 </div>
                                 <Button loading={isSubmitting} type="submit" title="Nộp chứng chỉ" />
                             </Form>

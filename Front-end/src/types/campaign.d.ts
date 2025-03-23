@@ -5,7 +5,10 @@ interface AddCampaign {
     giftQuantity: number;
     address: string;
     receiveDate: string;
-    limitedQuantity: number;
+    startRegisterDate: string;
+    endRegisterDate: string;
+    image: string;
+    typeCampaign: string | "Limited" | "Voluntary";
 }
 
 interface CampaignInfo {
@@ -25,9 +28,12 @@ interface CampaignInfo {
     dateUpdated: string | null;
     isDeleted: boolean;
     status: string;
-    type: string;
-    limitedQuantity: number | string;
+    typeAccount: string;
     rejectComment: string | null;
+    startRegisterDate: string;
+    endRegisterDate: string;
+    image: string;
+    typeCampaign: string;
 }
 
 interface CurrentCampaign {
@@ -37,17 +43,22 @@ interface CurrentCampaign {
     nameCampaign: string;
     description: string;
     giftType: string;
-    giftQuantity: number;
     address: string;
     receiveDate: string;
     dateCreated: string;
     dateUpdated: string | null;
     isDeleted: boolean;
-    status: string;
-    rejectComment: string | null;
-    limitedQuantity: number;
-    comment: string | null;
-    type: string;
+    status: "Pending" | "Approved" | "Rejected";
+    typeCampaign: "Limited" | "Voluntary";
+    giftQuantity?: number;
+    startRegisterDate?: string;
+    endRegisterDate?: string;
+    rejectComment?: string | null;
+    comment?: string | null;
+    typeAccount: "Personal Donor" | "Organization";
+    reviewComments?: string | null;
+    cancelComment?: string | null;
+    image: string;
 }
 
 interface CampaignState {

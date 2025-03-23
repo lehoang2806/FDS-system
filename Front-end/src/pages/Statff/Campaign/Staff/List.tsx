@@ -3,6 +3,7 @@ import { useAppDispatch, useAppSelector } from '@/app/store'
 import { ActiveIcon, BlockIcon, TotalIcon } from '@/assets/icons'
 import { navigateHook } from '@/routes/RouteApp'
 import { routes } from '@/routes/routeName'
+import { setLoading } from '@/services/app/appSlice'
 import { getAllCampaignApiThunk } from '@/services/campaign/campaignThunk'
 import { FC, useEffect } from 'react'
 
@@ -19,12 +20,16 @@ const StaffListCampaignStaffPage: FC = () => {
     const staffCampaigns = campaigns.filter(campaign => campaign.roleId === 2)
 
     useEffect(() => {
+        dispatch(setLoading(true));
         dispatch(getAllCampaignApiThunk())
             .unwrap()
             .catch(() => {
             }).finally(() => {
+                setTimeout(() => {
+                    dispatch(setLoading(false));
+                }, 1000)
             });
-    }, []);
+    }, [dispatch]);
 
     return (
         <section id="staff-list-campaign-staff" className="staff-section">

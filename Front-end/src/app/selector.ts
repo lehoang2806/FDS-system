@@ -3,6 +3,10 @@ import { UserProfile } from "@/types/auth";
 import { RootState } from "./reducer";
 import { DonorCertificate, RecipientCertificate, UserInfo } from "@/types/user";
 
+export const selectLoading: Selector<boolean> = (state: RootState) => {
+    return state.app.loading;
+}
+
 export const selectUserLogin: Selector<UserProfile|null> = (state: RootState) => {
     return state.auth.userInfo;
 }

@@ -2,6 +2,7 @@ import { selectCurrentCampaign, selectGetAllRegisterReceivers } from '@/app/sele
 import { useAppDispatch, useAppSelector } from '@/app/store';
 import { navigateHook } from '@/routes/RouteApp'
 import { routes } from '@/routes/routeName'
+import { setLoading } from '@/services/app/appSlice';
 import { getCampaignByIdApiThunk } from '@/services/campaign/campaignThunk';
 import { getAllRegisterReceiversApiThunk } from '@/services/registerReceive/registerReceiveThunk';
 import { FC, useEffect } from 'react'
@@ -22,11 +23,19 @@ const StaffDetailCampaignStaffPage: FC = () => {
     const time = currentCampaign?.receiveDate.split("T")[1].replace("Z", "");
 
     useEffect(() => {
-        dispatch(getAllRegisterReceiversApiThunk());
         if (id) {
-            dispatch(getCampaignByIdApiThunk(id));
+            dispatch(setLoading(true));
+            dispatch(getAllRegisterReceiversApiThunk());
+            dispatch(getCampaignByIdApiThunk(id))
+                .unwrap()
+                .catch(() => {
+                }).finally(() => {
+                    setTimeout(() => {
+                        dispatch(setLoading(false));
+                    }, 1000)
+                });
         }
-    }, [id])
+    }, [id, dispatch])
 
     return (
         <section id="staff-detail-campaign-user" className="staff-section">

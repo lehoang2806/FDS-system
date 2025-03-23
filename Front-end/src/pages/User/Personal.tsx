@@ -1,9 +1,11 @@
 import { selectGetAllCampaign, selectGetAllDonorCertificate, selectGetAllRecipientCertificate, selectGetAllRegisterReceivers, selectUserLogin } from "@/app/selector";
 import { useAppDispatch, useAppSelector } from "@/app/store";
 import { AvatarUser, NoResult } from "@/assets/images"
-import { CreateCampaignModal, RecipientCertificateModal, RejectReasonModal, SubmitCertificateModal } from "@/components/Modal";
+import { Loading } from "@/components/Elements";
+import { CreateCampaignModal, RecipientCertificateModal, SubmitCertificateModal } from "@/components/Modal";
 import { navigateHook } from "@/routes/RouteApp";
 import { routes } from "@/routes/routeName";
+import { setLoading } from "@/services/app/appSlice";
 import { getAllCampaignApiThunk } from "@/services/campaign/campaignThunk";
 import { getAllRegisterReceiversApiThunk } from "@/services/registerReceive/registerReceiveThunk";
 import { getAllDonorCertificateApiThunk, getAllRecipientCertificateApiThunk } from "@/services/user/userThunk";
@@ -13,32 +15,37 @@ import { useLocation, useNavigate } from "react-router-dom";
 const UserPersonalPage = () => {
     const dispatch = useAppDispatch();
 
+    // Lấy dữ liệu từ Redux store
     const userLogin = useAppSelector(selectUserLogin);
-
-    const [selectedReason, setSelectReason] = useState<string | null>('');
-
-    const [isRejectReasonModalOpen, setIsRejectReasonModalOpen] = useState(false);
-
+    const campaigns = useAppSelector(selectGetAllCampaign);
     const donorCertificates = useAppSelector(selectGetAllDonorCertificate);
-
     const recipientCertificates = useAppSelector(selectGetAllRecipientCertificate);
-
-    const campaigns = useAppSelector(selectGetAllCampaign)
-
-    const currentCampaigns = campaigns.filter((campaign) => campaign.accountId === userLogin?.accountId);
-
-    const currentDonorCertificates = donorCertificates.filter((donorCertificate) => donorCertificate.donorId === userLogin?.accountId);
-
-    const currentRecipientCertificates = recipientCertificates.filter((recipientCertificate) => recipientCertificate.recipientId === userLogin?.accountId);
-
     const registerReceivers = useAppSelector(selectGetAllRegisterReceivers);
 
-    const currentRegisterReceivers = registerReceivers.filter((registerReceiver) => registerReceiver.accountId === userLogin?.accountId);
+    // Lọc dữ liệu theo tài khoản đăng nhập
+    const currentCampaigns = campaigns.filter(
+        (campaign) => campaign.accountId === userLogin?.accountId
+    );
 
+    const currentDonorCertificates = donorCertificates.filter(
+        (donorCertificate) => donorCertificate.donorId === userLogin?.accountId
+    );
+
+    const currentRecipientCertificates = recipientCertificates.filter(
+        (recipientCertificate) => recipientCertificate.recipientId === userLogin?.accountId
+    );
+
+    const currentRegisterReceivers = registerReceivers.filter(
+        (registerReceiver) => registerReceiver.accountId === userLogin?.accountId
+    );
+
+    // State quản lý modal
     const [isSubmitCertificateModalOpen, setIsSubmitCertificateModalOpen] = useState(false);
     const [isRecipientCertificateModalOpen, setIsRecipientCertificateModalOpen] = useState(false);
     const [isCreateCampaignModalOpen, setIsCreateCampaignModalOpen] = useState(false);
+    const [isFiltering, setIsFiltering] = useState(false);
 
+    // Hooks điều hướng
     const location = useLocation();
     const navigate = useNavigate();
 
@@ -61,11 +68,20 @@ const UserPersonalPage = () => {
         navigate(`?tab=${tabIndex}`);
     };
 
+    const handleFilter = () => {
+        setIsFiltering(true);
+        setTimeout(() => {
+            setIsFiltering(false);
+        }, 1000);
+    };
+
     useEffect(() => {
         setActiveTab(getActiveTabFromURL());
     }, [location.search]);
 
     useEffect(() => {
+        document.title = "Trang cá nhân";
+        dispatch(setLoading(true));
         dispatch(getAllRegisterReceiversApiThunk())
         dispatch(getAllDonorCertificateApiThunk())
         dispatch(getAllRecipientCertificateApiThunk())
@@ -73,8 +89,11 @@ const UserPersonalPage = () => {
             .unwrap()
             .catch(() => {
             }).finally(() => {
+                setTimeout(() => {
+                    dispatch(setLoading(false));
+                }, 1000)
             });
-    }, []);
+    }, [dispatch]);
 
     const handleCreateCampaign = () => {
         if (userLogin?.isConfirm === false) {
@@ -84,11 +103,6 @@ const UserPersonalPage = () => {
             setIsCreateCampaignModalOpen(true)
         }
     }
-
-    const handleViewReason = (comment: string | null) => {
-        setSelectReason(comment);
-        setIsRejectReasonModalOpen(true);
-    };
 
     const handleToDetail = (campaignId: string) => {
         const url = routes.user.campaign.detail.replace(":id", campaignId);
@@ -114,21 +128,22 @@ const UserPersonalPage = () => {
                             <button className="pr-btn" onClick={() => navigateHook(routes.user.profile)}>Chỉnh sửa thông tin</button>
                         </div>
                     </div>
+                    {isFiltering && <Loading loading={true} isFullPage />} 
                     {userLogin?.roleId === 3 && (
                         <>
                             <div className="upps2cr2">
                                 <div className="upp-tabs">
                                     <div
                                         className={`upp-tabs-item ${activeTab === "chiendich" ? "upp-tabs-item-actived" : ""}`}
-                                        onClick={() => handleTabChange("chiendich")}
+                                        onClick={() => {handleTabChange("chiendich"), handleFilter()}}
                                     >
                                         Chiến dịch
                                     </div>
                                     <div
                                         className={`upp-tabs-item ${activeTab === "chungchi" ? "upp-tabs-item-actived" : ""}`}
-                                        onClick={() => handleTabChange("chungchi")}
+                                        onClick={() => {handleTabChange("chungchi"), handleFilter()}}
                                     >
-                                        Chứng chỉ
+                                        Xác nhận danh tính
                                     </div>
                                 </div>
                             </div>
@@ -160,10 +175,10 @@ const UserPersonalPage = () => {
                                                             Description
                                                         </th>
                                                         <th className="table-head-cell">
-                                                            Gift Quantity
+                                                            Gift Type
                                                         </th>
                                                         <th className="table-head-cell">
-                                                            Gift Type
+                                                            Type Campaign
                                                         </th>
                                                         <th className="table-head-cell">
                                                             Status
@@ -180,12 +195,11 @@ const UserPersonalPage = () => {
                                                             <td className='table-body-cell'>{campaign.address}</td>
                                                             <td className='table-body-cell'>{campaign.receiveDate}</td>
                                                             <td className='table-body-cell'>{campaign.description}</td>
-                                                            <td className='table-body-cell'>{campaign.giftQuantity}</td>
                                                             <td className='table-body-cell'>{campaign.giftType}</td>
+                                                            <td className='table-body-cell'>{campaign.typeCampaign}</td>
                                                             <td className='table-body-cell'>{campaign.status === "Pending" ? <span className='status-pending'>Pending</span> : campaign.status === "Approved" ? <span className='status-approve'>Approve</span> : <span className='status-reject'>Reject</span>}</td>
                                                             <td className="table-body-cell">
-                                                                {campaign.status === "Approved" && <button className='view-btn' onClick={() => handleToDetail(campaign.campaignId)}>Go to Campaign</button>}
-                                                                {campaign.status === "Rejected" && <button className='reject-btn' onClick={() => handleViewReason(campaign.rejectComment)}>View Reason</button>}
+                                                                <button className='view-btn' onClick={() => handleToDetail(campaign.campaignId)}>Go to Campaign</button>
                                                             </td>
                                                         </tr>
                                                     ))}
@@ -195,7 +209,7 @@ const UserPersonalPage = () => {
                                     </div>
                                 ) : (
                                     <div className="upp-content">
-                                        <button className="pr-btn" onClick={() => navigateHook(routes.user.submit_certificate)}>Nộp chứng chỉ</button>
+                                        <button className="pr-btn" onClick={() => navigateHook(routes.user.submit_certificate)}>Xác nhận</button>
                                         {currentDonorCertificates.length === 0 ? (
                                             <>
                                                 <figure>
@@ -250,15 +264,15 @@ const UserPersonalPage = () => {
                                 <div className="upp-tabs">
                                     <div
                                         className={`upp-tabs-item ${activeTab === "chiendich" ? "upp-tabs-item-actived" : ""}`}
-                                        onClick={() => handleTabChange("chiendich")}
+                                        onClick={() => {handleTabChange("chiendich"), handleFilter()}}
                                     >
                                         Chiến dịch đăng ký
                                     </div>
                                     <div
                                         className={`upp-tabs-item ${activeTab === "chungchi" ? "upp-tabs-item-actived" : ""}`}
-                                        onClick={() => handleTabChange("chungchi")}
+                                        onClick={() => {handleTabChange("chungchi"), handleFilter()}}
                                     >
-                                        Chứng chỉ
+                                        Xác nhận danh tính
                                     </div>
                                 </div>
                             </div>
@@ -307,7 +321,7 @@ const UserPersonalPage = () => {
                                     </div>
                                 ) : (
                                     <div className="upp-content">
-                                        <button className="pr-btn" onClick={() => setIsRecipientCertificateModalOpen(true)}>Nộp chứng chỉ</button>
+                                        <button className="pr-btn" onClick={() => setIsRecipientCertificateModalOpen(true)}>Xác nhận</button>
                                         {currentRecipientCertificates.length === 0 ? (
                                             <>
                                                 <figure>
@@ -361,7 +375,6 @@ const UserPersonalPage = () => {
             <SubmitCertificateModal isOpen={isSubmitCertificateModalOpen} setIsOpen={setIsSubmitCertificateModalOpen} />
             <CreateCampaignModal isOpen={isCreateCampaignModalOpen} setIsOpen={setIsCreateCampaignModalOpen} />
             <RecipientCertificateModal isOpen={isRecipientCertificateModalOpen} setIsOpen={setIsRecipientCertificateModalOpen} />
-            <RejectReasonModal isOpen={isRejectReasonModalOpen} setIsOpen={setIsRejectReasonModalOpen} reason={selectedReason} />
         </main>
     )
 }

@@ -1,9 +1,11 @@
 import { selectGetAllCampaign } from '@/app/selector'
 import { useAppDispatch, useAppSelector } from '@/app/store'
 import { ActiveIcon, BlockIcon, TotalIcon } from '@/assets/icons'
-import { RejectCampaignModal, RejectReasonModal } from '@/components/Modal'
+import { Loading } from '@/components/Elements'
+import { RejectCampaignModal } from '@/components/Modal'
 import { navigateHook } from '@/routes/RouteApp'
 import { routes } from '@/routes/routeName'
+import { setLoading } from '@/services/app/appSlice'
 import { approveCampaignApiThunk, getAllCampaignApiThunk } from '@/services/campaign/campaignThunk'
 import { FC, useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
@@ -11,13 +13,11 @@ import { toast } from 'react-toastify'
 const StaffListCampaignUserPage: FC = () => {
     const dispatch = useAppDispatch()
 
+    const [isFiltering, setIsFiltering] = useState(false);
+
     const [selectedCampaign, setSelectedCampaign] = useState<RejectCampaign | null>(null);
-    
-    const [selectedReason, setSelectReason] = useState<string | null>('');
 
     const [isRejectCampaignModalOpen, setIsRejectCampaignModalOpen] = useState(false);
-
-    const [isRejectReasonModalOpen, setIsRejectReasonModalOpen] = useState(false);
 
     const handleToDetail = (campaignId: string) => {
         const url = routes.staff.campaign.user.detail.replace(":id", campaignId);
@@ -28,11 +28,36 @@ const StaffListCampaignUserPage: FC = () => {
 
     const userCampaigns = campaigns.filter(campaign => campaign.roleId === 3)
 
+    const userRejectedCampaigns = userCampaigns.filter(campaign => campaign.status === "Rejected")
+
+    const userApprovedCampaigns = userCampaigns.filter(campaign => campaign.status === "Approved")
+
+    const userPendingCampaigns = userCampaigns.filter(campaign => campaign.status === "Pending")
+
+    const [filterStatus, setFilterStatus] = useState<string | null>(null);
+
+    const handleFilter = (status: string | null) => {
+        setIsFiltering(true);
+        setTimeout(() => {
+            setFilterStatus(status);
+            setIsFiltering(false);
+        }, 500);
+    };
+
+    const filteredCampaigns = filterStatus
+        ? userCampaigns.filter((c) => c.status === filterStatus)
+        : userCampaigns;
+
+
     useEffect(() => {
+        dispatch(setLoading(true));
         dispatch(getAllCampaignApiThunk())
             .unwrap()
             .catch(() => {
             }).finally(() => {
+                setTimeout(() => {
+                    dispatch(setLoading(false));
+                }, 1000);
             });
     }, []);
 
@@ -53,56 +78,53 @@ const StaffListCampaignUserPage: FC = () => {
         setIsRejectCampaignModalOpen(true);
     };
 
-    const handleViewReason = (comment: string | null) => {
-        setSelectReason(comment);
-        setIsRejectReasonModalOpen(true);
-    };
-
     return (
         <section id="staff-list-campaign-user" className="staff-section">
+            {isFiltering && <Loading loading={true} isFullPage />} 
             <div className="staff-container slcu-container">
                 <div className="slcucr1">
                     <h1>User's Campain</h1>
                     <p>Dashboard<span className="staff-tag">User's Campaign</span></p>
                 </div>
                 <div className="slcucr2">
-                    <div className="staff-tab staff-tab-1">
+                    <div className="staff-tab staff-tab-1" onClick={() => handleFilter(null)}>
                         <div className="st-figure st-figure-1">
                             <TotalIcon className="st-icon" />
                         </div>
                         <div className="st-info">
                             <h3>Total</h3>
-                            <p>7 Campaigns</p>
+                            <p>{userCampaigns.length} Campaigns</p>
                         </div>
                     </div>
-                    <div className="staff-tab staff-tab-2">
+                    <div className="staff-tab staff-tab-2" onClick={() => handleFilter("Rejected")}>
                         <div className="st-figure st-figure-2">
                             <BlockIcon className="st-icon" />
                         </div>
                         <div className="st-info">
                             <h3>Reject</h3>
-                            <p>7 Campaigns</p>
+                            <p>{userRejectedCampaigns.length} Campaigns</p>
                         </div>
                     </div>
-                    <div className="staff-tab staff-tab-3">
+                    <div className="staff-tab staff-tab-3" onClick={() => handleFilter("Approved")}>
                         <div className="st-figure st-figure-3">
                             <ActiveIcon className="st-icon" />
                         </div>
                         <div className="st-info">
                             <h3>Approve</h3>
-                            <p>7 Campaigns</p>
+                            <p>{userApprovedCampaigns.length} Campaigns</p>
                         </div>
                     </div>
-                    <div className="staff-tab staff-tab-4">
+                    <div className="staff-tab staff-tab-4" onClick={() => handleFilter("Pending")}>
                         <div className="st-figure st-figure-4">
                             <ActiveIcon className="st-icon" />
                         </div>
                         <div className="st-info">
                             <h3>Pending</h3>
-                            <p>7 Campaigns</p>
+                            <p>{userPendingCampaigns.length} Campaigns</p>
                         </div>
                     </div>
                 </div>
+
                 <div className="slcucr3">
                     <table className="table">
                         <thead className="table-head">
@@ -128,7 +150,7 @@ const StaffListCampaignUserPage: FC = () => {
                             </tr>
                         </thead>
                         <tbody className="table-body">
-                            {userCampaigns.map((campaign, index) => (
+                            {filteredCampaigns.map((campaign, index) => (
                                 <tr className="table-body-row" key={index}>
                                     <td className='table-body-cell'>{campaign.nameCampaign}</td>
                                     <td className='table-body-cell'>{campaign.address}</td>
@@ -143,16 +165,15 @@ const StaffListCampaignUserPage: FC = () => {
                                                 <button className='reject-btn' onClick={() => handleRejectCampaign(campaign.campaignId)}>Reject</button>
                                             </>
                                         )}
-                                        {campaign.status === "Rejected" && <button className='reject-btn' onClick={() => handleViewReason(campaign.rejectComment)}>View Reason</button>}
                                     </td>
                                 </tr>
                             ))}
                         </tbody>
+
                     </table>
                 </div>
             </div>
             <RejectCampaignModal isOpen={isRejectCampaignModalOpen} setIsOpen={setIsRejectCampaignModalOpen} selectedCampaign={selectedCampaign} />
-            <RejectReasonModal isOpen={isRejectReasonModalOpen} setIsOpen={setIsRejectReasonModalOpen} reason={selectedReason} />
         </section>
     )
 }

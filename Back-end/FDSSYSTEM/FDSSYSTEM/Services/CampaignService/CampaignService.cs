@@ -54,7 +54,6 @@ namespace FDSSYSTEM.Services.CampaignService
                 IsDeleted = false,
                 Status = "Pending",// Nếu không truyền, mặc định là "Pending",
                 TypeAccount = donorType, //staff, personal , organization
-                IsReceiveMulti = campaign.IsReceiveMulti,
                 StartRegisterDate = campaign.StartRegisterDate,
                 EndRegisterDate = campaign.EndRegisterDate,
                 Image = campaign.Image,
@@ -101,7 +100,6 @@ namespace FDSSYSTEM.Services.CampaignService
                 existingCampaign.Address = campaign.Address;
                 existingCampaign.ReceiveDate = campaign.ReceiveDate;
                 existingCampaign.DateUpdated = DateTime.Now;
-                existingCampaign.IsReceiveMulti = campaign.IsReceiveMulti;
                 existingCampaign.StartRegisterDate = campaign.StartRegisterDate;
                 existingCampaign.EndRegisterDate = campaign.EndRegisterDate;
                 existingCampaign.Image = campaign.Image;

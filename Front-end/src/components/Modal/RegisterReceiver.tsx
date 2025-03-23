@@ -10,7 +10,7 @@ import { get } from 'lodash';
 import { RegisterReceiverModalProps } from './type';
 import { createRegisterReceiverApiThunk, getAllRegisterReceiversApiThunk } from '@/services/registerReceive/registerReceiveThunk';
 
-const RegisterReceiverModal: FC<RegisterReceiverModalProps> = ({ isOpen, setIsOpen, campaignId, limitedQuantity }) => {
+const RegisterReceiverModal: FC<RegisterReceiverModalProps> = ({ isOpen, setIsOpen, campaignId }) => {
     const dispatch = useAppDispatch();
 
     const localDate = new Date();
@@ -34,7 +34,6 @@ const RegisterReceiverModal: FC<RegisterReceiverModalProps> = ({ isOpen, setIsOp
             .typeError('Số lượng phải là số')
             .integer('Số lượng phải là số nguyên')
             .min(1, 'Số lượng phải lớn hơn 0')
-            .max(limitedQuantity, `Số lượng không được vượt quá ${limitedQuantity}`)
             .required('Vui lòng nhập số lượng'),
     });
 
@@ -57,7 +56,6 @@ const RegisterReceiverModal: FC<RegisterReceiverModalProps> = ({ isOpen, setIsOp
             <section id="recipient-certificate-modal">
                 <div className="rcm-container">
                     <h1>Đăng ký nhận quà</h1>
-                    <p>Mỗi người chỉ được đăng ký không quá {limitedQuantity} phần quà</p>
                     <Formik
                         initialValues={initialValues}
                         onSubmit={onSubmit}
