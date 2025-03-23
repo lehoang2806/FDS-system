@@ -10,6 +10,7 @@ import { addStaffApiThunk } from "@/services/admin/staff/staffThunk";
 import { toast } from "react-toastify";
 import { get } from "lodash";
 import Button from "@/components/Elements/Button";
+import { setLoading } from "@/services/app/appSlice";
 
 const AdminAddStaffPage: FC = () => {
     const dispatch = useAppDispatch();
@@ -39,7 +40,8 @@ const AdminAddStaffPage: FC = () => {
             .matches(/^[0-9]{10,11}$/, "Số điện thoại không hợp lệ"),
     });
     
-    const onSubmit = async (values: AddStaff, helpers: FormikHelpers<AddStaff>) => { 
+    const onSubmit = async (values: AddStaff, helpers: FormikHelpers<AddStaff>) => {
+        dispatch(setLoading(true));
         await dispatch(addStaffApiThunk(values)).unwrap().then(() => {
             toast.success("Add staff successfully");
             helpers.resetForm();
@@ -48,6 +50,9 @@ const AdminAddStaffPage: FC = () => {
             helpers.setErrors({ userEmail: errorData });
         }).finally(() => {
             helpers.setSubmitting(false);
+            setTimeout(() => {
+                dispatch(setLoading(false));
+            }, 1000)
         });
      };
     return (

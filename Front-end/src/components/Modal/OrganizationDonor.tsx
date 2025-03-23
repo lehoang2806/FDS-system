@@ -12,6 +12,7 @@ import { toast } from 'react-toastify';
 import { navigateHook } from '@/routes/RouteApp';
 import { routes } from '@/routes/routeName';
 import { get } from 'lodash';
+import { setLoading } from '@/services/app/appSlice';
 
 const OrganizationDonorModal: FC<OrganizationDonorModalProps> = ({ isOpen, setIsOpen }) => {
     const dispatch = useAppDispatch();
@@ -29,6 +30,7 @@ const OrganizationDonorModal: FC<OrganizationDonorModalProps> = ({ isOpen, setIs
     });
 
     const onSubmit = async (values: OrganizationDonor, helpers: FormikHelpers<OrganizationDonor>) => {
+        dispatch(setLoading(true));
         await dispatch(createOrganizationDonorCertificateApiThunk(values)).unwrap().then(() => {
             toast.success("Nộp chứng chỉ thành công");
             setIsOpen(false);
@@ -39,6 +41,9 @@ const OrganizationDonorModal: FC<OrganizationDonorModalProps> = ({ isOpen, setIs
             toast.error(errorData);
         }).finally(() => {
             helpers.setSubmitting(false);
+            setTimeout(() => {
+                dispatch(setLoading(false));
+            }, 1000);
         });
     }
     return (

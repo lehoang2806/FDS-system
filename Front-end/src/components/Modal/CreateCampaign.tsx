@@ -11,6 +11,7 @@ import { get } from 'lodash';
 import Button from '../Elements/Button';
 import classNames from "classnames";
 import { format } from "date-fns";
+import { setLoading } from '@/services/app/appSlice';
 
 const CreateCampaignModal: FC<CreateCampaignModalProps> = ({ isOpen, setIsOpen }) => {
     const dispatch = useAppDispatch();
@@ -81,7 +82,6 @@ const CreateCampaignModal: FC<CreateCampaignModalProps> = ({ isOpen, setIsOpen }
                         ),
             }),
 
-
         image: Yup.string()
             .required("Hình ảnh là bắt buộc"),
 
@@ -90,35 +90,40 @@ const CreateCampaignModal: FC<CreateCampaignModalProps> = ({ isOpen, setIsOpen }
     });
 
     const onSubmit = async (values: AddCampaign, helpers: FormikHelpers<AddCampaign>) => {
-        // Chuyển từng giá trị Date riêng lẻ
         const toUTC = (dateStr: string) => {
             const localDate = new Date(dateStr);
             const offset = localDate.getTimezoneOffset();
             return new Date(localDate.getTime() - offset * 60000).toISOString();
         };
 
-        const formattedValues = {
+        const formattedValues: AddCampaign = {
             ...values,
             receiveDate: toUTC(values.receiveDate),
-            startRegisterDate: toUTC(values.startRegisterDate),
-            endRegisterDate: toUTC(values.endRegisterDate),
+            ...(values.typeCampaign === "Voluntary"
+                ? {
+                    startRegisterDate: toUTC(values.startRegisterDate),
+                    endRegisterDate: toUTC(values.endRegisterDate),
+                }
+                : {}),
         };
 
-        await dispatch(addCampaignApiThunk(formattedValues))
-            .unwrap()
-            .then(() => {
-                toast.success("Add Campaign successfully");
-                dispatch(getAllCampaignApiThunk());
-            })
-            .catch((error) => {
-                const errorData = get(error, "data.message", null);
-                helpers.setErrors({ nameCampaign: errorData });
-            })
-            .finally(() => {
-                helpers.setSubmitting(false);
-                setIsOpen(false);
-            });
+        try {
+            await dispatch(addCampaignApiThunk(formattedValues)).unwrap();
+            toast.success("Add Campaign successfully");
+            dispatch(setLoading(true));
+            dispatch(getAllCampaignApiThunk());
+        } catch (error) {
+            const errorData = get(error, "data.message", "An error occurred");
+            helpers.setErrors({ nameCampaign: errorData });
+        } finally {
+            helpers.setSubmitting(false);
+            setIsOpen(false);
+            setTimeout(() => {
+                dispatch(setLoading(false));
+            }, 1000)
+        }
     };
+
 
     return (
         <Modal isOpen={isOpen} setIsOpen={setIsOpen} title="Tạo chiến dịch">

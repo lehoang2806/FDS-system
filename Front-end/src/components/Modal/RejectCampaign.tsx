@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 import { useAppDispatch } from '@/app/store';
 import { RejectCampaignModalProps } from './type';
 import { getAllCampaignApiThunk, getCampaignByIdApiThunk, rejectCampaignApiThunk } from '@/services/campaign/campaignThunk';
+import { setLoading } from '@/services/app/appSlice';
 
 const RejectCampaignModal: FC<RejectCampaignModalProps> = ({ isOpen, setIsOpen, selectedCampaign }) => {
     const dispatch = useAppDispatch();
@@ -19,14 +20,23 @@ const RejectCampaignModal: FC<RejectCampaignModalProps> = ({ isOpen, setIsOpen, 
         if (!selectedCampaign) return;
 
         try {
+            dispatch(setLoading(true));
             await dispatch(rejectCampaignApiThunk({
                 campaignId: selectedCampaign.campaignId,
                 comment: reason
-            })).unwrap();
-            toast.success("Reject Campaign successfully.");
-            setIsOpen(false);
-            dispatch(getAllCampaignApiThunk());
-            dispatch(getCampaignByIdApiThunk(selectedCampaign.campaignId));
+            })).unwrap()
+                .then(() => {
+                    toast.success("Reject Campaign successfully.");
+                    setIsOpen(false);
+                    dispatch(getAllCampaignApiThunk());
+                    dispatch(getCampaignByIdApiThunk(selectedCampaign.campaignId));
+                }).catch(() => {
+                }).finally(() => {
+                    setTimeout(() => {
+                        dispatch(setLoading(false));
+                    }, 1000);
+                });
+
         } catch (error) {
             toast.error("An error occurred while rejecting the certificate.");
             console.error(error);

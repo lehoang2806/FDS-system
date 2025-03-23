@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 import { useAppDispatch } from '@/app/store';
 import { RejectCertificateModalProps } from './type';
 import { getAllDonorCertificateApiThunk, getAllRecipientCertificateApiThunk, rejectCertificateApiThunk } from '@/services/user/userThunk';
+import { setLoading } from '@/services/app/appSlice';
 
 const RejectCertificateModal: FC<RejectCertificateModalProps> = ({ isOpen, setIsOpen, selectedCertificate }) => {
     const dispatch = useAppDispatch();
@@ -19,16 +20,25 @@ const RejectCertificateModal: FC<RejectCertificateModalProps> = ({ isOpen, setIs
         if (!selectedCertificate) return;
 
         try {
+            dispatch(setLoading(true));
             await dispatch(rejectCertificateApiThunk({
                 certificateId: selectedCertificate.certificateId,
                 type: selectedCertificate.type,
                 comment: reason
-            })).unwrap();
-
-            toast.success("Reject Certificate successfully.");
-            setIsOpen(false);
-            dispatch(getAllDonorCertificateApiThunk());
-            dispatch(getAllRecipientCertificateApiThunk());
+            })).unwrap()
+                .then(() => {
+                    toast.success("Reject Certificate successfully.");
+                    setIsOpen(false);
+                    dispatch(getAllDonorCertificateApiThunk());
+                    dispatch(getAllRecipientCertificateApiThunk());
+                })
+                .catch(() => {
+                })
+                .finally(() => {
+                    setTimeout(() => {
+                        dispatch(setLoading(false));
+                    }, 1000);
+                });
         } catch (error) {
             toast.error("An error occurred while rejecting the certificate.");
             console.error(error);
