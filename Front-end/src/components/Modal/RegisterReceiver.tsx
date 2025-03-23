@@ -9,6 +9,7 @@ import Modal from './Modal';
 import { get } from 'lodash';
 import { RegisterReceiverModalProps } from './type';
 import { createRegisterReceiverApiThunk, getAllRegisterReceiversApiThunk } from '@/services/registerReceive/registerReceiveThunk';
+import { setLoading } from '@/services/app/appSlice';
 
 const RegisterReceiverModal: FC<RegisterReceiverModalProps> = ({ isOpen, setIsOpen, campaignId }) => {
     const dispatch = useAppDispatch();
@@ -38,6 +39,7 @@ const RegisterReceiverModal: FC<RegisterReceiverModalProps> = ({ isOpen, setIsOp
     });
 
     const onSubmit = async (values: CreateRegisterReceiver, helpers: FormikHelpers<CreateRegisterReceiver>) => {
+        dispatch(setLoading(true));
         await dispatch(createRegisterReceiverApiThunk(values)).unwrap().then(() => {
             toast.success("Đăng ký nhận quà thành công");
             setIsOpen(false);
@@ -48,6 +50,9 @@ const RegisterReceiverModal: FC<RegisterReceiverModalProps> = ({ isOpen, setIsOp
             toast.error(errorData);
         }).finally(() => {
             helpers.setSubmitting(false);
+            setTimeout(() => {
+                dispatch(setLoading(false));
+            }, 1000)
         });
     }
 

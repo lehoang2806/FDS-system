@@ -11,6 +11,7 @@ import { addCampaignApiThunk } from "@/services/campaign/campaignThunk";
 import { toast } from "react-toastify";
 import { get } from "lodash";
 import { format } from "date-fns";
+import { setLoading } from "@/services/app/appSlice";
 
 const StaffAddCampaignStaffPage: FC = () => {
     const dispatch = useAppDispatch();
@@ -22,7 +23,10 @@ const StaffAddCampaignStaffPage: FC = () => {
         giftQuantity: 0,
         address: "",
         receiveDate: "",
-        limitedQuantity: 0
+        startRegisterDate: "",
+        endRegisterDate: "",
+        image: "",
+        typeCampaign: ""
     };
 
     const schema = Yup.object().shape({
@@ -37,8 +41,11 @@ const StaffAddCampaignStaffPage: FC = () => {
             .required("Loại quà tặng không được để trống"),
 
         giftQuantity: Yup.number()
-            .required("Số lượng quà tặng không được để trống")
-            .min(1, "Số lượng quà tặng phải lớn hơn 0"),
+            .nullable()
+            .when("typeCampaign", {
+                is: "Limited",
+                otherwise: (schema) => schema.notRequired().nullable(),
+            }),
 
         address: Yup.string()
             .required("Địa chỉ không được để trống"),
@@ -47,25 +54,61 @@ const StaffAddCampaignStaffPage: FC = () => {
             .required("Ngày nhận không được để trống")
             .test("is-future-date", "Ngày nhận phải sau ít nhất 2 ngày kể từ hôm nay", (value) => {
                 if (!value) return false;
-                const selectedDate = moment(value, "YYYY-MM-DD");
+                const selectedDate = moment(value);
                 const minDate = moment().add(2, "days").startOf("day");
                 return selectedDate.isAfter(minDate);
             }),
 
-        limitedQuantity: Yup.number()
-            .required("Số lượng giới hạn nhận quà không được để trống")
-            .min(1, "Số lượng giới hạn nhận quà phải lớn hơn 0"),
+        startRegisterDate: Yup.date()
+            .nullable()
+            .when("typeCampaign", {
+                is: "Voluntary",
+                otherwise: (schema) => schema.notRequired(),
+            }),
+
+        endRegisterDate: Yup.date()
+            .nullable()
+            .when("typeCampaign", {
+                is: "Voluntary",
+                then: (schema) =>
+                    schema
+                        .test(
+                            "is-before-receiveDate",
+                            "Ngày kết thúc đăng ký phải trước ngày nhận quà",
+                            function (value) {
+                                if (!value || !this.parent.receiveDate) return true; // Bỏ qua nếu không có giá trị
+                                return new Date(value).getTime() < new Date(this.parent.receiveDate).getTime();
+                            }
+                        ),
+            }),
+
+
+        image: Yup.string()
+            .required("Hình ảnh là bắt buộc"),
+
+        typeCampaign: Yup.string()
+            .required("Loại chiến dịch là bắt buộc")
     });
 
     const onSubmit = async (values: AddCampaign, helpers: FormikHelpers<AddCampaign>) => {
-        const localDate = new Date(values.receiveDate);
-        const offset = localDate.getTimezoneOffset();
-
-        const formattedValues = {
-            ...values,
-            receiveDate: new Date(localDate.getTime() - offset * 60000).toISOString(),
+        const toUTC = (dateStr: string) => {
+            const localDate = new Date(dateStr);
+            const offset = localDate.getTimezoneOffset();
+            return new Date(localDate.getTime() - offset * 60000).toISOString();
         };
 
+        const formattedValues: AddCampaign = {
+            ...values,
+            receiveDate: toUTC(values.receiveDate),
+            ...(values.typeCampaign === "Voluntary"
+                ? {
+                    startRegisterDate: toUTC(values.startRegisterDate),
+                    endRegisterDate: toUTC(values.endRegisterDate),
+                }
+                : {}),
+        };
+
+        dispatch(setLoading(true));
         await dispatch(addCampaignApiThunk(formattedValues)).unwrap().then(() => {
             toast.success("Add Campaign successfully");
             helpers.resetForm();
@@ -74,6 +117,9 @@ const StaffAddCampaignStaffPage: FC = () => {
             helpers.setErrors({ nameCampaign: errorData });
         }).finally(() => {
             helpers.setSubmitting(false);
+            setTimeout(() => {
+                dispatch(setLoading(false));
+            }, 1000)
         });
     };
 
@@ -116,27 +162,22 @@ const StaffAddCampaignStaffPage: FC = () => {
                                 <div className="sacscr2r3">
                                     <div className="form">
                                         <div className="form-field">
-                                            <label className="form-label">Campaign Name</label>
+                                            <label className="form-label">Tên chiến dịch</label>
                                             <Field name="nameCampaign" type="text" placeholder="Hãy nhập tên chiến dịch" className={classNames("form-input", { "is-error": errors.nameCampaign && touched.nameCampaign })} />
                                             {errors.nameCampaign && touched.nameCampaign && <span className="text-error">{errors.nameCampaign}</span>}
                                         </div>
                                         <div className="form-field">
-                                            <label className="form-label">Description</label>
+                                            <label className="form-label">Mô tả</label>
                                             <Field name="description" type="text" placeholder="Hãy nhập mô tả về chiến dịch" className={classNames("form-input", { "is-error": errors.description && touched.description })} />
                                             {errors.description && touched.description && <span className="text-error">{errors.description}</span>}
                                         </div>
                                         <div className="form-field">
-                                            <label className="form-label">Gift Quantity</label>
-                                            <Field name="giftQuantity" type="number" placeholder="Hãy nhập số lượng phần quà tặng" className={classNames("form-input", { "is-error": errors.giftQuantity && touched.giftQuantity })} />
-                                            {errors.giftQuantity && touched.giftQuantity && <span className="text-error">{errors.giftQuantity}</span>}
-                                        </div>
-                                        <div className="form-field">
-                                            <label className="form-label">Gift Type</label>
+                                            <label className="form-label">Loại quà tặng</label>
                                             <Field name="giftType" type="text" placeholder="Hãy nhập loại quà tặng" className={classNames("form-input", { "is-error": errors.giftType && touched.giftType })} />
                                             {errors.giftType && touched.giftType && <span className="text-error">{errors.giftType}</span>}
                                         </div>
                                         <div className="form-field">
-                                            <label className="form-label">Address</label>
+                                            <label className="form-label">Địa chỉ</label>
                                             <Field name="address" type="text" placeholder="Hãy nhập điểm nhận quà tặng" className={classNames("form-input", { "is-error": errors.address && touched.address })} />
                                             {errors.address && touched.address && <span className="text-error">{errors.address}</span>}
                                         </div>
@@ -152,10 +193,51 @@ const StaffAddCampaignStaffPage: FC = () => {
                                             {errors.receiveDate && touched.receiveDate && <span className="text-error">{errors.receiveDate}</span>}
                                         </div>
                                         <div className="form-field">
-                                            <label className="form-label">Số lượng giới hạn cho từng người nhận</label>
-                                            <Field name="limitedQuantity" type="number" placeholder="Hãy nhập số lượng giới hạn nhận quà" className={classNames("form-input", { "is-error": errors.limitedQuantity && touched.limitedQuantity })} />
-                                            {errors.limitedQuantity && touched.limitedQuantity && <span className="text-error">{errors.limitedQuantity}</span>}
+                                            <label className="form-label">Ảnh</label>
+                                            <Field name="image" type="file" placeholder="Hãy nhập điểm nhận quà tặng" className={classNames("form-input", { "is-error": errors.image && touched.image })} />
+                                            {errors.image && touched.image && <span className="text-error">{errors.image}</span>}
                                         </div>
+                                        <div className="form-field">
+                                            <label className="form-label">Loại chiến dịch</label>
+                                            <Field
+                                                as="select"
+                                                name="typeCampaign"
+                                                className="form-input"
+                                                value={values.typeCampaign}
+                                                onChange={(e: ChangeEvent<HTMLSelectElement>) => {
+                                                    const newValue = e.target.value;
+                                                    setFieldValue("typeCampaign", newValue);
+                                                    console.log(newValue);
+                                                }}
+                                            >
+                                                <option value="">Chọn loại chiến dịch</option>
+                                                <option value="Limited">Số lượng giới hạn</option>
+                                                <option value="Voluntary">Đăng ký theo nguyện vọng</option>
+                                            </Field>
+                                        </div>
+                                        {values.typeCampaign === "Limited" && (
+                                            <div className="form-field">
+                                                <label className="form-label">Số lượng giới hạn</label>
+                                                <Field name="giftQuantity" type="number" placeholder="Nhập số lượng" className="form-input" />
+                                                {errors.giftQuantity && touched.giftQuantity && <span className="text-error">{errors.giftQuantity}</span>}
+                                            </div>
+                                        )}
+
+                                        {values.typeCampaign === "Voluntary" && (
+                                            <>
+                                                <div className="form-field">
+                                                    <label className="form-label">Ngày mở đăng ký</label>
+                                                    <Field name="startRegisterDate" type="datetime-local" className="form-input" />
+                                                    {errors.startRegisterDate && touched.startRegisterDate && <span className="text-error">{errors.startRegisterDate}</span>}
+                                                </div>
+
+                                                <div className="form-field">
+                                                    <label className="form-label">Ngày đóng đăng ký</label>
+                                                    <Field name="endRegisterDate" type="datetime-local" className="form-input" />
+                                                    {errors.endRegisterDate && touched.endRegisterDate && <span className="text-error">{errors.endRegisterDate}</span>}
+                                                </div>
+                                            </>
+                                        )}
                                     </div>
                                 </div>
 

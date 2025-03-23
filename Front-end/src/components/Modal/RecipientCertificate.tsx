@@ -10,6 +10,7 @@ import { FC } from 'react';
 import { RecipientCertificateModalProps } from './type';
 import Modal from './Modal';
 import { get } from 'lodash';
+import { setLoading } from '@/services/app/appSlice';
 
 const RecipientCertificateModal: FC<RecipientCertificateModalProps> = ({isOpen, setIsOpen}) => {
     const dispatch = useAppDispatch();
@@ -27,6 +28,7 @@ const RecipientCertificateModal: FC<RecipientCertificateModalProps> = ({isOpen, 
     });
 
     const onSubmit = async (values: AddRecipientCertificate, helpers: FormikHelpers<AddRecipientCertificate>) => {
+        dispatch(setLoading(true));
         await dispatch(createRecipientCertificateApiThunk(values)).unwrap().then(() => {
             toast.success("Nộp chứng chỉ thành công");
             setIsOpen(false);
@@ -37,6 +39,9 @@ const RecipientCertificateModal: FC<RecipientCertificateModalProps> = ({isOpen, 
             toast.error(errorData);
         }).finally(() => {
             helpers.setSubmitting(false);
+            setTimeout(() => {
+                dispatch(setLoading(false));
+            }, 1000);
         });
     }
 

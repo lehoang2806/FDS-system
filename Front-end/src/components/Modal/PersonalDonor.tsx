@@ -12,6 +12,7 @@ import { get } from 'lodash';
 import { navigateHook } from '@/routes/RouteApp';
 import { routes } from '@/routes/routeName';
 import { PersonalDonorModalProps } from './type';
+import { setLoading } from '@/services/app/appSlice';
 
 const PersonalDonorModal: FC<PersonalDonorModalProps> = ({ isOpen, setIsOpen }) => {
     const dispatch = useAppDispatch();
@@ -29,6 +30,7 @@ const PersonalDonorModal: FC<PersonalDonorModalProps> = ({ isOpen, setIsOpen }) 
     });
 
     const onSubmit = async (values: PersonalDonor, helpers: FormikHelpers<PersonalDonor>) => {
+        dispatch(setLoading(true));
         await dispatch(createPersonalDonorCertificateApiThunk(values)).unwrap().then(() => {
             toast.success("Nộp chứng chỉ thành công");
             setIsOpen(false);
@@ -39,6 +41,9 @@ const PersonalDonorModal: FC<PersonalDonorModalProps> = ({ isOpen, setIsOpen }) 
             toast.error(errorData);
         }).finally(() => {
             helpers.setSubmitting(false);
+            setTimeout(() => {
+                dispatch(setLoading(false));
+            }, 1000)
         });
     }
 
