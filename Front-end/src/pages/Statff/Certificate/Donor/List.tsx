@@ -2,6 +2,7 @@ import { selectGetAllDonorCertificate } from '@/app/selector';
 import { useAppDispatch, useAppSelector } from '@/app/store';
 import { ActiveIcon, BlockIcon, TotalIcon } from '@/assets/icons';
 import { RejectCertificateModal } from '@/components/Modal';
+import { setLoading } from '@/services/app/appSlice';
 import { approveCertificateApiThunk, confirmUserApiThunk, getAllDonorCertificateApiThunk } from '@/services/user/userThunk';
 import { ApproveCertificate, ConfirmUser, RejectCertificate } from '@/types/user';
 import { useEffect, useState } from 'react'
@@ -17,12 +18,16 @@ const StaffListDonorCertificate = () => {
     const [isRejectCertificateModalOpen, setIsRejectCertificateModalOpen] = useState(false);
 
     useEffect(() => {
+        dispatch(setLoading(true));
         dispatch(getAllDonorCertificateApiThunk())
             .unwrap()
             .catch(() => {
             }).finally(() => {
+                setTimeout(() => {
+                    dispatch(setLoading(false));
+                }, 1000)
             });
-    }, []);
+    }, [dispatch]);
 
     const handleApproveCertificate = async (values: ApproveCertificate, confirmValues: ConfirmUser) => {
         try {

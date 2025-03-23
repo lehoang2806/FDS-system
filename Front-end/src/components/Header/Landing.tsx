@@ -66,7 +66,7 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
         <header id="header-landing">
             <div className="hl-container">
                 <div className="hlcc1">
-                    <h1 onClick={() => navigateHook(routes.user.home)}>Food Distribution System</h1>
+                    <h1 onClick={() => navigateHook(routes.user.home)}>FDS System</h1>
                 </div>
                 <div className="hlcc2">
                     <ul className="nav-list">
@@ -99,12 +99,15 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
                     {!isLogin && (
                         <>
                             <Link to={routes.login}>Đăng nhập</Link>
+                            <Link to={routes.register}>Đăng Ký</Link>
                         </>
                     )}
                     {isLogin && (
                         <>
-                            {userLogin?.roleId === 3 && (
+                            {userLogin?.roleId === 3 && userLogin?.isConfirm === true ? (
                                 <button onClick={handleCreateCampaign} className="sc-btn">Tạo chiến dịch</button>
+                            ) : (
+                                <p className="note">Tài khoản chưa được xác thực</p>
                             )}
                             <NotificationIcon width={30} height={30} className="notification-icon" />
                             <figure className="avatar-img"></figure>

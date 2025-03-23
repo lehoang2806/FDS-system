@@ -9,6 +9,10 @@
         justify-content: space-between;
         align-items: center;
 
+        .hlcc1 {
+            font-size: 14px;
+        }
+
         .hlcc2 {
             .nav-list {
                 display: flex;
@@ -90,6 +94,12 @@
                 font-size: 14px;
                 font-weight: 800;
                 text-decoration: none;
+                margin: 0 10px;
+            }
+
+            .note {
+                color: red;
+                margin-right: 20px;
             }
 
             .sub-menu-profile {

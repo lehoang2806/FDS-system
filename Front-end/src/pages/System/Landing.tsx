@@ -6,6 +6,7 @@ import { useAppDispatch, useAppSelector } from "@/app/store";
 import { selectGetAllCampaign } from "@/app/selector";
 import { useEffect } from "react";
 import { getAllCampaignApiThunk } from "@/services/campaign/campaignThunk";
+import { setLoading } from "@/services/app/appSlice";
 
 export default function () {
     const dispatch = useAppDispatch();
@@ -19,20 +20,22 @@ export default function () {
 
     const approvedCampaigns = campaigns.filter((campaign) => campaign.status === "Approved");
 
-    const personalCampaigns = approvedCampaigns.filter((campaign) => campaign.type === "Personal Donor");
+    const personalCampaigns = approvedCampaigns.filter((campaign) => campaign.typeAccount === "Personal Donor");
 
-    const organizationCampaigns = approvedCampaigns.filter((campaign) => campaign.type === "Organization Donor");
-
-    console.log(personalCampaigns)
-    console.log(organizationCampaigns)
+    const organizationCampaigns = approvedCampaigns.filter((campaign) => campaign.typeAccount === "Organization Donor");
 
     useEffect(() => {
+        document.title = "Trang chủ";
+        dispatch(setLoading(true));
         dispatch(getAllCampaignApiThunk())
             .unwrap()
             .catch(() => {
             }).finally(() => {
+                setTimeout(() => {
+                    dispatch(setLoading(false));
+                }, 1000)
             });
-    }, [])
+    }, [dispatch])
 
     return (
         <>

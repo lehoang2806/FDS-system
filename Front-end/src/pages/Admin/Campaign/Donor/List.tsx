@@ -4,6 +4,7 @@ import { ActiveIcon, BlockIcon, TotalIcon } from '@/assets/icons'
 import { RejectCampaignModal, RejectReasonModal } from '@/components/Modal'
 import { navigateHook } from '@/routes/RouteApp'
 import { routes } from '@/routes/routeName'
+import { setLoading } from '@/services/app/appSlice'
 import { approveCampaignApiThunk, getAllCampaignApiThunk } from '@/services/campaign/campaignThunk'
 import { FC, useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
@@ -13,7 +14,7 @@ const AdminListCampaignDonorPage: FC = () => {
 
     const campaigns = useAppSelector(selectGetAllCampaign)
 
-    const donorCampaigns = campaigns.filter((campaign) => campaign.type === "Personal Donor" || campaign.type === "Organization Donor");
+    const donorCampaigns = campaigns.filter((campaign) => campaign.typeAccount === "Personal Donor" || campaign.typeAccount === "Organization Donor");
 
     const [selectedCampaign, setSelectedCampaign] = useState<RejectCampaign | null>(null);
 
@@ -24,12 +25,16 @@ const AdminListCampaignDonorPage: FC = () => {
     const [isRejectReasonModalOpen, setIsRejectReasonModalOpen] = useState(false);
 
     useEffect(() => {
+        dispatch(setLoading(true));
         dispatch(getAllCampaignApiThunk())
             .unwrap()
             .catch(() => {
             }).finally(() => {
+                setTimeout(() => {
+                    dispatch(setLoading(false));
+                }, 1000)
             });
-    }, []);
+    }, [dispatch]);
 
     const handleApproveCampaign = async (values: ApproveCampaign) => {
         try {

@@ -3,6 +3,7 @@ import { useAppDispatch, useAppSelector } from "@/app/store"
 import { ActiveIcon, BlockIcon, TotalIcon } from "@/assets/icons"
 import { navigateHook } from "@/routes/RouteApp"
 import { routes } from "@/routes/routeName"
+import { setLoading } from "@/services/app/appSlice"
 import { getAllUserApiThunk } from "@/services/user/userThunk"
 import { useEffect } from "react"
 
@@ -13,12 +14,16 @@ const StaffListUserPage = () => {
     const accountsWithoutStaff = users.filter(user => user.roleId !== 2);
 
     useEffect(() => {
+        dispatch(setLoading(true));
         dispatch(getAllUserApiThunk())
             .unwrap()
             .catch(() => {
             }).finally(() => {
+                setTimeout(() => {
+                    dispatch(setLoading(false));
+                }, 1000)
             });
-    }, []);
+    }, [dispatch]);
 
     const handleToDetail = (campaignId: string) => {
         const url = routes.staff.user.detail.replace(":id", campaignId);

@@ -5,6 +5,7 @@ import { Subscriber } from '@/components/Elements/index'
 import { RegisterReceiverModal, RemindCertificateModal } from '@/components/Modal';
 import { navigateHook } from '@/routes/RouteApp';
 import { routes } from '@/routes/routeName';
+import { setLoading } from '@/services/app/appSlice';
 import { getAllCampaignApiThunk, getCampaignByIdApiThunk } from '@/services/campaign/campaignThunk';
 import { getAllRegisterReceiversApiThunk } from '@/services/registerReceive/registerReceiveThunk';
 import React, { useEffect, useState } from 'react'
@@ -43,34 +44,41 @@ const DetailCampaignPage: React.FC = () => {
     }
 
     useEffect(() => {
+        dispatch(setLoading(true));
         dispatch(getAllCampaignApiThunk())
             .unwrap()
             .catch(() => {
             }).finally(() => {
+                setTimeout(() => {
+                    dispatch(setLoading(false));
+                }, 1000)
             });
-    }, [])
+    }, [dispatch])
 
     const date = currentCampaign?.receiveDate.split("T")[0];
     const time = currentCampaign?.receiveDate.split("T")[1].replace("Z", "");
 
     useEffect(() => {
-        dispatch(getAllRegisterReceiversApiThunk())
         if (id) {
-            dispatch(getCampaignByIdApiThunk(id));
+            dispatch(setLoading(true));
+            dispatch(getAllRegisterReceiversApiThunk())
+            dispatch(getCampaignByIdApiThunk(id))
+                .unwrap()
+                .catch(() => {
+                }).finally(() => {
+                    setTimeout(() => {
+                        dispatch(setLoading(false));
+                    }, 1000)
+                });
         }
-    }, [id])
+    }, [id, dispatch])
 
     const handleRegisterReceiver = () => {
-        if (userLogin?.isConfirm === false) {
-            setIsRemindCertificateModalOpend(true);
+        if (registeredReceiver) {
+            alert("Bạn đã đăng ký rồi")
         }
-        if (userLogin?.isConfirm === true) {
-            if (registeredReceiver) {
-                alert("Bạn đã đăng ký rồi")
-            }
-            else {
-                setIsRegisterReceiverModalOpend(true);
-            }
+        else {
+            setIsRegisterReceiverModalOpend(true);
         }
     }
 
@@ -110,46 +118,55 @@ const DetailCampaignPage: React.FC = () => {
                                     <button className='sc-btn' onClick={handleRegisterReceiver}>Đăng ký nhận hỗ trợ</button>
                                 )}
                             </div>
-                            <div className="dcscr1c2r2">
-                                <h3>Danh sách dăng ký nhận hỗ trợ</h3>
-                                <div className="dcscr1c2r2-lists">
-                                    {currentRegisterReceivers.length > 0 ? (
-                                        currentRegisterReceivers.map((registerReceiver) => (
-                                            <Subscriber key={registerReceiver.registerReceiverId} registerReceiver={registerReceiver}/>
+                            {currentCampaign?.status === "Approved" && (
+                                <div className="dcscr1c2r2">
+                                    <h3>Danh sách dăng ký nhận hỗ trợ</h3>
+                                    <div className="dcscr1c2r2-lists">
+                                        {currentRegisterReceivers.length > 0 ? (
+                                            currentRegisterReceivers.map((registerReceiver) => (
+                                                <Subscriber key={registerReceiver.registerReceiverId} registerReceiver={registerReceiver} />
+                                            ))
+                                        ) : (
+                                            <h1>Chưa có người đăng ký</h1>
+                                        )
+                                        }
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                    {currentCampaign?.status === "Rejected" && (
+                        <p>{currentCampaign.rejectComment}</p>
+                    )}
+                    {currentCampaign?.status === "Approved" && (
+                        <>
+                            <div className="line"></div>
+                            <div className="dcscr2">
+                                <div className="dcscr2r1">
+                                    <h2>Các chiến dịch khác</h2>
+                                    <Link to={routes.user.campaign.list}>Xem tất cả</Link>
+                                </div>
+                                <div className="dcscr2r2">
+                                    {otherCampaigns.length > 0 ? (
+                                        otherCampaigns.map((campaign) => (
+                                            <CampaignCard
+                                                campaign={campaign}
+                                                key={campaign.campaignId}
+                                                onClickDetail={() => handleToDetail(campaign.campaignId)}
+                                            />
                                         ))
                                     ) : (
-                                        <h1>Chưa có người đăng ký</h1>
+                                        <h1>Chưa có dữ liệu</h1>
                                     )
                                     }
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    <div className="line"></div>
-                    <div className="dcscr2">
-                        <div className="dcscr2r1">
-                            <h2>Các chiến dịch khác</h2>
-                            <Link to={routes.user.campaign.list}>Xem tất cả</Link>
-                        </div>
-                        <div className="dcscr2r2">
-                            {otherCampaigns.length > 0 ? (
-                                otherCampaigns.map((campaign) => (
-                                    <CampaignCard
-                                        campaign={campaign}
-                                        key={campaign.campaignId}
-                                        onClickDetail={() => handleToDetail(campaign.campaignId)}
-                                    />
-                                ))
-                            ) : (
-                                <h1>Chưa có dữ liệu</h1>
-                            )
-                            }
-                        </div>
-                    </div>
+                        </>
+                    )}
                 </div>
             </section>
             <RemindCertificateModal isOpen={isRemindCertificateModalOpend} setIsOpen={setIsRemindCertificateModalOpend} />
-            <RegisterReceiverModal isOpen={isRegisterReceiverModalOpend} setIsOpen={setIsRegisterReceiverModalOpend} campaignId={id} limitedQuantity={Number(currentCampaign?.limitedQuantity)}/>
+            <RegisterReceiverModal isOpen={isRegisterReceiverModalOpend} setIsOpen={setIsRegisterReceiverModalOpend} campaignId={id} />
         </main>
     )
 }

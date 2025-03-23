@@ -46,7 +46,7 @@ const PersonalDonorModal: FC<PersonalDonorModalProps> = ({ isOpen, setIsOpen }) 
         <Modal isOpen={isOpen} setIsOpen={setIsOpen} title="Personal Donor">
             <section id="personal-donor-modal">
                 <div className="pdm-container">
-                    <h1>Đăng ký thành cá nhân ủng hộ</h1>
+                    <h1>Trở thành tài khoản cá nhân</h1>
                     <Formik
                         initialValues={initialValues}
                         onSubmit={onSubmit}

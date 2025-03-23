@@ -1,11 +1,14 @@
 import { selectCurrentCampaign, selectGetAllRegisterReceivers } from '@/app/selector';
 import { useAppDispatch, useAppSelector } from '@/app/store';
+import { RejectCampaignModal } from '@/components/Modal';
 import { navigateHook } from '@/routes/RouteApp'
 import { routes } from '@/routes/routeName'
-import { getCampaignByIdApiThunk } from '@/services/campaign/campaignThunk';
+import { setLoading } from '@/services/app/appSlice';
+import { approveCampaignApiThunk, getCampaignByIdApiThunk } from '@/services/campaign/campaignThunk';
 import { getAllRegisterReceiversApiThunk } from '@/services/registerReceive/registerReceiveThunk';
-import { FC, useEffect } from 'react'
+import { FC, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const StaffDetailCampaignUserPage: FC = () => {
     const { id } = useParams<{ id: string }>();
@@ -18,15 +21,53 @@ const StaffDetailCampaignUserPage: FC = () => {
 
     const currentRegisterReceivers = registerReceivers.filter((registerReceiver) => registerReceiver.campaignId === id);
 
+    const [selectedCampaign, setSelectedCampaign] = useState<RejectCampaign | null>(null);
+
+    const [isRejectCampaignModalOpen, setIsRejectCampaignModalOpen] = useState(false);
+
     const date = currentCampaign?.receiveDate.split("T")[0];
     const time = currentCampaign?.receiveDate.split("T")[1].replace("Z", "");
 
     useEffect(() => {
-        dispatch(getAllRegisterReceiversApiThunk());
         if (id) {
-            dispatch(getCampaignByIdApiThunk(id));
+            dispatch(setLoading(true));
+            dispatch(getAllRegisterReceiversApiThunk());
+            dispatch(getCampaignByIdApiThunk(id))
+                .unwrap()
+                .catch(() => {
+                }).finally(() => {
+                    setTimeout(() => {
+                        dispatch(setLoading(false));
+                    }, 1000)
+                });
         }
-    }, [id])
+    }, [id, dispatch])
+
+    const handleApproveCampaign = async (values: ApproveCampaign) => {
+        try {
+            await dispatch(approveCampaignApiThunk(values)).unwrap();
+            toast.success("Approve Campaign Successfully");
+            dispatch(setLoading(true));
+            dispatch(getCampaignByIdApiThunk(String(id)))
+                .unwrap()
+                .catch(() => {
+                })
+                .finally(() => {
+                    setTimeout(() => {
+                        dispatch(setLoading(false));
+                    }, 1000)
+                });
+        } catch (error) {
+            console.error("Error in approval process:", error);
+            toast.error("An error occurred while approving the certificate.");
+        }
+    };
+
+
+    const handleRejectCampaign = (campaignId: string) => {
+        setSelectedCampaign({ campaignId, comment: "" });
+        setIsRejectCampaignModalOpen(true);
+    };
 
     return (
         <section id="staff-detail-campaign-user" className="staff-section">
@@ -71,6 +112,12 @@ const StaffDetailCampaignUserPage: FC = () => {
                             <p>{time}</p>
                         </div>
                     </div>
+                    {currentCampaign?.status === "Pending" && (
+                        <>
+                            <button className='approve-btn' onClick={() => handleApproveCampaign({ campaignId: String(id) })}>Approve</button>
+                            <button className='reject-btn' onClick={() => handleRejectCampaign(String(id))}>Reject</button>
+                        </>
+                    )}
                     {currentCampaign?.status === "Approved" && (
                         <div className="sdcucr2r3">
                             <table className="table">
@@ -99,8 +146,15 @@ const StaffDetailCampaignUserPage: FC = () => {
                             </table>
                         </div>
                     )}
+                    {currentCampaign?.status === "Rejected" && (
+                        <>
+                            <h3>Reject Reason:</h3>
+                            <p>{currentCampaign?.rejectComment}</p>
+                        </>
+                    )}
                 </div>
             </div>
+            <RejectCampaignModal isOpen={isRejectCampaignModalOpen} setIsOpen={setIsRejectCampaignModalOpen} selectedCampaign={selectedCampaign} />
         </section>
     )
 }

@@ -26,6 +26,7 @@ const LoginPage = () => {
     });
 
     useEffect(() => {
+        document.title = "Đăng nhập";
         if (isAuthenticated) {
             navigateHook(routes.user.home);
         }

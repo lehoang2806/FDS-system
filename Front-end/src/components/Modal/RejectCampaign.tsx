@@ -3,7 +3,7 @@ import Modal from './Modal'
 import { toast } from 'react-toastify';
 import { useAppDispatch } from '@/app/store';
 import { RejectCampaignModalProps } from './type';
-import { getAllCampaignApiThunk, rejectCampaignApiThunk } from '@/services/campaign/campaignThunk';
+import { getAllCampaignApiThunk, getCampaignByIdApiThunk, rejectCampaignApiThunk } from '@/services/campaign/campaignThunk';
 
 const RejectCampaignModal: FC<RejectCampaignModalProps> = ({ isOpen, setIsOpen, selectedCampaign }) => {
     const dispatch = useAppDispatch();
@@ -26,6 +26,7 @@ const RejectCampaignModal: FC<RejectCampaignModalProps> = ({ isOpen, setIsOpen, 
             toast.success("Reject Campaign successfully.");
             setIsOpen(false);
             dispatch(getAllCampaignApiThunk());
+            dispatch(getCampaignByIdApiThunk(selectedCampaign.campaignId));
         } catch (error) {
             toast.error("An error occurred while rejecting the certificate.");
             console.error(error);
