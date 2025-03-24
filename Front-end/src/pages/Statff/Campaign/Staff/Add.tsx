@@ -1,6 +1,6 @@
 import { navigateHook } from "@/routes/RouteApp"
 import { routes } from "@/routes/routeName"
-import { ChangeEvent, FC } from "react"
+import { ChangeEvent, FC, useState } from "react"
 import classNames from "classnames";
 import Button from "@/components/Elements/Button";
 import { Field, Form, Formik, FormikHelpers } from "formik";
@@ -15,6 +15,7 @@ import { setLoading } from "@/services/app/appSlice";
 
 const StaffAddCampaignStaffPage: FC = () => {
     const dispatch = useAppDispatch();
+    const [imagePreview, setImagePreview] = useState<string[]>([]);
 
     const initialValues: AddCampaign = {
         nameCampaign: "",
@@ -25,7 +26,7 @@ const StaffAddCampaignStaffPage: FC = () => {
         receiveDate: "",
         startRegisterDate: "",
         endRegisterDate: "",
-        image: "",
+        images: [],
         typeCampaign: ""
     };
 
@@ -89,6 +90,30 @@ const StaffAddCampaignStaffPage: FC = () => {
         typeCampaign: Yup.string()
             .required("Loại chiến dịch là bắt buộc")
     });
+
+    const handleFileChange = async (event: ChangeEvent<HTMLInputElement>, setFieldValue: Function) => {
+        if (event.target.files) {
+            const files = Array.from(event.target.files);
+            const base64Promises = files.map(file => convertToBase64(file));
+
+            try {
+                const base64Images = await Promise.all(base64Promises);
+                setFieldValue("images", base64Images); // 🔹 Lưu danh sách ảnh vào Formik
+                setImagePreview(base64Images); // 🔹 Cập nhật ảnh xem trước
+            } catch (error) {
+                console.error("Error converting images:", error);
+            }
+        }
+    };
+
+    const convertToBase64 = (file: File): Promise<string> => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result as string);
+            reader.onerror = (error) => reject(error);
+        });
+    };
 
     const onSubmit = async (values: AddCampaign, helpers: FormikHelpers<AddCampaign>) => {
         const toUTC = (dateStr: string) => {
@@ -194,9 +219,17 @@ const StaffAddCampaignStaffPage: FC = () => {
                                         </div>
                                         <div className="form-field">
                                             <label className="form-label">Ảnh</label>
-                                            <Field name="image" type="file" placeholder="Hãy nhập điểm nhận quà tặng" className={classNames("form-input", { "is-error": errors.image && touched.image })} />
-                                            {errors.image && touched.image && <span className="text-error">{errors.image}</span>}
+                                            <input type="file" accept="image/*" multiple onChange={(e) => handleFileChange(e, setFieldValue)} className="form-input" />
+                                            {errors.images && touched.images && <span className="text-error">{errors.images}</span>}
                                         </div>
+
+                                        {imagePreview.length > 0 && (
+                                            <div className="image-preview-container">
+                                                {imagePreview.map((img, index) => (
+                                                    <img key={index} src={img} alt={`Preview ${index}`} className="image-preview" style={{ width: "100px", height: "100px" }} />
+                                                ))}
+                                            </div>
+                                        )}
                                         <div className="form-field">
                                             <label className="form-label">Loại chiến dịch</label>
                                             <Field

@@ -56,7 +56,7 @@ namespace FDSSYSTEM.Services.CampaignService
                 TypeAccount = donorType, //staff, personal , organization
                 StartRegisterDate = campaign.StartRegisterDate,
                 EndRegisterDate = campaign.EndRegisterDate,
-                Image = campaign.Image,
+                Images = campaign.Images,
                 TypeCampaign = campaign.TypeCampaign,
             });
         }
@@ -102,7 +102,7 @@ namespace FDSSYSTEM.Services.CampaignService
                 existingCampaign.DateUpdated = DateTime.Now;
                 existingCampaign.StartRegisterDate = campaign.StartRegisterDate;
                 existingCampaign.EndRegisterDate = campaign.EndRegisterDate;
-                existingCampaign.Image = campaign.Image;
+                existingCampaign.Images = campaign.Images;
                 existingCampaign.TypeCampaign = campaign.TypeCampaign;
 
                 await _campaignRepository.UpdateAsync(existingCampaign.Id, existingCampaign);

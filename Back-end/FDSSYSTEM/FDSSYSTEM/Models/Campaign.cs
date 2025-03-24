@@ -51,7 +51,7 @@ namespace FDSSYSTEM.Models
 
         public string CancelComment { get; set; }
 
-        public string Image {  get; set; }
+        public List<string> Images { get; set; } = new List<string>();
     }
 
     public class CampainNotificaiton

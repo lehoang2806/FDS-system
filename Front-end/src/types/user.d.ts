@@ -49,11 +49,17 @@ interface UserState {
 
 interface PersonalDonor {
     citizenId: string;
+    images: string[];
 }
 
 interface OrganizationDonor {
     organizationName: string;
     taxIdentificationNumber: string;
+    representativeName: string;
+    representativePhone: string;
+    representativeCitizenId: string;
+    representativeEmail: string;
+    images: string[];
 }
 
 interface AddRecipientCertificate {

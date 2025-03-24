@@ -110,7 +110,7 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
                                 <p className="note">Tài khoản chưa được xác thực</p>
                             )}
                             <NotificationIcon width={30} height={30} className="notification-icon" />
-                            <figure className="avatar-img"></figure>
+                            <p className="name">Hello {userLogin?.fullName}</p>
                             <MenuIcon width={30} height={30} className="menu-icon" onClick={() => setIsSubMenuProfileOpen(!isSubMenuProfileOpen)} />
                             {isSubMenuProfileOpen && (
                                 <div className="sub-menu-profile">

@@ -191,12 +191,12 @@ input.is-error {
     background: #F8C20A;
 }
 
-.reject-btn, .approve-btn, .view-btn {
+.reject-btn, .approve-btn, .view-btn, .additional-btn {
     font-size: 14px;
     font-weight: 400;
     color: #fff;
     padding: 8px 12px;
-    margin: 0 8px;
+    margin: 5px;
     border-radius: var(--border-radius-12);
     background: #FF6692;
     border: none;
@@ -205,6 +205,10 @@ input.is-error {
 
 .approve-btn {
     background: #36C76C;
+}
+
+.additional-btn {
+    background: #F8C20A;
 }
 
 .view-btn {

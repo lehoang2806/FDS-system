@@ -1,6 +1,6 @@
 import { selectCurrentCampaign, selectGetAllRegisterReceivers } from '@/app/selector';
 import { useAppDispatch, useAppSelector } from '@/app/store';
-import { RejectCampaignModal } from '@/components/Modal';
+import { AdditionalCampaignModal, RejectCampaignModal } from '@/components/Modal';
 import { navigateHook } from '@/routes/RouteApp'
 import { routes } from '@/routes/routeName'
 import { setLoading } from '@/services/app/appSlice';
@@ -17,13 +17,19 @@ const StaffDetailCampaignUserPage: FC = () => {
 
     const currentCampaign = useAppSelector(selectCurrentCampaign);
 
+    console.log(currentCampaign)
+
     const registerReceivers = useAppSelector(selectGetAllRegisterReceivers);
 
     const currentRegisterReceivers = registerReceivers.filter((registerReceiver) => registerReceiver.campaignId === id);
 
-    const [selectedCampaign, setSelectedCampaign] = useState<RejectCampaign | null>(null);
+    const [selectedRejectCampaign, setSelectedRejectCampaign] = useState<RejectCampaign | null>(null);
+
+    const [selectedAdditionalCampaign, setSelectedAdditionalCampaign] = useState<AdditionalCampaign | null>(null);
 
     const [isRejectCampaignModalOpen, setIsRejectCampaignModalOpen] = useState(false);
+
+    const [isAdditionalCampaignModalOpen, setIsAdditionalCampaignModalOpen] = useState(false);
 
     const date = currentCampaign?.receiveDate.split("T")[0];
     const time = currentCampaign?.receiveDate.split("T")[1].replace("Z", "");
@@ -65,8 +71,13 @@ const StaffDetailCampaignUserPage: FC = () => {
 
 
     const handleRejectCampaign = (campaignId: string) => {
-        setSelectedCampaign({ campaignId, comment: "" });
+        setSelectedRejectCampaign({ campaignId, comment: "" });
         setIsRejectCampaignModalOpen(true);
+    };
+
+    const handleAdditionalCampaign = (campaignId: string) => {
+        setSelectedAdditionalCampaign({ campaignId, content: "" });
+        setIsAdditionalCampaignModalOpen(true);
     };
 
     return (
@@ -112,10 +123,22 @@ const StaffDetailCampaignUserPage: FC = () => {
                             <p>{time}</p>
                         </div>
                     </div>
+                    <div className="sdcucr2r4">
+                        {currentCampaign?.images.map((img, index) => (
+                            <img key={index} src={img} alt={"Campaign Image ${index + 1}"} style={{ width: "150px", height: "150px", margin: "5px" }} />
+                        ))}
+                    </div>
                     {currentCampaign?.status === "Pending" && (
                         <>
+                            <div className="sdcucr2r5">
+                                <h3>Review Comments</h3>
+                                {currentCampaign.reviewComments?.map((comment, index) => (
+                                    <p key={index}>{comment.content}</p>
+                                ))}
+                            </div>
                             <button className='approve-btn' onClick={() => handleApproveCampaign({ campaignId: String(id) })}>Approve</button>
                             <button className='reject-btn' onClick={() => handleRejectCampaign(String(id))}>Reject</button>
+                            <button className='additional-btn' onClick={() => handleAdditionalCampaign(String(id))}>Additional</button>
                         </>
                     )}
                     {currentCampaign?.status === "Approved" && (
@@ -154,7 +177,8 @@ const StaffDetailCampaignUserPage: FC = () => {
                     )}
                 </div>
             </div>
-            <RejectCampaignModal isOpen={isRejectCampaignModalOpen} setIsOpen={setIsRejectCampaignModalOpen} selectedCampaign={selectedCampaign} />
+            <RejectCampaignModal isOpen={isRejectCampaignModalOpen} setIsOpen={setIsRejectCampaignModalOpen} selectedCampaign={selectedRejectCampaign} />
+            <AdditionalCampaignModal isOpen={isAdditionalCampaignModalOpen} setIsOpen={setIsAdditionalCampaignModalOpen} selectedCampaign={selectedAdditionalCampaign} />
         </section>
     )
 }

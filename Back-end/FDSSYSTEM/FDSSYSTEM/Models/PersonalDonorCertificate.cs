@@ -13,5 +13,6 @@ namespace FDSSYSTEM.Models
         public string CitizenId { get; set; }
         public string Status { get; set; } = "Pending";
         public string RejectComment { get; set; }
+        public List<string> Images { get; set; } = new List<string>();
     }
 }
