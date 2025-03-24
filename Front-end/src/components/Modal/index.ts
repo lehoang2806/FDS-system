@@ -9,6 +9,7 @@ import RejectReasonModal from "./RejectReason";
 import RecipientCertificateModal from "./RecipientCertificate";
 import RemindCertificateModal from "./RemindCertificates";
 import RegisterReceiverModal from "./RegisterReceiver";
+import AdditionalCampaignModal from "./AdditionalCampaign";
 
 export {
     Modal,
@@ -21,5 +22,6 @@ export {
     RejectReasonModal,
     RecipientCertificateModal,
     RemindCertificateModal,
-    RegisterReceiverModal
+    RegisterReceiverModal,
+    AdditionalCampaignModal
 };

@@ -2,7 +2,7 @@ import { selectGetAllCampaign } from '@/app/selector'
 import { useAppDispatch, useAppSelector } from '@/app/store'
 import { ActiveIcon, BlockIcon, TotalIcon } from '@/assets/icons'
 import { Loading } from '@/components/Elements'
-import { RejectCampaignModal } from '@/components/Modal'
+import { AdditionalCampaignModal, RejectCampaignModal } from '@/components/Modal'
 import { navigateHook } from '@/routes/RouteApp'
 import { routes } from '@/routes/routeName'
 import { setLoading } from '@/services/app/appSlice'
@@ -15,9 +15,13 @@ const StaffListCampaignUserPage: FC = () => {
 
     const [isFiltering, setIsFiltering] = useState(false);
 
-    const [selectedCampaign, setSelectedCampaign] = useState<RejectCampaign | null>(null);
+    const [selectedRejectCampaign, setSelectedRejectCampaign] = useState<RejectCampaign | null>(null);
+
+    const [selectedAdditionalCampaign, setSelectedAdditionalCampaign] = useState<AdditionalCampaign | null>(null);
 
     const [isRejectCampaignModalOpen, setIsRejectCampaignModalOpen] = useState(false);
+
+    const [isAdditionalCampaignModalOpen, setIsAdditionalCampaignModalOpen] = useState(false);
 
     const handleToDetail = (campaignId: string) => {
         const url = routes.staff.campaign.user.detail.replace(":id", campaignId);
@@ -74,8 +78,13 @@ const StaffListCampaignUserPage: FC = () => {
 
 
     const handleRejectCampaign = (campaignId: string) => {
-        setSelectedCampaign({ campaignId, comment: "" });
+        setSelectedRejectCampaign({ campaignId, comment: "" });
         setIsRejectCampaignModalOpen(true);
+    };
+
+    const handleAdditionalCampaign = (campaignId: string) => {
+        setSelectedAdditionalCampaign({ campaignId, content: "" });
+        setIsAdditionalCampaignModalOpen(true);
     };
 
     return (
@@ -163,6 +172,7 @@ const StaffListCampaignUserPage: FC = () => {
                                             <>
                                                 <button className='approve-btn' onClick={() => handleApproveCampaign({ campaignId: campaign.campaignId })}>Approve</button>
                                                 <button className='reject-btn' onClick={() => handleRejectCampaign(campaign.campaignId)}>Reject</button>
+                                                <button className='additional-btn' onClick={() => handleAdditionalCampaign(campaign.campaignId)}>Additional</button>
                                             </>
                                         )}
                                     </td>
@@ -173,7 +183,8 @@ const StaffListCampaignUserPage: FC = () => {
                     </table>
                 </div>
             </div>
-            <RejectCampaignModal isOpen={isRejectCampaignModalOpen} setIsOpen={setIsRejectCampaignModalOpen} selectedCampaign={selectedCampaign} />
+            <RejectCampaignModal isOpen={isRejectCampaignModalOpen} setIsOpen={setIsRejectCampaignModalOpen} selectedCampaign={selectedRejectCampaign} />
+            <AdditionalCampaignModal isOpen={isAdditionalCampaignModalOpen} setIsOpen={setIsAdditionalCampaignModalOpen} selectedCampaign={selectedAdditionalCampaign} />
         </section>
     )
 }

@@ -7,7 +7,7 @@ interface AddCampaign {
     receiveDate: string;
     startRegisterDate: string;
     endRegisterDate: string;
-    image: string;
+    images: [];
     typeCampaign: string | "Limited" | "Voluntary";
 }
 
@@ -56,9 +56,9 @@ interface CurrentCampaign {
     rejectComment?: string | null;
     comment?: string | null;
     typeAccount: "Personal Donor" | "Organization";
-    reviewComments?: string | null;
+    reviewComments?: ReviewComment[] | null;
     cancelComment?: string | null;
-    image: string;
+    images: string[];
 }
 
 interface CampaignState {
@@ -73,4 +73,14 @@ interface ApproveCampaign {
 interface RejectCampaign {
     campaignId: string;
     comment: string;
+}
+
+interface AdditionalCampaign {
+    campaignId: string;
+    content: string;
+}
+
+interface ReviewComment {
+    createDate: string;
+    content: string;
 }

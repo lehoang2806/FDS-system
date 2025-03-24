@@ -175,7 +175,12 @@ public class UserService : IUserService
             OrganizationDonorCertificateId = Guid.NewGuid().ToString(),
             DonorId = _userContextService.UserId,
             OrganizationName = certificateDto.OrganizationName,
-            TaxIdentificationNumber = certificateDto.TaxIdentificationNumber
+            TaxIdentificationNumber = certificateDto.TaxIdentificationNumber,
+            RepresentativeName = certificateDto.RepresentativeName,
+            RepresentativePhone = certificateDto.RepresentativePhone,
+            RepresentativeCitizenId = certificateDto.RepresentativeCitizenId,
+            RepresentativeEmail = certificateDto.RepresentativeEmail,
+            Images = certificateDto.Images
         });
 
     }
@@ -187,6 +192,7 @@ public class UserService : IUserService
             PersonalDonorCertificateId = Guid.NewGuid().ToString(),
             DonorId = _userContextService.UserId,
             CitizenId = certificateDto.CitizenId,
+            Images = certificateDto.Images
         });
     }
 

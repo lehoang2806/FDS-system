@@ -24,3 +24,8 @@ export const rejectCampaignApi = async (params: RejectCampaign) => {
     const data = await request.put('api/campaign/Reject', params);
     return data.data;
 }
+
+export const additionalCampaignApi = async (params: AdditionalCampaign) => {
+    const data = await request.post('api/campaign/CommentCampaign', params);
+    return data.data;
+}

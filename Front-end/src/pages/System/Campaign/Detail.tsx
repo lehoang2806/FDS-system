@@ -22,6 +22,8 @@ const DetailCampaignPage: React.FC = () => {
 
     const currentCampaign = useAppSelector(selectCurrentCampaign);
 
+    console.log(currentCampaign)
+
     const campaigns = useAppSelector(selectGetAllCampaign)
 
     const approvedCampaigns = campaigns.filter((campaign) => campaign.status === "Approved");
@@ -37,6 +39,8 @@ const DetailCampaignPage: React.FC = () => {
     const currentRegisterReceivers = registerReceivers.filter((registerReceiver) => registerReceiver.campaignId === id);
 
     const registeredReceiver = currentRegisterReceivers.find((registerReceiver) => registerReceiver.accountId === userLogin?.accountId);
+
+    const [selectedImage, setSelectedImage] = useState(currentCampaign?.images?.[0] || "")
 
     const handleToDetail = (campaignId: string) => {
         const url = routes.user.campaign.detail.replace(":id", campaignId);
@@ -73,6 +77,12 @@ const DetailCampaignPage: React.FC = () => {
         }
     }, [id, dispatch])
 
+    useEffect(() => {
+        if (currentCampaign?.images && currentCampaign.images.length > 0) {
+            setSelectedImage(currentCampaign.images[0]);
+        }
+    }, [JSON.stringify(currentCampaign?.images)]);
+
     const handleRegisterReceiver = () => {
         if (registeredReceiver) {
             alert("Bạn đã đăng ký rồi")
@@ -101,6 +111,41 @@ const DetailCampaignPage: React.FC = () => {
                             </div>
                             <div className="dcscr1c1r4">
                                 <div className="dcscr1c1r4-content">{currentCampaign?.description}</div>
+                            </div>
+                            <div className="dcscr1c1r4">
+                                {selectedImage && (
+                                    <img
+                                        src={selectedImage}
+                                        alt="Selected Campaign Image"
+                                        style={{
+                                            width: "400px",
+                                            height: "400px",
+                                            objectFit: "cover",
+                                            borderRadius: "10px",
+                                            marginBottom: "10px"
+                                        }}
+                                    />
+                                )}
+                            </div>
+                            <div className="dcscr1c1r4">
+                                {currentCampaign?.images?.map((img, index) => (
+                                    <img
+                                        key={index}
+                                        src={img}
+                                        alt={`Campaign Image ${index + 1}`}
+                                        onClick={() => setSelectedImage(img)}
+                                        style={{
+                                            width: "100px",
+                                            height: "100px",
+                                            margin: "5px",
+                                            objectFit: "cover",
+                                            cursor: "pointer",
+                                            borderRadius: "5px",
+                                            border: selectedImage === img ? "3px solid blue" : "2px solid gray",
+                                            transition: "0.3s"
+                                        }}
+                                    />
+                                ))}
                             </div>
                         </div>
                         <div className="dcscr1c2">

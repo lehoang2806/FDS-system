@@ -80,6 +80,11 @@ const StaffDetailCampaignStaffPage: FC = () => {
                             <p>{time}</p>
                         </div>
                     </div>
+                    <div className="sdcucr2r3">
+                        {currentCampaign?.images.map((img, index) => (
+                            <img key={index} src={img} alt={"Campaign Image ${index + 1}"} style={{ width: "150px", height: "150px", margin: "5px" }} />
+                        ))}
+                    </div>
                     {currentCampaign?.status === "Approved" && (
                         <div className="sdcucr2r3">
                             <table className="table">
