@@ -4,6 +4,7 @@ using FDSSYSTEM.Options;
 using FDSSYSTEM.Repositories.CampaignRepository;
 using FDSSYSTEM.Repositories.NewRepository;
 using FDSSYSTEM.Repositories.NotificationCampaignRepository;
+using FDSSYSTEM.Repositories.NotificationRepository;
 using FDSSYSTEM.Repositories.OrganizationDonorCertificateRepository;
 using FDSSYSTEM.Repositories.PostCommentRepository;
 using FDSSYSTEM.Repositories.PostRepository;
@@ -18,13 +19,14 @@ using FDSSYSTEM.SeedData;
 using FDSSYSTEM.Services.CampaignService;
 using FDSSYSTEM.Services.NewService;
 using FDSSYSTEM.Services.NotificationCampaignService;
+using FDSSYSTEM.Services.NotificationService;
 using FDSSYSTEM.Services.PostCommentService;
 using FDSSYSTEM.Services.PostService;
 using FDSSYSTEM.Services.RegisterReceiverService;
 using FDSSYSTEM.Services.RoleService;
 using FDSSYSTEM.Services.UserContextService;
 using FDSSYSTEM.Services.UserService;
-
+using FDSSYSTEM.SignalR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
@@ -66,6 +68,9 @@ builder.Services.AddScoped<IOrganizationDonorCertificateRepository, Organization
 builder.Services.AddScoped<IPersonalDonorCertificateRepository, PersonalDonorCertificateRepository>();
 builder.Services.AddScoped<IRecipientCertificateRepository, RecipientCertificateRepository>();
 
+builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
+builder.Services.AddScoped<INotificationService, NotificationService>();
+
 builder.Services.Configure<JwtSetting>(builder.Configuration.GetSection("JwtSettings"));
 builder.Services.AddSingleton<JwtHelper>();
 
@@ -88,16 +93,18 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 
 
-// Thêm CORS (chỉ sử dụng builder, không khai báo lại)
+
+//Config cors
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAllOrigins",
-        policy =>
-        {
-            policy.AllowAnyOrigin()
-                  .AllowAnyMethod()
-                  .AllowAnyHeader();
-        });
+    options.AddDefaultPolicy(builder =>
+    {
+        builder.WithOrigins("null") // Cho phép chạy từ file:/// (không khuyến khích) => dùng để test từ file html
+               .WithOrigins("http://localhost:5173") // gọi từ frontend
+               .AllowAnyMethod()
+               .AllowAnyHeader()
+               .AllowCredentials();
+    });
 });
 
 
@@ -133,8 +140,13 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
+builder.Services.AddAuthorization();
+builder.Services.AddSignalR();
+
 
 var app = builder.Build();
+
+app.MapHub<NotificationHub>("/notificationhub");
 
 //Default data
 using (var scope = app.Services.CreateScope())
@@ -151,10 +163,11 @@ if (app.Environment.IsDevelopment())
 }
 
 // sử dụng CORS
-app.UseCors("AllowAllOrigins");
+app.UseCors();
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

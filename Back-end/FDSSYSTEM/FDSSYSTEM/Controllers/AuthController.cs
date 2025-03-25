@@ -46,7 +46,7 @@ namespace FDSSYSTEM.Controllers
         public async Task<IActionResult> Register([FromBody] RegisterUserDto user)
         {
             var existingUser = await _userService.GetUserByUsernameAsync(user.UserEmail);
-            if (existingUser != null) return BadRequest("Email already exists.");
+            if (existingUser != null) return BadRequest("Username already exists.");
 
             if(user.RoleId !=3 && user.RoleId != 4)
             {

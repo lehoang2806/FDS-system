@@ -20,6 +20,7 @@ namespace FDSSYSTEM.Models
 
         public string GiftType { get; set; }
 
+        public int GiftQuantity { get; set; }
 
         public string Address { get; set; }
 
@@ -30,28 +31,18 @@ namespace FDSSYSTEM.Models
         public DateTime? DateUpdated { get; set; }
 
         public bool? IsDeleted { get; set; }
-
         public string Status { get; set; } = "Pending";  // Mặc định là chờ duyệt
 
-        public string TypeCampaign { get; set; } // giới hạn quà tặng, đăng ký thoải mái
-
-        public int GiftQuantity { get; set; }
-
-        public string StartRegisterDate { get; set; }
-
-        public string EndRegisterDate { get; set; }
-
         public string RejectComment { get; set; }
-
         public string Comment  { get; set; }
-
         public string TypeAccount { get; set; } //staff, personal, organization
-
+        public bool TypeCampaign { get; set; } // giới hạn quà tặng, đăng ký thoải mái
+        public bool IsReceiveMulti { get; set; }
         public List<CampainNotificaiton> ReviewComments { get; set; }
-
         public string CancelComment { get; set; }
-
-        public List<string> Images { get; set; } = new List<string>();
+        public string StartRegisterDate { get; set; }
+        public string EndRegisterDate { get; set; }
+        public string Image {  get; set; }
     }
 
     public class CampainNotificaiton
