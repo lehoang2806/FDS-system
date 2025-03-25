@@ -26,9 +26,10 @@ namespace FDSSYSTEM.Services.NewService
         {
             await _newRepository.AddAsync(new New
             {
-                PostText = newDto.PostText,
+                Title = newDto.Title,
+                DateStart = newDto.DateStart,
+                DateEnd = newDto.DateEnd,
                 DateCreated = DateTime.Now,
-                PostFile = newDto.PostFile,
                 Image = newDto.Image,
                 NewId = Guid.NewGuid().ToString(),
                 Content = newDto.Content,
@@ -56,10 +57,11 @@ namespace FDSSYSTEM.Services.NewService
         public async Task Update(string id, NewDto newDto)
         {
             var news = await _newRepository.GetByIdAsync(id);
-            news.PostFile = newDto.PostFile;
+            news.Title = newDto.Title;
             news.Image = newDto.Image;
             news.Content = newDto.Content;
-            news.PostText = newDto.PostText;
+            news.DateStart = newDto.DateStart;
+            news.DateEnd = newDto.DateEnd;
 
             await _newRepository.UpdateAsync(news.Id, news);
 

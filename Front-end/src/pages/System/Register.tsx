@@ -47,6 +47,14 @@ const RegisterPage = () => {
         phone: Yup.string()
             .required("Số điện thoại không được để trống")
             .matches(/^[0-9]{10,11}$/, "Số điện thoại không hợp lệ"),
+
+        roleId: Yup.number()
+            .required("Vui lòng chọn vai trò")
+            .test(
+                "is-not-zero",
+                "Vui lòng chọn vai trò",
+                (value) => value !== 0
+            ),
     });
 
     const onSubmit = async (values: IRegisterEmail, helpers: FormikHelpers<IRegisterEmail>) => {
@@ -54,9 +62,8 @@ const RegisterPage = () => {
             toast.success("Register successfully");
             navigateHook(routes.login);
         }).catch((error) => {
-            const errorData = get(error, 'data.message', null);
-            helpers.setErrors({ userEmail: errorData });
-            toast.error(errorData);
+            const errorMessage = get(error, 'data', 'An error occurred');
+            toast.error(errorMessage);
         }).finally(() => {
             helpers.setSubmitting(false);
         });
@@ -105,7 +112,7 @@ const RegisterPage = () => {
                                         <div className="form-field">
                                             <label className="form-label">Lựa chọn vai trò</label>
                                             <Field as="select" name="roleId" className={classNames("form-input", { "is-error": errors.roleId && touched.roleId })}>
-                                                <option value="">Chọn vai trò</option>
+                                                <option value={0}>Chọn vai trò</option>
                                                 <option value={3}>Người ủng hộ</option>
                                                 <option value={4}>Người thu nhập thấp</option>
                                             </Field>
