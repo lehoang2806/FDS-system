@@ -36,8 +36,7 @@ const LoginPage = () => {
         await dispatch(loginApiThunk(values)).unwrap().then(() => {
             toast.success("Login successfully");
         }).catch((error) => {
-            const errorData = get(error, 'data.message', null);
-            helpers.setErrors({ userEmail: errorData });
+            const errorData = get(error, 'data', 'An error occurred');
             toast.error(errorData);
         }).finally(() => {
             helpers.setSubmitting(false);

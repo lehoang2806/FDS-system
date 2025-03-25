@@ -40,7 +40,7 @@ namespace FDSSYSTEM.Controllers
         // Lấy tất cả tin tức
 
         [HttpGet("GetAllNews")]
-        [Authorize(Roles = "Admin,Staff,Donor,Staff")]
+        //[Authorize(Roles = "Admin,Staff,Donor,Staff")]
         public async Task<ActionResult> GetAllNews()
         {
             try
@@ -115,7 +115,7 @@ namespace FDSSYSTEM.Controllers
 
         // Cập nhật tin tức
         [HttpPut("UpdateNews/{id}")]
-        [Authorize(Roles = "Admin,Staff")]
+        //[Authorize(Roles = "Admin,Staff")]
         public async Task<ActionResult> UpdateNews(string id, NewDto news)
         {
             try
