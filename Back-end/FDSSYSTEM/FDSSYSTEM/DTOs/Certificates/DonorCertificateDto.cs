@@ -12,10 +12,5 @@
         public string CitizenId { get; set; }
         public string Status { get; set; }
         public string RejectComment { get; set; }
-        public List<string> Images { get; set; } = new List<string>();
-        public string representativeName { get; set; }
-        public string representativePhone { get; set; }
-        public string representativeCitizenId { get; set; }
-        public string representativeEmail { get; set; }
     }
 }

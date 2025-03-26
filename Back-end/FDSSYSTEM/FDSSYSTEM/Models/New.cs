@@ -10,12 +10,15 @@ public partial class New
     [BsonId]
     [BsonRepresentation(BsonType.ObjectId)]
     public string Id { get; set; }
-
     public string NewId { get; set; }
+
+    public string NewCategoryId { get; set; }
 
     public string AccountId { get; set; }
 
     public string Title { get; set; } = null!;
+
+    public string? Subtitle { get; set; }
 
     public string? Image { get; set; }
 
@@ -27,10 +30,6 @@ public partial class New
 
     public DateTime? DateCreated { get; set; }
 
-    public DateTime? DateStart { get; set; }
-
-    public DateTime? DateEnd { get; set; }
-
     public string? UserUpdated { get; set; }
 
     public DateTime? DateUpdated { get; set; }
@@ -41,5 +40,11 @@ public partial class New
 
     public DateTime? DateDelete { get; set; }
 
+    public string? PostText { get; set; }
+
+    public string? PostFile { get; set; }
+
+ 
     public string RejectComment { get; set; }
+
 }

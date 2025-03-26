@@ -8,10 +8,11 @@
         public int GiftQuantity { get; set; }
         public string Address { get; set; }
         public DateTime ReceiveDate { get; set; }
+        public bool IsReceiveMulti { get; set; }
         public string StartRegisterDate { get; set; }
         public string EndRegisterDate { get; set; }
-        public List<string> Images { get; set; } = new List<string>();
-        public string TypeCampaign { get; set; }
+        public string Image { get; set; }
+        public bool TypeCampaign { get; set; }
 
     }
 }

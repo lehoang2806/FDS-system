@@ -8,34 +8,73 @@ using Microsoft.Extensions.Hosting;
 using MongoDB.Driver;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using FDSSYSTEM.Services.UserContextService;
+using FDSSYSTEM.Services.UserService;
+using FDSSYSTEM.SignalR;
+using Mapster;
+using FDSSYSTEM.Services.NotificationService;
+using Microsoft.AspNetCore.SignalR;
 namespace FDSSYSTEM.Services.NewService
 {
     public class NewService : INewService
     {
         private readonly INewRepository _newRepository;
+        private readonly IUserService _userService;
+        private readonly IUserContextService _userContextService;
+        private readonly INotificationService _notificationService;
+        private readonly IHubContext<NotificationHub> _hubNotificationContext;
         private object _newsCollection;
 
-        public NewService(INewRepository newRepository)
+        public NewService(INewRepository newRepository
+            , IUserContextService userContextService, IUserService userService
+            , INotificationService notificationService
+            , IHubContext<NotificationHub> hubContext
+            )
         {
             _newRepository = newRepository;
+            _userContextService = userContextService;
+            _userService = userService;
+            _notificationService = notificationService;
+            _hubNotificationContext = hubContext;
         }
 
 
 
         public async Task Create(NewDto newDto)
         {
-            await _newRepository.AddAsync(new New
+            var news = new New
             {
-                Title = newDto.Title,
-                DateStart = newDto.DateStart,
-                DateEnd = newDto.DateEnd,
+                PostText = newDto.PostText,
                 DateCreated = DateTime.Now,
+                PostFile = newDto.PostFile,
                 Image = newDto.Image,
                 NewId = Guid.NewGuid().ToString(),
                 Content = newDto.Content,
                 Status = "Pending"
 
-            });
+            };
+            await _newRepository.AddAsync(news);
+
+            //Send notifiction all staff and admin
+            var userReceiveNotifications = await _userService.GetAllAdminAndStaffId();
+            foreach (var userId in userReceiveNotifications)
+            {
+                var notificationDto = new NotificationDto
+                {
+                    Title = "Có một bài báo mới được tạo",
+                    Content = "Có một bài báo mới được tạo ra",
+                    CreatedDate = DateTime.Now,
+                    NotificationType = "Approve",
+                    ObjectType = "New",
+                    OjectId = news.NewId,
+                    AccountId = userId
+                };
+                //save notifiation to db
+                await _notificationService.AddNotificationAsync(notificationDto);
+                //send notification via signalR
+                await _hubNotificationContext.Clients.User(notificationDto.AccountId).SendAsync("ReceiveNotification", notificationDto);
+            }
+
         }
 
         public async Task Delete(string id)
@@ -57,13 +96,32 @@ namespace FDSSYSTEM.Services.NewService
         public async Task Update(string id, NewDto newDto)
         {
             var news = await _newRepository.GetByIdAsync(id);
-            news.Title = newDto.Title;
+            news.PostFile = newDto.PostFile;
             news.Image = newDto.Image;
             news.Content = newDto.Content;
-            news.DateStart = newDto.DateStart;
-            news.DateEnd = newDto.DateEnd;
+            news.PostText = newDto.PostText;
 
             await _newRepository.UpdateAsync(news.Id, news);
+
+            //Send notifiction all staff and admin
+            var userReceiveNotifications = await _userService.GetAllAdminAndStaffId();
+            foreach (var userId in userReceiveNotifications)
+            {
+                var notificationDto = new NotificationDto
+                {
+                    Title = "Có một bài báo mới được tạo",
+                    Content = "Có một bài báo mới được tạo ra",
+                    CreatedDate = DateTime.Now,
+                    NotificationType = "Approve",
+                    ObjectType = "New",
+                    OjectId = news.NewId,
+                    AccountId = userId
+                };
+                //save notifiation to db
+                await _notificationService.AddNotificationAsync(notificationDto);
+                //send notification via signalR
+                await _hubNotificationContext.Clients.User(notificationDto.AccountId).SendAsync("ReceiveNotification", notificationDto);
+            }
 
         }
 
@@ -74,6 +132,23 @@ namespace FDSSYSTEM.Services.NewService
 
             news.Status = "Approved";
             await _newRepository.UpdateAsync(news.Id, news);
+
+            //Send notifiction
+            var notificationDto = new NotificationDto
+            {
+                Title = "Bài báo đã được phê duyệt",
+                Content = "Bài báo đã được phê duyệt",
+                CreatedDate = DateTime.Now,
+                NotificationType = "Approve",
+                ObjectType = "New",
+                OjectId = news.NewId,
+                AccountId = news.AccountId
+            };
+            //save notifiation to db
+            await _notificationService.AddNotificationAsync(notificationDto);
+            //send notification via signalR
+            await _hubNotificationContext.Clients.User(notificationDto.AccountId).SendAsync("ReceiveNotification", notificationDto);
+
         }
 
         public async Task Reject(RejectNewDto rejectNewDto)
@@ -84,6 +159,23 @@ namespace FDSSYSTEM.Services.NewService
             news.Status = "Rejected";
             news.RejectComment = rejectNewDto.Comment;
             await _newRepository.UpdateAsync(news.Id, news);
+
+            //Send notifiction
+            var notificationDto = new NotificationDto
+            {
+                Title = "Bài báo không được phê duyệt",
+                Content = "Bài báo không được phê duyệt",
+                CreatedDate = DateTime.Now,
+                NotificationType = "Reject",
+                ObjectType = "New",
+                OjectId = news.NewId,
+                AccountId = news.AccountId
+            };
+            //save notifiation to db
+            await _notificationService.AddNotificationAsync(notificationDto);
+            //send notification via signalR
+            await _hubNotificationContext.Clients.User(notificationDto.AccountId).SendAsync("ReceiveNotification", notificationDto);
+
         }
 
      

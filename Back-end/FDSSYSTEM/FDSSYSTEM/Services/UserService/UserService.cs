@@ -175,12 +175,7 @@ public class UserService : IUserService
             OrganizationDonorCertificateId = Guid.NewGuid().ToString(),
             DonorId = _userContextService.UserId,
             OrganizationName = certificateDto.OrganizationName,
-            TaxIdentificationNumber = certificateDto.TaxIdentificationNumber,
-            RepresentativeName = certificateDto.RepresentativeName,
-            RepresentativePhone = certificateDto.RepresentativePhone,
-            RepresentativeCitizenId = certificateDto.RepresentativeCitizenId,
-            RepresentativeEmail = certificateDto.RepresentativeEmail,
-            Images = certificateDto.Images
+            TaxIdentificationNumber = certificateDto.TaxIdentificationNumber
         });
 
     }
@@ -192,7 +187,6 @@ public class UserService : IUserService
             PersonalDonorCertificateId = Guid.NewGuid().ToString(),
             DonorId = _userContextService.UserId,
             CitizenId = certificateDto.CitizenId,
-            Images = certificateDto.Images
         });
     }
 
@@ -443,5 +437,15 @@ public class UserService : IUserService
         return account;
     }
 
+    public async Task<List<string>> GetAllAdminAndStaffId()
+    {
 
+        List<int> roleIds = new List<int>
+        {
+            1,//admin
+            2//staff
+        };
+        var filter = Builders<Account>.Filter.In(c => c.RoleId, roleIds);
+        return (await _userRepository.GetAllAsync(filter)).Select(x=>x.AccountId).ToList();
+    }
 }
