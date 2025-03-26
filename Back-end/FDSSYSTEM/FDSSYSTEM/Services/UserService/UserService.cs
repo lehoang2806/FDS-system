@@ -175,7 +175,19 @@ public class UserService : IUserService
             OrganizationDonorCertificateId = Guid.NewGuid().ToString(),
             DonorId = _userContextService.UserId,
             OrganizationName = certificateDto.OrganizationName,
-            TaxIdentificationNumber = certificateDto.TaxIdentificationNumber
+            TaxIdentificationNumber = certificateDto.TaxIdentificationNumber,
+            OrganizationAbbreviatedName = certificateDto.OrganizationAbbreviatedName,
+            OrganizationType = certificateDto.OrganizationType,
+            MainBusiness = certificateDto.MainBusiness,
+            OrganizationAddress = certificateDto.OrganizationAddress,
+            ContactPhone = certificateDto.ContactPhone,
+            OrganizationEmail = certificateDto.OrganizationEmail,
+            WebsiteLink = certificateDto.WebsiteLink,
+            RepresentativeName = certificateDto.RepresentativeName,
+            RepresentativePhone = certificateDto.RepresentativePhone,
+            RepresentativeEmail = certificateDto.RepresentativeEmail,
+            CreatedDate = certificateDto.CreatedDate,
+            Images = certificateDto.Images,
         });
 
     }
@@ -187,6 +199,16 @@ public class UserService : IUserService
             PersonalDonorCertificateId = Guid.NewGuid().ToString(),
             DonorId = _userContextService.UserId,
             CitizenId = certificateDto.CitizenId,
+            FullName = certificateDto.FullName,
+            BirthDay = certificateDto.BirthDay,
+            Email = certificateDto.Email,
+            Phone = certificateDto.Phone,
+            Address = certificateDto.Address,
+            SocialMediaLink = certificateDto.SocialMediaLink,
+            MainSourceIncome = certificateDto.MainSourceIncome,
+            MonthlyIncome = certificateDto.MonthlyIncome,
+            CreatedDate = certificateDto.CreatedDate,
+            Images = certificateDto.Images,
         });
     }
 
@@ -198,6 +220,15 @@ public class UserService : IUserService
             RecipientCertificateId = Guid.NewGuid().ToString(),
             RecipientId = _userContextService.UserId,
             CitizenId = certificateDto.CitizenId,
+            FullName = certificateDto.FullName,
+            Phone = certificateDto.Phone,
+            Address = certificateDto.Address,
+            BirthDay = certificateDto.BirthDay,
+            Email = certificateDto.Email,
+            Circumstances = certificateDto.Circumstances,
+            RegisterSupportReason = certificateDto.RegisterSupportReason,
+            CreatedDate = certificateDto.CreatedDate,
+            Images = certificateDto.Images,
         });
     }
 
