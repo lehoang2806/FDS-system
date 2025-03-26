@@ -178,6 +178,16 @@ const DetailCampaignPage: React.FC = () => {
                                     </div>
                                 </div>
                             )}
+                            {currentCampaign?.status === "Pending" && (
+                                <>
+                                    <div className="sdcucr2r5">
+                                        <h3>Cần bổ sung các thông tin sau:</h3>
+                                        {currentCampaign.reviewComments?.map((comment, index) => (
+                                            <p key={index}>{comment.content}</p>
+                                        ))}
+                                    </div>
+                                </>
+                            )}
                         </div>
                     </div>
                     {currentCampaign?.status === "Rejected" && (

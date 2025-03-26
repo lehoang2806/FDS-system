@@ -9,6 +9,8 @@ const CampaignCard: FC<CampaignCardProps> = ({onClickDetail, campaign}) => {
             <div className="campaign-img"></div>
             <h4>{campaign.nameCampaign}</h4>
             <p>{date} - {time}</p>
+            <p>{campaign.giftType}</p>
+            <p>{campaign.typeCampaign ? "Chiến dịch có phần quà giới hạn" : "Chiến dịch đăng ký theo nguyện vọng"}</p>
         </div>
     )
 }

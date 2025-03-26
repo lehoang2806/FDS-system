@@ -17,8 +17,6 @@ const StaffDetailCampaignUserPage: FC = () => {
 
     const currentCampaign = useAppSelector(selectCurrentCampaign);
 
-    console.log(currentCampaign)
-
     const registerReceivers = useAppSelector(selectGetAllRegisterReceivers);
 
     const currentRegisterReceivers = registerReceivers.filter((registerReceiver) => registerReceiver.campaignId === id);
