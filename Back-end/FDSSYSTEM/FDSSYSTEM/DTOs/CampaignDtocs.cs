@@ -11,7 +11,6 @@
         public int ImplementationTime { get; set; }
 
         public string TypeGift { get; set; }
-        public DateTime? DateUpdated { get; set; }
         public string EstimatedBudget { get; set; }
         public string AverageCostPerGift { get; set; }
         public string Sponsors { get; set; }

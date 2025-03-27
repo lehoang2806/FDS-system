@@ -40,8 +40,9 @@ namespace FDSSYSTEM.Services.PostService
             var newPost = new Post
             {
                 PostText = post.PostText,
-                DateCreated = DateTime.Now,
-                PostId = Guid.NewGuid().ToString()
+                CreatedDate = DateTime.Now,
+                PostId = Guid.NewGuid().ToString(),
+                Images = post.Images,
             };
             await _postRepository.AddAsync(newPost);
 
@@ -86,7 +87,7 @@ namespace FDSSYSTEM.Services.PostService
         {
             var post = await _postRepository.GetByPostIdAsync(id);
             post.PostFile = postDto.PostFile;
-            post.Image = postDto.Image;
+            post.Images = postDto.Images;
             post.Content = postDto.Content;
             post.PostText = postDto.PostText;
 

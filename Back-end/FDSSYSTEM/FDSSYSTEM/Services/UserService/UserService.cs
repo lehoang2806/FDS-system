@@ -186,7 +186,7 @@ public class UserService : IUserService
             RepresentativeName = certificateDto.RepresentativeName,
             RepresentativePhone = certificateDto.RepresentativePhone,
             RepresentativeEmail = certificateDto.RepresentativeEmail,
-            CreatedDate = certificateDto.CreatedDate,
+            CreatedDate = DateTime.Now,
             Images = certificateDto.Images,
         });
 
@@ -207,7 +207,7 @@ public class UserService : IUserService
             SocialMediaLink = certificateDto.SocialMediaLink,
             MainSourceIncome = certificateDto.MainSourceIncome,
             MonthlyIncome = certificateDto.MonthlyIncome,
-            CreatedDate = certificateDto.CreatedDate,
+            CreatedDate = DateTime.Now,
             Images = certificateDto.Images,
         });
     }
@@ -227,7 +227,7 @@ public class UserService : IUserService
             Email = certificateDto.Email,
             Circumstances = certificateDto.Circumstances,
             RegisterSupportReason = certificateDto.RegisterSupportReason,
-            CreatedDate = certificateDto.CreatedDate,
+            CreatedDate = DateTime.Now,
             Images = certificateDto.Images,
         });
     }
