@@ -18,8 +18,8 @@
         public string Communication { get; set; }
         public string LimitedQuantity { get; set; }
         public string CampaignType { get; set; } // giới hạn quà tặng, đăng ký thoải mái
-        public int StartRegisterDate { get; set; }
-        public int EndRegisterDate { get; set; }
+        public string StartRegisterDate { get; set; }
+        public string EndRegisterDate { get; set; }
         public List<string> Images { get; set; }
 
     }

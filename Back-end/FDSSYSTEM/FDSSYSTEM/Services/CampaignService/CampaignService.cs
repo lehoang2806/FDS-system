@@ -83,7 +83,6 @@ namespace FDSSYSTEM.Services.CampaignService
                 {
                     Title = "Campain mới được tạo",
                     Content = "Có chiến dịch mới được tạo ra",
-                    CreatedDate = DateTime.Now,
                     NotificationType = "Approve",
                     ObjectType = "Campain",
                     OjectId = newCampain.CampaignId,
@@ -154,7 +153,6 @@ namespace FDSSYSTEM.Services.CampaignService
                 {
                     Title = "Campain mới được update",
                     Content = "có chiến dịch mới vừa được cập nhật",
-                    CreatedDate = DateTime.Now,
                     NotificationType = "Approve",
                     ObjectType = "Campain",
                     OjectId = existingCampaign.CampaignId,
@@ -220,7 +218,6 @@ namespace FDSSYSTEM.Services.CampaignService
             {
                 Title = "Đã approve",
                 Content = "Chiến dịch của bạn đã được phê duyệt thành công",
-                CreatedDate = DateTime.Now,
                 NotificationType = "Approve",
                 ObjectType = "Campain",
                 OjectId = campain.CampaignId,
@@ -245,7 +242,6 @@ namespace FDSSYSTEM.Services.CampaignService
             {
                 Title = "Đã reject",
                 Content = "Rất tiếc chiến dịch của bạn không phù hợp.Bạn có thể xem lý do ",
-                CreatedDate = DateTime.Now,
                 NotificationType = "Approve",
                 ObjectType = "Campain",
                 OjectId = campain.CampaignId,
@@ -281,7 +277,6 @@ namespace FDSSYSTEM.Services.CampaignService
             {
                 Title = "Cần bổ sung chiến dịch",
                 Content = "Chiến dịch của bạn còn thiếu sót.Bạn có thể xem lý do ",
-                CreatedDate = DateTime.Now,
                 NotificationType = "Approve",
                 ObjectType = "Campain",
                 OjectId = campain.CampaignId,
@@ -308,7 +303,6 @@ namespace FDSSYSTEM.Services.CampaignService
             {
                 Title = "Đã cancel",
                 Content = "Chiến dịch của bạn đã được hủy bỏ",
-                CreatedDate = DateTime.Now,
                 NotificationType = "Approve",
                 ObjectType = "Campain",
                 OjectId = campain.CampaignId,

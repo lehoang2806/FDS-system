@@ -20,7 +20,6 @@ public class NotificationService : INotificationService
             AccountId = notificationDto.AccountId,
             Title = notificationDto.Title,
             Content = notificationDto.Content,
-            CreatedDate = notificationDto.CreatedDate,
             NotificationType = notificationDto.NotificationType,
             ObjectType = notificationDto.ObjectType,
             OjectId = notificationDto.OjectId
