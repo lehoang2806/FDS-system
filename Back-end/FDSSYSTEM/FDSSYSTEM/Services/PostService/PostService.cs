@@ -54,7 +54,6 @@ namespace FDSSYSTEM.Services.PostService
                 {
                     Title = "Có một bài đăng mới được tạo",
                     Content = "Có một bài đăng mới được tạo ra",
-                    CreatedDate = DateTime.Now,
                     NotificationType = "Approve",
                     ObjectType = "Post",
                     OjectId = newPost.PostId,
@@ -100,7 +99,6 @@ namespace FDSSYSTEM.Services.PostService
                 {
                     Title = "Có một bài đăng mới được cập nhật",
                     Content = "Có một bài đăng vừa được cập nhật",
-                    CreatedDate = DateTime.Now,
                     NotificationType = "Approve",
                     ObjectType = "Post",
                     OjectId = post.PostId,
@@ -127,7 +125,6 @@ namespace FDSSYSTEM.Services.PostService
             {
                 Title = "Bài đăng đã được phê duyệt",
                 Content = "Bài đăng đã được phê duyệt",
-                CreatedDate = DateTime.Now,
                 NotificationType = "Approve",
                 ObjectType = "Post",
                 OjectId = post.PostId,
@@ -153,7 +150,6 @@ namespace FDSSYSTEM.Services.PostService
             {
                 Title = "Bài đăng không được phê duyệt",
                 Content = "Bài đăng không được phê duyệt",
-                CreatedDate = DateTime.Now,
                 NotificationType = "Reject",
                 ObjectType = "Post",
                 OjectId = post.PostId,

@@ -3,7 +3,6 @@
     public class CreatePersonalDonorCertificateDto
     {
         public string CitizenId { get; set; }
-        public DateTime CreatedDate { get; set; } = DateTime.Now;
         public string FullName { get; set; }
         public string BirthDay { get; set; }
         public string Email { get; set; }

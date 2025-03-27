@@ -430,7 +430,6 @@ public class UserService : IUserService
         {
             Title = "Đã approve",
             Content = "Chứng nhận của bạn đã được phê duyệt thành công",
-            CreatedDate = DateTime.Now,
             NotificationType = "Approve",
             ObjectType = "Certificate",
             OjectId = objectId,
@@ -484,7 +483,6 @@ public class UserService : IUserService
         {
             Title = "Đã reject",
             Content = "Rất tiếc chiến dịch của bạn không phù hợp.Bạn có thể xem lý do ",
-            CreatedDate = DateTime.Now,
             NotificationType = "Approve",
             ObjectType = "Campain",
             OjectId = objectId,
@@ -598,13 +596,14 @@ public class UserService : IUserService
                 throw new Exception("Type not found");
         }
 
+
         //TODO: Send Email / SMS
 
         var notificationDto = new NotificationDto
         {
             Title = "Cần bổ sung chứng nhận",
             Content = "Chứng nhận của bạn còn thiếu sót.Bạn có thể xem lý do ",
-            CreatedDate = DateTime.Now,
+
             NotificationType = "Approve",
             ObjectType = "Certificate",
             OjectId = objectId,

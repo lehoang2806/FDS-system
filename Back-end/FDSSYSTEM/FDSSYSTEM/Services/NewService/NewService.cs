@@ -63,7 +63,6 @@ namespace FDSSYSTEM.Services.NewService
                 {
                     Title = "Có một bài báo mới được tạo",
                     Content = "Có một bài báo mới được tạo ra",
-                    CreatedDate = DateTime.Now,
                     NotificationType = "Approve",
                     ObjectType = "New",
                     OjectId = news.NewId,
@@ -111,7 +110,6 @@ namespace FDSSYSTEM.Services.NewService
                 {
                     Title = "Có một bài báo mới được tạo",
                     Content = "Có một bài báo mới được tạo ra",
-                    CreatedDate = DateTime.Now,
                     NotificationType = "Approve",
                     ObjectType = "New",
                     OjectId = news.NewId,
@@ -138,7 +136,6 @@ namespace FDSSYSTEM.Services.NewService
             {
                 Title = "Bài báo đã được phê duyệt",
                 Content = "Bài báo đã được phê duyệt",
-                CreatedDate = DateTime.Now,
                 NotificationType = "Approve",
                 ObjectType = "New",
                 OjectId = news.NewId,
@@ -165,7 +162,6 @@ namespace FDSSYSTEM.Services.NewService
             {
                 Title = "Bài báo không được phê duyệt",
                 Content = "Bài báo không được phê duyệt",
-                CreatedDate = DateTime.Now,
                 NotificationType = "Reject",
                 ObjectType = "New",
                 OjectId = news.NewId,
