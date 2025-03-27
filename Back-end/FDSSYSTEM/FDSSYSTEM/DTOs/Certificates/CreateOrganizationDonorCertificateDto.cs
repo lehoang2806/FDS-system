@@ -14,7 +14,6 @@
         public string RepresentativeName { get; set; }
         public string RepresentativePhone { get; set; }
         public string RepresentativeEmail { get; set; }
-        public DateTime CreatedDate { get; set; } = DateTime.Now;
         public List<string> Images { get; set; }
     }
 }

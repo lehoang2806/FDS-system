@@ -24,6 +24,12 @@ namespace FDSSYSTEM.Models
         public string MonthlyIncome { get; set; }
         public List<string> Images { get; set; }
 
+        public List<PersonalDonorCertificateReViewComment> ReviewComments { get; set; }
+    }
 
+    public class PersonalDonorCertificateReViewComment
+    {
+        public DateTime CreatedDate { get; set; }
+        public string Content { get; set; }
     }
 }

@@ -13,6 +13,5 @@
         public string MainSourceIncome { get; set; }
         public string MonthlyIncome { get; set; }
         public List<string> Images { get; set; }
-        public DateTime CreatedDate { get; set; } = DateTime.Now;
     }
 }

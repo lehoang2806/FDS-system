@@ -22,9 +22,14 @@ public interface IUserService
     Task<List<RecipientCertificateDto>> GetAllRecipientCertificat();
 
 
+    Task<PersonalDonorCertificate> GetPersonalDonorCertificateById(string personalDonorCertificate);  // Thêm phương thức này để lấy chiến dịch theo ID
+    Task<OrganizationDonorCertificate> GetOrganizationDonorCertificateById(string organizationDonorCertificate);  // Thêm phương thức này để lấy chiến dịch theo ID
+    Task<RecipientCertificate> GetRecipientCertificateById(string recipientCertificate);  // Thêm phương thức này để lấy chiến dịch theo ID
+
     Task ApproveCertificate(ApproveCertificateDto approveCertificateDto);
     Task RejectCertificate(RejectCertificateDto rejectCertificateDto);
     Task<Account> GetAccountById(string accountId);
 
     Task<List<string>> GetAllAdminAndStaffId();
+    Task AddCertificateReviewComment(ReviewCommentCertificateDto reviewCommentCertificateDto);
 }

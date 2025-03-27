@@ -19,7 +19,7 @@ namespace FDSSYSTEM.Repositories.CampaignRepository
         public async Task<Campaign> GetLatestAsync()
         {
             var all = await GetAllAsync();
-            return all.OrderByDescending(x => x.DateCreated).FirstOrDefault();
+            return all.OrderByDescending(x => x.CreatedDate).FirstOrDefault();
         }
     }
 }
