@@ -21,21 +21,8 @@ public partial class Post
 
     public string Status { get; set; } = "Pending";  // Mặc định là chờ duyệt
 
-    public string? UserCreated { get; set; }
-
-    public DateTime? DateCreated { get; set; }
-
-    public string? UserUpdated { get; set; }
-
-    public DateTime? DateUpdated { get; set; }
-
-    public bool? IsDelete { get; set; }
-
-    public string? UserDelete { get; set; }
-
-    public DateTime? DateDelete { get; set; }
-
- 
+    public DateTime CreatedDate { get; set; } = DateTime.Now;
+    public List<string> Images { get; set; }
     public string RejectComment { get; set; }
 
     public string? Image { get; set; }

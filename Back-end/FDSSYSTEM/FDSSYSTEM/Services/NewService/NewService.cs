@@ -45,9 +45,9 @@ namespace FDSSYSTEM.Services.NewService
             var news = new New
             {
                 PostText = newDto.PostText,
-                DateCreated = DateTime.Now,
+                CreatedDate = DateTime.Now,
                 PostFile = newDto.PostFile,
-                Image = newDto.Image,
+                Images = newDto.Images,
                 NewId = Guid.NewGuid().ToString(),
                 Content = newDto.Content,
                 Status = "Pending"
@@ -97,7 +97,7 @@ namespace FDSSYSTEM.Services.NewService
         {
             var news = await _newRepository.GetByIdAsync(id);
             news.PostFile = newDto.PostFile;
-            news.Image = newDto.Image;
+            news.Images = newDto.Images;
             news.Content = newDto.Content;
             news.PostText = newDto.PostText;
 

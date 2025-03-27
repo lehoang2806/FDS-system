@@ -59,7 +59,6 @@ namespace FDSSYSTEM.Services.CampaignService
                 Location = campaign.Location,
                 ImplementationTime = campaign.ImplementationTime,
                 TypeGift = campaign.TypeGift,
-                DateUpdated = campaign.DateUpdated,
                 EstimatedBudget = campaign.EstimatedBudget,
                 AverageCostPerGift = campaign.AverageCostPerGift,
                 Status = "Pending",// Nếu không truyền, mặc định là "Pending",
@@ -72,8 +71,9 @@ namespace FDSSYSTEM.Services.CampaignService
                 Communication = campaign.Communication,
                 LimitedQuantity = campaign.LimitedQuantity,
                 CampaignType = campaign.CampaignType,
-                CreatedDate = campaign.CreatedDate,
-               
+                CreatedDate = DateTime.Now
+
+
             };
 
             await _campaignRepository.AddAsync(newCampain);
@@ -136,7 +136,6 @@ namespace FDSSYSTEM.Services.CampaignService
                 existingCampaign.Location = campaign.Location;
                 existingCampaign.ImplementationTime = campaign.ImplementationTime;
                 existingCampaign.TypeGift = campaign.TypeGift;
-                existingCampaign.DateUpdated = campaign.DateUpdated;
                 existingCampaign.EstimatedBudget = campaign.EstimatedBudget;
                 existingCampaign.AverageCostPerGift = campaign.AverageCostPerGift;
                 existingCampaign.Sponsors = campaign.Sponsors;
