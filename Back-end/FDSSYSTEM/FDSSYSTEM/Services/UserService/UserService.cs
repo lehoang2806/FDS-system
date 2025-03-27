@@ -1,4 +1,4 @@
-﻿
+﻿using FDSSYSTEM.Services.NotificationService;
 using FDSSYSTEM.Models;
 using FDSSYSTEM.Repositories.UserRepository;
 using MongoDB.Bson;
@@ -12,6 +12,9 @@ using Mapster;
 using Elfie.Serialization;
 using FDSSYSTEM.Enums;
 using Microsoft.AspNetCore.Http.HttpResults;
+using FDSSYSTEM.SignalR;
+using Microsoft.AspNetCore.SignalR;
+
 
 namespace FDSSYSTEM.Services.UserService;
 
@@ -23,12 +26,17 @@ public class UserService : IUserService
     private readonly IOrganizationDonorCertificateRepository _organizationDonorCertificateRepository;
     private readonly IPersonalDonorCertificateRepository _personalDonorCertificateRepository;
     private readonly IRecipientCertificateRepository _recipientCertificateRepository;
+    private readonly INotificationService _notificationService;
+
+    private readonly IHubContext<NotificationHub> _hubNotificationContext;
 
     public UserService(IUserRepository userRepository
         , IUserContextService userContextService
         , IOrganizationDonorCertificateRepository organizationDonorCertificateRepository
         , IPersonalDonorCertificateRepository personalDonorCertificateRepository
         , IRecipientCertificateRepository recipientCertificateRepository
+        , INotificationService notificationService
+        , IHubContext<NotificationHub> hubContext
         )
     {
         _userRepository = userRepository;
@@ -36,6 +44,8 @@ public class UserService : IUserService
         _organizationDonorCertificateRepository = organizationDonorCertificateRepository;
         _personalDonorCertificateRepository = personalDonorCertificateRepository;
         _recipientCertificateRepository = recipientCertificateRepository;
+        _notificationService = notificationService;
+        _hubNotificationContext = hubContext;
     }
 
     public async Task AddUser(Account account)
@@ -44,7 +54,7 @@ public class UserService : IUserService
         await _userRepository.AddAsync(account);
     }
 
-  
+
 
     public async Task<Account> GetUserByUsernameAsync(string userEmail)
     {
@@ -186,7 +196,6 @@ public class UserService : IUserService
             RepresentativeName = certificateDto.RepresentativeName,
             RepresentativePhone = certificateDto.RepresentativePhone,
             RepresentativeEmail = certificateDto.RepresentativeEmail,
-            CreatedDate = DateTime.Now,
             Images = certificateDto.Images,
         });
 
@@ -207,7 +216,6 @@ public class UserService : IUserService
             SocialMediaLink = certificateDto.SocialMediaLink,
             MainSourceIncome = certificateDto.MainSourceIncome,
             MonthlyIncome = certificateDto.MonthlyIncome,
-            CreatedDate = DateTime.Now,
             Images = certificateDto.Images,
         });
     }
@@ -227,7 +235,6 @@ public class UserService : IUserService
             Email = certificateDto.Email,
             Circumstances = certificateDto.Circumstances,
             RegisterSupportReason = certificateDto.RegisterSupportReason,
-            CreatedDate = DateTime.Now,
             Images = certificateDto.Images,
         });
     }
@@ -240,7 +247,7 @@ public class UserService : IUserService
         config.NewConfig<PersonalDonorCertificate, DonorCertificateDto>()
             .Map(dest => dest.DonorCertificateId, src => src.PersonalDonorCertificateId);
 
-        var org = (await _organizationDonorCertificateRepository.GetAllAsync()).ToList(); 
+        var org = (await _organizationDonorCertificateRepository.GetAllAsync()).ToList();
         var per = (await _personalDonorCertificateRepository.GetAllAsync()).ToList();
 
         var rs = org.Adapt<List<DonorCertificateDto>>(config);
@@ -254,7 +261,7 @@ public class UserService : IUserService
         foreach (var donor in rs)
         {
             var cretor = allCreator.FirstOrDefault(x => x.AccountId == donor.DonorId);
-            if(cretor != null)
+            if (cretor != null)
             {
                 donor.FullName = cretor?.FullName;
                 donor.Phone = cretor.Phone;
@@ -278,7 +285,7 @@ public class UserService : IUserService
         foreach (var rep in rs)
         {
             var cretor = allCreator.FirstOrDefault(x => x.AccountId == rep.RecipientId);
-            if(cretor != null)
+            if (cretor != null)
             {
                 rep.FullName = cretor?.FullName;
                 rep.Phone = cretor.Phone;
@@ -387,48 +394,59 @@ public class UserService : IUserService
 
     public async Task ApproveCertificate(ApproveCertificateDto approveCertificateDto)
     {
+        string objectId = "";
+        string accountId = "";
         switch (approveCertificateDto.Type)
         {
             case ApproveCertificateType.PersonalDonor:
                 var pcert = await _personalDonorCertificateRepository.GetPersonalDonorCertificateByIdAsync(approveCertificateDto.CertificateId);
                 if (pcert == null) throw new Exception("Certificate Not found");
                 pcert.Status = "Approved";
-                await _personalDonorCertificateRepository.UpdateAsync(pcert.Id,pcert);
-                //Update Donnor Type
-                var puser = await GetAccountById(pcert.DonorId);
-                if (puser != null)
-                {
-                    puser.DonorType = "Personal Donor";
-                    await _userRepository.UpdateAsync(puser.Id, puser);
-                }
-
+                await _personalDonorCertificateRepository.UpdateAsync(pcert.Id, pcert);
+                objectId = pcert.PersonalDonorCertificateId;
+                accountId = pcert.DonorId;
                 break;
             case ApproveCertificateType.OrganizationDonor:
                 var ogcert = await _organizationDonorCertificateRepository.GetOrganizationDonorCertificateByIdAsync(approveCertificateDto.CertificateId);
                 if (ogcert == null) throw new Exception("Certificate Not found");
                 ogcert.Status = "Approved";
                 await _organizationDonorCertificateRepository.UpdateAsync(ogcert.Id, ogcert);
-                //Update Donnor Type
-                var ouser = await GetAccountById(ogcert.DonorId);
-                if (ouser != null)
-                {
-                    ouser.DonorType = "Organization Donor";
-                    await _userRepository.UpdateAsync(ouser.Id, ouser);
-                }
+                objectId = ogcert.OrganizationDonorCertificateId;
+                accountId = ogcert.DonorId;
                 break;
             case ApproveCertificateType.Recipient:
                 var rcert = await _recipientCertificateRepository.GetRecipientCertificateByIdAsync(approveCertificateDto.CertificateId);
                 if (rcert == null) throw new Exception("Certificate Not found");
                 rcert.Status = "Approved";
                 await _recipientCertificateRepository.UpdateAsync(rcert.Id, rcert);
+                objectId = rcert.RecipientCertificateId;
+                accountId = rcert.RecipientId;
                 break;
             default:
                 throw new Exception("Type not found");
         }
+
+        var notificationDto = new NotificationDto
+        {
+            Title = "Đã approve",
+            Content = "Chứng nhận của bạn đã được phê duyệt thành công",
+            CreatedDate = DateTime.Now,
+            NotificationType = "Approve",
+            ObjectType = "Certificate",
+            OjectId = objectId,
+            AccountId = accountId
+        };
+        //save notifiation to db
+        await _notificationService.AddNotificationAsync(notificationDto);
+        //send notification via signalR
+        await _hubNotificationContext.Clients.User(notificationDto.AccountId).SendAsync("ReceiveNotification", notificationDto);
+
     }
 
     public async Task RejectCertificate(RejectCertificateDto rejectCertificateDto)
     {
+        string objectId = "";
+        string accountId = "";
         switch (rejectCertificateDto.Type)
         {
             case ApproveCertificateType.PersonalDonor:
@@ -437,6 +455,8 @@ public class UserService : IUserService
                 pcert.Status = "Rejected";
                 pcert.RejectComment = rejectCertificateDto.Comment;
                 await _personalDonorCertificateRepository.UpdateAsync(pcert.Id, pcert);
+                objectId = pcert.PersonalDonorCertificateId;
+                accountId = pcert.DonorId;
                 break;
             case ApproveCertificateType.OrganizationDonor:
                 var ogcert = await _organizationDonorCertificateRepository.GetOrganizationDonorCertificateByIdAsync(rejectCertificateDto.CertificateId);
@@ -444,6 +464,8 @@ public class UserService : IUserService
                 ogcert.Status = "Rejected";
                 ogcert.RejectComment = rejectCertificateDto.Comment;
                 await _organizationDonorCertificateRepository.UpdateAsync(ogcert.Id, ogcert);
+                objectId = ogcert.OrganizationDonorCertificateId;
+                accountId = ogcert.DonorId;
                 break;
             case ApproveCertificateType.Recipient:
                 var rcert = await _recipientCertificateRepository.GetRecipientCertificateByIdAsync(rejectCertificateDto.CertificateId);
@@ -451,11 +473,31 @@ public class UserService : IUserService
                 rcert.Status = "Rejected";
                 rcert.RejectComment = rejectCertificateDto.Comment;
                 await _recipientCertificateRepository.UpdateAsync(rcert.Id, rcert);
+                objectId = rcert.RecipientCertificateId;
+                accountId = rcert.RecipientId;
                 break;
             default:
                 throw new Exception("Type not found");
         }
+
+        var notificationDto = new NotificationDto
+        {
+            Title = "Đã reject",
+            Content = "Rất tiếc chiến dịch của bạn không phù hợp.Bạn có thể xem lý do ",
+            CreatedDate = DateTime.Now,
+            NotificationType = "Approve",
+            ObjectType = "Campain",
+            OjectId = objectId,
+            AccountId = accountId
+        };
+        //save notifiation to db
+        await _notificationService.AddNotificationAsync(notificationDto);
+        //send notification via signalR
+        await _hubNotificationContext.Clients.User(notificationDto.AccountId).SendAsync("ReceiveNotification", notificationDto);
+
     }
+
+
 
     public async Task<Account> GetAccountById(string accountId)
     {
@@ -477,6 +519,100 @@ public class UserService : IUserService
             2//staff
         };
         var filter = Builders<Account>.Filter.In(c => c.RoleId, roleIds);
-        return (await _userRepository.GetAllAsync(filter)).Select(x=>x.AccountId).ToList();
+        return (await _userRepository.GetAllAsync(filter)).Select(x => x.AccountId).ToList();
+    }
+
+    public async Task<PersonalDonorCertificate> GetPersonalDonorCertificateById(string id)
+    {
+        var filter = Builders<PersonalDonorCertificate>.Filter.Eq(c => c.PersonalDonorCertificateId, id);
+        var getbyId = await _personalDonorCertificateRepository.GetAllAsync(filter);
+        return getbyId.FirstOrDefault();
+    }
+
+    public async Task<OrganizationDonorCertificate> GetOrganizationDonorCertificateById(string id)
+    {
+        var filter = Builders<OrganizationDonorCertificate>.Filter.Eq(c => c.OrganizationDonorCertificateId, id);
+        var getbyId = await _organizationDonorCertificateRepository.GetAllAsync(filter);
+        return getbyId.FirstOrDefault();
+    }
+
+    public async Task<RecipientCertificate> GetRecipientCertificateById(string id)
+    {
+        var filter = Builders<RecipientCertificate>.Filter.Eq(c => c.RecipientCertificateId, id);
+        var getbyId = await _recipientCertificateRepository.GetAllAsync(filter);
+        return getbyId.FirstOrDefault();
+    }
+
+    public async Task AddCertificateReviewComment(ReviewCommentCertificateDto reviewCommentCertificateDto)
+    {
+        string objectId = "";
+        string accountId = "";
+        switch (reviewCommentCertificateDto.Type)
+        {
+            case CertificateType.PersonalDonor:
+                var pcert = await _personalDonorCertificateRepository.GetPersonalDonorCertificateByIdAsync(reviewCommentCertificateDto.CertificateId);
+                if (pcert == null) throw new Exception("Certificate Not found");
+
+                if (pcert.ReviewComments == null)
+                {
+                    pcert.ReviewComments = new List<PersonalDonorCertificateReViewComment>();
+                }
+                pcert.ReviewComments.Add(new PersonalDonorCertificateReViewComment
+                {
+                    Content = reviewCommentCertificateDto.Content,
+                    CreatedDate = DateTime.Now
+                });
+                await _personalDonorCertificateRepository.UpdateAsync(pcert.Id, pcert);
+                break;
+            case CertificateType.OrganizationDonor:
+                var ogcert = await _organizationDonorCertificateRepository.GetOrganizationDonorCertificateByIdAsync(reviewCommentCertificateDto.CertificateId);
+                if (ogcert == null) throw new Exception("Certificate Not found");
+
+                if (ogcert.ReviewComments == null)
+                {
+                    ogcert.ReviewComments = new List<OrganizationDonorCertificateReViewComment>();
+                }
+                ogcert.ReviewComments.Add(new OrganizationDonorCertificateReViewComment
+                {
+                    Content = reviewCommentCertificateDto.Content,
+                    CreatedDate = DateTime.Now
+                });
+                await _organizationDonorCertificateRepository.UpdateAsync(ogcert.Id, ogcert);
+                break;
+            case CertificateType.Recipient:
+                var rcert = await _recipientCertificateRepository.GetRecipientCertificateByIdAsync(reviewCommentCertificateDto.CertificateId);
+                if (rcert == null) throw new Exception("Certificate Not found");
+
+                if (rcert.ReviewComments == null)
+                {
+                    rcert.ReviewComments = new List<RecipientCertificateReViewComment>();
+                }
+                rcert.ReviewComments.Add(new RecipientCertificateReViewComment
+                {
+                    Content = reviewCommentCertificateDto.Content,
+                    CreatedDate = DateTime.Now
+                });
+                await _recipientCertificateRepository.UpdateAsync(rcert.Id, rcert);
+                break;
+            default:
+                throw new Exception("Type not found");
+        }
+
+        //TODO: Send Email / SMS
+
+        var notificationDto = new NotificationDto
+        {
+            Title = "Cần bổ sung chứng nhận",
+            Content = "Chứng nhận của bạn còn thiếu sót.Bạn có thể xem lý do ",
+            CreatedDate = DateTime.Now,
+            NotificationType = "Approve",
+            ObjectType = "Certificate",
+            OjectId = objectId,
+            AccountId = accountId,
+        };
+        //save notifiation to db
+        await _notificationService.AddNotificationAsync(notificationDto);
+        //send notification via signalR
+        await _hubNotificationContext.Clients.User(notificationDto.AccountId).SendAsync("ReceiveNotification", notificationDto);
     }
 }

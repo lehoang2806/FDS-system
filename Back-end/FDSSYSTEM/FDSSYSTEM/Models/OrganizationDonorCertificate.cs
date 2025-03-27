@@ -27,6 +27,11 @@ namespace FDSSYSTEM.Models
         public DateTime CreatedDate { get; set; } = DateTime.Now;
         public List<string> Images { get; set; }
 
-
+        public List<OrganizationDonorCertificateReViewComment> ReviewComments { get; set; }
+    }
+    public class OrganizationDonorCertificateReViewComment
+    {
+        public DateTime CreatedDate { get; set; }
+        public string Content { get; set; }
     }
 }

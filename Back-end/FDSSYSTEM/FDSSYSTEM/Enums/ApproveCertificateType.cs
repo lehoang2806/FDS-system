@@ -6,4 +6,11 @@
         OrganizationDonor = 2,
         Recipient = 3
     }
+
+    public enum CertificateType
+    {
+        PersonalDonor = 1,
+        OrganizationDonor = 2,
+        Recipient = 3
+    }
 }

@@ -71,9 +71,6 @@ namespace FDSSYSTEM.Services.CampaignService
                 Communication = campaign.Communication,
                 LimitedQuantity = campaign.LimitedQuantity,
                 CampaignType = campaign.CampaignType,
-                CreatedDate = DateTime.Now
-
-
             };
 
             await _campaignRepository.AddAsync(newCampain);
@@ -146,8 +143,6 @@ namespace FDSSYSTEM.Services.CampaignService
                 existingCampaign.Communication = campaign.Communication;
                 existingCampaign.LimitedQuantity = campaign.LimitedQuantity;
                 existingCampaign.CampaignType = campaign.CampaignType;
-                existingCampaign.CreatedDate = campaign.CreatedDate;
-
                 await _campaignRepository.UpdateAsync(existingCampaign.Id, existingCampaign);
 
             }
@@ -281,6 +276,22 @@ namespace FDSSYSTEM.Services.CampaignService
             }
             await _campaignRepository.UpdateAsync(campain.Id, campain);
             //TODO: Send Email / SMS
+
+            var notificationDto = new NotificationDto
+            {
+                Title = "Cần bổ sung chiến dịch",
+                Content = "Chiến dịch của bạn còn thiếu sót.Bạn có thể xem lý do ",
+                CreatedDate = DateTime.Now,
+                NotificationType = "Approve",
+                ObjectType = "Campain",
+                OjectId = campain.CampaignId,
+                AccountId = campain.AccountId
+            };
+            //save notifiation to db
+            await _notificationService.AddNotificationAsync(notificationDto);
+            //send notification via signalR
+            await _hubNotificationContext.Clients.User(notificationDto.AccountId).SendAsync("ReceiveNotification", notificationDto);
+
         }
 
         public async Task Cancel(CancelCampaignDto cancelCampaignDto)

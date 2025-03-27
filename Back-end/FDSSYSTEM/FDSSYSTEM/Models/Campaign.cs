@@ -20,7 +20,7 @@ namespace FDSSYSTEM.Models
 
         public string Location { get; set; }
 
-        public int ImplementationTime { get; set; }
+        public string ImplementationTime { get; set; }
 
         public string TypeGift { get; set; }
         public string EstimatedBudget {  get; set; }
@@ -35,8 +35,8 @@ namespace FDSSYSTEM.Models
         public string CampaignType { get; set; } // giới hạn quà tặng, đăng ký thoải mái
         public List<CampainNotificaiton> ReviewComments { get; set; }
         public string CancelComment { get; set; }
-        public string StartRegisterDate { get; set; }
-        public string EndRegisterDate { get; set; }
+        public int StartRegisterDate { get; set; }
+        public int EndRegisterDate { get; set; }
         public List <string> Images {  get; set; }
         public  DateTime CreatedDate { get; set; } = DateTime.Now;
 

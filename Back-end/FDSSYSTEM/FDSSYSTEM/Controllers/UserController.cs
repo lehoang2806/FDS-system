@@ -160,6 +160,93 @@ namespace FDSSYSTEM.Controllers
             }
         }
 
+        [HttpPost("CommentCertificate")]
+        [Authorize(Roles = "Admin,Staff")]
+        public async Task<ActionResult> CommentCertificate(ReviewCommentCertificateDto reviewCommentCertificateDto)
+        {
+            try
+            {
+                await _userService.AddCertificateReviewComment(reviewCommentCertificateDto);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpGet("GetPersonalDonorCertificateById/{id}")]
+        /* [Authorize(Roles = "Staff,Admin,Donor,Recipient")]*/
+        public async Task<ActionResult> GetPersonalDonorCertificateById(string id)
+        {
+            try
+            {
+                // Gọi service để lấy chứng nhận theo ID
+                var personalDonorCertificate = await _userService.GetPersonalDonorCertificateById(id);
+
+                // Nếu chứng nhận không tìm thấy, trả về lỗi NotFound
+                if (personalDonorCertificate == null)
+                {
+                    return NotFound(new { message = "Certificate not found" });
+                }
+
+                // Trả về thông tin chi tiết của chứng nhận
+                return Ok(personalDonorCertificate);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        [HttpGet("GetOrganizationDonorCertificateById/{id}")]
+        /* [Authorize(Roles = "Staff,Admin,Donor,Recipient")]*/
+        public async Task<ActionResult> GetOrganizationDonorCertificateById(string id)
+        {
+            try
+            {
+                // Gọi service để lấy chứng nhận theo ID
+                var organizationDonorCertificate = await _userService.GetOrganizationDonorCertificateById(id);
+
+                // Nếu chứng nhận không tìm thấy, trả về lỗi NotFound
+                if (organizationDonorCertificate == null)
+                {
+                    return NotFound(new { message = "Certificate not found" });
+                }
+
+                // Trả về thông tin chi tiết của chứng nhận
+                return Ok(organizationDonorCertificate);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        [HttpGet("GetRecipientCertificateById/{id}")]
+        /* [Authorize(Roles = "Staff,Admin,Donor,Recipient")]*/
+        public async Task<ActionResult> RecipientCertificateById(string id)
+        {
+            try
+            {
+                // Gọi service để lấy chứng nhận theo ID
+                var recipientCertificate = await _userService.GetRecipientCertificateById(id);
+
+                // Nếu chứng nhận không tìm thấy, trả về lỗi NotFound
+                if (recipientCertificate == null)
+                {
+                    return NotFound(new { message = "Certificate not found" });
+                }
+
+                // Trả về thông tin chi tiết của chứng nhận
+                return Ok(recipientCertificate);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
 
         [HttpGet("GetAllDonorCertificate")]
         [Authorize(Roles = "Admin,Staff,Donor")]

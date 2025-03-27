@@ -8,7 +8,6 @@ using System.Security.Claims;
 using System.Security.Principal;
 using System.Text;
 
-
 namespace FDSSYSTEM.Repositories.UserRepository;
 
 public class UserRepository : MongoRepository<Account>, IUserRepository
@@ -18,4 +17,6 @@ public class UserRepository : MongoRepository<Account>, IUserRepository
     {
         _dbContext = dbContext; 
     }
+
+    
 }
