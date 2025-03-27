@@ -54,21 +54,26 @@ namespace FDSSYSTEM.Services.CampaignService
             {
                 CampaignId = Guid.NewGuid().ToString(),
                 AccountId = _userContextService.UserId ?? "",
-                NameCampaign = campaign.NameCampaign,
-                Description = campaign.Description,
-                GiftType = campaign.GiftType,
-                GiftQuantity = campaign.GiftQuantity,
-                Address = campaign.Address,
-                ReceiveDate = campaign.ReceiveDate,
-                DateCreated = DateTime.Now,
-                IsDeleted = false,
+                CampaignName = campaign.CampaignName,
+                CampaignDescription = campaign.CampaignDescription,
+                Location = campaign.Location,
+                ImplementationTime = campaign.ImplementationTime,
+                TypeGift = campaign.TypeGift,
+                DateUpdated = campaign.DateUpdated,
+                EstimatedBudget = campaign.EstimatedBudget,
+                AverageCostPerGift = campaign.AverageCostPerGift,
                 Status = "Pending",// Nếu không truyền, mặc định là "Pending",
                 TypeAccount = donorType, //staff, personal , organization
-                IsReceiveMulti = campaign.IsReceiveMulti,
+                Sponsors = campaign.Sponsors,
                 StartRegisterDate = campaign.StartRegisterDate,
                 EndRegisterDate = campaign.EndRegisterDate,
-                Image = campaign.Image,
-                TypeCampaign = campaign.TypeCampaign,
+                Images = campaign.Images,
+                ImplementationMethod = campaign.ImplementationMethod,
+                Communication = campaign.Communication,
+                LimitedQuantity = campaign.LimitedQuantity,
+                CampaignType = campaign.CampaignType,
+                CreatedDate = campaign.CreatedDate,
+               
             };
 
             await _campaignRepository.AddAsync(newCampain);
@@ -126,18 +131,23 @@ namespace FDSSYSTEM.Services.CampaignService
             var existingCampaign = await GetCampaignById(id);
             if (existingCampaign != null)
             {
-                existingCampaign.NameCampaign = campaign.NameCampaign;
-                existingCampaign.Description = campaign.Description;
-                existingCampaign.GiftType = campaign.GiftType;
-                existingCampaign.GiftQuantity = campaign.GiftQuantity;
-                existingCampaign.Address = campaign.Address;
-                existingCampaign.ReceiveDate = campaign.ReceiveDate;
-                existingCampaign.DateUpdated = DateTime.Now;
-                existingCampaign.IsReceiveMulti = campaign.IsReceiveMulti;
+                existingCampaign.CampaignName = campaign.CampaignName;
+                existingCampaign.CampaignDescription = campaign.CampaignDescription;
+                existingCampaign.Location = campaign.Location;
+                existingCampaign.ImplementationTime = campaign.ImplementationTime;
+                existingCampaign.TypeGift = campaign.TypeGift;
+                existingCampaign.DateUpdated = campaign.DateUpdated;
+                existingCampaign.EstimatedBudget = campaign.EstimatedBudget;
+                existingCampaign.AverageCostPerGift = campaign.AverageCostPerGift;
+                existingCampaign.Sponsors = campaign.Sponsors;
                 existingCampaign.StartRegisterDate = campaign.StartRegisterDate;
                 existingCampaign.EndRegisterDate = campaign.EndRegisterDate;
-                existingCampaign.Image = campaign.Image;
-                existingCampaign.TypeCampaign = campaign.TypeCampaign;
+                existingCampaign.Images = campaign.Images;
+                existingCampaign.ImplementationMethod = campaign.ImplementationMethod;
+                existingCampaign.Communication = campaign.Communication;
+                existingCampaign.LimitedQuantity = campaign.LimitedQuantity;
+                existingCampaign.CampaignType = campaign.CampaignType;
+                existingCampaign.CreatedDate = campaign.CreatedDate;
 
                 await _campaignRepository.UpdateAsync(existingCampaign.Id, existingCampaign);
 
