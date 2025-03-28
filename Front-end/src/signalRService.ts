@@ -20,8 +20,8 @@ const connection = new signalR.HubConnectionBuilder()
   .build();
 
 export const startConnection = async () => {
-  if (connection.state !== signalR.HubConnectionState.Disconnected) {
-    console.log("🔌 SignalR is already connected or connecting...");
+  if (connection.state === signalR.HubConnectionState.Connected) {
+    console.log("🔌 SignalR is already connected.");
     return;
   }
 
@@ -30,7 +30,7 @@ export const startConnection = async () => {
     console.log("✅ SignalR Connected!");
   } catch (err) {
     console.error("❌ SignalR Connection Error:", err);
-    setTimeout(() => startConnection(), 5000); // Thử kết nối lại sau 5 giây
+    setTimeout(() => startConnection(), 5000);
   }
 };
 

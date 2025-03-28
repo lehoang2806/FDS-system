@@ -2,26 +2,16 @@ import { selectGetAllCampaign } from '@/app/selector'
 import { useAppDispatch, useAppSelector } from '@/app/store'
 import { ActiveIcon, BlockIcon, TotalIcon } from '@/assets/icons'
 import { Loading } from '@/components/Elements'
-import { AdditionalCampaignModal, RejectCampaignModal } from '@/components/Modal'
 import { navigateHook } from '@/routes/RouteApp'
 import { routes } from '@/routes/routeName'
 import { setLoading } from '@/services/app/appSlice'
-import { approveCampaignApiThunk, getAllCampaignApiThunk } from '@/services/campaign/campaignThunk'
+import { getAllCampaignApiThunk } from '@/services/campaign/campaignThunk'
 import { FC, useEffect, useState } from 'react'
-import { toast } from 'react-toastify'
 
 const StaffListCampaignUserPage: FC = () => {
     const dispatch = useAppDispatch()
 
     const [isFiltering, setIsFiltering] = useState(false);
-
-    const [selectedRejectCampaign, setSelectedRejectCampaign] = useState<RejectCampaign | null>(null);
-
-    const [selectedAdditionalCampaign, setSelectedAdditionalCampaign] = useState<AdditionalCampaign | null>(null);
-
-    const [isRejectCampaignModalOpen, setIsRejectCampaignModalOpen] = useState(false);
-
-    const [isAdditionalCampaignModalOpen, setIsAdditionalCampaignModalOpen] = useState(false);
 
     const handleToDetail = (campaignId: string) => {
         const url = routes.staff.campaign.user.detail.replace(":id", campaignId);
@@ -64,28 +54,6 @@ const StaffListCampaignUserPage: FC = () => {
                 }, 1000);
             });
     }, []);
-
-    const handleApproveCampaign = async (values: ApproveCampaign) => {
-        try {
-            await dispatch(approveCampaignApiThunk(values)).unwrap();
-            toast.success("Approve Campaign Successfully");
-            dispatch(getAllCampaignApiThunk());
-        } catch (error) {
-            console.error("Error in approval process:", error);
-            toast.error("An error occurred while approving the certificate.");
-        }
-    };
-
-
-    const handleRejectCampaign = (campaignId: string) => {
-        setSelectedRejectCampaign({ campaignId, comment: "" });
-        setIsRejectCampaignModalOpen(true);
-    };
-
-    const handleAdditionalCampaign = (campaignId: string) => {
-        setSelectedAdditionalCampaign({ campaignId, content: "" });
-        setIsAdditionalCampaignModalOpen(true);
-    };
 
     return (
         <section id="staff-list-campaign-user" className="staff-section">
@@ -142,12 +110,6 @@ const StaffListCampaignUserPage: FC = () => {
                                     Campaign Name
                                 </th>
                                 <th className="table-head-cell">
-                                    Address
-                                </th>
-                                <th className="table-head-cell">
-                                    Receive Date
-                                </th>
-                                <th className="table-head-cell">
                                     Description
                                 </th>
                                 <th className="table-head-cell">
@@ -161,20 +123,11 @@ const StaffListCampaignUserPage: FC = () => {
                         <tbody className="table-body">
                             {filteredCampaigns.map((campaign, index) => (
                                 <tr className="table-body-row" key={index}>
-                                    <td className='table-body-cell'>{campaign.nameCampaign}</td>
-                                    <td className='table-body-cell'>{campaign.address}</td>
-                                    <td className='table-body-cell'>{campaign.receiveDate}</td>
-                                    <td className='table-body-cell'>{campaign.description}</td>
+                                    <td className='table-body-cell'>{campaign.campaignName}</td>
+                                    <td className='table-body-cell'>{campaign.campaignDescription}</td>
                                     <td className='table-body-cell'>{campaign.status === "Pending" ? <span className='status-pending'>Pending</span> : campaign.status === "Approved" ? <span className='status-approve'>Approve</span> : <span className='status-reject'>Reject</span>}</td>
                                     <td className="table-body-cell">
                                         <button className='view-btn' onClick={() => handleToDetail(campaign.campaignId)}>View</button>
-                                        {campaign.status === "Pending" && (
-                                            <>
-                                                <button className='approve-btn' onClick={() => handleApproveCampaign({ campaignId: campaign.campaignId })}>Approve</button>
-                                                <button className='reject-btn' onClick={() => handleRejectCampaign(campaign.campaignId)}>Reject</button>
-                                                <button className='additional-btn' onClick={() => handleAdditionalCampaign(campaign.campaignId)}>Additional</button>
-                                            </>
-                                        )}
                                     </td>
                                 </tr>
                             ))}
@@ -183,8 +136,6 @@ const StaffListCampaignUserPage: FC = () => {
                     </table>
                 </div>
             </div>
-            <RejectCampaignModal isOpen={isRejectCampaignModalOpen} setIsOpen={setIsRejectCampaignModalOpen} selectedCampaign={selectedRejectCampaign} />
-            <AdditionalCampaignModal isOpen={isAdditionalCampaignModalOpen} setIsOpen={setIsAdditionalCampaignModalOpen} selectedCampaign={selectedAdditionalCampaign} />
         </section>
     )
 }

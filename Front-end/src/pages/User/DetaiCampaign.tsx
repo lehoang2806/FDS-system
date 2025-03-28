@@ -11,7 +11,7 @@ import { getAllRegisterReceiversApiThunk } from '@/services/registerReceive/regi
 import React, { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom';
 
-const DetailCampaignPage: React.FC = () => {
+const UserDetailCampaignPage: React.FC = () => {
     const userLogin = useAppSelector(selectUserLogin);
 
     const [activeTab, setActiveTab] = useState<"mota" | "dangky">("mota");
@@ -21,8 +21,6 @@ const DetailCampaignPage: React.FC = () => {
     const dispatch = useAppDispatch();
 
     const currentCampaign = useAppSelector(selectCurrentCampaign);
-
-    console.log(currentCampaign)
 
     const campaigns = useAppSelector(selectGetAllCampaign)
 
@@ -93,26 +91,26 @@ const DetailCampaignPage: React.FC = () => {
     }
 
     return (
-        <main id="detail-campaign">
-            <section id="dc-section">
-                <div className="dcs-container">
-                    <div className="dcscr1">
-                        <div className="dcscr1c1">
-                            <div className="dcscr1c1r1">
-                                <h1>{currentCampaign?.campaignName}</h1>
+        <main id="user-detail-campaign">
+            <section id="udc-section">
+                <div className="udcs-container">
+                    <div className="udcscr1">
+                        <div className="udcscr1c1">
+                            <div className="udcscr1c1r1">
+                                <h1>{currentCampaign?.campaignName} - <span>{currentCampaign?.status}</span></h1>
                             </div>
-                            <div className="dcscr1c1r3">
+                            <div className="udcscr1c1r3">
                                 <div
-                                    className={`dcscr1c1r3-tags-item ${activeTab === "mota" ? "dcscr1c1r3-tags-item-actived" : ""}`}
+                                    className={`udcscr1c1r3-tags-item ${activeTab === "mota" ? "udcscr1c1r3-tags-item-actived" : ""}`}
                                     onClick={() => setActiveTab("mota")}
                                 >
                                     Mô tả
                                 </div>
                             </div>
-                            <div className="dcscr1c1r4">
-                                <div className="dcscr1c1r4-content">{currentCampaign?.campaignDescription}</div>
+                            <div className="udcscr1c1r4">
+                                <div className="udcscr1c1r4-content">{currentCampaign?.campaignDescription}</div>
                             </div>
-                            <div className="dcscr1c1r4">
+                            <div className="udcscr1c1r4">
                                 {selectedImage && (
                                     <img
                                         src={selectedImage}
@@ -127,7 +125,7 @@ const DetailCampaignPage: React.FC = () => {
                                     />
                                 )}
                             </div>
-                            <div className="dcscr1c1r4">
+                            <div className="udcscr1c1r4">
                                 {currentCampaign?.images?.map((img, index) => (
                                     <img
                                         key={index}
@@ -148,8 +146,8 @@ const DetailCampaignPage: React.FC = () => {
                                 ))}
                             </div>
                         </div>
-                        <div className="dcscr1c2">
-                            <div className="dcscr1c2r1">
+                        <div className="udcscr1c2">
+                            <div className="udcscr1c2r1">
                                 <div>
                                     <h4>Phần quà</h4>
                                     <p>{currentCampaign?.limitedQuantity} - {currentCampaign?.typeGift}</p>
@@ -157,48 +155,71 @@ const DetailCampaignPage: React.FC = () => {
                                 <div>
                                     <h4>Thời gian & Địa điểm</h4>
                                     <p>{currentCampaign?.location}</p>
-                                    <p>{date} - {time}</p>
+                                    <p>{date}</p>
+                                    <p>{time}</p>
                                 </div>
                                 {userLogin?.roleId === 4 && (
                                     <button className='sc-btn' onClick={handleRegisterReceiver}>Đăng ký nhận hỗ trợ</button>
                                 )}
                             </div>
-                            <div className="dcscr1c2r2">
-                                <h3>Danh sách dăng ký nhận hỗ trợ</h3>
-                                <div className="dcscr1c2r2-lists">
-                                    {currentRegisterReceivers.length > 0 ? (
-                                        currentRegisterReceivers.map((registerReceiver) => (
-                                            <Subscriber key={registerReceiver.registerReceiverId} registerReceiver={registerReceiver} />
+                            {currentCampaign?.status === "Approved" && (
+                                <div className="udcscr1c2r2">
+                                    <h3>Danh sách dăng ký nhận hỗ trợ</h3>
+                                    <div className="udcscr1c2r2-lists">
+                                        {currentRegisterReceivers.length > 0 ? (
+                                            currentRegisterReceivers.map((registerReceiver) => (
+                                                <Subscriber key={registerReceiver.registerReceiverId} registerReceiver={registerReceiver} />
+                                            ))
+                                        ) : (
+                                            <h1>Chưa có người đăng ký</h1>
+                                        )
+                                        }
+                                    </div>
+                                </div>
+                            )}
+                            {currentCampaign?.status === "Pending" && (
+                                <>
+                                    <div className="sdcucr2r5">
+                                        <h3>Cần bổ sung các thông tin sau:</h3>
+                                        {currentCampaign.reviewComments?.map((comment, index) => (
+                                            <p key={index} style={{ whiteSpace: "pre-line" }}>{comment.content}</p>
+                                        ))}
+                                    </div>
+                                </>
+                            )}
+                            {currentCampaign?.status === "Rejected" && (
+                                <>
+                                    <h3>Lí do bị từ chối</h3>
+                                    <p>{currentCampaign.rejectComment}</p>
+                                </>
+                            )}
+                        </div>
+                    </div>
+                    {currentCampaign?.status === "Approved" && (
+                        <>
+                            <div className="line"></div>
+                            <div className="udcscr2">
+                                <div className="udcscr2r1">
+                                    <h2>Các chiến dịch khác</h2>
+                                    <Link to={routes.user.campaign.list}>Xem tất cả</Link>
+                                </div>
+                                <div className="udcscr2r2">
+                                    {otherCampaigns.length > 0 ? (
+                                        otherCampaigns.map((campaign) => (
+                                            <CampaignCard
+                                                campaign={campaign}
+                                                key={campaign.campaignId}
+                                                onClickDetail={() => handleToDetail(campaign.campaignId)}
+                                            />
                                         ))
                                     ) : (
-                                        <h1>Chưa có người đăng ký</h1>
+                                        <h1>Chưa có dữ liệu</h1>
                                     )
                                     }
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    <div className="line"></div>
-                    <div className="dcscr2">
-                        <div className="dcscr2r1">
-                            <h2>Các chiến dịch khác</h2>
-                            <Link to={routes.user.campaign.list}>Xem tất cả</Link>
-                        </div>
-                        <div className="dcscr2r2">
-                            {otherCampaigns.length > 0 ? (
-                                otherCampaigns.map((campaign) => (
-                                    <CampaignCard
-                                        campaign={campaign}
-                                        key={campaign.campaignId}
-                                        onClickDetail={() => handleToDetail(campaign.campaignId)}
-                                    />
-                                ))
-                            ) : (
-                                <h1>Chưa có dữ liệu</h1>
-                            )
-                            }
-                        </div>
-                    </div>
+                        </>
+                    )}
                 </div>
             </section>
             <RemindCertificateModal isOpen={isRemindCertificateModalOpend} setIsOpen={setIsRemindCertificateModalOpend} />
@@ -207,4 +228,4 @@ const DetailCampaignPage: React.FC = () => {
     )
 }
 
-export default DetailCampaignPage
+export default UserDetailCampaignPage

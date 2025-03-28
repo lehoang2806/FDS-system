@@ -25,32 +25,32 @@ const StaffHeader: FC = () => {
 
     useEffect(() => {
         startConnection();
-    
+
         connection.on("ReceiveNotification", (notification: any) => {
             const correctedNotification: NotificationDto = {
                 ...notification,
                 objectId: notification.objectId || notification.ojectId, // Fix lỗi objectId bị sai tên
             };
-    
+
             setNotifications((prev) => [correctedNotification, ...prev]);
-            toast.info(`🔔 ${correctedNotification.title}`);
+            toast.info(`🔔 ${correctedNotification.content}`);
         });
-    
+
         connection.on("LoadOldNotifications", (oldNotifications: any[]) => {
             const correctedNotifications: NotificationDto[] = oldNotifications.map((notif) => ({
                 ...notif,
                 objectId: notif.objectId || notif.ojectId,
             }));
-    
+
             setNotifications(correctedNotifications);
         });
-    
+
         return () => {
             connection.off("ReceiveNotification");
             connection.off("LoadOldNotifications");
         };
     }, []);
-    
+
 
     const unreadCount = notifications.filter((notif) => !notif.isRead).length;
 
@@ -76,7 +76,12 @@ const StaffHeader: FC = () => {
         console.log("Navigating to:", url);
         navigateHook(url);
     };
-    
+
+    const markAsRead = (index: number) => {
+        setNotifications((prev) =>
+            prev.map((notif, i) => (i === index ? { ...notif, isRead: true } : notif))
+        );
+    };
 
     return (
         <header id="staff-header" className="sh-collapsed">
@@ -91,13 +96,43 @@ const StaffHeader: FC = () => {
                         {isNotifOpen && (
                             <div className="notification-dropdown">
                                 {notifications.length > 0 ? (
-                                    notifications.map((notif, index) => (
-                                        <div key={index} className="notification-item" onClick={() => handleToDetailUserCampaign(notif.objectId)}>
-                                            <strong>Có một chiến dịch mới được tạo</strong>
-                                            <p>Đi đến chiến dịch</p>
-                                            <small>{notif.createdDate}</small>
-                                        </div>
-                                    ))
+                                    notifications.map((notif) => {
+                                        if (notif.objectType === "Campain") {
+                                            let actionText = "";
+                                            if (notif.notificationType === "Pending") actionText = "Có chiến dịch được tạo";
+                                    
+                                            if (actionText) {
+                                                return (
+                                                    <div
+                                                        key={notif.objectId || notif.createdDate}
+                                                        className={`notification-item ${notif.isRead ? "read" : "unread"}`}
+                                                        onClick={() => {markAsRead(notifications.indexOf(notif)); handleToDetailUserCampaign(notif.objectId)}}
+                                                    >
+                                                        <strong>{notif.content}</strong>
+                                                        <p>{actionText}</p>
+                                                    </div>
+                                                );
+                                            }
+                                        }
+                                        if (notif.objectType === "Certificate") {
+                                            let actionText = "";
+                                            if (notif.notificationType === "Pending") actionText = "Có chiến dịch được tạo";
+                                    
+                                            if (actionText) {
+                                                return (
+                                                    <div
+                                                        key={notif.objectId || notif.createdDate}
+                                                        className={`notification-item ${notif.isRead ? "read" : "unread"}`}
+                                                        onClick={() => {markAsRead(notifications.indexOf(notif))}}
+                                                    >
+                                                        <strong>{notif.content}</strong>
+                                                        <p>{actionText}</p>
+                                                    </div>
+                                                );
+                                            }
+                                        }
+                                        return null;
+                                    })
                                 ) : (
                                     <div className="notification-empty">Không có thông báo</div>
                                 )}

@@ -26,7 +26,9 @@ export const routes = {
         personal: "/user/personal",
         submit_certificate: "/user/submit-certificate",
         change_pass: "/user/change-pass",
-        new_pass: "/user/new-pass"
+        new_pass: "/user/new-pass",
+        detail_campaign: "/user/campaign/:id/detail",
+        detail_certificate: "/user/certificate/:id/detail",
     },
     admin: {
         dashboard: "/admin",

@@ -45,6 +45,8 @@ interface UserState {
     listUser: UserInfo[];
     listDonorCertificate: DonorCertificate[];
     listRecipientCertificate: RecipientCertificate[];
+    currentDonorPersonalCertificate: currentPersonalDonorCertificate | null;
+    currentDonorOrganizationCertificate: currentOrganizationDonorCertificate | null;
 }
 
 interface PersonalDonor {
@@ -128,4 +130,47 @@ interface RejectCertificate {
 interface ConfirmUser {
     accountId: string;
     type: string;
+}
+
+interface currentPersonalDonorCertificate {
+    id: string;
+    donorId: string;
+    personalDonorCertificateId: string;
+    citizenId: string;
+    status: string;
+    rejectComment?: string | null;
+    createdDate: string;
+    fullName: string;
+    birthDay: string;
+    email: string;
+    phone: string;
+    address: string;
+    socialMediaLink?: string;
+    mainSourceIncome: string;
+    monthlyIncome: number;
+    images: string[];
+    reviewComments?: ReviewComment[] | null;
+}
+
+interface currentOrganizationDonorCertificate {
+    id: string;
+    donorId: string;
+    organizationDonorCertificateId: string;
+    organizationName: string;
+    taxIdentificationNumber: string;
+    status: string;
+    rejectComment?: string | null;
+    organizationAbbreviatedName: string;
+    organizationType: string;
+    mainBusiness: string;
+    organizationAddress: string;
+    contactPhone: string;
+    organizationEmail: string;
+    websiteLink: string;
+    representativeName: string;
+    representativePhone: string;
+    representativeEmail: string;
+    createdDate: string;
+    images: string[];
+    reviewComments?: ReviewComment[] | null;
 }

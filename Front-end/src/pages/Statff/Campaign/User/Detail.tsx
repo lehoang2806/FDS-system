@@ -29,8 +29,9 @@ const StaffDetailCampaignUserPage: FC = () => {
 
     const [isAdditionalCampaignModalOpen, setIsAdditionalCampaignModalOpen] = useState(false);
 
-    const date = currentCampaign?.receiveDate.split("T")[0];
-    const time = currentCampaign?.receiveDate.split("T")[1].replace("Z", "");
+    const date = currentCampaign?.implementationTime.split("T")[0];
+    const time = currentCampaign?.implementationTime.split("T")[1].replace("Z", "");
+    const dateCreate = currentCampaign?.createdDate.split("T")[0];
 
     useEffect(() => {
         if (id) {
@@ -99,26 +100,51 @@ const StaffDetailCampaignUserPage: FC = () => {
                         </div>
                         <div className="sdcucr2r2c2">
                             <h3>Created Date:</h3>
-                            <p>{currentCampaign?.dateCreated}</p>
+                            <p>{dateCreate}</p>
                         </div>
                     </div>
                     <hr />
                     <div className="sdcucr2r3">
                         <div className="sdcucr2r3c1">
+                            <h2>Campaign Information</h2>
                             <h3>Campaign Name:</h3>
-                            <p>{currentCampaign?.nameCampaign}</p>
+                            <p>{currentCampaign?.campaignName}</p>
                             <h3>Campaign Description:</h3>
-                            <p>{currentCampaign?.description}</p>
-                            <h3>Gift Quantity:</h3>
-                            <p>{currentCampaign?.giftQuantity}</p>
+                            <p>{currentCampaign?.campaignDescription}</p>
                             <h3>Gift Type:</h3>
-                            <p>{currentCampaign?.giftType}</p>
+                            <p>{currentCampaign?.typeGift}</p>
+                            <h3>Location:</h3>
+                            <p>{currentCampaign?.location}</p>
+                            <h3>Implementation Time:</h3>
+                            <p>{date} & {time}</p>
+                            <h3>Implementation Method:</h3>
+                            <p>{currentCampaign?.implementationMethod}</p>
+                            {currentCampaign?.campaignType === "Limited" && (
+                                <>
+                                    <h3>Number of Gifts:</h3>
+                                    <p>{currentCampaign?.limitedQuantity}</p>
+                                </>
+                            )}
+                            {currentCampaign?.campaignType === "Voluntary" && (
+                                <>
+                                    <h3>Start Register Date:</h3>
+                                    <p>{currentCampaign?.startRegisterDate}</p>
+                                    <h3>End Register Date:</h3>
+                                    <p>{currentCampaign?.endRegisterDate}</p>
+                                </>
+                            )}
                         </div>
                         <div className="sdcucr2r3c2">
-                            <h3>Receive Date:</h3>
-                            <p>{date}</p>
-                            <h3>Receive Time:</h3>
-                            <p>{time}</p>
+                            <h2>Financial information</h2>
+                            <h3>Estimated Budget:</h3>
+                            <p>{currentCampaign?.estimatedBudget}</p>
+                            <h3>Average cost per gift:</h3>
+                            <p>{currentCampaign?.averageCostPerGift}</p>
+                            <h2>Media</h2>
+                            <h3>Sponsor:</h3>
+                            <p>{currentCampaign?.sponsors}</p>
+                            <h3>Communication:</h3>
+                            <p>{currentCampaign?.communication}</p>
                         </div>
                     </div>
                     <div className="sdcucr2r4">
@@ -128,12 +154,14 @@ const StaffDetailCampaignUserPage: FC = () => {
                     </div>
                     {currentCampaign?.status === "Pending" && (
                         <>
-                            <div className="sdcucr2r5">
-                                <h3>Review Comments</h3>
-                                {currentCampaign.reviewComments?.map((comment, index) => (
-                                    <p key={index}>{comment.content}</p>
-                                ))}
-                            </div>
+                            {currentCampaign.reviewComments && currentCampaign.reviewComments?.length > 0 && (
+                                <div className="sdcucr2r5">
+                                    <h3>Review Comments</h3>
+                                    {currentCampaign.reviewComments?.map((comment, index) => (
+                                        <p key={index} style={{ whiteSpace: "pre-line" }}>{comment.content}</p>
+                                    ))}
+                                </div>
+                            )}
                             <button className='approve-btn' onClick={() => handleApproveCampaign({ campaignId: String(id) })}>Approve</button>
                             <button className='reject-btn' onClick={() => handleRejectCampaign(String(id))}>Reject</button>
                             <button className='additional-btn' onClick={() => handleAdditionalCampaign(String(id))}>Additional</button>

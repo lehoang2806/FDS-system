@@ -45,3 +45,13 @@ export const getAllRecipientCertificateApi = async () => {
     const data = await request.get('api/user/getAllRecipientCertificate');
     return data.data;
 }
+
+export const getPersonalDonorCertificateByIdApi = async (personalDonorCertificateId: string) => {
+    const data = await request.get(`api/user/GetPersonalDonorCertificateById/${personalDonorCertificateId}`);
+    return data.data;
+}
+
+export const getOrganizationDonorCertificateByIdApi = async (organizationDonorCertificateId: string) => {
+    const data = await request.get(`api/user/GetOrganizationDonorCertificateById/${organizationDonorCertificateId}`);
+    return data.data;
+}

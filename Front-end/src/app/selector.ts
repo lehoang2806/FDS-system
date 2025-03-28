@@ -1,7 +1,7 @@
 import { Selector } from "@/types/app";
 import { UserProfile } from "@/types/auth";
 import { RootState } from "./reducer";
-import { DonorCertificate, RecipientCertificate, UserInfo } from "@/types/user";
+import { currentOrganizationDonorCertificate, currentPersonalDonorCertificate, DonorCertificate, RecipientCertificate, UserInfo } from "@/types/user";
 
 export const selectLoading: Selector<boolean> = (state: RootState) => {
     return state.app.loading;
@@ -30,6 +30,14 @@ export const selectGetAllDonorCertificate: Selector<DonorCertificate[]> = (state
 
 export const selectGetAllRecipientCertificate: Selector<RecipientCertificate[]> = (state: RootState) => {
     return state.user.listRecipientCertificate;
+}
+
+export const selectGetPersonalDonorCertificateById: Selector<currentPersonalDonorCertificate> = (state: RootState) => {
+    return state.user.currentDonorPersonalCertificate as currentPersonalDonorCertificate;
+}
+
+export const selectGetOrganizationDonorCertificateById: Selector<currentOrganizationDonorCertificate> = (state: RootState) => {
+    return state.user.currentDonorOrganizationCertificate as currentOrganizationDonorCertificate;
 }
 
 //Campaign
