@@ -10,6 +10,9 @@ using Microsoft.Extensions.Hosting;
 using MongoDB.Driver;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using FDSSYSTEM.Services.NotificationService;
+using FDSSYSTEM.SignalR;
+using Microsoft.AspNetCore.SignalR;
 
 namespace FDSSYSTEM.Services.RegisterReceiverService
 {
@@ -18,13 +21,22 @@ namespace FDSSYSTEM.Services.RegisterReceiverService
         private readonly IRegisterReceiverRepository _registerReceiverRepository;
         private readonly IUserRepository _userRepository;
         private readonly IUserContextService _userContextService;
+        private readonly IUserService _userService;
+        private readonly INotificationService _notificationService;
+
+        private readonly IHubContext<NotificationHub> _hubNotificationContext;
 
         public RegisterReceiverService(IRegisterReceiverRepository registerReceiverRepository,
-             IUserRepository userRepository, IUserContextService userContextService)
+             IUserRepository userRepository,  IUserContextService userContextService, IUserService userService
+            , INotificationService notificationService
+            , IHubContext<NotificationHub> hubContext)
         {
            _registerReceiverRepository = registerReceiverRepository;
             _userRepository = userRepository;
             _userContextService = userContextService;
+            _userService = userService;
+            _notificationService = notificationService;
+            _hubNotificationContext = hubContext;
         }
 
         // Lấy tất cả các RegisterReceiver
@@ -67,7 +79,7 @@ namespace FDSSYSTEM.Services.RegisterReceiverService
         // Tạo một RegisterReceiver mới
         public async Task Create(RegisterReceiverDto registerReceiver)
         {
-            await _registerReceiverRepository.AddAsync(new RegisterReceiver
+            var newRegisterReceiver = new RegisterReceiver
             {
                 AccountId = _userContextService.UserId ?? "",
                 RegisterReceiverName = registerReceiver.RegisterReceiverName,
@@ -75,7 +87,28 @@ namespace FDSSYSTEM.Services.RegisterReceiverService
                 CreatAt = registerReceiver.CreatAt,
                 RegisterReceiverId = Guid.NewGuid().ToString(),
                 CampaignId = registerReceiver.CampaignId,
-            });
+            };
+            await _registerReceiverRepository.AddAsync(newRegisterReceiver);
+
+            //Send notifiction all staff and admin
+            var userReceiveNotifications = await _userService.GetAllAdminAndStaffId();
+            foreach (var userId in userReceiveNotifications)
+            {
+                var notificationDto = new NotificationDto
+                {
+                    Title = "Yêu cầu hỗ trợ mới được tạo",
+                    Content = "Có chiến dịch mới được tạo ra",
+                    NotificationType = "Pending",
+                    ObjectType = "RegisterReceiver",
+                    OjectId = newRegisterReceiver.RegisterReceiverId,
+                    AccountId = userId
+                };
+                //save notifiation to db
+                await _notificationService.AddNotificationAsync(notificationDto);
+                //send notification via signalR
+                await _hubNotificationContext.Clients.User(notificationDto.AccountId).SendAsync("ReceiveNotification", notificationDto);
+            }
+
         }
 
         // Cập nhật một RegisterReceiver theo ID
@@ -87,12 +120,28 @@ namespace FDSSYSTEM.Services.RegisterReceiverService
                 existingRegisterReceiver.RegisterReceiverName = registerReceiver.RegisterReceiverName;
                 existingRegisterReceiver.Quantity = registerReceiver.Quantity;
                 existingRegisterReceiver.CreatAt = registerReceiver.CreatAt;
-                existingRegisterReceiver.DateUpdated = DateTime.Now;
                 existingRegisterReceiver.CampaignId = registerReceiver.CampaignId;
                 await _registerReceiverRepository.UpdateAsync(existingRegisterReceiver.Id, existingRegisterReceiver);
             }
+
+            var userReceiveNotifications = await _userService.GetAllAdminAndStaffId();
+            foreach (var userId in userReceiveNotifications)
+            {
+                var notificationDto = new NotificationDto
+                {
+                    Title = "Có một chiến dịch hỗ trợ mới được cập nhật",
+                    Content = "có chiến dịch mới vừa được cập nhật",
+                    NotificationType = "Update",
+                    ObjectType = "RegisterReceiver",
+                    OjectId = existingRegisterReceiver.RegisterReceiverId,
+                    AccountId = userId
+                };
+                //save notifiation to db
+                await _notificationService.AddNotificationAsync(notificationDto);
+                //send notification via signalR
+                await _hubNotificationContext.Clients.User(notificationDto.AccountId).SendAsync("ReceiveNotification", notificationDto);
+            }
+
         }
-
-
     }
 }
