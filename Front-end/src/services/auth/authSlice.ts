@@ -29,8 +29,6 @@ export const authSlice = createSlice({
         .addCase(loginApiThunk.fulfilled, (state, action: PayloadAction<ResponseFromServer<AuthResponse>>) => {
             let token = get(action, 'payload.token', null);
             let dataUser = get(action, 'payload.userInfo', null);
-
-            console.log(token)
             
             state.token = token;
             state.isAuthenticated = true;

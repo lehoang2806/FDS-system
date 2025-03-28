@@ -50,11 +50,11 @@ const AdditionalCampaignModal: FC<AdditionalCampaignModalProps> = ({ isOpen, set
                     <form className="form" onSubmit={handleSubmit}>
                         <div className="form-field">
                             <label className="form-label">Yêu cầu bổ sung</label>
-                            <input
-                                type="text"
+                            <textarea
                                 className="form-input"
                                 placeholder="Vui lòng nhập điều cần bổ sung"
                                 value={content}
+                                rows={10}
                                 onChange={(e) => setContent(e.target.value)}
                             />
                         </div>

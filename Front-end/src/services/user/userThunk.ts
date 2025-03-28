@@ -1,6 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { approveCertificateApi, confirmUserApi, createOrganizationDonorCertificateApi, createPersonalDonorCertificateApi, createRecipientCertificateApi, getAllDonorCertificateApi, getAllRecipientCertificateApi, getAllUserApi, rejectCertificateApi } from "./userApi";
-import { AddRecipientCertificate, ApproveCertificate, ConfirmUser, DonorCertificate, OrganizationDonor, PersonalDonor, RecipientCertificate, RejectCertificate, UserInfo } from "@/types/user";
+import { approveCertificateApi, confirmUserApi, createOrganizationDonorCertificateApi, createPersonalDonorCertificateApi, createRecipientCertificateApi, getAllDonorCertificateApi, getAllRecipientCertificateApi, getAllUserApi, getOrganizationDonorCertificateByIdApi, getPersonalDonorCertificateByIdApi, rejectCertificateApi } from "./userApi";
+import { AddRecipientCertificate, ApproveCertificate, ConfirmUser, currentOrganizationDonorCertificate, currentPersonalDonorCertificate, DonorCertificate, OrganizationDonor, PersonalDonor, RecipientCertificate, RejectCertificate, UserInfo } from "@/types/user";
 import { TextResponse } from "@/types/auth";
 import { ResponseFromServer } from "@/types/app";
 
@@ -13,6 +13,8 @@ const REJECT_CERTIFICATE = 'REJECT_CERTIFICATE';
 const CONFIRM_USER = 'CONFIRM_USER';
 const CREATE_RECIPIENT_CERTIFICATE = 'CREATE_RECIPIENT_CERTIFICATE';
 const GET_ALL_RECIPIENT_CERTIFICATE = 'GET_ALL_RECIPIENT_CERTIFICATE';
+const GET_PERSONAL_DONOR_CERTIFICATE_BY_ID = 'GET_PERSONAL_DONOR_CERTIFICATE_BY_ID';
+const GET_ORGANIZATION_DONOR_CERTIFICATE_BY_ID = 'GET_ORGANIZATION_DONOR_CERTIFICATE_BY_ID';
 
 export const getAllUserApiThunk = createAsyncThunk<UserInfo[]>(
     GET_ALL_USER,
@@ -148,3 +150,33 @@ export const getAllRecipientCertificateApiThunk = createAsyncThunk<RecipientCert
         }
     },
 );
+
+export const getPersonalDonorCertificateByIdApiThunk = createAsyncThunk<currentPersonalDonorCertificate, string>(
+    GET_PERSONAL_DONOR_CERTIFICATE_BY_ID,
+    async (payload, { rejectWithValue }) => {
+        try {
+            const response = await getPersonalDonorCertificateByIdApi(payload);
+            return response;
+        } catch (err: any) {
+            return rejectWithValue({
+                errorMessage: err.message,
+                data: err.response.data,
+            });
+        }
+    },
+)
+
+export const getOrganizationDonorCertificateByIdApiThunk = createAsyncThunk<currentOrganizationDonorCertificate, string>(
+    GET_ORGANIZATION_DONOR_CERTIFICATE_BY_ID,
+    async (payload, { rejectWithValue }) => {
+        try {
+            const response = await getOrganizationDonorCertificateByIdApi(payload);
+            return response;
+        } catch (err: any) {
+            return rejectWithValue({
+                errorMessage: err.message,
+                data: err.response.data,
+            });
+        }
+    },
+)

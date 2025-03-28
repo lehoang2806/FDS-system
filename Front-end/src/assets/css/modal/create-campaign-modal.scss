@@ -1,5 +1,6 @@
 #create-campaign-modal {
     padding: 0 30px;
+    width: 1200px;
 
     .ccm-container {
         text-align: center;
@@ -11,7 +12,17 @@
             margin-bottom: 40px;
         }
 
+        h3 {
+            text-align: start;
+            font-size: 20px;
+            font-weight: 700;
+            color: #272d4e;
+            margin-bottom: 10px;
+        }
+
         .form {
+            width: 100%;
+
             .form-field {
                 text-align: start;
             }
