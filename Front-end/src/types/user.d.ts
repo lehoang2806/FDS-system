@@ -49,21 +49,45 @@ interface UserState {
 
 interface PersonalDonor {
     citizenId: string;
+    fullName: string;
+    birthDay: string;
+    email: string;
+    phone: string;
+    address: string;
+    socialMediaLink: string;
+    mainSourceIncome: string;
+    monthlyIncome: string;
     images: string[];
 }
 
 interface OrganizationDonor {
     organizationName: string;
     taxIdentificationNumber: string;
+    organizationAbbreviatedName: string;
+    organizationType: string;
+    mainBusiness: string;
+    organizationAddress: string;
+    contactPhone: string;
+    organizationEmail: string;
+    websiteLink: string;
     representativeName: string;
     representativePhone: string;
-    representativeCitizenId: string;
     representativeEmail: string;
     images: string[];
 }
 
 interface AddRecipientCertificate {
     citizenId: string;
+    fullName: string;
+    email: string;
+    phone: string;
+    address: string;
+    birthDay: string;
+    circumstances: string;
+    registerSupportReason: string;
+    mainSourceIncome: string;
+    monthlyIncome: string;
+    images: string[];
 }
 
 interface DonorCertificate {

@@ -1,0 +1,55 @@
+.notification-wrapper {
+    position: relative;
+
+    .notification-dropdown {
+        position: absolute;
+        width: 350px;
+        right: 0;
+        padding: 10px;
+        background: #fff;
+        border-radius: var(--border-radius-16);
+        box-shadow: 0px 1px 16px 0px rgba(0, 0, 0, 0.15);
+
+        .notification-item {
+            padding: 10px;
+            border-radius: var(--border-radius-12);
+            cursor: pointer;
+
+            &:hover {
+                background: #e9ecef;
+            }
+
+            strong {
+                font-size: 18px;
+                font-weight: 600;
+            }
+
+            p {
+                font-size: 14px;
+                font-weight: 400;
+                margin-top: 5px;
+                color: rgba(99, 91, 255, 1);
+            }
+        }
+    }
+
+    .notification-icon-wrapper {
+        position: relative;
+        display: inline-block;
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: red;
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    }
+}

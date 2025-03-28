@@ -1,14 +1,19 @@
 interface AddCampaign {
-    nameCampaign: string;
-    description: string;
-    giftType: string;
-    giftQuantity: number;
-    address: string;
-    receiveDate: string;
+    campaignName: string;
+    campaignDescription: string;
+    location: string;
+    implementationTime: string;
+    typeGift: string;
+    estimatedBudget: string;
+    averageCostPerGift: string;
+    sponsors: string;
+    implementationMethod: string;
+    communication: string;
+    limitedQuantity: string;
+    campaignType: string;
     startRegisterDate: string;
     endRegisterDate: string;
-    images: [];
-    typeCampaign: string | "Limited" | "Voluntary";
+    images: string[];
 }
 
 interface CampaignInfo {
