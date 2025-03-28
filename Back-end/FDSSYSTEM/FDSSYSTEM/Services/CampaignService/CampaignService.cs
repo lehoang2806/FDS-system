@@ -83,7 +83,7 @@ namespace FDSSYSTEM.Services.CampaignService
                 {
                     Title = "Campain mới được tạo",
                     Content = "Có chiến dịch mới được tạo ra",
-                    NotificationType = "Approve",
+                    NotificationType = "Pending",
                     ObjectType = "Campain",
                     OjectId = newCampain.CampaignId,
                     AccountId = userId
@@ -151,9 +151,9 @@ namespace FDSSYSTEM.Services.CampaignService
             {
                 var notificationDto = new NotificationDto
                 {
-                    Title = "Campain mới được update",
+                    Title = "Chiến dịch mới được cập nhật",
                     Content = "có chiến dịch mới vừa được cập nhật",
-                    NotificationType = "Approve",
+                    NotificationType = "Update",
                     ObjectType = "Campain",
                     OjectId = existingCampaign.CampaignId,
                     AccountId = userId
@@ -216,7 +216,7 @@ namespace FDSSYSTEM.Services.CampaignService
             //Send notifiction
             var notificationDto = new NotificationDto
             {
-                Title = "Đã approve",
+                Title = "Phê duyệt chiến dịch thành công",
                 Content = "Chiến dịch của bạn đã được phê duyệt thành công",
                 NotificationType = "Approve",
                 ObjectType = "Campain",
@@ -240,9 +240,9 @@ namespace FDSSYSTEM.Services.CampaignService
             //Send notifiction
             var notificationDto = new NotificationDto
             {
-                Title = "Đã reject",
+                Title = "Phê duyệt chiến dịch thất bại",
                 Content = "Rất tiếc chiến dịch của bạn không phù hợp.Bạn có thể xem lý do ",
-                NotificationType = "Approve",
+                NotificationType = "Reject",
                 ObjectType = "Campain",
                 OjectId = campain.CampaignId,
                 AccountId = campain.AccountId
@@ -277,7 +277,7 @@ namespace FDSSYSTEM.Services.CampaignService
             {
                 Title = "Cần bổ sung chiến dịch",
                 Content = "Chiến dịch của bạn còn thiếu sót.Bạn có thể xem lý do ",
-                NotificationType = "Approve",
+                NotificationType = "Review",
                 ObjectType = "Campain",
                 OjectId = campain.CampaignId,
                 AccountId = campain.AccountId
@@ -303,7 +303,7 @@ namespace FDSSYSTEM.Services.CampaignService
             {
                 Title = "Đã cancel",
                 Content = "Chiến dịch của bạn đã được hủy bỏ",
-                NotificationType = "Approve",
+                NotificationType = "Cancel",
                 ObjectType = "Campain",
                 OjectId = campain.CampaignId,
                 AccountId = campain.AccountId

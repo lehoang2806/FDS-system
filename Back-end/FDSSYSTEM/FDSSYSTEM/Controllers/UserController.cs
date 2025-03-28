@@ -249,7 +249,7 @@ namespace FDSSYSTEM.Controllers
 
 
         [HttpGet("GetAllDonorCertificate")]
-        [Authorize(Roles = "Admin,Staff,Donor")]
+       /* [Authorize(Roles = "Admin,Staff,Donor")]*/
         public async Task<ActionResult> GetAllDonorCertificate()
         {
             try
@@ -264,7 +264,7 @@ namespace FDSSYSTEM.Controllers
         }
 
         [HttpGet("GetAllRecipientCertificate")]
-        [Authorize(Roles = "Admin,Staff,Recipient")]
+       /* [Authorize(Roles = "Admin,Staff,Recipient")]*/
         public async Task<ActionResult> GetAllRecipientCertificate()
         {
             try
