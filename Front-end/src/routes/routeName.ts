@@ -85,6 +85,7 @@ export const routes = {
         certificate: {
             donor: {
                 list: "/staff/certificate/donor",
+                detail: "/staff/certificate/donor/:id/detail",
             },
             recipient: {
                 list: "/staff/certificate/recipient",

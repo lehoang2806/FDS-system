@@ -88,6 +88,7 @@
 @use "./staff/news/staff-add-news.scss";
 @use "./staff/post/staff-list-post.scss";
 @use "./staff/certificate/donor/staff-list-donor-certificate.scss";
+@use "./staff/certificate/donor/staff-detail-donor-certificate.scss";
 @use "./staff/certificate/recipient/staff-list-recipient-certificate.scss";
 
 @use "./modal/modal.scss";
@@ -100,3 +101,4 @@
 @use "./modal/recipient-certificate-modal.scss";
 @use "./modal/remind-certificate-modal.scss";
 @use "./modal/additional-campaign-modal.scss";
+@use "./modal/additional-certificate-modal.scss";

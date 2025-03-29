@@ -14,8 +14,6 @@ const UserDetailCertificate = () => {
     const currentPersonalDonorCertificate = useAppSelector(selectGetPersonalDonorCertificateById);
     const currentOrganizationDonorCertificate = useAppSelector(selectGetOrganizationDonorCertificateById);
 
-    console.log(currentPersonalDonorCertificate)
-
     useEffect(() => {
         if (certificateType === "Personal") {
             dispatch(setLoading(true));
@@ -72,9 +70,10 @@ const UserDetailCertificate = () => {
                                 </div>
                                 {currentPersonalDonorCertificate && currentPersonalDonorCertificate.reviewComments && currentPersonalDonorCertificate.status === "Pending" && (
                                     <div className="udcsc1r2">
+                                        <h2>Các yêu cầu cần bổ sung</h2>
                                         {currentPersonalDonorCertificate.reviewComments?.map((comment, index) => (
                                             <div key={index}>
-                                                <p>{comment.content}</p>
+                                                <p style={{ whiteSpace: 'pre-line' }}>{comment.content}</p>
                                             </div>
                                         ))}
                                     </div>
@@ -131,9 +130,10 @@ const UserDetailCertificate = () => {
                                 </div>
                                 {currentOrganizationDonorCertificate && currentOrganizationDonorCertificate.reviewComments && currentOrganizationDonorCertificate.status === "Pending" && (
                                     <div className="udcsc1r2">
+                                        <h2>Các yêu cầu cần bổ sung</h2>
                                         {currentOrganizationDonorCertificate.reviewComments?.map((comment, index) => (
                                             <div key={index}>
-                                                <p>{comment.content}</p>
+                                                <p style={{ whiteSpace: 'pre-line' }}>{comment.content}</p>
                                             </div>
                                         ))}
                                     </div>

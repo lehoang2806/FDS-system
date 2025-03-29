@@ -95,14 +95,32 @@ interface AddRecipientCertificate {
 interface DonorCertificate {
     donorCertificateId: string;
     donorId: string;
-    email: string;
-    fullName: string;
-    phone: string;
-    organizationName?: string | null;
-    taxIdentificationNumber?: string | null;
-    citizenId?: string | null;
+    citizenId: string | null;
     status: string;
-    rejectComment?: string | null;
+    rejectComment: string | null;
+    createdDate: string;
+    fullName: string | null;
+    birthDay: string | null;
+    email: string | null;
+    phone: string | null;
+    address: string | null;
+    socialMediaLink: string | null;
+    mainSourceIncome: string | null;
+    monthlyIncome: string | null;
+    images: string[];
+    organizationName: string;
+    taxIdentificationNumber: string;
+    organizationAbbreviatedName: string;
+    organizationType: string;
+    mainBusiness: string;
+    organizationAddress: string;
+    contactPhone: string;
+    organizationEmail: string;
+    websiteLink: string;
+    representativeName: string;
+    representativePhone: string;
+    representativeEmail: string;
+    reviewComments: string[] | null;
 }
 
 interface RecipientCertificate {
@@ -125,6 +143,12 @@ interface RejectCertificate {
     certificateId: string;
     type: number;
     comment: string;
+}
+
+interface ReviewCertificate {
+    certificateId: string;
+    type: number;
+    content: string;
 }
 
 interface ConfirmUser {
