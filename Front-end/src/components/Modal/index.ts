@@ -10,6 +10,7 @@ import RecipientCertificateModal from "./RecipientCertificate";
 import RemindCertificateModal from "./RemindCertificates";
 import RegisterReceiverModal from "./RegisterReceiver";
 import AdditionalCampaignModal from "./AdditionalCampaign";
+import AdditionalCertificateModal from "./AdditionalCertificate";
 
 export {
     Modal,
@@ -23,5 +24,6 @@ export {
     RecipientCertificateModal,
     RemindCertificateModal,
     RegisterReceiverModal,
-    AdditionalCampaignModal
+    AdditionalCampaignModal,
+    AdditionalCertificateModal
 };

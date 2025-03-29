@@ -205,6 +205,25 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
                                                         );
                                                     }
                                                 }
+                                                if (notif.objectType === "Certificate") {
+                                                    let actionText = "";
+                                                    if (notif.notificationType === "Approve") actionText = "Đơn xác minh danh tính đã được phê duyệt.";
+                                                    if (notif.notificationType === "Reject") actionText = "Đơn xác minh danh tính đã bị từ chối.";
+                                                    if (notif.notificationType === "Review") actionText = "Đơn xác minh danh tính đang chờ xem xét.";
+                                            
+                                                    if (actionText) {
+                                                        return (
+                                                            <div
+                                                                key={notif.objectId || notif.createdDate}
+                                                                className={`notification-item ${notif.isRead ? "read" : "unread"}`}
+                                                                onClick={() => {markAsRead(notifications.indexOf(notif))}}
+                                                            >
+                                                                <strong>{notif.content}</strong>
+                                                                <p>{actionText}</p>
+                                                            </div>
+                                                        );
+                                                    }
+                                                }
                                                 return null;
                                             })
                                         ) : (
