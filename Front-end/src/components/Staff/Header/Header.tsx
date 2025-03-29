@@ -100,6 +100,7 @@ const StaffHeader: FC = () => {
                                         if (notif.objectType === "Campain") {
                                             let actionText = "";
                                             if (notif.notificationType === "Pending") actionText = "Có chiến dịch được tạo";
+                                            if (notif.notificationType === "Update") actionText = "Có chiến dịch được cập nhật";
                                     
                                             if (actionText) {
                                                 return (

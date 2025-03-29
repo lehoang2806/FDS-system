@@ -1,4 +1,23 @@
 interface AddCampaign {
+    camapignId?: string;
+    campaignName: string;
+    campaignDescription: string;
+    location: string;
+    implementationTime: string;
+    typeGift: string;
+    estimatedBudget: string;
+    averageCostPerGift: string;
+    sponsors: string;
+    implementationMethod: string;
+    communication: string;
+    limitedQuantity: string;
+    campaignType: string;
+    startRegisterDate: string;
+    endRegisterDate: string;
+    images: string[];
+}
+
+interface UpdateCampaign {
     campaignName: string;
     campaignDescription: string;
     location: string;

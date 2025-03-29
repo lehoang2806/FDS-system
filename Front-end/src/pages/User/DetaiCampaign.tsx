@@ -2,7 +2,7 @@ import { selectCurrentCampaign, selectGetAllCampaign, selectGetAllRegisterReceiv
 import { useAppDispatch, useAppSelector } from '@/app/store';
 import { CampaignCard } from '@/components/Card/index';
 import { Subscriber } from '@/components/Elements/index'
-import { RegisterReceiverModal, RemindCertificateModal } from '@/components/Modal';
+import { RegisterReceiverModal, RemindCertificateModal, UpdateCampaignModal } from '@/components/Modal';
 import { navigateHook } from '@/routes/RouteApp';
 import { routes } from '@/routes/routeName';
 import { setLoading } from '@/services/app/appSlice';
@@ -31,6 +31,8 @@ const UserDetailCampaignPage: React.FC = () => {
     const [isRemindCertificateModalOpend, setIsRemindCertificateModalOpend] = useState(false);
 
     const [isRegisterReceiverModalOpend, setIsRegisterReceiverModalOpend] = useState(false);
+
+    const [isUpdateCampaignModalOpend, setIsUpdateCampaignModalOpend] = useState(false);
 
     const registerReceivers = useAppSelector(selectGetAllRegisterReceivers);
 
@@ -98,6 +100,7 @@ const UserDetailCampaignPage: React.FC = () => {
                         <div className="udcscr1c1">
                             <div className="udcscr1c1r1">
                                 <h1>{currentCampaign?.campaignName} - <span>{currentCampaign?.status}</span></h1>
+                                <button className='pr-btn' onClick={() => setIsUpdateCampaignModalOpend(true)}>Cập nhật</button>
                             </div>
                             <div className="udcscr1c1r3">
                                 <div
@@ -224,6 +227,7 @@ const UserDetailCampaignPage: React.FC = () => {
             </section>
             <RemindCertificateModal isOpen={isRemindCertificateModalOpend} setIsOpen={setIsRemindCertificateModalOpend} />
             <RegisterReceiverModal isOpen={isRegisterReceiverModalOpend} setIsOpen={setIsRegisterReceiverModalOpend} campaignId={id} />
+            <UpdateCampaignModal isOpen={isUpdateCampaignModalOpend} setIsOpen={setIsUpdateCampaignModalOpend} selectedCampaign={currentCampaign} />
         </main>
     )
 }

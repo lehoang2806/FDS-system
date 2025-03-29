@@ -5,6 +5,11 @@ export const addCampaignApi = async (params: AddCampaign) => {
     return data.data;
 };
 
+export const updateCampaignApi = async (params: UpdateCampaign, campaignId: string) => {
+    const data = await request.put(`api/campaign/UpdateCampaign/${campaignId}`, params);
+    return data.data;
+};
+
 export const getAllCampaignApi = async () => {
     const data = await request.get('api/campaign/GetAllCampaigns');
     return data.data;
