@@ -125,9 +125,14 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
         { name: "Giới thiệu", subMenu: ["Về chúng tôi", "Liên hệ"] }
     ];
 
-    const handleToDetail = (campaignId: string) => {
+    const handleToDetailCampaign = (campaignId: string) => {
         const url = routes.user.detail_campaign.replace(":id", campaignId);
         return navigateHook(url)
+    }
+
+    const handleToDetailCertificate = () => {
+        const url = routes.user.personal;
+        return navigateHook(`${url}?tab=chungchi`)
     }
 
     return (
@@ -197,7 +202,7 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
                                                             <div
                                                                 key={notif.objectId || notif.createdDate}
                                                                 className={`notification-item ${notif.isRead ? "read" : "unread"}`}
-                                                                onClick={() => {markAsRead(notifications.indexOf(notif)); handleToDetail(notif.objectId || "")}}
+                                                                onClick={() => {markAsRead(notifications.indexOf(notif)); handleToDetailCampaign(notif.objectId || "")}}
                                                             >
                                                                 <strong>{notif.content}</strong>
                                                                 <p>{actionText}</p>
@@ -216,7 +221,7 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
                                                             <div
                                                                 key={notif.objectId || notif.createdDate}
                                                                 className={`notification-item ${notif.isRead ? "read" : "unread"}`}
-                                                                onClick={() => {markAsRead(notifications.indexOf(notif))}}
+                                                                onClick={() => {markAsRead(notifications.indexOf(notif)), handleToDetailCertificate()}}
                                                             >
                                                                 <strong>{notif.content}</strong>
                                                                 <p>{actionText}</p>

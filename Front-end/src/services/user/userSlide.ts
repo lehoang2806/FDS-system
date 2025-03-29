@@ -1,6 +1,6 @@
-import { currentOrganizationDonorCertificate, currentPersonalDonorCertificate, DonorCertificate, RecipientCertificate, UserInfo, UserState } from "@/types/user";
+import { currentOrganizationDonorCertificate, currentPersonalDonorCertificate, currentRecipientCertificate, DonorCertificate, RecipientCertificate, UserInfo, UserState } from "@/types/user";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { getAllDonorCertificateApiThunk, getAllRecipientCertificateApiThunk, getAllUserApiThunk, getOrganizationDonorCertificateByIdApiThunk, getPersonalDonorCertificateByIdApiThunk } from "./userThunk";
+import { getAllDonorCertificateApiThunk, getAllRecipientCertificateApiThunk, getAllUserApiThunk, getOrganizationDonorCertificateByIdApiThunk, getPersonalDonorCertificateByIdApiThunk, getRecipientCertificateByIdApiThunk } from "./userThunk";
 
 const initialState: UserState = {
     listUser: [],
@@ -8,6 +8,7 @@ const initialState: UserState = {
     listRecipientCertificate: [],
     currentDonorOrganizationCertificate: null,
     currentDonorPersonalCertificate: null,
+    currentRecipientCertificate: null
 };
 
 export const userSlice = createSlice({
@@ -31,6 +32,9 @@ export const userSlice = createSlice({
         })
         .addCase(getOrganizationDonorCertificateByIdApiThunk.fulfilled, (state, action: PayloadAction<currentOrganizationDonorCertificate>) => {
             state.currentDonorOrganizationCertificate = action.payload;
+        })
+        .addCase(getRecipientCertificateByIdApiThunk.fulfilled, (state, action: PayloadAction<currentRecipientCertificate>) => {
+            state.currentRecipientCertificate = action.payload;
         })
     },
 });

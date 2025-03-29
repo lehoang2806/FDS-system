@@ -3,7 +3,7 @@ import Modal from './Modal'
 import { toast } from 'react-toastify';
 import { useAppDispatch } from '@/app/store';
 import { RejectCertificateModalProps } from './type';
-import { getOrganizationDonorCertificateByIdApiThunk, getPersonalDonorCertificateByIdApiThunk, rejectCertificateApiThunk } from '@/services/user/userThunk';
+import { getOrganizationDonorCertificateByIdApiThunk, getPersonalDonorCertificateByIdApiThunk, getRecipientCertificateByIdApiThunk, rejectCertificateApiThunk } from '@/services/user/userThunk';
 import { setLoading } from '@/services/app/appSlice';
 
 const RejectCertificateModal: FC<RejectCertificateModalProps> = ({ isOpen, setIsOpen, selectedCertificate }) => {
@@ -34,6 +34,9 @@ const RejectCertificateModal: FC<RejectCertificateModalProps> = ({ isOpen, setIs
                     }
                     else if (selectedCertificate.type === 2) {
                         dispatch(getOrganizationDonorCertificateByIdApiThunk(selectedCertificate.certificateId));
+                    }
+                    else if (selectedCertificate.type === 3) {
+                        dispatch(getRecipientCertificateByIdApiThunk(selectedCertificate.certificateId));
                     }
                 })
                 .catch(() => {

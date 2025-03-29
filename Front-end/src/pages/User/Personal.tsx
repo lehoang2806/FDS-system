@@ -117,6 +117,9 @@ const UserPersonalPage = () => {
         if (type === "Organization") {
             return navigateHook(`${url}?type=Organization`);
         }
+        if (type === "Recipient") {
+            return navigateHook(`${url}?type=Recipient`);
+        }
     }
 
     return (
@@ -323,16 +326,19 @@ const UserPersonalPage = () => {
                                                             CCCD
                                                         </th>
                                                         <th className="table-head-cell">
-                                                            Full Name
+                                                            Họ và tên
                                                         </th>
                                                         <th className="table-head-cell">
-                                                            Phone
+                                                            Số điện thoại
                                                         </th>
                                                         <th className="table-head-cell">
-                                                            Status
+                                                            Lí do đăng ký hỗ trợ
                                                         </th>
                                                         <th className="table-head-cell">
-                                                            Action
+                                                            Trạng thái
+                                                        </th>
+                                                        <th className="table-head-cell">
+                                                            Hành động
                                                         </th>
                                                     </tr>
                                                 </thead>
@@ -342,9 +348,10 @@ const UserPersonalPage = () => {
                                                             <td className='table-body-cell'>{row.citizenId}</td>
                                                             <td className='table-body-cell'>{row.fullName}</td>
                                                             <td className='table-body-cell'>{row.phone}</td>
+                                                            <td className='table-body-cell'>{row.registerSupportReason}</td>
                                                             <td className='table-body-cell'>{row.status === "Pending" ? <span className='status-pending'>Pending</span> : row.status === "Approved" ? <span className='status-approve'>Approve</span> : <span className='status-reject'>Reject</span>}</td>
                                                             <td className="table-body-cell">
-                                                                <button className="view-btn">View</button>
+                                                                <button className="view-btn" onClick={() => handleToDetailCertificate(row.recipientCertificateId, "Recipient")}>View Detail</button>
                                                             </td>
                                                         </tr>
                                                     ))}

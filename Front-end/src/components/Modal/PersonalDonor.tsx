@@ -166,7 +166,6 @@ const PersonalDonorModal: FC<PersonalDonorModalProps> = ({ isOpen, setIsOpen }) 
                                     {errors.monthlyIncome && touched.monthlyIncome && <span className="text-error">{errors.monthlyIncome}</span>}
                                 </div>
                                 <h2>Vui lòng nộp các giấy tờ sau:</h2>
-
                                 <div className="document-section">
                                     <h3>📌 Giấy tờ tùy thân:</h3>
                                     <ul>

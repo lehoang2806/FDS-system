@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 import { useAppDispatch } from '@/app/store';
 import { AdditionalCertificateModalProps } from './type';
 import { setLoading } from '@/services/app/appSlice';
-import { additionalCertificateApiThunk, getOrganizationDonorCertificateByIdApiThunk, getPersonalDonorCertificateByIdApiThunk } from '@/services/user/userThunk';
+import { additionalCertificateApiThunk, getOrganizationDonorCertificateByIdApiThunk, getPersonalDonorCertificateByIdApiThunk, getRecipientCertificateByIdApiThunk } from '@/services/user/userThunk';
 
 const AdditionalCertificateModal: FC<AdditionalCertificateModalProps> = ({ isOpen, setIsOpen, selectedCertificate }) => {
     const dispatch = useAppDispatch();
@@ -34,6 +34,9 @@ const AdditionalCertificateModal: FC<AdditionalCertificateModalProps> = ({ isOpe
                     }
                     else if (selectedCertificate.type === 2) {
                         dispatch(getOrganizationDonorCertificateByIdApiThunk(selectedCertificate.certificateId));
+                    }
+                    else if (selectedCertificate.type === 3) {
+                        dispatch(getRecipientCertificateByIdApiThunk(selectedCertificate.certificateId));
                     }
                 }).catch(() => {
                 }).finally(() => {

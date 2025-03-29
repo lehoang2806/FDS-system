@@ -89,6 +89,7 @@ export const routes = {
             },
             recipient: {
                 list: "/staff/certificate/recipient",
+                detail: "/staff/certificate/recipient/:id/detail",
             }
         }
     }
