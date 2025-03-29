@@ -24,6 +24,10 @@ interface RejectCertificateModalProps extends ModalCommonProps {
 
 interface CreateCampaignModalProps extends ModalCommonProps {}
 
+interface UpdateCampaignModalProps extends ModalCommonProps {
+    selectedCampaign?: CurrentCampaign | null;
+}
+
 interface RejectCampaignModalProps extends ModalCommonProps {
     selectedCampaign?: RejectCampaign | null;
 }
