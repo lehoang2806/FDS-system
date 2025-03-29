@@ -1,7 +1,7 @@
-import { selectGetOrganizationDonorCertificateById, selectGetPersonalDonorCertificateById } from "@/app/selector";
+import { selectGetOrganizationDonorCertificateById, selectGetPersonalDonorCertificateById, selectGetRecipientCertificateById } from "@/app/selector";
 import { useAppDispatch, useAppSelector } from "@/app/store";
 import { setLoading } from "@/services/app/appSlice";
-import { getOrganizationDonorCertificateByIdApiThunk, getPersonalDonorCertificateByIdApiThunk } from "@/services/user/userThunk";
+import { getOrganizationDonorCertificateByIdApiThunk, getPersonalDonorCertificateByIdApiThunk, getRecipientCertificateByIdApiThunk } from "@/services/user/userThunk";
 import { useEffect } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 
@@ -13,6 +13,7 @@ const UserDetailCertificate = () => {
 
     const currentPersonalDonorCertificate = useAppSelector(selectGetPersonalDonorCertificateById);
     const currentOrganizationDonorCertificate = useAppSelector(selectGetOrganizationDonorCertificateById);
+    const currentRecipientCertificate = useAppSelector(selectGetRecipientCertificateById);
 
     useEffect(() => {
         if (certificateType === "Personal") {
@@ -39,6 +40,18 @@ const UserDetailCertificate = () => {
                     }, 1000)
                 });
         }
+        else if (certificateType === "Recipient") {
+            dispatch(setLoading(true));
+            dispatch(getRecipientCertificateByIdApiThunk(String(id)))
+                .unwrap()
+                .catch(() => {
+                })
+                .finally(() => {
+                    setTimeout(() => {
+                        dispatch(setLoading(false));
+                    }, 1000)
+                });
+        }
     }, [id, dispatch])
 
     return (
@@ -47,6 +60,7 @@ const UserDetailCertificate = () => {
                 <h1>Thông tin xác minh tài khoản</h1>
                 {currentPersonalDonorCertificate && certificateType === "Personal" && <h2>Trạng thái: <span>{currentPersonalDonorCertificate.status}</span></h2>}
                 {currentOrganizationDonorCertificate && certificateType === "Organization" && <h2>Trạng thái: <span>{currentOrganizationDonorCertificate.status}</span></h2>}
+                {currentRecipientCertificate && certificateType === "Recipient" && <h2>Trạng thái: <span>{currentRecipientCertificate.status}</span></h2>}
                 <div className="udcs-container">
                     {certificateType === "Personal" && (
                         <>
@@ -158,6 +172,64 @@ const UserDetailCertificate = () => {
                                 <div className="udcsc2r2">
                                     <h1>Hình ảnh xác minh</h1>
                                     {currentOrganizationDonorCertificate?.images.map((image, index) => (
+                                        <div key={index}>
+                                            <img src={image} alt={`Image ${index}`} style={{ width: '200px', height: '200px' }} />
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </>
+                    )}
+                    {certificateType === "Recipient" && (
+                        <>
+                            <div className="col-flex udcsc1">
+                                <div className="udcsc1r1">
+                                    <h1>Thông tin cá nhân</h1>
+                                    <h2>Họ Và tên</h2>
+                                    <p>{currentRecipientCertificate?.fullName}</p>
+                                    <h2>Ngày sinh</h2>
+                                    <p>{currentRecipientCertificate?.birthDay}</p>
+                                    <h2>Số điện thoại</h2>
+                                    <p>{currentRecipientCertificate?.phone}</p>
+                                    <h2>Email</h2>
+                                    <p>{currentRecipientCertificate?.email}</p>
+                                    <h2>Địa chỉ</h2>
+                                    <p>{currentRecipientCertificate?.address}</p>
+                                    <h2>Số CCCD</h2>
+                                    <p>{currentRecipientCertificate?.citizenId}</p>
+                                    <h2>Hoàn cảnh gia đình</h2>
+                                    <p>{currentRecipientCertificate?.circumstances}</p>
+                                </div>
+                                {currentRecipientCertificate && currentRecipientCertificate.reviewComments && currentRecipientCertificate.status === "Pending" && (
+                                    <div className="udcsc1r2">
+                                        <h2>Các yêu cầu cần bổ sung</h2>
+                                        {currentRecipientCertificate.reviewComments?.map((comment, index) => (
+                                            <div key={index}>
+                                                <p style={{ whiteSpace: 'pre-line' }}>{comment.content}</p>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                                {currentRecipientCertificate && currentRecipientCertificate.status === "Rejected" && (
+                                    <div className="udcsc1r2">
+                                        <h2>Lí do bị từ chối:</h2>
+                                        <p>{currentRecipientCertificate.rejectComment}</p>
+                                    </div>
+                                )}
+                            </div>
+                            <div className="col-flex udcsc2">
+                                <div className="udcsc2r1">
+                                    <h1>Thông tin tài chính</h1>
+                                    <h2>Thu nhập chính</h2>
+                                    <p>{currentRecipientCertificate?.mainSourceIncome}</p>
+                                    <h2>Thu nhập hàng tháng</h2>
+                                    <p>{currentRecipientCertificate?.monthlyIncome}</p>
+                                    <h2>Lí do đăng ký hỗ trợ</h2>
+                                    <p>{currentRecipientCertificate?.registerSupportReason}</p>
+                                </div>
+                                <div className="udcsc2r2">
+                                    <h1>Hình ảnh xác minh</h1>
+                                    {currentRecipientCertificate?.images.map((image, index) => (
                                         <div key={index}>
                                             <img src={image} alt={`Image ${index}`} style={{ width: '200px', height: '200px' }} />
                                         </div>

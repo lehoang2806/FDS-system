@@ -47,6 +47,7 @@ interface UserState {
     listRecipientCertificate: RecipientCertificate[];
     currentDonorPersonalCertificate: currentPersonalDonorCertificate | null;
     currentDonorOrganizationCertificate: currentOrganizationDonorCertificate | null;
+    currentRecipientCertificate: currentRecipientCertificate | null;
 }
 
 interface PersonalDonor {
@@ -126,12 +127,21 @@ interface DonorCertificate {
 interface RecipientCertificate {
     recipientCertificateId: string;
     recipientId: string;
-    email: string;
+    citizenId: string;
     fullName: string;
+    email: string;
     phone: string;
-    citizenId?: string | null;
+    address: string;
+    birthDay: string;
+    circumstances: string;
+    registerSupportReason: string;
+    mainSourceIncome: string;
+    monthlyIncome: string;
+    images: string[];
     status: string;
     rejectComment?: string | null;
+    createdDate: string;
+    reviewComments?: string[] | null;
 }
 
 interface ApproveCertificate {
@@ -196,5 +206,27 @@ interface currentOrganizationDonorCertificate {
     representativeEmail: string;
     createdDate: string;
     images: string[];
+    reviewComments?: ReviewComment[] | null;
+}
+
+interface currentRecipientCertificate {
+    id: string;
+    recipientId: string;
+    recipientCertificateId: string;
+    citizenId: string;
+    status: string;
+    rejectComment?: string | null;
+    campaignId?: string | null;
+    fullName: string;
+    email: string;
+    phone: string;
+    address: string;
+    birthDay: string;
+    circumstances: string;
+    registerSupportReason: string;
+    mainSourceIncome: string;
+    monthlyIncome: string;
+    images: string[];
+    createdDate: string;
     reviewComments?: ReviewComment[] | null;
 }

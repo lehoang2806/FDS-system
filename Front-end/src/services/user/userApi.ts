@@ -56,6 +56,12 @@ export const getOrganizationDonorCertificateByIdApi = async (organizationDonorCe
     return data.data;
 }
 
+export const getRecipientCertificateByIdApi = async (recipientCertificateId: string) => {
+    const data = await request.get(`api/user/GetRecipientCertificateById/${recipientCertificateId}`);
+    return data.data;
+}
+
+
 export const additionalCertificateApi = async (params: ReviewCertificate) => {
     const data = await request.post('api/user/CommentCertificate', params);
     return data.data;

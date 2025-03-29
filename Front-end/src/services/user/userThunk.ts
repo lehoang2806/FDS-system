@@ -1,6 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { additionalCertificateApi, approveCertificateApi, confirmUserApi, createOrganizationDonorCertificateApi, createPersonalDonorCertificateApi, createRecipientCertificateApi, getAllDonorCertificateApi, getAllRecipientCertificateApi, getAllUserApi, getOrganizationDonorCertificateByIdApi, getPersonalDonorCertificateByIdApi, rejectCertificateApi } from "./userApi";
-import { AddRecipientCertificate, ApproveCertificate, ConfirmUser, currentOrganizationDonorCertificate, currentPersonalDonorCertificate, DonorCertificate, OrganizationDonor, PersonalDonor, RecipientCertificate, RejectCertificate, ReviewCertificate, UserInfo } from "@/types/user";
+import { additionalCertificateApi, approveCertificateApi, confirmUserApi, createOrganizationDonorCertificateApi, createPersonalDonorCertificateApi, createRecipientCertificateApi, getAllDonorCertificateApi, getAllRecipientCertificateApi, getAllUserApi, getOrganizationDonorCertificateByIdApi, getPersonalDonorCertificateByIdApi, getRecipientCertificateByIdApi, rejectCertificateApi } from "./userApi";
+import { AddRecipientCertificate, ApproveCertificate, ConfirmUser, currentOrganizationDonorCertificate, currentPersonalDonorCertificate, currentRecipientCertificate, DonorCertificate, OrganizationDonor, PersonalDonor, RecipientCertificate, RejectCertificate, ReviewCertificate, UserInfo } from "@/types/user";
 import { TextResponse } from "@/types/auth";
 import { ResponseFromServer } from "@/types/app";
 
@@ -15,6 +15,7 @@ const CREATE_RECIPIENT_CERTIFICATE = 'CREATE_RECIPIENT_CERTIFICATE';
 const GET_ALL_RECIPIENT_CERTIFICATE = 'GET_ALL_RECIPIENT_CERTIFICATE';
 const GET_PERSONAL_DONOR_CERTIFICATE_BY_ID = 'GET_PERSONAL_DONOR_CERTIFICATE_BY_ID';
 const GET_ORGANIZATION_DONOR_CERTIFICATE_BY_ID = 'GET_ORGANIZATION_DONOR_CERTIFICATE_BY_ID';
+const GET_RECIPIENT_CERTIFICATE_BY_ID = 'GET_RECIPIENT_CERTIFICATE_BY_ID';
 const COMMENT_CERTIFICATE = 'COMMENT_CERTIFICATE';
 
 export const getAllUserApiThunk = createAsyncThunk<UserInfo[]>(
@@ -172,6 +173,21 @@ export const getOrganizationDonorCertificateByIdApiThunk = createAsyncThunk<curr
     async (payload, { rejectWithValue }) => {
         try {
             const response = await getOrganizationDonorCertificateByIdApi(payload);
+            return response;
+        } catch (err: any) {
+            return rejectWithValue({
+                errorMessage: err.message,
+                data: err.response.data,
+            });
+        }
+    },
+)
+
+export const getRecipientCertificateByIdApiThunk = createAsyncThunk<currentRecipientCertificate, string>(
+    GET_RECIPIENT_CERTIFICATE_BY_ID,
+    async (payload, { rejectWithValue }) => {
+        try {
+            const response = await getRecipientCertificateByIdApi(payload);
             return response;
         } catch (err: any) {
             return rejectWithValue({
