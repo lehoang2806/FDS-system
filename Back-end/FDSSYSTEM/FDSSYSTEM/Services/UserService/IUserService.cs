@@ -10,7 +10,7 @@ public interface IUserService
     Task AddUser(Account account);
     Task AddStaff(AddStaffDto staffDto);
     public Task<Account> GetUserByUsernameAsync(string userEmail);
-    public Task CreateUserAsync(RegisterUserDto account);
+    public Task CreateUserAsync(RegisterUserDto account, bool verifyOtp);
     public bool VerifyPassword(string enteredPassword, string storedHash);
     Task Confirm(ConfirmUserDto confirmUserDto);
 
@@ -39,5 +39,6 @@ public interface IUserService
     Task UpdatePersonalDonorCertificate(string id, CreatePersonalDonorCertificateDto personalDonorCertificate);
     Task UpdateOrganizationDonorCertificate(string id, CreateOrganizationDonorCertificateDto organizationDonorCertificate);
     Task UpdateRecipientCertificate(string id, CreateRecipientCertificateDto recipientCertificate);
+    Task RequestOtp( RequestOtpDto requestOtpDto);
     Task<bool> VerifyOtp( VerifyOtpDto verifyOtpDto);
 }

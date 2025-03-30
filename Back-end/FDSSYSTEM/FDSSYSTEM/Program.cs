@@ -7,6 +7,7 @@ using FDSSYSTEM.Repositories.NewRepository;
 using FDSSYSTEM.Repositories.NotificationCampaignRepository;
 using FDSSYSTEM.Repositories.NotificationRepository;
 using FDSSYSTEM.Repositories.OrganizationDonorCertificateRepository;
+using FDSSYSTEM.Repositories.OtpRepository;
 using FDSSYSTEM.Repositories.PostCommentRepository;
 using FDSSYSTEM.Repositories.PostRepository;
 using FDSSYSTEM.Repositories.RecipientCertificateRepository;
@@ -71,6 +72,8 @@ builder.Services.AddScoped<IRecipientCertificateRepository, RecipientCertificate
 
 builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
+
+builder.Services.AddScoped<IOtpRepository, OtpRepository>();
 
 builder.Services.Configure<JwtSetting>(builder.Configuration.GetSection("JwtSettings"));
 builder.Services.AddSingleton<JwtHelper>();

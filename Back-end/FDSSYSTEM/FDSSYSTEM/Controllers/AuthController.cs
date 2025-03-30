@@ -29,8 +29,7 @@ namespace FDSSYSTEM.Controllers
             var user = await _userService.GetUserByUsernameAsync(loginRequest.UserEmail);
             if (user == null || !_userService.VerifyPassword(loginRequest.Password, user.Password))
                 return Unauthorized("Invalid credentials.");
-            if(!user.IsConfirm)
-                return Unauthorized("Unverified account");
+
 
             var role = await _roleService.GetRoleById(user.RoleId);
 
@@ -50,14 +49,34 @@ namespace FDSSYSTEM.Controllers
             var existingUser = await _userService.GetUserByUsernameAsync(user.UserEmail);
             if (existingUser != null) return BadRequest("Username already exists.");
 
-            if(user.RoleId !=3 && user.RoleId != 4)
+            if (user.RoleId != 3 && user.RoleId != 4)
             {
                 return BadRequest();
             }
 
-            await _userService.CreateUserAsync(user);
+            try
+            {
+                await _userService.CreateUserAsync(user, true);
+                return Ok("User registered successfully.");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
 
-            return Ok("User registered successfully.");
+        [HttpPost("RequestOtp")]
+        public async Task<IActionResult> RequestOtp([FromBody] RequestOtpDto requestOtpDto)
+        {
+            try
+            {
+                await _userService.RequestOtp(requestOtpDto);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPut("VerifyOtp")]

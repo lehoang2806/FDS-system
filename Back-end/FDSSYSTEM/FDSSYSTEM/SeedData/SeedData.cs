@@ -24,7 +24,7 @@ namespace FDSSYSTEM.SeedData
                 };
 
                 // Lưu tài khoản admin vào MongoDB
-                await userService.CreateUserAsync(newAdmin);
+                await userService.CreateUserAsync(newAdmin,false);
             }
         }
     }

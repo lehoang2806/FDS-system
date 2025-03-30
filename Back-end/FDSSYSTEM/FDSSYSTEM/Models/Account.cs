@@ -29,7 +29,7 @@ public partial class Account
 
     public string? Gender { get; set; }
 
-    public string? Status { get; set; }
+
 
     public string? UserCreated { get; set; }
 
@@ -49,15 +49,9 @@ public partial class Account
 
     public string? Address { get; set; }
 
-    public string CitizenId { get; set; }
-    public string TaxIdentificationNumber { get; set; }
-    public string OrganizationName { get; set; }
-
     public bool IsConfirm { get; set; }
 
     public string Type { get; set; }
     public string DonorType { get; set; }
     public DateTime CreatedDate { get; set; } = DateTime.Now;
-    public string Otp {  get; set; }
-    public DateTime OtpExpirationTime { get; set; }
 }

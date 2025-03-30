@@ -17,6 +17,9 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using System.Net;
 using FDSSYSTEM.Helper;
+using static System.Net.WebRequestMethods;
+using FDSSYSTEM.Repositories.OtpRepository;
+using ZstdSharp.Unsafe;
 
 
 namespace FDSSYSTEM.Services.UserService;
@@ -30,6 +33,7 @@ public class UserService : IUserService
     private readonly IPersonalDonorCertificateRepository _personalDonorCertificateRepository;
     private readonly IRecipientCertificateRepository _recipientCertificateRepository;
     private readonly INotificationService _notificationService;
+    private readonly IOtpRepository _otpRepository;
 
     private readonly IHubContext<NotificationHub> _hubNotificationContext;
     private readonly EmailHelper _emailHeper;
@@ -42,6 +46,7 @@ public class UserService : IUserService
         , INotificationService notificationService
         , IHubContext<NotificationHub> hubContext
         , EmailHelper emailHeper
+        , IOtpRepository otpRepository
         )
     {
         _userRepository = userRepository;
@@ -52,6 +57,7 @@ public class UserService : IUserService
         _notificationService = notificationService;
         _hubNotificationContext = hubContext;
         _emailHeper = emailHeper;
+        _otpRepository = otpRepository;
     }
 
     public async Task AddUser(Account account)
@@ -71,8 +77,20 @@ public class UserService : IUserService
 
     }
 
-    public async Task CreateUserAsync(RegisterUserDto user)
+    public async Task CreateUserAsync(RegisterUserDto user, bool verifyOtp)
     {
+
+        //kiểm tra đã xác thực OTP trước khi tạo account
+        if (verifyOtp)
+        {
+            //tạo user admin mặc định không cần kiểm tra OTP , verifyOtp =false
+            var opt = await _otpRepository.GetLatestOtpCodeByEmail(user.UserEmail);
+            if (opt == null || !opt.IsVerified) throw new Exception("OTP not verified");
+            if (opt.ExpirationTime < DateTime.UtcNow) throw new Exception("OTP expired");
+        }
+
+
+        //Sau khi xác thực OTP xong tạo account
         var passwordHash = HashPassword(user.Password);
         var account = new Account
         {
@@ -82,26 +100,17 @@ public class UserService : IUserService
             FullName = user.FullName,
             Phone = user.Phone,
             RoleId = user.RoleId,
-            Status = "Pending",
             //CCCD = user.CCCD,
             //TaxIdentificationNumber = user.TaxIdentificationNumber,
             //OrganizationName = user.OrganizationName,
             //Status = user.Status,
             /*IsConfirm = user.IsConfirm,*/
             /*type = user.type,*/
-            Otp = OTPGenerator.GenerateOTP(),
-            OtpExpirationTime = DateTime.UtcNow.AddMinutes(5),
             CreatedDate = DateTime.UtcNow,
         };
         await _userRepository.AddAsync(account);
 
-        //Send OTP
-        //Send via Email
-        string subject = "Mã OTP";
-        string content = $"Mã OTP xác thực đăng ký tài khoản của bạn: {account.Otp}";
-        await _emailHeper.SendEmailAsync(subject, content, account.Email);
 
-        //TODO: Send OTP via SMS
     }
 
     public bool VerifyPassword(string enteredPassword, string hashPass)
@@ -124,7 +133,7 @@ public class UserService : IUserService
             UserEmail = staffDto.UserEmail,
             RoleId = 2,
         };
-        await CreateUserAsync(staff);
+        await CreateUserAsync(staff, false);
     }
 
     //public async Task CreateUserAsync(RegisterPersonalDonorDto user)
@@ -226,7 +235,7 @@ public class UserService : IUserService
                 Title = "Chứng nhận mới được tạo",
                 Content = "Có chứng nhận mới được tạo ra",
                 NotificationType = "Pending",
-                ObjectType = "Certificate",
+                ObjectType = "Organization Donor Certificate",
                 OjectId = certificateId,
                 AccountId = userId
             };
@@ -266,7 +275,7 @@ public class UserService : IUserService
                 Title = "Chứng nhận mới được tạo",
                 Content = "Có chứng nhận mới được tạo ra",
                 NotificationType = "Pending",
-                ObjectType = "Certificate",
+                ObjectType = "PersonalDonor Certificate Certificate",
                 OjectId = certificateId,
                 AccountId = userId
             };
@@ -308,7 +317,7 @@ public class UserService : IUserService
                 Title = "Chứng nhận mới được tạo",
                 Content = "Có chứng nhận mới được tạo ra",
                 NotificationType = "Pending",
-                ObjectType = "Certificate",
+                ObjectType = "Recipient Certificate ",
                 OjectId = certificateId,
                 AccountId = userId
             };
@@ -348,7 +357,7 @@ public class UserService : IUserService
                 Title = "Chứng nhận mới được cập nhật",
                 Content = "có chứng nhận mới vừa được cập nhật",
                 NotificationType = "Update",
-                ObjectType = "Certificate",
+                ObjectType = "Personal Donor Certificate",
                 OjectId = existingPersonalDonorCertificate.PersonalDonorCertificateId,
                 AccountId = userId
             };
@@ -391,7 +400,7 @@ public class UserService : IUserService
                 Title = "Chứng nhận mới được cập nhật",
                 Content = "có chứng nhận mới vừa được cập nhật",
                 NotificationType = "Update",
-                ObjectType = "Certificate",
+                ObjectType = "Organization Donor Certificate",
                 OjectId = existingOrganizationDonorCertificate.OrganizationDonorCertificateId,
                 AccountId = userId
             };
@@ -432,7 +441,7 @@ public class UserService : IUserService
                 Title = "Chứng nhận mới được cập nhật",
                 Content = "có chứng nhận mới vừa được cập nhật",
                 NotificationType = "Update",
-                ObjectType = "Certificate",
+                ObjectType = "Recipient Certificate",
                 OjectId = existingRecipientCertificate.RecipientCertificateId,
                 AccountId = userId
             };
@@ -577,6 +586,7 @@ public class UserService : IUserService
     {
         string objectId = "";
         string accountId = "";
+        string objectType = "";
         switch (approveCertificateDto.Type)
         {
             case ApproveCertificateType.PersonalDonor:
@@ -586,6 +596,7 @@ public class UserService : IUserService
                 await _personalDonorCertificateRepository.UpdateAsync(pcert.Id, pcert);
                 objectId = pcert.PersonalDonorCertificateId;
                 accountId = pcert.DonorId;
+                objectType = "Personal Donor Certificate";
                 break;
             case ApproveCertificateType.OrganizationDonor:
                 var ogcert = await _organizationDonorCertificateRepository.GetOrganizationDonorCertificateByIdAsync(approveCertificateDto.CertificateId);
@@ -594,6 +605,7 @@ public class UserService : IUserService
                 await _organizationDonorCertificateRepository.UpdateAsync(ogcert.Id, ogcert);
                 objectId = ogcert.OrganizationDonorCertificateId;
                 accountId = ogcert.DonorId;
+                objectType = "Organization Donor Certificate";
                 break;
             case ApproveCertificateType.Recipient:
                 var rcert = await _recipientCertificateRepository.GetRecipientCertificateByIdAsync(approveCertificateDto.CertificateId);
@@ -602,17 +614,22 @@ public class UserService : IUserService
                 await _recipientCertificateRepository.UpdateAsync(rcert.Id, rcert);
                 objectId = rcert.RecipientCertificateId;
                 accountId = rcert.RecipientId;
+                objectType = "Recipient Certificate";
                 break;
             default:
                 throw new Exception("Type not found");
         }
+
+        var account = await GetAccountById(accountId);
+        account.IsConfirm = true;
+        await _userRepository.UpdateAsync(account.Id, account);
 
         var notificationDto = new NotificationDto
         {
             Title = "Phê duyệt chứng nhận thành công",
             Content = "Chứng nhận của bạn đã được phê duyệt thành công",
             NotificationType = "Approve",
-            ObjectType = "Certificate",
+            ObjectType =objectType,
             OjectId = objectId,
             AccountId = accountId
         };
@@ -627,6 +644,7 @@ public class UserService : IUserService
     {
         string objectId = "";
         string accountId = "";
+        string objectType = "";
         switch (rejectCertificateDto.Type)
         {
             case ApproveCertificateType.PersonalDonor:
@@ -637,6 +655,7 @@ public class UserService : IUserService
                 await _personalDonorCertificateRepository.UpdateAsync(pcert.Id, pcert);
                 objectId = pcert.PersonalDonorCertificateId;
                 accountId = pcert.DonorId;
+                objectType = "Personal Donor Certificate";
                 break;
             case ApproveCertificateType.OrganizationDonor:
                 var ogcert = await _organizationDonorCertificateRepository.GetOrganizationDonorCertificateByIdAsync(rejectCertificateDto.CertificateId);
@@ -646,6 +665,7 @@ public class UserService : IUserService
                 await _organizationDonorCertificateRepository.UpdateAsync(ogcert.Id, ogcert);
                 objectId = ogcert.OrganizationDonorCertificateId;
                 accountId = ogcert.DonorId;
+                objectType = "Organization Donor Certificate";
                 break;
             case ApproveCertificateType.Recipient:
                 var rcert = await _recipientCertificateRepository.GetRecipientCertificateByIdAsync(rejectCertificateDto.CertificateId);
@@ -655,6 +675,7 @@ public class UserService : IUserService
                 await _recipientCertificateRepository.UpdateAsync(rcert.Id, rcert);
                 objectId = rcert.RecipientCertificateId;
                 accountId = rcert.RecipientId;
+                objectType = "Recipient Certificate";
                 break;
             default:
                 throw new Exception("Type not found");
@@ -665,7 +686,7 @@ public class UserService : IUserService
             Title = "Phê duyệt chứng nhận thất bại",
             Content = "Rất tiếc chứng nhận của bạn không phù hợp.Bạn có thể xem lý do ",
             NotificationType = "Reject",
-            ObjectType = "Certificate",
+            ObjectType = objectType,
             OjectId = objectId,
             AccountId = accountId
         };
@@ -717,7 +738,7 @@ public class UserService : IUserService
 
         List<int> roleIds = new List<int>
         {
-            
+
             3,//donor
             2//staff
         };
@@ -726,7 +747,7 @@ public class UserService : IUserService
     }
 
     public async Task<List<string>> GetAllAdminAndStaffAndRecipientId()
-    { 
+    {
         List<int> roleIds = new List<int>
         {
             1,//admin
@@ -775,6 +796,7 @@ public class UserService : IUserService
     {
         string objectId = "";
         string accountId = "";
+        string objectType = "";
         switch (reviewCommentCertificateDto.Type)
         {
             case CertificateType.PersonalDonor:
@@ -788,9 +810,10 @@ public class UserService : IUserService
                 pcert.ReviewComments.Add(new PersonalDonorCertificateReViewComment
                 {
                     Content = reviewCommentCertificateDto.Content,
-                    CreatedDate = DateTime.Now
+                    CreatedDate = DateTime.Now,
                 });
                 await _personalDonorCertificateRepository.UpdateAsync(pcert.Id, pcert);
+                objectType = "Personal Donor Certificate";
                 break;
             case CertificateType.OrganizationDonor:
                 var ogcert = await _organizationDonorCertificateRepository.GetOrganizationDonorCertificateByIdAsync(reviewCommentCertificateDto.CertificateId);
@@ -806,6 +829,8 @@ public class UserService : IUserService
                     CreatedDate = DateTime.Now
                 });
                 await _organizationDonorCertificateRepository.UpdateAsync(ogcert.Id, ogcert);
+                objectType = "Organization Donor Certificate";
+
                 break;
             case CertificateType.Recipient:
                 var rcert = await _recipientCertificateRepository.GetRecipientCertificateByIdAsync(reviewCommentCertificateDto.CertificateId);
@@ -821,6 +846,7 @@ public class UserService : IUserService
                     CreatedDate = DateTime.Now
                 });
                 await _recipientCertificateRepository.UpdateAsync(rcert.Id, rcert);
+                objectType = "Recipient Certificate";
                 break;
             default:
                 throw new Exception("Type not found");
@@ -833,9 +859,8 @@ public class UserService : IUserService
         {
             Title = "Cần bổ sung chứng nhận",
             Content = "Chứng nhận của bạn còn thiếu sót.Bạn có thể xem lý do ",
-
             NotificationType = "Review",
-            ObjectType = "Certificate",
+            ObjectType = objectType,
             OjectId = objectId,
             AccountId = accountId,
         };
@@ -847,13 +872,34 @@ public class UserService : IUserService
 
     public async Task<bool> VerifyOtp(VerifyOtpDto verifyOtpDto)
     {
-        var existingUser = await GetUserByUsernameAsync(verifyOtpDto.Email);
-        if (existingUser == null) throw new Exception("User Notfoud");
-        if (existingUser.Otp != verifyOtpDto.Otp) throw new Exception("Invalid OTP");
-        if (existingUser.OtpExpirationTime < DateTime.UtcNow) throw new Exception("OTP expired");
+        var latestOtp = await _otpRepository.GetLatestOtpCodeByEmail(verifyOtpDto.Email);
 
-        existingUser.IsConfirm = true;
-        await _userRepository.UpdateAsync(existingUser.Id, existingUser);
+        if (latestOtp == null) throw new Exception("User Notfoud");
+        if (latestOtp.Code != verifyOtpDto.Otp) throw new Exception("Invalid OTP");
+        if (latestOtp.ExpirationTime < DateTime.UtcNow) throw new Exception("OTP expired");
+
+        latestOtp.IsVerified = true;
+        await _otpRepository.UpdateAsync(latestOtp.Id, latestOtp);
         return true;
+    }
+
+    public async Task RequestOtp(RequestOtpDto requestOtpDto)
+    {
+        var otpCode = new OtpCode
+        {
+            Email = requestOtpDto.Email,
+            Code = OTPGenerator.GenerateOTP(),
+            ExpirationTime = DateTime.UtcNow.AddMinutes(5),
+            IsVerified = false
+        };
+        await _otpRepository.AddAsync(otpCode);
+
+        //Send OTP
+        //Send via Email
+        string subject = "Mã OTP";
+        string content = $"Mã OTP xác thực đăng ký tài khoản của bạn: {otpCode.Code}";
+        await _emailHeper.SendEmailAsync(subject, content, otpCode.Email);
+
+        //TODO: Send OTP via SMS
     }
 }

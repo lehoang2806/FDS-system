@@ -300,14 +300,14 @@ namespace FDSSYSTEM.Services.CampaignService
             campain.CancelComment = cancelCampaignDto.Comment;
             await _campaignRepository.UpdateAsync(campain.Id, campain);
 
-            var userReceiveNotifications = await _userService.GetAllAdminAndStaffId();
+            var userReceiveNotifications = await _userService.GetAllAdminAndStaffAndRecipientId();
             foreach (var userId in userReceiveNotifications)
             {
                 var notificationDto = new NotificationDto
                 {
                     Title = "Chiến dịch mới được cập nhật",
                     Content = "có chiến dịch mới vừa được cập nhật",
-                    NotificationType = "Update",
+                    NotificationType = "Cancel",
                     ObjectType = "Campain",
                     OjectId = campain.CampaignId,
                     AccountId = userId
