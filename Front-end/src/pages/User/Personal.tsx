@@ -104,9 +104,22 @@ const UserPersonalPage = () => {
         }
     }
 
-    const handleToDetail = (campaignId: string) => {
-        const url = routes.user.campaign.detail.replace(":id", campaignId);
+    const handleToDetailCampaign = (campaignId: string) => {
+        const url = routes.user.detail_campaign.replace(":id", campaignId);
         return navigateHook(url)
+    }
+
+    const handleToDetailCertificate = (certificateId: string, type: string) => {
+        const url = routes.user.detail_certificate.replace(":id", certificateId);
+        if (type === "Personal") {
+            return navigateHook(`${url}?type=Personal`);
+        }
+        if (type === "Organization") {
+            return navigateHook(`${url}?type=Organization`);
+        }
+        if (type === "Recipient") {
+            return navigateHook(`${url}?type=Recipient`);
+        }
     }
 
     return (
@@ -166,19 +179,7 @@ const UserPersonalPage = () => {
                                                             Campaign Name
                                                         </th>
                                                         <th className="table-head-cell">
-                                                            Address
-                                                        </th>
-                                                        <th className="table-head-cell">
-                                                            Receive Date
-                                                        </th>
-                                                        <th className="table-head-cell">
                                                             Description
-                                                        </th>
-                                                        <th className="table-head-cell">
-                                                            Gift Type
-                                                        </th>
-                                                        <th className="table-head-cell">
-                                                            Type Campaign
                                                         </th>
                                                         <th className="table-head-cell">
                                                             Status
@@ -191,15 +192,11 @@ const UserPersonalPage = () => {
                                                 <tbody className="table-body">
                                                     {currentCampaigns.map((campaign, index) => (
                                                         <tr className="table-body-row" key={index}>
-                                                            <td className='table-body-cell'>{campaign.nameCampaign}</td>
-                                                            <td className='table-body-cell'>{campaign.address}</td>
-                                                            <td className='table-body-cell'>{campaign.receiveDate}</td>
-                                                            <td className='table-body-cell'>{campaign.description}</td>
-                                                            <td className='table-body-cell'>{campaign.giftType}</td>
-                                                            <td className='table-body-cell'>{campaign.typeCampaign}</td>
+                                                            <td className='table-body-cell'>{campaign.campaignName}</td>
+                                                            <td className='table-body-cell'>{campaign.campaignDescription}</td>
                                                             <td className='table-body-cell'>{campaign.status === "Pending" ? <span className='status-pending'>Pending</span> : campaign.status === "Approved" ? <span className='status-approve'>Approve</span> : <span className='status-reject'>Reject</span>}</td>
                                                             <td className="table-body-cell">
-                                                                <button className='view-btn' onClick={() => handleToDetail(campaign.campaignId)}>Go to Campaign</button>
+                                                                <button className='view-btn' onClick={() => handleToDetailCampaign(campaign.campaignId)}>View Detail</button>
                                                             </td>
                                                         </tr>
                                                     ))}
@@ -225,12 +222,6 @@ const UserPersonalPage = () => {
                                                             Type
                                                         </th>
                                                         <th className="table-head-cell">
-                                                            Full Name
-                                                        </th>
-                                                        <th className="table-head-cell">
-                                                            Phone
-                                                        </th>
-                                                        <th className="table-head-cell">
                                                             Status
                                                         </th>
                                                         <th className="table-head-cell">
@@ -242,11 +233,9 @@ const UserPersonalPage = () => {
                                                     {currentDonorCertificates.map((row, index) => (
                                                         <tr key={index} className="table-body-row">
                                                             <td className='table-body-cell'>{row.citizenId === null ? "Organization" : "Personal"}</td>
-                                                            <td className='table-body-cell'>{row.fullName}</td>
-                                                            <td className='table-body-cell'>{row.phone}</td>
                                                             <td className='table-body-cell'>{row.status === "Pending" ? <span className='status-pending'>Pending</span> : row.status === "Approved" ? <span className='status-approve'>Approve</span> : <span className='status-reject'>Reject</span>}</td>
                                                             <td className="table-body-cell">
-                                                                <button className="view-btn">View</button>
+                                                                <button className="view-btn" onClick={() => row.citizenId === null ? handleToDetailCertificate(row.donorCertificateId, "Organization") : handleToDetailCertificate(row.donorCertificateId, "Personal")}>View Detail</button>
                                                             </td>
                                                         </tr>
                                                     ))}
@@ -311,7 +300,7 @@ const UserPersonalPage = () => {
                                                             <td className='table-body-cell'>{registerReceiver.quantity}</td>
                                                             <td className='table-body-cell'>{registerReceiver.creatAt}</td>
                                                             <td className='table-body-cell'>
-                                                                <button className="view-btn" onClick={() => handleToDetail(registerReceiver.campaignId)}>Go to Campaign</button>
+                                                                <button className="view-btn" onClick={() => handleToDetailCampaign(registerReceiver.campaignId)}>Go to Campaign</button>
                                                             </td>
                                                         </tr>
                                                     ))}
@@ -337,16 +326,19 @@ const UserPersonalPage = () => {
                                                             CCCD
                                                         </th>
                                                         <th className="table-head-cell">
-                                                            Full Name
+                                                            Họ và tên
                                                         </th>
                                                         <th className="table-head-cell">
-                                                            Phone
+                                                            Số điện thoại
                                                         </th>
                                                         <th className="table-head-cell">
-                                                            Status
+                                                            Lí do đăng ký hỗ trợ
                                                         </th>
                                                         <th className="table-head-cell">
-                                                            Action
+                                                            Trạng thái
+                                                        </th>
+                                                        <th className="table-head-cell">
+                                                            Hành động
                                                         </th>
                                                     </tr>
                                                 </thead>
@@ -356,9 +348,10 @@ const UserPersonalPage = () => {
                                                             <td className='table-body-cell'>{row.citizenId}</td>
                                                             <td className='table-body-cell'>{row.fullName}</td>
                                                             <td className='table-body-cell'>{row.phone}</td>
+                                                            <td className='table-body-cell'>{row.registerSupportReason}</td>
                                                             <td className='table-body-cell'>{row.status === "Pending" ? <span className='status-pending'>Pending</span> : row.status === "Approved" ? <span className='status-approve'>Approve</span> : <span className='status-reject'>Reject</span>}</td>
                                                             <td className="table-body-cell">
-                                                                <button className="view-btn">View</button>
+                                                                <button className="view-btn" onClick={() => handleToDetailCertificate(row.recipientCertificateId, "Recipient")}>View Detail</button>
                                                             </td>
                                                         </tr>
                                                     ))}

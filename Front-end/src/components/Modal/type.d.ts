@@ -1,4 +1,4 @@
-import { RejectCertificate } from "@/types/user";
+import { RejectCertificate, ReviewCertificate } from "@/types/user";
 
 interface ModalProps {
     isOpen: boolean;
@@ -24,6 +24,10 @@ interface RejectCertificateModalProps extends ModalCommonProps {
 
 interface CreateCampaignModalProps extends ModalCommonProps {}
 
+interface UpdateCampaignModalProps extends ModalCommonProps {
+    selectedCampaign?: CurrentCampaign | null;
+}
+
 interface RejectCampaignModalProps extends ModalCommonProps {
     selectedCampaign?: RejectCampaign | null;
 }
@@ -42,4 +46,8 @@ interface RegisterReceiverModalProps extends ModalCommonProps {
 
 interface AdditionalCampaignModalProps extends ModalCommonProps {
     selectedCampaign?: AdditionalCampaign | null;
+}
+
+interface AdditionalCertificateModalProps extends ModalCommonProps {
+    selectedCertificate?: ReviewCertificate | null;
 }

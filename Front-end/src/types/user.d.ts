@@ -45,49 +45,103 @@ interface UserState {
     listUser: UserInfo[];
     listDonorCertificate: DonorCertificate[];
     listRecipientCertificate: RecipientCertificate[];
+    currentDonorPersonalCertificate: currentPersonalDonorCertificate | null;
+    currentDonorOrganizationCertificate: currentOrganizationDonorCertificate | null;
+    currentRecipientCertificate: currentRecipientCertificate | null;
 }
 
 interface PersonalDonor {
     citizenId: string;
+    fullName: string;
+    birthDay: string;
+    email: string;
+    phone: string;
+    address: string;
+    socialMediaLink: string;
+    mainSourceIncome: string;
+    monthlyIncome: string;
     images: string[];
 }
 
 interface OrganizationDonor {
     organizationName: string;
     taxIdentificationNumber: string;
+    organizationAbbreviatedName: string;
+    organizationType: string;
+    mainBusiness: string;
+    organizationAddress: string;
+    contactPhone: string;
+    organizationEmail: string;
+    websiteLink: string;
     representativeName: string;
     representativePhone: string;
-    representativeCitizenId: string;
     representativeEmail: string;
     images: string[];
 }
 
 interface AddRecipientCertificate {
     citizenId: string;
+    fullName: string;
+    email: string;
+    phone: string;
+    address: string;
+    birthDay: string;
+    circumstances: string;
+    registerSupportReason: string;
+    mainSourceIncome: string;
+    monthlyIncome: string;
+    images: string[];
 }
 
 interface DonorCertificate {
     donorCertificateId: string;
     donorId: string;
-    email: string;
-    fullName: string;
-    phone: string;
-    organizationName?: string | null;
-    taxIdentificationNumber?: string | null;
-    citizenId?: string | null;
+    citizenId: string | null;
     status: string;
-    rejectComment?: string | null;
+    rejectComment: string | null;
+    createdDate: string;
+    fullName: string | null;
+    birthDay: string | null;
+    email: string | null;
+    phone: string | null;
+    address: string | null;
+    socialMediaLink: string | null;
+    mainSourceIncome: string | null;
+    monthlyIncome: string | null;
+    images: string[];
+    organizationName: string;
+    taxIdentificationNumber: string;
+    organizationAbbreviatedName: string;
+    organizationType: string;
+    mainBusiness: string;
+    organizationAddress: string;
+    contactPhone: string;
+    organizationEmail: string;
+    websiteLink: string;
+    representativeName: string;
+    representativePhone: string;
+    representativeEmail: string;
+    reviewComments: string[] | null;
 }
 
 interface RecipientCertificate {
     recipientCertificateId: string;
     recipientId: string;
-    email: string;
+    citizenId: string;
     fullName: string;
+    email: string;
     phone: string;
-    citizenId?: string | null;
+    address: string;
+    birthDay: string;
+    circumstances: string;
+    registerSupportReason: string;
+    mainSourceIncome: string;
+    monthlyIncome: string;
+    images: string[];
     status: string;
     rejectComment?: string | null;
+    createdDate: string;
+    reviewComments?: string[] | null;
 }
 
 interface ApproveCertificate {
@@ -101,7 +155,78 @@ interface RejectCertificate {
     comment: string;
 }
 
+interface ReviewCertificate {
+    certificateId: string;
+    type: number;
+    content: string;
+}
+
 interface ConfirmUser {
     accountId: string;
     type: string;
+}
+
+interface currentPersonalDonorCertificate {
+    id: string;
+    donorId: string;
+    personalDonorCertificateId: string;
+    citizenId: string;
+    status: string;
+    rejectComment?: string | null;
+    createdDate: string;
+    fullName: string;
+    birthDay: string;
+    email: string;
+    phone: string;
+    address: string;
+    socialMediaLink?: string;
+    mainSourceIncome: string;
+    monthlyIncome: number;
+    images: string[];
+    reviewComments?: ReviewComment[] | null;
+}
+
+interface currentOrganizationDonorCertificate {
+    id: string;
+    donorId: string;
+    organizationDonorCertificateId: string;
+    organizationName: string;
+    taxIdentificationNumber: string;
+    status: string;
+    rejectComment?: string | null;
+    organizationAbbreviatedName: string;
+    organizationType: string;
+    mainBusiness: string;
+    organizationAddress: string;
+    contactPhone: string;
+    organizationEmail: string;
+    websiteLink: string;
+    representativeName: string;
+    representativePhone: string;
+    representativeEmail: string;
+    createdDate: string;
+    images: string[];
+    reviewComments?: ReviewComment[] | null;
+}
+
+interface currentRecipientCertificate {
+    id: string;
+    recipientId: string;
+    recipientCertificateId: string;
+    citizenId: string;
+    status: string;
+    rejectComment?: string | null;
+    campaignId?: string | null;
+    fullName: string;
+    email: string;
+    phone: string;
+    address: string;
+    birthDay: string;
+    circumstances: string;
+    registerSupportReason: string;
+    mainSourceIncome: string;
+    monthlyIncome: string;
+    images: string[];
+    createdDate: string;
+    reviewComments?: ReviewComment[] | null;
 }

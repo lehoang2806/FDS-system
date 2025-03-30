@@ -2,18 +2,18 @@ import { FC, useState } from 'react'
 import Modal from './Modal'
 import { toast } from 'react-toastify';
 import { useAppDispatch } from '@/app/store';
-import { RejectCertificateModalProps } from './type';
-import { getOrganizationDonorCertificateByIdApiThunk, getPersonalDonorCertificateByIdApiThunk, getRecipientCertificateByIdApiThunk, rejectCertificateApiThunk } from '@/services/user/userThunk';
+import { AdditionalCertificateModalProps } from './type';
 import { setLoading } from '@/services/app/appSlice';
+import { additionalCertificateApiThunk, getOrganizationDonorCertificateByIdApiThunk, getPersonalDonorCertificateByIdApiThunk, getRecipientCertificateByIdApiThunk } from '@/services/user/userThunk';
 
-const RejectCertificateModal: FC<RejectCertificateModalProps> = ({ isOpen, setIsOpen, selectedCertificate }) => {
+const AdditionalCertificateModal: FC<AdditionalCertificateModalProps> = ({ isOpen, setIsOpen, selectedCertificate }) => {
     const dispatch = useAppDispatch();
-    const [reason, setReason] = useState("");
+    const [content, setContent] = useState("");
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!reason.trim()) {
-            toast.error("Vui lòng nhập lý do từ chối.");
+        if (!content.trim()) {
+            toast.error("Vui lòng nhập điều cần bổ sung.");
             return;
         }
 
@@ -21,13 +21,13 @@ const RejectCertificateModal: FC<RejectCertificateModalProps> = ({ isOpen, setIs
 
         try {
             dispatch(setLoading(true));
-            await dispatch(rejectCertificateApiThunk({
+            await dispatch(additionalCertificateApiThunk({
                 certificateId: selectedCertificate.certificateId,
-                type: selectedCertificate.type,
-                comment: reason
+                content: content,
+                type: selectedCertificate.type
             })).unwrap()
                 .then(() => {
-                    toast.success("Reject Certificate successfully.");
+                    toast.success("Request Addtional Certificate Successfully.");
                     setIsOpen(false);
                     if (selectedCertificate.type === 1) {
                         dispatch(getPersonalDonorCertificateByIdApiThunk(selectedCertificate.certificateId));
@@ -38,14 +38,13 @@ const RejectCertificateModal: FC<RejectCertificateModalProps> = ({ isOpen, setIs
                     else if (selectedCertificate.type === 3) {
                         dispatch(getRecipientCertificateByIdApiThunk(selectedCertificate.certificateId));
                     }
-                })
-                .catch(() => {
-                })
-                .finally(() => {
+                }).catch(() => {
+                }).finally(() => {
                     setTimeout(() => {
                         dispatch(setLoading(false));
                     }, 1000);
                 });
+
         } catch (error) {
             toast.error("An error occurred while rejecting the certificate.");
             console.error(error);
@@ -53,19 +52,18 @@ const RejectCertificateModal: FC<RejectCertificateModalProps> = ({ isOpen, setIs
     };
 
     return (
-        <Modal isOpen={isOpen} setIsOpen={setIsOpen} title="Reject Certificate">
-            <section id="reject-certificate-modal">
-                <div className="rcm-container">
-                    <h1>Từ chối chứng chỉ</h1>
+        <Modal isOpen={isOpen} setIsOpen={setIsOpen}>
+            <section id="additional-certificate-modal">
+                <div className="acm-container">
                     <form className="form" onSubmit={handleSubmit}>
                         <div className="form-field">
-                            <label className="form-label">Lý do từ chối</label>
-                            <input
-                                type="text"
+                            <label className="form-label">Yêu cầu bổ sung</label>
+                            <textarea
                                 className="form-input"
-                                placeholder="Vui lòng nhập lý do từ chối chứng chỉ"
-                                value={reason}
-                                onChange={(e) => setReason(e.target.value)}
+                                placeholder="Vui lòng nhập điều cần bổ sung"
+                                value={content}
+                                rows={10}
+                                onChange={(e) => setContent(e.target.value)}
                             />
                         </div>
                         <button type="submit" className="sc-btn">Xác nhận</button>
@@ -77,4 +75,4 @@ const RejectCertificateModal: FC<RejectCertificateModalProps> = ({ isOpen, setIs
 };
 
 
-export default RejectCertificateModal
+export default AdditionalCertificateModal

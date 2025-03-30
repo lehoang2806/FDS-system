@@ -57,7 +57,7 @@ const RegisterReceiverModal: FC<RegisterReceiverModalProps> = ({ isOpen, setIsOp
     }
 
     return (
-        <Modal isOpen={isOpen} setIsOpen={setIsOpen} title="Recipient Certificate">
+        <Modal isOpen={isOpen} setIsOpen={setIsOpen}>
             <section id="recipient-certificate-modal">
                 <div className="rcm-container">
                     <h1>Đăng ký nhận quà</h1>
@@ -83,7 +83,7 @@ const RegisterReceiverModal: FC<RegisterReceiverModalProps> = ({ isOpen, setIsOp
                                     <Field name="quantity" type="number" placeholder="Hãy nhập tên của bạn" className={classNames("form-input", { "is-error": errors.quantity && touched.quantity })} />
                                     {errors.quantity && touched.quantity && <span className="error">{errors.quantity}</span>}
                                 </div>
-                                <Button loading={isSubmitting} type="submit" title="Nộp chứng chỉ" />
+                                <Button loading={isSubmitting} type="submit" title="Đăng ký" />
                             </Form>
                         )}
                     </Formik>

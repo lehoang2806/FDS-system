@@ -1,8 +1,7 @@
-#create-campaign-modal {
+#additional-certificate-modal {
     padding: 0 30px;
-    width: 1200px;
 
-    .ccm-container {
+    .acm-container {
         text-align: center;
 
         h1 {
@@ -12,17 +11,7 @@
             margin-bottom: 40px;
         }
 
-        h3 {
-            text-align: start;
-            font-size: 20px;
-            font-weight: 700;
-            color: #272d4e;
-            margin-bottom: 10px;
-        }
-
         .form {
-            width: 100%;
-
             .form-field {
                 text-align: start;
             }

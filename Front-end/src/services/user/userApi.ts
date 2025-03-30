@@ -1,4 +1,4 @@
-import { AddRecipientCertificate, ApproveCertificate, ConfirmUser, OrganizationDonor, PersonalDonor, RejectCertificate } from "@/types/user";
+import { AddRecipientCertificate, ApproveCertificate, ConfirmUser, OrganizationDonor, PersonalDonor, RejectCertificate, ReviewCertificate } from "@/types/user";
 import request from "../request";
 
 export const getAllUserApi = async () => {
@@ -43,5 +43,26 @@ export const createRecipientCertificateApi = async (params: AddRecipientCertific
 
 export const getAllRecipientCertificateApi = async () => {
     const data = await request.get('api/user/getAllRecipientCertificate');
+    return data.data;
+}
+
+export const getPersonalDonorCertificateByIdApi = async (personalDonorCertificateId: string) => {
+    const data = await request.get(`api/user/GetPersonalDonorCertificateById/${personalDonorCertificateId}`);
+    return data.data;
+}
+
+export const getOrganizationDonorCertificateByIdApi = async (organizationDonorCertificateId: string) => {
+    const data = await request.get(`api/user/GetOrganizationDonorCertificateById/${organizationDonorCertificateId}`);
+    return data.data;
+}
+
+export const getRecipientCertificateByIdApi = async (recipientCertificateId: string) => {
+    const data = await request.get(`api/user/GetRecipientCertificateById/${recipientCertificateId}`);
+    return data.data;
+}
+
+
+export const additionalCertificateApi = async (params: ReviewCertificate) => {
+    const data = await request.post('api/user/CommentCertificate', params);
     return data.data;
 }

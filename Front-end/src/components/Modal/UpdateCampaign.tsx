@@ -1,11 +1,11 @@
-import { ChangeEvent, FC, useState } from 'react'
+import { ChangeEvent, FC, useEffect, useState } from 'react'
 import Modal from './Modal'
-import { CreateCampaignModalProps } from './type'
+import { UpdateCampaignModalProps } from './type'
 import { useAppDispatch } from '@/app/store';
 import * as Yup from "yup";
 import moment from "moment";
 import { Field, Form, Formik, FormikHelpers } from 'formik';
-import { addCampaignApiThunk, getAllCampaignApiThunk } from '@/services/campaign/campaignThunk';
+import { getCampaignByIdApiThunk, updateCampaignApiThunk } from '@/services/campaign/campaignThunk';
 import { toast } from 'react-toastify';
 import { get } from 'lodash';
 import Button from '../Elements/Button';
@@ -13,26 +13,26 @@ import classNames from "classnames";
 import { format } from "date-fns";
 import { setLoading } from '@/services/app/appSlice';
 
-const CreateCampaignModal: FC<CreateCampaignModalProps> = ({ isOpen, setIsOpen }) => {
+const UpdateCampaignModal: FC<UpdateCampaignModalProps> = ({ isOpen, setIsOpen, selectedCampaign }) => {
     const dispatch = useAppDispatch();
     const [imagePreview, setImagePreview] = useState<string[]>([]);
 
     const initialValues: AddCampaign = {
-        campaignName: "",
-        campaignDescription: "",
-        location: "",
-        implementationTime: "",
-        typeGift: "",
-        estimatedBudget: "",
-        averageCostPerGift: "",
-        sponsors: "",
-        implementationMethod: "",
-        communication: "",
-        limitedQuantity: "",
-        campaignType: "",
-        startRegisterDate: "",
-        endRegisterDate: "",
-        images: [],
+        campaignName: selectedCampaign?.campaignName || "",
+        campaignDescription: selectedCampaign?.campaignDescription || "",
+        location: selectedCampaign?.location || "",
+        implementationTime: selectedCampaign?.implementationTime || "",
+        typeGift: selectedCampaign?.typeGift || "",
+        estimatedBudget: selectedCampaign?.estimatedBudget || "",
+        averageCostPerGift: selectedCampaign?.averageCostPerGift || "",
+        sponsors: selectedCampaign?.sponsors || "",
+        implementationMethod: selectedCampaign?.implementationMethod || "",
+        communication: selectedCampaign?.communication || "",
+        limitedQuantity: selectedCampaign?.limitedQuantity || "",
+        campaignType: selectedCampaign?.campaignType || "",
+        startRegisterDate: selectedCampaign?.startRegisterDate || "",
+        endRegisterDate: selectedCampaign?.endRegisterDate || "",
+        images: selectedCampaign?.images || [],
     };
 
     const schema = Yup.object().shape({
@@ -106,7 +106,7 @@ const CreateCampaignModal: FC<CreateCampaignModalProps> = ({ isOpen, setIsOpen }
                         ),
             }),
 
-            images: Yup.array().of(Yup.string().required('Mỗi ảnh phải là một chuỗi hợp lệ')).min(1, 'Cần ít nhất một ảnh').required('Danh sách ảnh là bắt buộc'),
+        images: Yup.array().of(Yup.string().required('Mỗi ảnh phải là một chuỗi hợp lệ')).min(1, 'Cần ít nhất một ảnh').required('Danh sách ảnh là bắt buộc'),
 
     });
 
@@ -117,8 +117,8 @@ const CreateCampaignModal: FC<CreateCampaignModalProps> = ({ isOpen, setIsOpen }
 
             try {
                 const base64Images = await Promise.all(base64Promises);
-                setFieldValue("images", base64Images); // 🔹 Lưu danh sách ảnh vào Formik
-                setImagePreview(base64Images); // 🔹 Cập nhật ảnh xem trước
+                setFieldValue("images", base64Images);
+                setImagePreview(base64Images);
             } catch (error) {
                 console.error("Error converting images:", error);
             }
@@ -134,33 +134,12 @@ const CreateCampaignModal: FC<CreateCampaignModalProps> = ({ isOpen, setIsOpen }
         });
     };
 
-    const onSubmit = async (values: AddCampaign, helpers: FormikHelpers<AddCampaign>) => {
-        const toUTC = (dateStr: string) => {
-            const localDate = new Date(dateStr);
-            const offset = localDate.getTimezoneOffset();
-            return new Date(localDate.getTime() - offset * 6000).toISOString();
-        };
-    
-        const formattedValues: AddCampaign = {
-            ...values,
-            implementationTime: toUTC(values.implementationTime),
-            ...(values.campaignType === "Voluntary"
-                ? {
-                      startRegisterDate: toUTC(values.startRegisterDate),
-                      endRegisterDate: toUTC(values.endRegisterDate),
-                      limitedQuantity: "",
-                  }
-                : {
-                      startRegisterDate: "",
-                      endRegisterDate: "",
-                  }),
-        };
-    
+    const onSubmit = async (values: UpdateCampaign, helpers: FormikHelpers<UpdateCampaign>) => {
         try {
-            await dispatch(addCampaignApiThunk(formattedValues)).unwrap();
-            toast.success("Add Campaign successfully");
+            await dispatch(updateCampaignApiThunk({ params: values, campaignId: String(selectedCampaign?.campaignId) })).unwrap();
+            toast.success("Update Campaign successfully");
             dispatch(setLoading(true));
-            dispatch(getAllCampaignApiThunk());
+            dispatch(getCampaignByIdApiThunk(String(selectedCampaign?.campaignId)));
         } catch (error) {
             const errorData = get(error, "data.message", "An error occurred");
             helpers.setErrors({ campaignName: errorData });
@@ -172,8 +151,14 @@ const CreateCampaignModal: FC<CreateCampaignModalProps> = ({ isOpen, setIsOpen }
             }, 1000);
         }
     };
-    
 
+    useEffect(() => {
+        if (selectedCampaign?.images?.length) {
+            setImagePreview(selectedCampaign.images);
+        } else {
+            setImagePreview([]);
+        }
+    }, [selectedCampaign]);
 
     return (
         <Modal isOpen={isOpen} setIsOpen={setIsOpen} title="Tạo chiến dịch">
@@ -300,7 +285,7 @@ const CreateCampaignModal: FC<CreateCampaignModalProps> = ({ isOpen, setIsOpen }
                                         ))}
                                     </div>
                                 )}
-                                <Button type="submit" title="Tạo chiến dịch" loading={isSubmitting} />
+                                <Button type="submit" title="Cập nhật chiến dịch" loading={isSubmitting} />
                             </Form>
                         )}
                     </Formik>
@@ -310,4 +295,4 @@ const CreateCampaignModal: FC<CreateCampaignModalProps> = ({ isOpen, setIsOpen }
     )
 }
 
-export default CreateCampaignModal;
+export default UpdateCampaignModal;

@@ -7,13 +7,13 @@ const UserSubmitCertificatePage = () => {
 
     return (
         <section id="user-submit-certificate">
-            <h1>Xác nhận danh tính</h1>
+            <h1>Xác nhận thông tin cá nhân</h1>
             <div className="usc-container">
                 <div className="col-flex usccc1">
-                    <button className="sc-btn" onClick={() => setIsPersonalDonorModalOpen(true)}>Bạn là tài khoản cá nhân</button>
+                    <button className="sc-btn" onClick={() => setIsPersonalDonorModalOpen(true)}>Xác minh tài khoản cá nhân</button>
                 </div>
                 <div className="col-flex usccc2">
-                    <button className="pr-btn" onClick={() => setIsOrganizationDonorModalOpen(true)}>Bạn là tài khoản tổ chức</button>
+                    <button className="pr-btn" onClick={() => setIsOrganizationDonorModalOpen(true)}>Xác minh tài khoản tổ chức</button>
                 </div>
             </div>
             <PersonalDonorModal isOpen={isPersonalDonorModalOpen} setIsOpen={setIsPersonalDonorModalOpen} />
