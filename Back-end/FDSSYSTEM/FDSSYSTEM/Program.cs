@@ -1,4 +1,5 @@
 ﻿using FDSSYSTEM.Database;
+using FDSSYSTEM.Helper;
 using FDSSYSTEM.Helpers;
 using FDSSYSTEM.Options;
 using FDSSYSTEM.Repositories.CampaignRepository;
@@ -73,6 +74,8 @@ builder.Services.AddScoped<INotificationService, NotificationService>();
 
 builder.Services.Configure<JwtSetting>(builder.Configuration.GetSection("JwtSettings"));
 builder.Services.AddSingleton<JwtHelper>();
+builder.Services.Configure<SmtpSetting>(builder.Configuration.GetSection("SmtpSetting"));
+builder.Services.AddSingleton<EmailHelper>();
 
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

@@ -29,6 +29,8 @@ namespace FDSSYSTEM.Controllers
             var user = await _userService.GetUserByUsernameAsync(loginRequest.UserEmail);
             if (user == null || !_userService.VerifyPassword(loginRequest.Password, user.Password))
                 return Unauthorized("Invalid credentials.");
+            if(!user.IsConfirm)
+                return Unauthorized("Unverified account");
 
             var role = await _roleService.GetRoleById(user.RoleId);
 
@@ -58,5 +60,18 @@ namespace FDSSYSTEM.Controllers
             return Ok("User registered successfully.");
         }
 
+        [HttpPut("VerifyOtp")]
+        public async Task<IActionResult> VerifyOtp([FromBody] VerifyOtpDto user)
+        {
+            try
+            {
+                var result = await _userService.VerifyOtp(user);
+                return Ok("Verify successfully.");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

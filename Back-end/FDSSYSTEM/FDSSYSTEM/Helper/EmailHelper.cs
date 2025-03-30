@@ -1,6 +1,42 @@
-﻿namespace FDSSYSTEM.Helper
+﻿using FDSSYSTEM.Options;
+using Microsoft.Extensions.Options;
+using MailKit.Net.Smtp;
+using MimeKit;
+
+namespace FDSSYSTEM.Helper;
+
+public class EmailHelper
 {
-    public class EmailHelper
+    private readonly SmtpSetting _smtpSetting;
+
+    public EmailHelper(IOptions<SmtpSetting> smtpSetting)
     {
+        _smtpSetting = smtpSetting.Value;
+    }
+
+    public async Task SendEmailAsync(string subject, string content, string toEmail, List<string> ccEmails = null)
+    {
+        var message = new MimeMessage();
+        message.From.Add(new MailboxAddress(_smtpSetting.AppName, _smtpSetting.FromEmail));
+        message.To.Add(new MailboxAddress("", toEmail));
+        if(ccEmails!=null && ccEmails.Count > 0)
+        {
+            foreach(var cc in ccEmails)
+            {
+                message.Cc.Add(new MailboxAddress("", cc));
+            }
+        }
+        message.Subject = subject;
+
+        message.Body = new TextPart("plain")
+        {
+            Text = content
+        };
+
+        using var client = new SmtpClient();
+        await client.ConnectAsync(_smtpSetting.SmtpServer, _smtpSetting.Port, MailKit.Security.SecureSocketOptions.StartTls);
+        await client.AuthenticateAsync(_smtpSetting.FromEmail, _smtpSetting.Password);
+        await client.SendAsync(message);
+        await client.DisconnectAsync(true);
     }
 }

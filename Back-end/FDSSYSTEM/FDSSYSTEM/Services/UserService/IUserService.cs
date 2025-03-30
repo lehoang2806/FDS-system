@@ -18,8 +18,8 @@ public interface IUserService
     Task CreatePersonalDonorCertificate(CreatePersonalDonorCertificateDto certificateDto);
     Task CreateRecipientCertificate(CreateRecipientCertificateDto certificateDto);
 
-    Task<List<DonorCertificateDto>> GetAllDonorCertificat();
-    Task<List<RecipientCertificateDto>> GetAllRecipientCertificat();
+    Task<List<DonorCertificateDto>> GetAllDonorCertificate();
+    Task<List<RecipientCertificateDto>> GetAllRecipientCertificate();
 
 
     Task<PersonalDonorCertificate> GetPersonalDonorCertificateById(string personalDonorCertificate);  // Thêm phương thức này để lấy chiến dịch theo ID
@@ -31,5 +31,13 @@ public interface IUserService
     Task<Account> GetAccountById(string accountId);
 
     Task<List<string>> GetAllAdminAndStaffId();
+    Task<List<string>> GetAllAdminId();
+    Task<List<string>> GetAllAdminAndRecipientId();
+    Task<List<string>> GetAllDonorAndStaffId();
+    Task<List<string>> GetAllAdminAndStaffAndRecipientId();
     Task AddCertificateReviewComment(ReviewCommentCertificateDto reviewCommentCertificateDto);
+    Task UpdatePersonalDonorCertificate(string id, CreatePersonalDonorCertificateDto personalDonorCertificate);
+    Task UpdateOrganizationDonorCertificate(string id, CreateOrganizationDonorCertificateDto organizationDonorCertificate);
+    Task UpdateRecipientCertificate(string id, CreateRecipientCertificateDto recipientCertificate);
+    Task<bool> VerifyOtp( VerifyOtpDto verifyOtpDto);
 }

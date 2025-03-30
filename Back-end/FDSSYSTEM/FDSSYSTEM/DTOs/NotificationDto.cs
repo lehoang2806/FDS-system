@@ -2,6 +2,7 @@
 
 public class NotificationDto
 {
+    public string NotificationId { get; set; }
     public string AccountId { get; set; }
     public string Title { get; set; }
     public string Content { get; set; }

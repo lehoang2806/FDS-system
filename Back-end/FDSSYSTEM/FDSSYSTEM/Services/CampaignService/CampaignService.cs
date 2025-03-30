@@ -41,6 +41,7 @@ namespace FDSSYSTEM.Services.CampaignService
         public async Task Create(CampaignDto campaign)
         {
             var donorType = _userContextService.Role ?? "";
+            bool isDonorCreate = false;   
             if (!string.IsNullOrEmpty(donorType) && donorType.Equals("Donor"))
             {
                 var user = await _userService.GetAccountById(_userContextService.UserId ?? "");
@@ -48,6 +49,7 @@ namespace FDSSYSTEM.Services.CampaignService
                 {
                     donorType = user.DonorType;
                 }
+                isDonorCreate = true;
             }
 
             var newCampain = new Campaign
@@ -76,7 +78,7 @@ namespace FDSSYSTEM.Services.CampaignService
             await _campaignRepository.AddAsync(newCampain);
 
             //Send notifiction all staff and admin
-            var userReceiveNotifications = await _userService.GetAllAdminAndStaffId();
+            var userReceiveNotifications = isDonorCreate? await _userService.GetAllAdminAndStaffAndRecipientId() : await _userService.GetAllAdminAndRecipientId();
             foreach (var userId in userReceiveNotifications)
             {
                 var notificationDto = new NotificationDto
@@ -298,21 +300,23 @@ namespace FDSSYSTEM.Services.CampaignService
             campain.CancelComment = cancelCampaignDto.Comment;
             await _campaignRepository.UpdateAsync(campain.Id, campain);
 
-            //Send notifiction
-            var notificationDto = new NotificationDto
+            var userReceiveNotifications = await _userService.GetAllAdminAndStaffId();
+            foreach (var userId in userReceiveNotifications)
             {
-                Title = "Đã cancel",
-                Content = "Chiến dịch của bạn đã được hủy bỏ",
-                NotificationType = "Cancel",
-                ObjectType = "Campain",
-                OjectId = campain.CampaignId,
-                AccountId = campain.AccountId
-            };
-            //save notifiation to db
-            await _notificationService.AddNotificationAsync(notificationDto);
-            //send notification via signalR
-            await _hubNotificationContext.Clients.User(notificationDto.AccountId).SendAsync("ReceiveNotification", notificationDto);
-
+                var notificationDto = new NotificationDto
+                {
+                    Title = "Chiến dịch mới được cập nhật",
+                    Content = "có chiến dịch mới vừa được cập nhật",
+                    NotificationType = "Update",
+                    ObjectType = "Campain",
+                    OjectId = campain.CampaignId,
+                    AccountId = userId
+                };
+                //save notifiation to db
+                await _notificationService.AddNotificationAsync(notificationDto);
+                //send notification via signalR
+                await _hubNotificationContext.Clients.User(notificationDto.AccountId).SendAsync("ReceiveNotification", notificationDto);
+            }
         }
     }
 }

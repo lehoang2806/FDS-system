@@ -91,7 +91,7 @@ namespace FDSSYSTEM.Services.RegisterReceiverService
             await _registerReceiverRepository.AddAsync(newRegisterReceiver);
 
             //Send notifiction all staff and admin
-            var userReceiveNotifications = await _userService.GetAllAdminAndStaffId();
+            var userReceiveNotifications = await _userService.GetAllDonorAndStaffId();
             foreach (var userId in userReceiveNotifications)
             {
                 var notificationDto = new NotificationDto
@@ -124,7 +124,7 @@ namespace FDSSYSTEM.Services.RegisterReceiverService
                 await _registerReceiverRepository.UpdateAsync(existingRegisterReceiver.Id, existingRegisterReceiver);
             }
 
-            var userReceiveNotifications = await _userService.GetAllAdminAndStaffId();
+            var userReceiveNotifications = await _userService.GetAllDonorAndStaffId();
             foreach (var userId in userReceiveNotifications)
             {
                 var notificationDto = new NotificationDto

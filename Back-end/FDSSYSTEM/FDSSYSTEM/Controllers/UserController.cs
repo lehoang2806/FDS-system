@@ -160,6 +160,70 @@ namespace FDSSYSTEM.Controllers
             }
         }
 
+        [HttpPut("UpdatePersonalDonorCertificate")]
+        [Authorize(Roles = "Donor")]
+        public async Task<ActionResult> UpdatePersonalDonorCertificate(string id, CreatePersonalDonorCertificateDto personalDonorCertificate)
+        {
+            try
+            {
+                var existingPersonalDonorCertificate = await _userService.GetPersonalDonorCertificateById(id);
+                if (existingPersonalDonorCertificate == null)
+                {
+                    return NotFound();
+                }
+
+                await _userService.UpdatePersonalDonorCertificate(id, personalDonorCertificate);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpPut("UpdateOrganizationDonorCertificate")]
+        [Authorize(Roles = "Donor")]
+        public async Task<ActionResult> UpdateOrganizationDonorCertificate(string id, CreateOrganizationDonorCertificateDto organizationDonorCertificate)
+        {
+            try
+            {
+                var existingOrganizationDonorCertificate = await _userService.GetOrganizationDonorCertificateById(id);
+                if (existingOrganizationDonorCertificate == null)
+                {
+                    return NotFound();
+                }
+
+                await _userService.UpdateOrganizationDonorCertificate(id, organizationDonorCertificate);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpPut("UpdateRecipientCertificate")]
+        [Authorize(Roles = "Donor")]
+        public async Task<ActionResult> UpdateRecipientCertificate(string id, CreateRecipientCertificateDto recipientCertificate)
+        {
+            try
+            {
+                var existingRecipientCertificate = await _userService.GetRecipientCertificateById(id);
+                if (existingRecipientCertificate == null)
+                {
+                    return NotFound();
+                }
+
+                await _userService.UpdateRecipientCertificate(id, recipientCertificate);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
+
+
         [HttpPost("CommentCertificate")]
         [Authorize(Roles = "Admin,Staff")]
         public async Task<ActionResult> CommentCertificate(ReviewCommentCertificateDto reviewCommentCertificateDto)
@@ -254,7 +318,7 @@ namespace FDSSYSTEM.Controllers
         {
             try
             {
-                var cert = await _userService.GetAllDonorCertificat();
+                var cert = await _userService.GetAllDonorCertificate();
                 return Ok(cert);
             }
             catch (Exception ex)
@@ -269,7 +333,7 @@ namespace FDSSYSTEM.Controllers
         {
             try
             {
-                var cert = await _userService.GetAllRecipientCertificat();
+                var cert = await _userService.GetAllRecipientCertificate();
                 return Ok(cert);
             }
             catch (Exception ex)

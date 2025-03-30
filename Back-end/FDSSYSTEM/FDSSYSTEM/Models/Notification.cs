@@ -8,7 +8,7 @@ public class Notification
     [BsonId]
     [BsonRepresentation(BsonType.ObjectId)]
     public string Id { get; set; }
-
+    public string NotificationId { get; set; } 
     public string AccountId { get; set; }
     public string Title { get; set; }
     public string Content { get; set; }
@@ -17,4 +17,5 @@ public class Notification
     public string OjectId { get; set; } //CampainId, CertificateId, ......
     public string NotificationType { get; set; } //Approve/Reject/.......
     public bool IsRead {  get; set; }
+    public bool IsDelete { get; set; }
 }

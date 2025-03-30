@@ -14,6 +14,9 @@ using FDSSYSTEM.Enums;
 using Microsoft.AspNetCore.Http.HttpResults;
 using FDSSYSTEM.SignalR;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
+using System.Net;
+using FDSSYSTEM.Helper;
 
 
 namespace FDSSYSTEM.Services.UserService;
@@ -29,6 +32,7 @@ public class UserService : IUserService
     private readonly INotificationService _notificationService;
 
     private readonly IHubContext<NotificationHub> _hubNotificationContext;
+    private readonly EmailHelper _emailHeper;
 
     public UserService(IUserRepository userRepository
         , IUserContextService userContextService
@@ -37,6 +41,7 @@ public class UserService : IUserService
         , IRecipientCertificateRepository recipientCertificateRepository
         , INotificationService notificationService
         , IHubContext<NotificationHub> hubContext
+        , EmailHelper emailHeper
         )
     {
         _userRepository = userRepository;
@@ -46,6 +51,7 @@ public class UserService : IUserService
         _recipientCertificateRepository = recipientCertificateRepository;
         _notificationService = notificationService;
         _hubNotificationContext = hubContext;
+        _emailHeper = emailHeper;
     }
 
     public async Task AddUser(Account account)
@@ -83,8 +89,19 @@ public class UserService : IUserService
             //Status = user.Status,
             /*IsConfirm = user.IsConfirm,*/
             /*type = user.type,*/
+            Otp = OTPGenerator.GenerateOTP(),
+            OtpExpirationTime = DateTime.UtcNow.AddMinutes(5),
+            CreatedDate = DateTime.UtcNow,
         };
         await _userRepository.AddAsync(account);
+
+        //Send OTP
+        //Send via Email
+        string subject = "Mã OTP";
+        string content = $"Mã OTP xác thực đăng ký tài khoản của bạn: {account.Otp}";
+        await _emailHeper.SendEmailAsync(subject, content, account.Email);
+
+        //TODO: Send OTP via SMS
     }
 
     public bool VerifyPassword(string enteredPassword, string hashPass)
@@ -303,7 +320,132 @@ public class UserService : IUserService
 
     }
 
-    public async Task<List<DonorCertificateDto>> GetAllDonorCertificat()
+    public async Task UpdatePersonalDonorCertificate(string id, CreatePersonalDonorCertificateDto personalDonorCertificate)
+    {
+        var existingPersonalDonorCertificate = await GetPersonalDonorCertificateById(id);
+        if (existingPersonalDonorCertificate != null)
+        {
+
+            existingPersonalDonorCertificate.CitizenId = personalDonorCertificate.CitizenId;
+            existingPersonalDonorCertificate.FullName = personalDonorCertificate.FullName;
+            existingPersonalDonorCertificate.BirthDay = personalDonorCertificate.BirthDay;
+            existingPersonalDonorCertificate.Email = personalDonorCertificate.Email;
+            existingPersonalDonorCertificate.Phone = personalDonorCertificate.Phone;
+            existingPersonalDonorCertificate.Address = personalDonorCertificate.Address;
+            existingPersonalDonorCertificate.SocialMediaLink = personalDonorCertificate.SocialMediaLink;
+            existingPersonalDonorCertificate.MainSourceIncome = personalDonorCertificate.MainSourceIncome;
+            existingPersonalDonorCertificate.MonthlyIncome = personalDonorCertificate.MonthlyIncome;
+            existingPersonalDonorCertificate.Images = personalDonorCertificate.Images;
+            await _personalDonorCertificateRepository.UpdateAsync(existingPersonalDonorCertificate.Id, existingPersonalDonorCertificate);
+
+        }
+
+        var userReceiveNotifications = await GetAllAdminAndStaffId();
+        foreach (var userId in userReceiveNotifications)
+        {
+            var notificationDto = new NotificationDto
+            {
+                Title = "Chứng nhận mới được cập nhật",
+                Content = "có chứng nhận mới vừa được cập nhật",
+                NotificationType = "Update",
+                ObjectType = "Certificate",
+                OjectId = existingPersonalDonorCertificate.PersonalDonorCertificateId,
+                AccountId = userId
+            };
+            //save notifiation to db
+            await _notificationService.AddNotificationAsync(notificationDto);
+            //send notification via signalR
+            await _hubNotificationContext.Clients.User(notificationDto.AccountId).SendAsync("ReceiveNotification", notificationDto);
+        }
+
+    }
+
+    public async Task UpdateOrganizationDonorCertificate(string id, CreateOrganizationDonorCertificateDto organizationDonorCertificate)
+    {
+        var existingOrganizationDonorCertificate = await GetOrganizationDonorCertificateById(id);
+        if (existingOrganizationDonorCertificate != null)
+        {
+
+            existingOrganizationDonorCertificate.OrganizationName = organizationDonorCertificate.OrganizationName;
+            existingOrganizationDonorCertificate.TaxIdentificationNumber = organizationDonorCertificate.TaxIdentificationNumber;
+            existingOrganizationDonorCertificate.OrganizationAbbreviatedName = organizationDonorCertificate.OrganizationAbbreviatedName;
+            existingOrganizationDonorCertificate.OrganizationType = organizationDonorCertificate.OrganizationType;
+            existingOrganizationDonorCertificate.MainBusiness = organizationDonorCertificate.MainBusiness;
+            existingOrganizationDonorCertificate.OrganizationAddress = organizationDonorCertificate.OrganizationAddress;
+            existingOrganizationDonorCertificate.ContactPhone = organizationDonorCertificate.ContactPhone;
+            existingOrganizationDonorCertificate.OrganizationEmail = organizationDonorCertificate.OrganizationEmail;
+            existingOrganizationDonorCertificate.WebsiteLink = organizationDonorCertificate.WebsiteLink;
+            existingOrganizationDonorCertificate.RepresentativeName = organizationDonorCertificate.RepresentativeName;
+            existingOrganizationDonorCertificate.RepresentativePhone = organizationDonorCertificate.RepresentativePhone;
+            existingOrganizationDonorCertificate.RepresentativeEmail = organizationDonorCertificate.RepresentativeEmail;
+            existingOrganizationDonorCertificate.Images = organizationDonorCertificate.Images;
+            await _organizationDonorCertificateRepository.UpdateAsync(existingOrganizationDonorCertificate.Id, existingOrganizationDonorCertificate);
+
+        }
+
+        var userReceiveNotifications = await GetAllAdminAndStaffId();
+        foreach (var userId in userReceiveNotifications)
+        {
+            var notificationDto = new NotificationDto
+            {
+                Title = "Chứng nhận mới được cập nhật",
+                Content = "có chứng nhận mới vừa được cập nhật",
+                NotificationType = "Update",
+                ObjectType = "Certificate",
+                OjectId = existingOrganizationDonorCertificate.OrganizationDonorCertificateId,
+                AccountId = userId
+            };
+            //save notifiation to db
+            await _notificationService.AddNotificationAsync(notificationDto);
+            //send notification via signalR
+            await _hubNotificationContext.Clients.User(notificationDto.AccountId).SendAsync("ReceiveNotification", notificationDto);
+        }
+
+    }
+
+    public async Task UpdateRecipientCertificate(string id, CreateRecipientCertificateDto recipientCertificate)
+    {
+        var existingRecipientCertificate = await GetRecipientCertificateById(id);
+        if (existingRecipientCertificate != null)
+        {
+
+            existingRecipientCertificate.CitizenId = recipientCertificate.CitizenId;
+            existingRecipientCertificate.FullName = recipientCertificate.FullName;
+            existingRecipientCertificate.Phone = recipientCertificate.Phone;
+            existingRecipientCertificate.Address = recipientCertificate.Address;
+            existingRecipientCertificate.BirthDay = recipientCertificate.BirthDay;
+            existingRecipientCertificate.Email = recipientCertificate.Email;
+            existingRecipientCertificate.Circumstances = recipientCertificate.Circumstances;
+            existingRecipientCertificate.RegisterSupportReason = recipientCertificate.RegisterSupportReason;
+            existingRecipientCertificate.Images = recipientCertificate.Images;
+            existingRecipientCertificate.MainSourceIncome = recipientCertificate.MainSourceIncome;
+            existingRecipientCertificate.MonthlyIncome = recipientCertificate.MonthlyIncome;
+            await _recipientCertificateRepository.UpdateAsync(existingRecipientCertificate.Id, existingRecipientCertificate);
+
+        }
+
+        var userReceiveNotifications = await GetAllAdminAndStaffId();
+        foreach (var userId in userReceiveNotifications)
+        {
+            var notificationDto = new NotificationDto
+            {
+                Title = "Chứng nhận mới được cập nhật",
+                Content = "có chứng nhận mới vừa được cập nhật",
+                NotificationType = "Update",
+                ObjectType = "Certificate",
+                OjectId = existingRecipientCertificate.RecipientCertificateId,
+                AccountId = userId
+            };
+            //save notifiation to db
+            await _notificationService.AddNotificationAsync(notificationDto);
+            //send notification via signalR
+            await _hubNotificationContext.Clients.User(notificationDto.AccountId).SendAsync("ReceiveNotification", notificationDto);
+        }
+
+    }
+
+
+    public async Task<List<DonorCertificateDto>> GetAllDonorCertificate()
     {
         var config = new TypeAdapterConfig();
         config.NewConfig<OrganizationDonorCertificate, DonorCertificateDto>()
@@ -316,12 +458,12 @@ public class UserService : IUserService
 
         var rs = org.Adapt<List<DonorCertificateDto>>(config);
         rs.AddRange(per.Adapt<List<DonorCertificateDto>>(config));
-  
+
 
         return rs;
     }
 
-    public async Task<List<RecipientCertificateDto>> GetAllRecipientCertificat()
+    public async Task<List<RecipientCertificateDto>> GetAllRecipientCertificate()
     {
         var rec = await _recipientCertificateRepository.GetAllAsync();
 
@@ -331,7 +473,7 @@ public class UserService : IUserService
         var recipientFilter = Builders<Account>.Filter.In(c => c.AccountId, listRecipientId);
         var allCreator = await _userRepository.GetAllAsync(recipientFilter);
 
-       
+
         return rs;
     }
 
@@ -522,7 +664,7 @@ public class UserService : IUserService
         {
             Title = "Phê duyệt chứng nhận thất bại",
             Content = "Rất tiếc chứng nhận của bạn không phù hợp.Bạn có thể xem lý do ",
-            NotificationType = "Approve",
+            NotificationType = "Reject",
             ObjectType = "Certificate",
             OjectId = objectId,
             AccountId = accountId
@@ -558,6 +700,55 @@ public class UserService : IUserService
         var filter = Builders<Account>.Filter.In(c => c.RoleId, roleIds);
         return (await _userRepository.GetAllAsync(filter)).Select(x => x.AccountId).ToList();
     }
+
+    public async Task<List<string>> GetAllAdminId()
+    {
+
+        List<int> roleIds = new List<int>
+        {
+            1//admin         
+        };
+        var filter = Builders<Account>.Filter.In(c => c.RoleId, roleIds);
+        return (await _userRepository.GetAllAsync(filter)).Select(x => x.AccountId).ToList();
+    }
+
+    public async Task<List<string>> GetAllDonorAndStaffId()
+    {
+
+        List<int> roleIds = new List<int>
+        {
+            
+            3,//donor
+            2//staff
+        };
+        var filter = Builders<Account>.Filter.In(c => c.RoleId, roleIds);
+        return (await _userRepository.GetAllAsync(filter)).Select(x => x.AccountId).ToList();
+    }
+
+    public async Task<List<string>> GetAllAdminAndStaffAndRecipientId()
+    { 
+        List<int> roleIds = new List<int>
+        {
+            1,//admin
+            2,//staff
+            4//recipient
+        };
+        var filter = Builders<Account>.Filter.In(c => c.RoleId, roleIds);
+        return (await _userRepository.GetAllAsync(filter)).Select(x => x.AccountId).ToList();
+    }
+    public async Task<List<string>> GetAllAdminAndRecipientId()
+    {
+        List<int> roleIds = new List<int>
+        {
+            1,//admin
+            4//recipient
+        };
+        var filter = Builders<Account>.Filter.In(c => c.RoleId, roleIds);
+        return (await _userRepository.GetAllAsync(filter)).Select(x => x.AccountId).ToList();
+    }
+
+
+
 
     public async Task<PersonalDonorCertificate> GetPersonalDonorCertificateById(string id)
     {
@@ -652,5 +843,17 @@ public class UserService : IUserService
         await _notificationService.AddNotificationAsync(notificationDto);
         //send notification via signalR
         await _hubNotificationContext.Clients.User(notificationDto.AccountId).SendAsync("ReceiveNotification", notificationDto);
+    }
+
+    public async Task<bool> VerifyOtp(VerifyOtpDto verifyOtpDto)
+    {
+        var existingUser = await GetUserByUsernameAsync(verifyOtpDto.Email);
+        if (existingUser == null) throw new Exception("User Notfoud");
+        if (existingUser.Otp != verifyOtpDto.Otp) throw new Exception("Invalid OTP");
+        if (existingUser.OtpExpirationTime < DateTime.UtcNow) throw new Exception("OTP expired");
+
+        existingUser.IsConfirm = true;
+        await _userRepository.UpdateAsync(existingUser.Id, existingUser);
+        return true;
     }
 }
