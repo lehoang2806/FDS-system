@@ -24,6 +24,10 @@ export const selectGetAllUser: Selector<UserInfo[]> = (state: RootState) => {
     return state.user.listUser;
 }
 
+export const selectGetProfileUser: Selector<UserInfo | null> = (state: RootState) => {
+    return state.user.profileUser;
+}
+
 export const selectGetAllDonorCertificate: Selector<DonorCertificate[]> = (state: RootState) => {
     return state.user.listDonorCertificate;
 }
@@ -56,4 +60,9 @@ export const selectCurrentCampaign: Selector<CurrentCampaign | null> = (state: R
 //RegisterReciver
 export const selectGetAllRegisterReceivers: Selector<RegisterReceiver[]> = (state: RootState) => {
     return state.registerReceiver.listRegisterReceivers;
+}
+
+//Notification
+export const selectNotifications: Selector<NotificationDto[]> = (state: RootState) => {
+    return state.notificate.notifications;
 }

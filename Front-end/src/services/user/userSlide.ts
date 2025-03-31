@@ -1,9 +1,10 @@
 import { currentOrganizationDonorCertificate, currentPersonalDonorCertificate, currentRecipientCertificate, DonorCertificate, RecipientCertificate, UserInfo, UserState } from "@/types/user";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { getAllDonorCertificateApiThunk, getAllRecipientCertificateApiThunk, getAllUserApiThunk, getOrganizationDonorCertificateByIdApiThunk, getPersonalDonorCertificateByIdApiThunk, getRecipientCertificateByIdApiThunk } from "./userThunk";
+import { getAllDonorCertificateApiThunk, getAllRecipientCertificateApiThunk, getAllUserApiThunk, getOrganizationDonorCertificateByIdApiThunk, getPersonalDonorCertificateByIdApiThunk, getProfileApiThunk, getRecipientCertificateByIdApiThunk } from "./userThunk";
 
 const initialState: UserState = {
     listUser: [],
+    profileUser: null,
     listDonorCertificate: [],
     listRecipientCertificate: [],
     currentDonorOrganizationCertificate: null,
@@ -20,6 +21,9 @@ export const userSlice = createSlice({
         builder
         .addCase(getAllUserApiThunk.fulfilled, (state, action: PayloadAction<UserInfo[]>) => {
             state.listUser = action.payload;
+        })
+        .addCase(getProfileApiThunk.fulfilled, (state, action: PayloadAction<UserInfo>) => {
+            state.profileUser = action.payload;
         })
         .addCase(getAllDonorCertificateApiThunk.fulfilled, (state, action: PayloadAction<DonorCertificate[]>) => {
             state.listDonorCertificate = action.payload;

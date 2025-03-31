@@ -1,6 +1,10 @@
 import { useState, useRef, FC, ChangeEvent } from "react";
 
-const OTPInput: FC = () => {
+interface OTPInputProps {
+    onChange: (otp: string) => void; // Nhận hàm callback từ parent
+}
+
+const OTPInput: FC<OTPInputProps> = ({ onChange }) => {
     const length = 6;
     const [otp, setOtp] = useState<string[]>(new Array(length).fill(""));
     const inputsRef = useRef<(HTMLInputElement | null)[]>([]);
@@ -12,6 +16,7 @@ const OTPInput: FC = () => {
         const newOtp = [...otp];
         newOtp[index] = value;
         setOtp(newOtp);
+        onChange(newOtp.join(""));
 
         if (value && index < length - 1) {
             inputsRef.current[index + 1]?.focus();

@@ -10,3 +10,13 @@ export const registerApi = async (params: IRegisterEmail) => {
     const data = await request.post('api/Auth/register', params);
     return data.data;
 };
+
+export const requestOTPApi = async (email: string) => {
+    const data = await request.post('api/Auth/RequestOTP', { email });
+    return data.data;
+};
+
+export const verifyOTPApi = async (email: string, otp: string) => {
+    const data = await request.put('api/Auth/VerifyOTP', { email, otp });
+    return data.data;
+};

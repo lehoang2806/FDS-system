@@ -3,6 +3,7 @@
 
     #udc-section {
         padding: 0 20px;
+        text-align: center;
 
         h1 {
             font-size: 35px;
@@ -23,6 +24,11 @@
                 font-size: 24px;
                 font-weight: 500;
             }
+        }
+        
+        .pr-btn {
+            border-radius: var(--border-radius-16);
+            margin-bottom: 20px;
         }
 
         .udcs-container {

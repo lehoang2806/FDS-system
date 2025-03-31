@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from "@/app/store";
 import * as Yup from "yup";
 import { toast } from "react-toastify";
 import { Field, Form, Formik, FormikHelpers } from "formik";
-import { registerApiThunk } from "@/services/auth/authThunk";
+import { requestOTPApiThunk } from "@/services/auth/authThunk";
 import { get } from "lodash";
 import Button from "@/components/Elements/Button";
 import classNames from "classnames";
@@ -58,9 +58,9 @@ const RegisterPage = () => {
     });
 
     const onSubmit = async (values: IRegisterEmail, helpers: FormikHelpers<IRegisterEmail>) => {
-        await dispatch(registerApiThunk(values)).unwrap().then(() => {
-            toast.success("Register successfully");
-            navigateHook(routes.login);
+        await dispatch(requestOTPApiThunk(values.userEmail)).unwrap().then(() => {
+            toast.success("Đã gữi mã OTP đến email");
+            navigateHook(routes.otp_auth, { state: values });
         }).catch((error) => {
             const errorMessage = get(error, 'data', 'An error occurred');
             toast.error(errorMessage);

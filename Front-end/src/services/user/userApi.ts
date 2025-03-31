@@ -61,8 +61,27 @@ export const getRecipientCertificateByIdApi = async (recipientCertificateId: str
     return data.data;
 }
 
-
 export const additionalCertificateApi = async (params: ReviewCertificate) => {
     const data = await request.post('api/user/CommentCertificate', params);
+    return data.data;
+}
+
+export const getProfileApi = async (accountId: string) => {
+    const data = await request.get(`api/user/GetAccountById?accountId=${accountId}`);
+    return data.data;
+};
+
+export const updatePersonalDonorCertificateApi = async (id: string, params: PersonalDonor) => {
+    const data = await request.put(`api/user/UpdatePersonalDonorCertificate?id=${id}`, params);
+    return data.data;
+}
+
+export const updateOrganizationDonorCertificateApi = async (id: string, params: OrganizationDonor) => {
+    const data = await request.put(`api/user/UpdateOrganizationDonorCertificate?id=${id}`, params);
+    return data.data;
+}
+
+export const updateRecipientCertificateApi = async (id: string, params: AddRecipientCertificate) => {
+    const data = await request.put(`api/user/UpdateRecipientCertificate?id=${id}`, params);
     return data.data;
 }
