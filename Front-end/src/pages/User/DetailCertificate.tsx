@@ -1,8 +1,9 @@
 import { selectGetOrganizationDonorCertificateById, selectGetPersonalDonorCertificateById, selectGetRecipientCertificateById } from "@/app/selector";
 import { useAppDispatch, useAppSelector } from "@/app/store";
+import { UpdateOrganizationDonorCertificateModal, UpdatePersonalDonorCertificateModal, UpdateRecipientCertificateModal } from "@/components/Modal";
 import { setLoading } from "@/services/app/appSlice";
 import { getOrganizationDonorCertificateByIdApiThunk, getPersonalDonorCertificateByIdApiThunk, getRecipientCertificateByIdApiThunk } from "@/services/user/userThunk";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 
 const UserDetailCertificate = () => {
@@ -14,6 +15,10 @@ const UserDetailCertificate = () => {
     const currentPersonalDonorCertificate = useAppSelector(selectGetPersonalDonorCertificateById);
     const currentOrganizationDonorCertificate = useAppSelector(selectGetOrganizationDonorCertificateById);
     const currentRecipientCertificate = useAppSelector(selectGetRecipientCertificateById);
+
+    const [isUpdatePersonalDonorCertificateModalOpen, setIsUpdatePersonalDonorCertificateModalOpen] = useState(false);
+    const [isUpdateOrganizationDonorCertificateModalOpen, setIsUpdateOrganizationDonorCertificateModalOpen] = useState(false);
+    const [isUpdateRecipientCertificateModalOpen, setIsUpdateRecipientCertificateModalOpen] = useState(false);
 
     useEffect(() => {
         if (certificateType === "Personal") {
@@ -61,6 +66,9 @@ const UserDetailCertificate = () => {
                 {currentPersonalDonorCertificate && certificateType === "Personal" && <h2>Trạng thái: <span>{currentPersonalDonorCertificate.status}</span></h2>}
                 {currentOrganizationDonorCertificate && certificateType === "Organization" && <h2>Trạng thái: <span>{currentOrganizationDonorCertificate.status}</span></h2>}
                 {currentRecipientCertificate && certificateType === "Recipient" && <h2>Trạng thái: <span>{currentRecipientCertificate.status}</span></h2>}
+                {currentPersonalDonorCertificate && certificateType === "Personal" && <button className="pr-btn" onClick={() => setIsUpdatePersonalDonorCertificateModalOpen(true)}>Cập nhật</button>}
+                {currentOrganizationDonorCertificate && certificateType === "Organization" && <button className="pr-btn" onClick={() => setIsUpdateOrganizationDonorCertificateModalOpen(true)}>Cập nhật</button>}
+                {currentRecipientCertificate && certificateType === "Recipient" && <button className="pr-btn" onClick={() => setIsUpdateRecipientCertificateModalOpen(true)}>Cập nhật</button>}
                 <div className="udcs-container">
                     {certificateType === "Personal" && (
                         <>
@@ -240,6 +248,9 @@ const UserDetailCertificate = () => {
                     )}
                 </div>
             </section>
+            <UpdatePersonalDonorCertificateModal isOpen={isUpdatePersonalDonorCertificateModalOpen} setIsOpen={setIsUpdatePersonalDonorCertificateModalOpen} selectedCurrentPersonalDonorCertificate={currentPersonalDonorCertificate} />
+            <UpdateOrganizationDonorCertificateModal isOpen={isUpdateOrganizationDonorCertificateModalOpen} setIsOpen={setIsUpdateOrganizationDonorCertificateModalOpen} selectedCurrentOrganizationDonorCertificate={currentOrganizationDonorCertificate} />
+            <UpdateRecipientCertificateModal isOpen={isUpdateRecipientCertificateModalOpen} setIsOpen={setIsUpdateRecipientCertificateModalOpen} selectedCurrentRecipientCertificate={currentRecipientCertificate} />
         </main>
     )
 }

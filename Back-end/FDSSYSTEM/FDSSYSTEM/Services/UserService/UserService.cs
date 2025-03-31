@@ -275,7 +275,7 @@ public class UserService : IUserService
                 Title = "Chứng nhận mới được tạo",
                 Content = "Có chứng nhận mới được tạo ra",
                 NotificationType = "Pending",
-                ObjectType = "PersonalDonor Certificate Certificate",
+                ObjectType = "Personal Donor Certificate",
                 OjectId = certificateId,
                 AccountId = userId
             };

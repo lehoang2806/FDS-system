@@ -1,4 +1,4 @@
-import { RejectCertificate, ReviewCertificate } from "@/types/user";
+import { currentOrganizationDonorCertificate, currentPersonalDonorCertificate, currentRecipientCertificate, RejectCertificate, ReviewCertificate } from "@/types/user";
 
 interface ModalProps {
     isOpen: boolean;
@@ -50,4 +50,16 @@ interface AdditionalCampaignModalProps extends ModalCommonProps {
 
 interface AdditionalCertificateModalProps extends ModalCommonProps {
     selectedCertificate?: ReviewCertificate | null;
+}
+
+interface UpdatePersonalDonorCertificateModalProps extends ModalCommonProps {
+    selectedCurrentPersonalDonorCertificate?: currentPersonalDonorCertificate | null;
+}
+
+interface UpdateOrganizationDonorCertificateModalProps extends ModalCommonProps {
+    selectedCurrentOrganizationDonorCertificate?: currentOrganizationDonorCertificate | null;
+}
+
+interface UpdateRecipientCertificateModalProps extends ModalCommonProps {
+    selectedCurrentRecipientCertificate?: currentRecipientCertificate | null;
 }
