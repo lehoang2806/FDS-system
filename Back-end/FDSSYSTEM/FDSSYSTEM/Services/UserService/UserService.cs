@@ -587,6 +587,7 @@ public class UserService : IUserService
         string objectId = "";
         string accountId = "";
         string objectType = "";
+        string donorType = "";
         switch (approveCertificateDto.Type)
         {
             case ApproveCertificateType.PersonalDonor:
@@ -597,6 +598,7 @@ public class UserService : IUserService
                 objectId = pcert.PersonalDonorCertificateId;
                 accountId = pcert.DonorId;
                 objectType = "Personal Donor Certificate";
+                donorType = "Personal Donor";
                 break;
             case ApproveCertificateType.OrganizationDonor:
                 var ogcert = await _organizationDonorCertificateRepository.GetOrganizationDonorCertificateByIdAsync(approveCertificateDto.CertificateId);
@@ -606,6 +608,7 @@ public class UserService : IUserService
                 objectId = ogcert.OrganizationDonorCertificateId;
                 accountId = ogcert.DonorId;
                 objectType = "Organization Donor Certificate";
+                donorType = "Organization Donor";
                 break;
             case ApproveCertificateType.Recipient:
                 var rcert = await _recipientCertificateRepository.GetRecipientCertificateByIdAsync(approveCertificateDto.CertificateId);
@@ -622,6 +625,7 @@ public class UserService : IUserService
 
         var account = await GetAccountById(accountId);
         account.IsConfirm = true;
+        account.DonorType = donorType;
         await _userRepository.UpdateAsync(account.Id, account);
 
         var notificationDto = new NotificationDto
@@ -809,10 +813,13 @@ public class UserService : IUserService
                 }
                 pcert.ReviewComments.Add(new PersonalDonorCertificateReViewComment
                 {
+                    
                     Content = reviewCommentCertificateDto.Content,
                     CreatedDate = DateTime.Now,
                 });
                 await _personalDonorCertificateRepository.UpdateAsync(pcert.Id, pcert);
+                objectId = pcert.PersonalDonorCertificateId;  
+                accountId = pcert.DonorId; 
                 objectType = "Personal Donor Certificate";
                 break;
             case CertificateType.OrganizationDonor:
@@ -829,6 +836,8 @@ public class UserService : IUserService
                     CreatedDate = DateTime.Now
                 });
                 await _organizationDonorCertificateRepository.UpdateAsync(ogcert.Id, ogcert);
+                objectId = ogcert.OrganizationDonorCertificateId;  
+                accountId = ogcert.DonorId;  
                 objectType = "Organization Donor Certificate";
 
                 break;
@@ -846,6 +855,8 @@ public class UserService : IUserService
                     CreatedDate = DateTime.Now
                 });
                 await _recipientCertificateRepository.UpdateAsync(rcert.Id, rcert);
+                objectId = rcert.RecipientCertificateId;  
+                accountId = rcert.RecipientId;  
                 objectType = "Recipient Certificate";
                 break;
             default:

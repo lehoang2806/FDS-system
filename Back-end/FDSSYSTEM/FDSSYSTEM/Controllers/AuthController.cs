@@ -92,5 +92,22 @@ namespace FDSSYSTEM.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+
+        [HttpGet("CheckEmail/{email}")]
+        public async Task<IActionResult> CheckEmail(string email)
+        {
+            try
+            {
+                var existingUser = await _userService.GetUserByUsernameAsync(email);
+                return Ok(new CheckExistingEmailDto { IsExisting = existingUser != null });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
     }
 }
