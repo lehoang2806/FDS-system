@@ -37,12 +37,14 @@ namespace FDSSYSTEM.Services.PostService
 
         public async Task Create(PostDto post)
         {
+            string accountId = _userContextService.UserId ?? "";
             var newPost = new Post
             {
-                PostText = post.PostText,
                 CreatedDate = DateTime.Now,
                 PostId = Guid.NewGuid().ToString(),
                 Images = post.Images,
+                AccountId = accountId,
+                PosterRole = _userContextService.Role??""
             };
             await _postRepository.AddAsync(newPost);
 
@@ -54,7 +56,7 @@ namespace FDSSYSTEM.Services.PostService
                 {
                     Title = "Có một bài đăng mới được tạo",
                     Content = "Có một bài đăng mới được tạo ra",
-                    NotificationType = "Approve",
+                    NotificationType = "pending",
                     ObjectType = "Post",
                     OjectId = newPost.PostId,
                     AccountId = userId
@@ -85,10 +87,10 @@ namespace FDSSYSTEM.Services.PostService
         public async Task Update(string id, PostDto postDto)
         {
             var post = await _postRepository.GetByPostIdAsync(id);
-            post.PostFile = postDto.PostFile;
+
             post.Images = postDto.Images;
-            post.Content = postDto.Content;
-            post.PostText = postDto.PostText;
+            post.PostContent = postDto.PostContent;
+
 
             await _postRepository.UpdateAsync(post.Id, post);
 
@@ -99,7 +101,7 @@ namespace FDSSYSTEM.Services.PostService
                 {
                     Title = "Có một bài đăng mới được cập nhật",
                     Content = "Có một bài đăng vừa được cập nhật",
-                    NotificationType = "Approve",
+                    NotificationType = "Update",
                     ObjectType = "Post",
                     OjectId = post.PostId,
                     AccountId = userId
@@ -114,10 +116,15 @@ namespace FDSSYSTEM.Services.PostService
 
         public async Task Approve(ApprovePostDto approvePostDto)
         {
+            string approverId = _userContextService.UserId ?? "";
+            var approver = await _userService.GetAccountById(approverId);
             var filter = Builders<Post>.Filter.Eq(c => c.PostId, approvePostDto.PostId);
             var post = (await _postRepository.GetAllAsync(filter)).FirstOrDefault();
 
             post.Status = "Approved";
+            post.PosterApproverId = approverId;
+            post.PosterApproverName = approver.FullName;
+            post.PublicDate = DateTime.Now.ToString();
             await _postRepository.UpdateAsync(post.Id, post);
 
             //Send notifiction

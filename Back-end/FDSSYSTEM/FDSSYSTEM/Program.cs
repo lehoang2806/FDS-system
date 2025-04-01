@@ -3,13 +3,17 @@ using FDSSYSTEM.Helper;
 using FDSSYSTEM.Helpers;
 using FDSSYSTEM.Options;
 using FDSSYSTEM.Repositories.CampaignRepository;
+using FDSSYSTEM.Repositories.NewCommentRepository;
+using FDSSYSTEM.Repositories.NewOfInterestRepository;
 using FDSSYSTEM.Repositories.NewRepository;
 using FDSSYSTEM.Repositories.NotificationCampaignRepository;
 using FDSSYSTEM.Repositories.NotificationRepository;
 using FDSSYSTEM.Repositories.OrganizationDonorCertificateRepository;
 using FDSSYSTEM.Repositories.OtpRepository;
 using FDSSYSTEM.Repositories.PostCommentRepository;
+using FDSSYSTEM.Repositories.PostLikeRepository;
 using FDSSYSTEM.Repositories.PostRepository;
+using FDSSYSTEM.Repositories.PostSaveRepository;
 using FDSSYSTEM.Repositories.RecipientCertificateRepository;
 using FDSSYSTEM.Repositories.RegisterReceiverRepository;
 using FDSSYSTEM.Repositories.RoleRepository;
@@ -19,10 +23,14 @@ using FDSSYSTEM.Repositories.UserRepository;
 
 using FDSSYSTEM.SeedData;
 using FDSSYSTEM.Services.CampaignService;
+using FDSSYSTEM.Services.NewCommentService;
+using FDSSYSTEM.Services.NewOfInterest;
 using FDSSYSTEM.Services.NewService;
 using FDSSYSTEM.Services.NotificationCampaignService;
 using FDSSYSTEM.Services.NotificationService;
 using FDSSYSTEM.Services.PostCommentService;
+using FDSSYSTEM.Services.PostLikeService;
+using FDSSYSTEM.Services.PostSaveService;
 using FDSSYSTEM.Services.PostService;
 using FDSSYSTEM.Services.RegisterReceiverService;
 using FDSSYSTEM.Services.RoleService;
@@ -45,11 +53,23 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IPostRepository, PostRepository>();
 builder.Services.AddScoped<IPostService, PostService>();
 
+builder.Services.AddScoped<IPostLikeRepository, PostLikeRepository>();
+builder.Services.AddScoped<IPostLikeService, PostLikeService>();
+
+builder.Services.AddScoped<IPostSaveRepository, PostSaveRepository>();
+builder.Services.AddScoped<IPostSaveService, PostSaveService>();
+
 builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 builder.Services.AddScoped<IRoleService, RoleService>();
 
 builder.Services.AddScoped<INewRepository, NewRepository>();
 builder.Services.AddScoped<INewService, NewService>();
+
+builder.Services.AddScoped<INewCommentRepository, NewCommentRepository>();
+builder.Services.AddScoped<INewCommentService, NewCommentService>();
+
+builder.Services.AddScoped<INewOfInterestRepository, NewOfInterestRepository>();
+builder.Services.AddScoped<INewOfInterestService, NewOfInterestService>();
 
 builder.Services.AddScoped<IPostCommentRepository, PostCommentRepository>();
 builder.Services.AddScoped<IPostCommentService, PostCommentService>();

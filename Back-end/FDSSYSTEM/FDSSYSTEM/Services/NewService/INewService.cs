@@ -13,7 +13,7 @@ namespace FDSSYSTEM.Services.NewService
         Task Create(NewDto news);
         Task Update(string id, NewDto news);
         Task Delete(string id);
-        Task Approve(ApproveNewDto approveNewDto);
-        Task Reject(RejectNewDto rejectNewDto);
+        /*Task Approve(ApproveNewDto approveNewDto);
+        Task Reject(RejectNewDto rejectNewDto);*/
     }
 }

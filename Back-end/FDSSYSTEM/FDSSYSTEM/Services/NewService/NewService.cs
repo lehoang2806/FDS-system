@@ -44,14 +44,12 @@ namespace FDSSYSTEM.Services.NewService
         {
             var news = new New
             {
-                PostText = newDto.PostText,
-                CreatedDate = DateTime.Now,
-                PostFile = newDto.PostFile,
+                NewsDescripttion = newDto.NewsDescripttion,
+                NewsTitle = newDto.NewsTitle,
                 Images = newDto.Images,
                 NewId = Guid.NewGuid().ToString(),
-                Content = newDto.Content,
-                Status = "Pending"
-
+                Status = "Pending",
+                SupportBeneficiaries = newDto.SupportBeneficiaries,
             };
             await _newRepository.AddAsync(news);
 
@@ -63,7 +61,7 @@ namespace FDSSYSTEM.Services.NewService
                 {
                     Title = "Có một bài báo mới được tạo",
                     Content = "Có một bài báo mới được tạo ra",
-                    NotificationType = "Approve",
+                    NotificationType = "pending",
                     ObjectType = "New",
                     OjectId = news.NewId,
                     AccountId = userId
@@ -95,10 +93,12 @@ namespace FDSSYSTEM.Services.NewService
         public async Task Update(string id, NewDto newDto)
         {
             var news = await _newRepository.GetByIdAsync(id);
-            news.PostFile = newDto.PostFile;
+
+            news.NewsDescripttion = newDto.NewsDescripttion;
+            news.NewsTitle = newDto.NewsTitle;
             news.Images = newDto.Images;
-            news.Content = newDto.Content;
-            news.PostText = newDto.PostText;
+            news.SupportBeneficiaries = newDto.SupportBeneficiaries;
+
 
             await _newRepository.UpdateAsync(news.Id, news);
 
@@ -108,9 +108,9 @@ namespace FDSSYSTEM.Services.NewService
             {
                 var notificationDto = new NotificationDto
                 {
-                    Title = "Có một bài báo mới được tạo",
-                    Content = "Có một bài báo mới được tạo ra",
-                    NotificationType = "Approve",
+                    Title = "Có một bài báo mới được cập nhật",
+                    Content = "Có một bài báo mới được cập nhật",
+                    NotificationType = "Update",
                     ObjectType = "New",
                     OjectId = news.NewId,
                     AccountId = userId
@@ -123,7 +123,7 @@ namespace FDSSYSTEM.Services.NewService
 
         }
 
-        public async Task Approve(ApproveNewDto approveNewDto)
+/*        public async Task Approve(ApproveNewDto approveNewDto)
         {
             var filter = Builders<New>.Filter.Eq(c => c.NewId, approveNewDto.NewId);
             var news = (await _newRepository.GetAllAsync(filter)).FirstOrDefault();
@@ -172,7 +172,7 @@ namespace FDSSYSTEM.Services.NewService
             //send notification via signalR
             await _hubNotificationContext.Clients.User(notificationDto.AccountId).SendAsync("ReceiveNotification", notificationDto);
 
-        }
+        }*/
 
      
         public async Task<List<New>> GetAllNewsApproved()

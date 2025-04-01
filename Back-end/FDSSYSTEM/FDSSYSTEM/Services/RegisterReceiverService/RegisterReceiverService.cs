@@ -97,7 +97,7 @@ namespace FDSSYSTEM.Services.RegisterReceiverService
                 var notificationDto = new NotificationDto
                 {
                     Title = "Yêu cầu hỗ trợ mới được tạo",
-                    Content = "Có chiến dịch mới được tạo ra",
+                    Content = "Có người đăng ký chiến dịch",
                     NotificationType = "Pending",
                     ObjectType = "RegisterReceiver",
                     OjectId = newRegisterReceiver.RegisterReceiverId,
@@ -130,7 +130,7 @@ namespace FDSSYSTEM.Services.RegisterReceiverService
                 var notificationDto = new NotificationDto
                 {
                     Title = "Có một chiến dịch hỗ trợ mới được cập nhật",
-                    Content = "có chiến dịch mới vừa được cập nhật",
+                    Content = "có người đăng ký chiến dịch vừa  cập nhật",
                     NotificationType = "Update",
                     ObjectType = "RegisterReceiver",
                     OjectId = existingRegisterReceiver.RegisterReceiverId,

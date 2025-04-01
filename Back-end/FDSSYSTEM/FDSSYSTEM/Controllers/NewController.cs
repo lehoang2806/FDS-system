@@ -83,7 +83,7 @@ namespace FDSSYSTEM.Controllers
             }
         }
 
-        [HttpPut("Approve")]
+        /*[HttpPut("Approve")]
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult> Approve(ApproveNewDto approveNewDto)
         {
@@ -112,7 +112,7 @@ namespace FDSSYSTEM.Controllers
                 return BadRequest();
             }
         }
-
+*/
         // Cập nhật tin tức
         [HttpPut("UpdateNews/{id}")]
         [Authorize(Roles = "Admin,Staff")]

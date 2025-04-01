@@ -15,9 +15,6 @@ public partial class Post
 
     public string AccountId { get; set; }
 
-    public string? PostText { get; set; }
-
-    public string? PostFile { get; set; }
 
     public string Status { get; set; } = "Pending";  // Mặc định là chờ duyệt
 
@@ -27,6 +24,10 @@ public partial class Post
 
     public string? Image { get; set; }
 
-    public string Content { get; set; } = null!;
+    public string PostContent { get; set; } = null!;
+    public string PublicDate { get; set; }
+    public string PosterRole { get; set; }
+    public string PosterApproverId { get; set; }
+    public string PosterApproverName { get; set; }
 
 }

@@ -5,17 +5,17 @@ using System.Collections.Generic;
 
 namespace FDSSYSTEM.Models;
 
-public partial class PostComment
+public partial class NewComment
 {
     [BsonId]
     [BsonRepresentation(BsonType.ObjectId)]
-    public string Id { get; set; }  
+    public string Id { get; set; }
 
-    public string PostCommentId { get; set; }
+    public string NewCommentId { get; set; }
 
     public string AccountId { get; set; }
 
-    public required string PostId { get; set; }
+    public required string NewId { get; set; }
 
     public string? Content { get; set; }
 

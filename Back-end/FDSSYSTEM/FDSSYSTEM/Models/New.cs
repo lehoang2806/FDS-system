@@ -16,7 +16,7 @@ public partial class New
 
     public string AccountId { get; set; }
 
-    public string Title { get; set; } = null!;
+    public string NewsTitle { get; set; } = null!;
 
     public string? Subtitle { get; set; }
 
@@ -30,8 +30,10 @@ public partial class New
     public string? PostText { get; set; }
 
     public string? PostFile { get; set; }
+    public string NewsDescripttion { get; set; }
+    public string SupportBeneficiaries { get; set; }
 
- 
+
     public string RejectComment { get; set; }
 
 }

@@ -1,4 +1,5 @@
 ﻿using FDSSYSTEM.DTOs;
+using FDSSYSTEM.DTOs.Certificates;
 using FDSSYSTEM.Models;
 using FDSSYSTEM.Services.PostService;
 using Mapster;
@@ -43,6 +44,10 @@ namespace FDSSYSTEM.Controllers
         {
             try
             {
+                var config = new TypeAdapterConfig();
+                config.NewConfig<Post, PostDto>()
+                     .Map(dest => dest.PosterId, src => src.AccountId);
+
                 var posts = await _postService.GetAllPosts();
                 return Ok(posts.Adapt<List<PostDto>>());
             }

@@ -1,7 +1,7 @@
 ﻿using FDSSYSTEM.DTOs;
 using FDSSYSTEM.Models;
-using FDSSYSTEM.Repositories.PostCommentRepository;
-using FDSSYSTEM.Repositories.PostRepository;
+using FDSSYSTEM.Repositories.NewCommentRepository;
+using FDSSYSTEM.Repositories.NewRepository;
 using FDSSYSTEM.Repositories.UserRepository;
 using FDSSYSTEM.Services.NotificationService;
 using FDSSYSTEM.Services.UserContextService;
@@ -14,38 +14,38 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace FDSSYSTEM.Services.PostCommentService
+namespace FDSSYSTEM.Services.NewCommentService
 {
-    public class PostCommentService : IPostCommentService
+    public class NewCommentService : INewCommentService
     {
-        private readonly IPostCommentRepository _postCommentRepository;
+        private readonly INewCommentRepository _newCommentRepository;
         private readonly IUserContextService _userContextService;
         private readonly IUserRepository _userRepository;
         private readonly IUserService _userService;
         private readonly INotificationService _notificationService;
-        private readonly IPostRepository _postRepository;
+        private readonly INewRepository _newRepository;
         private readonly IHubContext<NotificationHub> _hubNotificationContext;
 
-        public PostCommentService(IPostCommentRepository postCommentRepository
+        public NewCommentService(INewCommentRepository newCommentRepository
              , IUserContextService userContextService, IUserService userService
             , INotificationService notificationService
             , IHubContext<NotificationHub> hubContext
-            , IPostRepository postRepository)
+            , INewRepository newRepository)
         {
-            _postCommentRepository = postCommentRepository;
+            _newCommentRepository = newCommentRepository;
             _userContextService = userContextService;
             _hubNotificationContext = hubContext;
             _notificationService = notificationService;
             _userService = userService;
-            _postRepository = postRepository;
+            _newRepository = newRepository;
         }
 
         // Tạo bình luận mới
-        public async Task Create(PostCommentDto comment)
+        public async Task Create(NewCommentDto comment)
         {
-            await _postCommentRepository.AddAsync(new PostComment
+            await _newCommentRepository.AddAsync(new NewComment
             {
-                PostId = comment.PostId,
+                NewId = comment.NewId,
                 AccountId = _userContextService.UserId ?? "",
                 Content = comment.Content,
                 DateCreated = DateTime.Now,
@@ -53,40 +53,40 @@ namespace FDSSYSTEM.Services.PostCommentService
             });
 
             // Lấy thông tin người tạo bài viết
-            var post = await _postRepository.GetByPostIdAsync(comment.PostId);
-            if (post != null)
+            var news = await _newRepository.GetByIdAsync(comment.NewId);
+            if (news != null)
             {
                 var notificationDto = new NotificationDto
                 {
-                    Title = "Bài đăng của bạn vừa có bình luận mới",
-                    Content = "Một người dùng vừa bình luận trên bài đăng của bạn.",
+                    Title = "Bài tin tức của bạn vừa có bình luận mới",
+                    Content = "Một người dùng vừa bình luận trên bài tin tức của bạn.",
                     NotificationType = "Comment",
-                    ObjectType = "Post",
-                    OjectId = comment.PostId,
-                    AccountId = post.AccountId
+                    ObjectType = "New",
+                    OjectId = comment.NewId,
+                    AccountId = news.AccountId
                 };
                 await _notificationService.AddNotificationAsync(notificationDto);
-                await _hubNotificationContext.Clients.User(post.AccountId).SendAsync("ReceiveNotification", notificationDto);
+                await _hubNotificationContext.Clients.User(news.AccountId).SendAsync("ReceiveNotification", notificationDto);
             }
 
         }
 
         // Lấy tất cả bình luận theo postId
-        public async Task<List<PostComment>> GetByPostId(string postId)
+        public async Task<List<NewComment>> GetByNewId(string newId)
         {
-            return (await _postCommentRepository.GetByPostIdAsync(postId)).ToList();
+            return (await _newCommentRepository.GetByNewIdAsync(newId)).ToList();
         }
 
         // Lấy bình luận theo Id
-        public async Task<PostComment> GetById(string id)
+        public async Task<NewComment> GetById(string id)
         {
-            var filter = Builders<PostComment>.Filter.Eq(c => c.PostCommentId, id);
-            var getbyId = await _postCommentRepository.GetAllAsync(filter);
+            var filter = Builders<NewComment>.Filter.Eq(c => c.NewCommentId, id);
+            var getbyId = await _newCommentRepository.GetAllAsync(filter);
             return getbyId.FirstOrDefault();
         }
 
         // Cập nhật bình luận
-        public async Task Update(string id, PostCommentDto comment)
+        public async Task Update(string id, NewCommentDto comment)
         {
             var existingComment = await GetById(id);
             if (existingComment != null)
@@ -94,14 +94,14 @@ namespace FDSSYSTEM.Services.PostCommentService
                 existingComment.Content = comment.Content;
                 existingComment.DateUpdated = DateTime.Now;
 
-                await _postCommentRepository.UpdateAsync(id, existingComment);
+                await _newCommentRepository.UpdateAsync(id, existingComment);
             }
         }
 
         // Xóa bình luận
         public async Task Delete(string id)
         {
-            await _postCommentRepository.DeleteAsync(id);
+            await _newCommentRepository.DeleteAsync(id);
         }
 
 
