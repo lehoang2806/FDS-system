@@ -1,6 +1,7 @@
 import { selectUserLogin } from "@/app/selector";
 import { useAppSelector } from "@/app/store";
 import { RenderIf } from "@/components/Elements";
+import Button from "@/components/Elements/Button";
 import TextError from "@/components/Elements/TextError";
 import { UserUpdate } from "@/types/user";
 import { Field, Form, Formik } from "formik";
@@ -40,99 +41,97 @@ const UserProfilePage = () => {
 
     return (
         <main id="use-profile">
-            <section id="up-section">
-                <div className="ups-container">
-                    <div className="up-avatar"></div>
-                    <p>Thông tin cá nhân</p>
-                    <Formik
-                        initialValues={initialValues}
-                        onSubmit={onSubmit}
-                        validationSchema={schema}
-                        enableReinitialize={true}
-                    >
-                        {({ handleSubmit, errors, touched, }) => {
+            <Formik
+                initialValues={initialValues}
+                onSubmit={onSubmit}
+                validationSchema={schema}
+                enableReinitialize={true}
+            >
+                {({ handleSubmit, errors, touched, isSubmitting }) => (
+                    <Form onSubmit={handleSubmit} className="form">
+                        <section id="up-section">
+                            <div className="ups-container">
+                                {/* <div className="up-avatar"></div> */}
+                                <h1>Thông tin cá nhân</h1>
+                                <div className="form">
+                                    <div className="form-field">
+                                        <label className="form-label">
+                                            Email
+                                        </label>
+                                        <Field
+                                            disabled
+                                            name="email"
+                                            className="form-input"
 
-                        return(
-                            <>
-                            <Form onSubmit={handleSubmit} className="form">
-                                <div className="form-field">
-                                    <label className="form-label">
-                                        Email
-                                    </label>
-                                    <Field
-                                        disabled
-                                        name="email"
-                                        className="form-input"
+                                        />
+                                        <RenderIf condition={Boolean(get(errors, "email") && get(touched, "email"))}>
+                                            <TextError>{get(errors, "email")}</TextError>
+                                        </RenderIf>
 
-                                    />
-                                    <RenderIf condition={Boolean(get(errors, "email") && get(touched, "email"))}>
-                                        <TextError>{get(errors, "email")}</TextError>
-                                    </RenderIf>
-
+                                    </div>
+                                    <div className="form-field">
+                                        <label className="form-label">
+                                            Tên tài khoản
+                                        </label>
+                                        <Field
+                                            name="fullName"
+                                            className="form-input"
+                                        />
+                                        <RenderIf condition={Boolean(get(errors, "fullName") && get(touched, "fullName"))}>
+                                            <TextError>{get(errors, "fullName")}</TextError>
+                                        </RenderIf>
+                                    </div>
+                                    <div className="form-field">
+                                        <label className="form-label">
+                                            Địa chỉ
+                                        </label>
+                                        <Field
+                                            name="address"
+                                            className="form-input"
+                                        />
+                                        <RenderIf condition={Boolean(get(errors, "address") && get(touched, "address"))}>
+                                            <TextError>{get(errors, "address")}</TextError>
+                                        </RenderIf>
+                                    </div>
+                                    <div className="form-field">
+                                        <label className="form-label">
+                                            Số điện thoại
+                                        </label>
+                                        <Field
+                                            name="phone"
+                                            className="form-input"
+                                        />
+                                        {errors.phone && touched.phone && <span className="text-error">{errors.phone}</span>}
+                                    </div>
+                                    <div className="form-field">
+                                        <label className="form-label">
+                                            Ngày sinh
+                                        </label>
+                                        <Field
+                                            type="date"
+                                            name="birthDay"
+                                            className="form-input"
+                                        />
+                                        {errors.birthDay && touched.birthDay && <span className="text-error">{errors.birthDay}</span>}
+                                    </div>
+                                    <div className="form-field">
+                                        <label className="form-label">
+                                            Giới tính
+                                        </label>
+                                        <Field as="select" name="gender" className="form-input">
+                                            <option value="">Chọn giới tính</option>
+                                            <option value="male">Nam</option>
+                                            <option value="female">Nữ</option>
+                                        </Field>
+                                        {errors.gender && touched.gender && <span className="text-error">{errors.gender}</span>}
+                                    </div>
                                 </div>
-                                <div className="form-field">
-                                    <label className="form-label">
-                                        Tên tài khoản
-                                    </label>
-                                    <Field
-                                        name="fullName"
-                                        className="form-input"
-                                    />
-                                    <RenderIf condition={Boolean(get(errors, "fullName") && get(touched, "fullName"))}>
-                                        <TextError>{get(errors, "fullName")}</TextError>
-                                    </RenderIf>
-                                </div>
-                                <div className="form-field">
-                                    <label className="form-label">
-                                        Địa chỉ
-                                    </label>
-                                    <Field
-                                        name="address"
-                                        className="form-input"
-                                    />
-                                    <RenderIf condition={Boolean(get(errors, "address") && get(touched, "address"))}>
-                                        <TextError>{get(errors, "address")}</TextError>
-                                    </RenderIf>
-                                </div>
-                                <div className="form-field">
-                                    <label className="form-label">
-                                        Số điện thoại
-                                    </label>
-                                    <Field
-                                        name="phone"
-                                        className="form-input"
-                                    />
-                                    {errors.phone && touched.phone && <span className="text-error">{errors.phone}</span>}
-                                </div>
-                                <div className="form-field">
-                                    <label className="form-label">
-                                        Ngày sinh
-                                    </label>
-                                    <Field
-                                        type="date"
-                                        name="birthDay"
-                                        className="form-input"
-                                    />
-                                    {errors.birthDay && touched.birthDay && <span className="text-error">{errors.birthDay}</span>}
-                                </div>
-                                <div className="form-field">
-                                    <label className="form-label">
-                                        Giới tính
-                                    </label>
-                                    <Field as="select" name="gender" className="form-input">
-                                        <option value="">Chọn giới tính</option>
-                                        <option value="male">Nam</option>
-                                        <option value="female">Nữ</option>
-                                    </Field>
-                                    {errors.gender && touched.gender && <span className="text-error">{errors.gender}</span>}
-                                </div>
-                                <button className="sc-btn" type="submit">Cập nhật</button>
-                            </Form>
-                            </>
-                        )}}
-                    </Formik>
-                </div>
-            </section>
+                                <Button loading={isSubmitting} type="submit" title="Cập nhật" />
+                            </div>
+                        </section>
+                    </Form>
+                )}
+            </Formik>
         </main>
     )
 }

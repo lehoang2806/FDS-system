@@ -18,7 +18,6 @@ export type UserInfo = {
     phone: string;
     avatar?: string | null;
     gender?: string | null;
-    status?: string | null;
     userCreated?: string | null;
     dateCreated?: string | null;
     userUpdated?: string | null;
@@ -28,6 +27,10 @@ export type UserInfo = {
     dateDelete?: string | null;
     roleId: number;
     address?: string | null;
+    isConfirm: boolean;
+    type?: string | null;
+    donorType?: string | null;
+    createdDate: string;
 };
 
 interface AddStaff {
@@ -43,6 +46,7 @@ interface AdminStaffState {
 
 interface UserState {
     listUser: UserInfo[];
+    profileUser: UserInfo | null;
     listDonorCertificate: DonorCertificate[];
     listRecipientCertificate: RecipientCertificate[];
     currentDonorPersonalCertificate: currentPersonalDonorCertificate | null;
@@ -181,7 +185,7 @@ interface currentPersonalDonorCertificate {
     address: string;
     socialMediaLink?: string;
     mainSourceIncome: string;
-    monthlyIncome: number;
+    monthlyIncome: string;
     images: string[];
     reviewComments?: ReviewComment[] | null;
 }
