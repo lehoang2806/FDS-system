@@ -275,7 +275,7 @@ public class UserService : IUserService
                 Title = "Chứng nhận mới được tạo",
                 Content = "Có chứng nhận mới được tạo ra",
                 NotificationType = "Pending",
-                ObjectType = "PersonalDonor Certificate Certificate",
+                ObjectType = "Personal Donor Certificate ",
                 OjectId = certificateId,
                 AccountId = userId
             };
@@ -912,5 +912,21 @@ public class UserService : IUserService
         await _emailHeper.SendEmailAsync(subject, content, otpCode.Email);
 
         //TODO: Send OTP via SMS
+    }
+
+    public async Task<List<string>> GetAllDonorAndRecipientConfirmedId()
+    {
+        List<int> roleIds = new List<int>
+        {
+
+            3,//donor
+            4//recipient
+        };
+        var filter = Builders<Account>.Filter.And(
+              Builders<Account>.Filter.In(c => c.RoleId, roleIds),
+              Builders<Account>.Filter.Eq(p => p.IsConfirm, true)
+           );
+     
+        return (await _userRepository.GetAllAsync(filter)).Select(x => x.AccountId).ToList();
     }
 }
