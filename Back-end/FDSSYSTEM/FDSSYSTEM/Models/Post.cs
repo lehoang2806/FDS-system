@@ -22,7 +22,7 @@ public partial class Post
     public List<string> Images { get; set; }
     public string RejectComment { get; set; }
 
-    public string? Image { get; set; }
+    public string PosterName { get; set; }
 
     public string PostContent { get; set; } = null!;
     public string PublicDate { get; set; }

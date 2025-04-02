@@ -18,18 +18,12 @@ public partial class New
 
     public string NewsTitle { get; set; } = null!;
 
-    public string? Subtitle { get; set; }
-
-    public string Content { get; set; } = null!;
 
     public string Status { get; set; } = "Pending";  // Trạng thái mặc định là Pending
 
     public DateTime CreatedDate { get; set; } = DateTime.Now;
     public List<string> Images { get; set; }
 
-    public string? PostText { get; set; }
-
-    public string? PostFile { get; set; }
     public string NewsDescripttion { get; set; }
     public string SupportBeneficiaries { get; set; }
 

@@ -3,7 +3,6 @@
     public class NewDto
     {
 
-        public string? Image { get; set; }
         public List<string> Images { get; set; }
         public string NewsDescripttion { get; set; }
         public string SupportBeneficiaries { get; set; }

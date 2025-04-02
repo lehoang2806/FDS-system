@@ -44,7 +44,8 @@ namespace FDSSYSTEM.Services.PostService
                 PostId = Guid.NewGuid().ToString(),
                 Images = post.Images,
                 AccountId = accountId,
-                PosterRole = _userContextService.Role??""
+                PosterRole = _userContextService.Role??"",
+               PosterName = post.PosterName,
             };
             await _postRepository.AddAsync(newPost);
 
@@ -90,6 +91,7 @@ namespace FDSSYSTEM.Services.PostService
 
             post.Images = postDto.Images;
             post.PostContent = postDto.PostContent;
+            post.PosterName = postDto.PosterName;
 
 
             await _postRepository.UpdateAsync(post.Id, post);
@@ -104,7 +106,8 @@ namespace FDSSYSTEM.Services.PostService
                     NotificationType = "Update",
                     ObjectType = "Post",
                     OjectId = post.PostId,
-                    AccountId = userId
+                    AccountId = userId,
+                    
                 };
                 //save notifiation to db
                 await _notificationService.AddNotificationAsync(notificationDto);
