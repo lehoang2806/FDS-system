@@ -1,6 +1,11 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\FDSSYSTEM",
+    "\\FDSSYSTEM\\FDSSYSTEM",
+    "\\FDSSYSTEM\\FDSSYSTEM\\Controllers",
+    "\\FDSSYSTEM\\FDSSYSTEM\\Services\\NewService"
   ],
+  "SelectedNode": "\\FDSSYSTEM\\FDSSYSTEM\\Controllers\\NewController.cs",
   "PreviewInSolutionExplorer": false
 }

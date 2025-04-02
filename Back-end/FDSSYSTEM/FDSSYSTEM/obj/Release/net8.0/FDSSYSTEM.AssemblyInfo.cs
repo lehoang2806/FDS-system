@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("FDSSYSTEM")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f3280ebefc4e6da03d5df4793e7582bb43314e03")]
 [assembly: System.Reflection.AssemblyProductAttribute("FDSSYSTEM")]
 [assembly: System.Reflection.AssemblyTitleAttribute("FDSSYSTEM")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
