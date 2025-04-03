@@ -13,5 +13,6 @@ type SupporterCardProps = {
 }
 
 type NewsCardProps = {
+    news?: NewsInfo,
     onClickDetail?: () => void,
 }
