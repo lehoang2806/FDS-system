@@ -1,13 +1,33 @@
+import { selectGetAllNews } from '@/app/selector'
+import { useAppDispatch, useAppSelector } from '@/app/store'
 import { ActiveIcon, BlockIcon, TotalIcon } from '@/assets/icons'
 import { navigateHook } from '@/routes/RouteApp'
 import { routes } from '@/routes/routeName'
-import { FC } from 'react'
+import { setLoading } from '@/services/app/appSlice'
+import { getAllNewsApiThunk } from '@/services/news/newsThunk'
+import { FC, useEffect } from 'react'
 
 const StaffListNewsPage: FC = () => {
     const handleToDetail = (newsId: string) => {
         const url = routes.staff.news.detail.replace(":id", newsId);
         return navigateHook(url)
     }
+
+    const dispatch = useAppDispatch();
+    const news = useAppSelector(selectGetAllNews);
+
+    useEffect(() => {
+        dispatch(setLoading(true))
+        dispatch(getAllNewsApiThunk())
+            .unwrap()
+            .then()
+            .catch()
+            .finally(() => {
+                setTimeout(() => {
+                    dispatch(setLoading(false))
+                }, 1000)
+            })
+    }, [dispatch])
 
     return (
         <section id="staff-list-news" className="staff-section">
@@ -23,34 +43,7 @@ const StaffListNewsPage: FC = () => {
                         </div>
                         <div className="st-info">
                             <h3>Total</h3>
-                            <p>7 News</p>
-                        </div>
-                    </div>
-                    <div className="staff-tab staff-tab-2">
-                        <div className="st-figure st-figure-2">
-                            <BlockIcon className="st-icon" />
-                        </div>
-                        <div className="st-info">
-                            <h3>Reject</h3>
-                            <p>7 News</p>
-                        </div>
-                    </div>
-                    <div className="staff-tab staff-tab-3">
-                        <div className="st-figure st-figure-3">
-                            <ActiveIcon className="st-icon" />
-                        </div>
-                        <div className="st-info">
-                            <h3>Approve</h3>
-                            <p>7 News</p>
-                        </div>
-                    </div>
-                    <div className="staff-tab staff-tab-4">
-                        <div className="st-figure st-figure-4">
-                            <ActiveIcon className="st-icon" />
-                        </div>
-                        <div className="st-info">
-                            <h3>Pending</h3>
-                            <p>7 News</p>
+                            <p>{news.length} News</p>
                         </div>
                     </div>
                 </div>
@@ -62,13 +55,13 @@ const StaffListNewsPage: FC = () => {
                         <thead className="table-head">
                             <tr className="table-head-row">
                                 <th className="table-head-cell">
-                                    ID
+                                    Title
                                 </th>
                                 <th className="table-head-cell">
-                                    Name
+                                    Description
                                 </th>
                                 <th className="table-head-cell">
-                                    Creste Dste
+                                    Support Beneficiaries
                                 </th>
                                 <th className="table-head-cell">
                                     Action
@@ -76,22 +69,16 @@ const StaffListNewsPage: FC = () => {
                             </tr>
                         </thead>
                         <tbody className="table-body">
-                            <tr className="table-body-row">
-                                <td className='table-body-cell'>1</td>
-                                <td className='table-body-cell'>A</td>
-                                <td className='table-body-cell'>7/1</td>
-                                <td className="table-body-cell">
-                                    <button className='view-btn' onClick={() => handleToDetail('1')}>View</button>
-                                </td>
-                            </tr>
-                            <tr className="table-body-row">
-                                <td className='table-body-cell'>1</td>
-                                <td className='table-body-cell'>A</td>
-                                <td className='table-body-cell'>7/1</td>
-                                <td className="table-body-cell">
-                                    <button className='view-btn' onClick={() => handleToDetail('1')}>View</button>
-                                </td>
-                            </tr>
+                            {news && news.map((item, index) => (
+                                <tr className="table-body-row" key={index}>
+                                    <td className='table-body-cell'>{item.newsTitle}</td>
+                                    <td className='table-body-cell'>{item.newsDescripttion}</td>
+                                    <td className='table-body-cell'>{item.supportBeneficiaries}</td>
+                                    <td className="table-body-cell">
+                                        <button className='view-btn' onClick={() => handleToDetail(item.newId)}>View</button>
+                                    </td>
+                                </tr>
+                            ))}
                         </tbody>
                     </table>
                 </div>
