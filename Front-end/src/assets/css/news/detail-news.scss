@@ -11,6 +11,8 @@
             margin: 0 auto;
 
             .dnscr1 {
+                display: flex;
+                justify-content: center;
                 background: linear-gradient(to bottom, #a05e44 0%, #ffbe99 0%, #ffffff 100%);
 
                 .dn-img {
@@ -107,6 +109,7 @@
                         font-size: 14px;
                         font-weight: 400;
                         color: #393939;
+                        margin-bottom: 20px;
                     }
                 }
             }

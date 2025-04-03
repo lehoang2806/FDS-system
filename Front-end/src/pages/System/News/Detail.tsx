@@ -1,17 +1,41 @@
-import React from 'react'
+import { selectGetNewsById } from "@/app/selector";
+import { useAppDispatch, useAppSelector } from "@/app/store";
+import { setLoading } from "@/services/app/appSlice";
+import { getNewsByIdApiThunk } from "@/services/news/newsThunk";
+import { useEffect } from "react";
+import { useParams } from "react-router-dom";
 
 const DetailNewsPage = () => {
+    const { id } = useParams<{ id: string }>();
+
+    const dispatch =useAppDispatch();
+    const currentNews = useAppSelector(selectGetNewsById)
+
+    const createDate = currentNews?.createdDate && currentNews?.createdDate.split("T")[0];
+
+    useEffect(() => {
+        dispatch(setLoading(true))
+        dispatch(getNewsByIdApiThunk(String(id)))
+            .unwrap()
+            .then()
+            .catch()
+            .finally(() => {
+                setTimeout(() => {
+                    dispatch(setLoading(false))
+                }, 1000)
+            })
+    }, [dispatch, id])
+    
     return (
         <main id="detail-news">
             <section id="dn-section">
                 <div className="dns-container">
                     <div className="dnscr1">
-                        <div className="dn-img"></div>
+                        <img src={currentNews?.images[0]} className="dn-img"/>
                     </div>
                     <div className="dnscr2">
                         <div className="dnscr2r1">
-                            <p>Trạng thái</p>
-                            <h2>Tên tin tức</h2>
+                            <h2>{currentNews?.newsTitle}</h2>
                         </div>
                         <div className="dnscr2r2">
                             <p>Giới thiệu</p>
@@ -24,7 +48,9 @@ const DetailNewsPage = () => {
                         </div>
                         <div className="dnscr3r2">
                             <h4>Chi tiết tin tức</h4>
-                            <p>Thông tin tin tức</p>
+                            <p>{currentNews?.newsDescripttion}</p>
+                            <h4>Đối tượng hỗ trợ</h4>
+                            <p>{currentNews?.supportBeneficiaries}</p>
                         </div>
                     </div>
                     <div className="dnscr4">
