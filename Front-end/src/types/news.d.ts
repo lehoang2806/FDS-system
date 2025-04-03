@@ -1,5 +1,6 @@
 interface NewsState {
     listNews: NewsInfo[];
+    currentNews: NewsInfo | null;
 }
 
 interface ActionParamNews {
@@ -13,7 +14,7 @@ interface NewsInfo {
     id: string;
     newId: string;
     newsTitle: string;
-    createDate: string;
+    createdDate: string;
     images: string[];
     newsDescripttion: string;
     supportBeneficiaries: string;

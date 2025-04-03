@@ -7,5 +7,10 @@ export const createNewsApi = async (params: ActionParamNews) => {
 
 export const getAllNewsApi = async () => {
     const data = await request.get('api/news/GetAllNews');
-    return data.data
+    return data.data;
+}
+
+export const getNewsByIdApi = async (newsId: string) => {
+    const data = await request.get(`api/news/GetNewById/${newsId}`);
+    return data.data;
 }
