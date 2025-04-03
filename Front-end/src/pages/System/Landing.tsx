@@ -40,7 +40,7 @@ export default function () {
             .finally(() => {
                 dispatch(setLoading(false));
             });
-    }, [dispatch]);
+    }, []);
 
     return (
         <>
