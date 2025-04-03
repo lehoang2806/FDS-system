@@ -1,10 +1,17 @@
+import { selectIsAuthenticated } from '@/app/selector';
+import { useAppSelector } from '@/app/store';
 import { Post } from '@/components/Elements';
+import { CreatePostModal } from '@/components/Modal';
 import { routes } from '@/routes/routeName'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 
 const PostForumPage = () => {
     const [activeTab, setActiveTab] = useState<"noibat" | "theodoi">("noibat");
+
+    const isAuthentication = useAppSelector(selectIsAuthenticated)
+
+    const [isCreatePostModalOpen, setIsCreatePostModalOpen] = useState(false)
 
     return (
         <main id="post-forum">
@@ -89,6 +96,8 @@ const PostForumPage = () => {
                                     Theo dõi
                                 </div>
                             </div>
+
+                            <button className="pr-btn" onClick={() => setIsCreatePostModalOpen(true)}>Tạo bài viết</button>
                         </div>
                         <div className="pfscc2r2">
                             {activeTab === "noibat" ? (
@@ -110,6 +119,7 @@ const PostForumPage = () => {
                     </div>
                 </div>
             </section>
+            <CreatePostModal isOpen={isCreatePostModalOpen} setIsOpen={setIsCreatePostModalOpen} />
         </main>
     )
 }

@@ -63,3 +63,5 @@ interface UpdateOrganizationDonorCertificateModalProps extends ModalCommonProps 
 interface UpdateRecipientCertificateModalProps extends ModalCommonProps {
     selectedCurrentRecipientCertificate?: currentRecipientCertificate | null;
 }
+
+interface CreatePostModalProps extends ModalCommonProps {}

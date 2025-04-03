@@ -19,3 +19,9 @@ interface NewsInfo {
     newsDescripttion: string;
     supportBeneficiaries: string;
 }
+
+interface ActionParamNewsComment {
+    newId?: string;
+    content?: string;
+    fileComment: string;
+}

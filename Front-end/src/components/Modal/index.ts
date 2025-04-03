@@ -15,6 +15,7 @@ import UpdateCampaignModal from "./UpdateCampaign";
 import UpdatePersonalDonorCertificateModal from "./UpdatePersonalDonor";
 import UpdateOrganizationDonorCertificateModal from "./UpdateOrganizationDonor";
 import UpdateRecipientCertificateModal from "./UpdateRecipientCertificate";
+import CreatePostModal from "./CreatePost";
 
 export {
     Modal,
@@ -33,5 +34,6 @@ export {
     UpdateCampaignModal,
     UpdatePersonalDonorCertificateModal,
     UpdateOrganizationDonorCertificateModal,
-    UpdateRecipientCertificateModal
+    UpdateRecipientCertificateModal,
+    CreatePostModal
 };
