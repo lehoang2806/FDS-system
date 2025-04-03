@@ -1,7 +1,6 @@
 interface CreateNews {
-    title: string;
-    content: string;
-    image: string;
-    dateStart: string;
-    dateEnd: string;
+    newsTitle: string;
+    newsDescripttion: string;
+    supportBeneficiaries: string;
+    images: string[];  
 }

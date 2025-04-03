@@ -13,51 +13,43 @@ import { get } from "lodash";
 const StaffAddNewsPage: FC = () => {
     const dispatch = useAppDispatch();
 
-    const [imagePreview, setImagePreview] = useState<string>();
+    const [imagePreview, setImagePreview] = useState<string[]>([]);
 
     const initialValues: CreateNews = {
-        title: "",
-        image: "",
-        content: "",
-        dateStart: "",
-        dateEnd: "",
+        newsTitle: "",
+        images: [],
+        newsDescripttion: "",
+        supportBeneficiaries: "",
     };
 
     const schema = Yup.object().shape({
-        title: Yup.string()
+        newsTitle: Yup.string()
             .required("Tiêu đề không được để trống")
             .min(5, "Tiêu đề phải có ít nhất 5 ký tự")
             .max(100, "Tiêu đề không được vượt quá 100 ký tự"),
 
-        image: Yup.string()
-            .required("Hình ảnh không được để trống"),
+        images: Yup.array().of(Yup.string().required('Mỗi ảnh phải là một chuỗi hợp lệ')).min(1, 'Cần ít nhất một ảnh').required('Danh sách ảnh là bắt buộc'),
 
-        content: Yup.string()
+
+        newsDescripttion: Yup.string()
             .required("Nội dung không được để trống")
             .min(10, "Nội dung phải có ít nhất 10 ký tự"),
 
-        dateStart: Yup.date()
-            .required("Ngày bắt đầu không được để trống")
-            .typeError("Định dạng ngày không hợp lệ"),
-
-        dateEnd: Yup.date()
-            .required("Ngày kết thúc không được để trống")
-            .typeError("Định dạng ngày không hợp lệ")
-            .min(Yup.ref("dateStart"), "Ngày kết thúc phải sau ngày bắt đầu"),
+        supportBeneficiaries: Yup.string()
+            .required("Đối tượng hỗ trợ không được để trống")
     });
 
-    const handleFileChange = async (
-        event: ChangeEvent<HTMLInputElement>,
-        setFieldValue: Function
-    ) => {
-        if (event.target.files && event.target.files.length > 0) {
-            const file = event.target.files[0];
+    const handleFileChange = async (event: ChangeEvent<HTMLInputElement>, setFieldValue: Function) => {
+        if (event.target.files) {
+            const files = Array.from(event.target.files);
+            const base64Promises = files.map(file => convertToBase64(file));
+
             try {
-                const base64Image = await convertToBase64(file);
-                setFieldValue("image", base64Image);
-                setImagePreview(base64Image);
+                const base64Images = await Promise.all(base64Promises);
+                setFieldValue("images", base64Images); // 🔹 Lưu danh sách ảnh vào Formik
+                setImagePreview(base64Images); // 🔹 Cập nhật ảnh xem trước
             } catch (error) {
-                console.error("Lỗi khi chuyển đổi ảnh:", error);
+                console.error("Error converting images:", error);
             }
         }
     };
@@ -77,7 +69,7 @@ const StaffAddNewsPage: FC = () => {
         await dispatch(createNewsApiThunk(values)).unwrap().then(() => {
             toast.success("Add News successfully");
             helpers.resetForm();
-            setImagePreview(undefined);
+            setImagePreview([]);
         }).catch((error) => {
             const errorData = get(error, 'data', null);
             toast.error(errorData);
@@ -130,35 +122,30 @@ const StaffAddNewsPage: FC = () => {
                                     <div className="form">
                                         <div className="form-field">
                                             <label className="form-label">Title</label>
-                                            <Field name="title" type="text" placeholder="Hãy nhập tiêu đề" className={classNames("form-input", { "is-error": errors.title && touched.title })} />
-                                            {errors.title && touched.title && <span className="text-error">{errors.title}</span>}
+                                            <Field name="newsTitle" type="text" placeholder="Hãy nhập tiêu đề" className={classNames("form-input", { "is-error": errors.newsTitle && touched.newsTitle })} />
+                                            {errors.newsTitle && touched.newsTitle && <span className="text-error">{errors.newsTitle}</span>}
                                         </div>
                                         <div className="form-field">
-                                            <label className="form-label">Content</label>
-                                            <Field name="content" type="text" placeholder="Hãy nhập nội dung" className={classNames("form-input", { "is-error": errors.content && touched.content })} />
-                                            {errors.content && touched.content && <span className="text-error">{errors.content}</span>}
+                                            <label className="form-label">Description</label>
+                                            <Field name="newsDescripttion" type="text" placeholder="Hãy nhập nội dung" className={classNames("form-input", { "is-error": errors.newsDescripttion && touched.newsDescripttion })} />
+                                            {errors.newsDescripttion && touched.newsDescripttion && <span className="text-error">{errors.newsDescripttion}</span>}
+                                        </div>
+                                        <div className="form-field">
+                                            <label className="form-label">Support Beneficiaries</label>
+                                            <Field name="supportBeneficiaries" type="text" placeholder="Hãy nhập đối tượng hỗ trợ" className={classNames("form-input", { "is-error": errors.supportBeneficiaries && touched.supportBeneficiaries })} />
+                                            {errors.supportBeneficiaries && touched.supportBeneficiaries && <span className="text-error">{errors.supportBeneficiaries}</span>}
                                         </div>
                                         <div className="form-field">
                                             <label className="form-label">Ảnh</label>
-                                            <input type="file" accept="image/*" multiple onChange={(e) => handleFileChange(e, setFieldValue)} className="form-input" />
-                                            {errors.image && touched.image && <span className="text-error">{errors.image}</span>}
+                                            <input type="file" accept="image/*" multiple onChange={(e) => handleFileChange(e, setFieldValue)} className={classNames("form-input", { "is-error": errors.images && touched.images })} />
+                                            {errors.images && touched.images && <span className="text-error">{errors.images}</span>}
                                         </div>
 
-                                        <div className="form-field">
-                                            <label className="form-label">Ngày bắt đầu</label>
-                                            <Field name="dateStart" type="datetime-local" className="form-input" />
-                                            {errors.dateStart && touched.dateStart && <span className="text-error">{errors.dateStart}</span>}
-                                        </div>
-
-                                        <div className="form-field">
-                                            <label className="form-label">Ngày kết thúc</label>
-                                            <Field name="dateEnd" type="datetime-local" className="form-input" />
-                                            {errors.dateEnd && touched.dateEnd && <span className="text-error">{errors.dateEnd}</span>}
-                                        </div>
-
-                                        {imagePreview && (
+                                        {imagePreview.length > 0 && (
                                             <div className="image-preview-container">
-                                                <img src={imagePreview} alt={`Preview`} className="image-preview" style={{ width: "100px", height: "100px" }} />
+                                                {imagePreview.map((img, index) => (
+                                                    <img key={index} src={img} alt={`Preview ${index}`} className="image-preview" style={{ width: "100px", height: "100px" }} />
+                                                ))}
                                             </div>
                                         )}
                                     </div>
