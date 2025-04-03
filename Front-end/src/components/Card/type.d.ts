@@ -1,5 +1,6 @@
 type EventCardProps = {
     type: 1 | 2,
+    news?: NewsInfo;
 };
 
 type CampaignCardProps = {
