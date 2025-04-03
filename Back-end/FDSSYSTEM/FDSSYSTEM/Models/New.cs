@@ -19,7 +19,7 @@ public partial class New
     public string NewsTitle { get; set; } = null!;
 
 
-    public string Status { get; set; } = "Pending";  // Trạng thái mặc định là Pending
+   /* public string Status { get; set; } = "Pending";  // Trạng thái mặc định là Pending*/
 
     public DateTime CreatedDate { get; set; } = DateTime.Now;
     public List<string> Images { get; set; }
@@ -28,6 +28,6 @@ public partial class New
     public string SupportBeneficiaries { get; set; }
 
 
-    public string RejectComment { get; set; }
+ /*   public string RejectComment { get; set; }*/
 
 }

@@ -48,13 +48,12 @@ namespace FDSSYSTEM.Services.NewService
                 NewsTitle = newDto.NewsTitle,
                 Images = newDto.Images,
                 NewId = Guid.NewGuid().ToString(),
-                Status = "Pending",
                 SupportBeneficiaries = newDto.SupportBeneficiaries,
             };
             await _newRepository.AddAsync(news);
 
             //Send notifiction all staff and admin
-            var userReceiveNotifications = await _userService.GetAllAdminAndStaffId();
+            var userReceiveNotifications = await _userService.GetAllDonorAndRecipientConfirmedId();
             foreach (var userId in userReceiveNotifications)
             {
                 var notificationDto = new NotificationDto
@@ -175,7 +174,7 @@ namespace FDSSYSTEM.Services.NewService
         }*/
 
      
-        public async Task<List<New>> GetAllNewsApproved()
+       /* public async Task<List<New>> GetAllNewsApproved()
         {
             var filter = Builders<New>.Filter.Eq(news => news.Status, "Approved");
             return (await _newRepository.GetAllAsync(filter)).ToList();
@@ -185,13 +184,22 @@ namespace FDSSYSTEM.Services.NewService
         {
             var filter = Builders<New>.Filter.Eq(news => news.Status, "Pending");
             return (await _newRepository.GetAllAsync(filter)).ToList();
-        }
+        }*/
 
-        public async Task<List<New>> GetAllNews()
+
+        public async Task<List<New>> GetAllNew()
         {
             return (await _newRepository.GetAllAsync()).ToList();
         }
 
+
+
+        public async Task<New> GetNewById(string id)
+        {
+            var filter = Builders<New>.Filter.Eq(c => c.NewId, id);
+            var getbyId = await _newRepository.GetAllAsync(filter);
+            return getbyId.FirstOrDefault();
+        }
     }
 }
 

@@ -40,13 +40,13 @@ namespace FDSSYSTEM.Controllers
         // Lấy tất cả tin tức
 
         [HttpGet("GetAllNews")]
-        [Authorize(Roles = "Admin,Staff,Donor,Staff")]
-        public async Task<ActionResult> GetAllNews()
+        /* [Authorize(Roles = "Admin,Staff,Donor")]*/
+        public async Task<ActionResult> GetAllNew()
         {
             try
             {
-                var news = await _newService.GetAllNews();
-                return Ok(news.Adapt<List<NewDto>>());
+                var news = await _newService.GetAllNew();
+                return Ok(news);
             }
             catch (Exception ex)
             {
@@ -54,34 +54,32 @@ namespace FDSSYSTEM.Controllers
             }
         }
 
-        [HttpGet("GetAllNewsApproved")]
-        [Authorize(Roles = "Admin,Staff,Donor,Staff")]
-        public async Task<ActionResult> GetAllNewsApproved()
+        [HttpGet("GetNewById/{id}")]
+        /* [Authorize(Roles = "Staff,Admin,Donor,Recipient")]*/
+        public async Task<ActionResult> GetNewById(string id)
         {
             try
             {
-                var news = await _newService.GetAllNewsApproved();
-                return Ok(news.Adapt<List<NewDto>>());
+                // Gọi service để lấy chứng nhận theo ID
+                var news = await _newService.GetNewById(id);
+
+                // Nếu chứng nhận không tìm thấy, trả về lỗi NotFound
+                if (news == null)
+                {
+                    return NotFound(new { message = "News not found" });
+                }
+
+                // Trả về thông tin chi tiết của chứng nhận
+                return Ok(news);
             }
             catch (Exception ex)
             {
-                return BadRequest();
+                return BadRequest(new { message = ex.Message });
             }
         }
 
-        [HttpGet("GetAllNewsPending")]
-        public async Task<ActionResult> GetAllNewsPending()
-        {
-            try
-            {
-                var news = await _newService.GetAllNewsPending();
-                return Ok(news.Adapt<List<NewDto>>());
-            }
-            catch (Exception ex)
-            {
-                return BadRequest();
-            }
-        }
+
+
 
         /*[HttpPut("Approve")]
         [Authorize(Roles = "Admin")]
