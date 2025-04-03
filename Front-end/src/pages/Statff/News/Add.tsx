@@ -15,7 +15,7 @@ const StaffAddNewsPage: FC = () => {
 
     const [imagePreview, setImagePreview] = useState<string[]>([]);
 
-    const initialValues: CreateNews = {
+    const initialValues: ActionParamNews = {
         newsTitle: "",
         images: [],
         newsDescripttion: "",
@@ -65,7 +65,7 @@ const StaffAddNewsPage: FC = () => {
 
     const dateCurrent = new Date().toISOString().split("T")[0];
 
-    const onSubmit = async (values: CreateNews, helpers: FormikHelpers<CreateNews>) => {
+    const onSubmit = async (values: ActionParamNews, helpers: FormikHelpers<ActionParamNews>) => {
         await dispatch(createNewsApiThunk(values)).unwrap().then(() => {
             toast.success("Add News successfully");
             helpers.resetForm();

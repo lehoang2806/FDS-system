@@ -52,6 +52,8 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
     const [isNotifOpen, setIsNotifOpen] = useState(false);
     const notifications = useAppSelector(selectNotifications)
 
+    console.log(notifications)
+
     const handleNewNotification = (notification: any) => {
         const correctedNotification: NotificationDto = {
             ...notification,
@@ -258,6 +260,23 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
                                                 if (notif.objectType === "RegisterReceiver") {
                                                     let actionText = "";
                                                     if (notif.notificationType === "Pending") actionText = "Có người đăng ký chiến dịch của bạn.";
+
+                                                    if (actionText) {
+                                                        return (
+                                                            <div
+                                                                key={notif.objectId || notif.createdDate}
+                                                                className={`notification-item ${notif.isRead ? "read" : "unread"}`}
+                                                                onClick={() => { markAsRead(notifications.indexOf(notif)), handleToDetailCertificate(notif.objectId, "Personal") }}
+                                                            >
+                                                                <strong>{notif.content}</strong>
+                                                                <p>{actionText}</p>
+                                                            </div>
+                                                        );
+                                                    }
+                                                }
+                                                if (notif.objectType === "New") {
+                                                    let actionText = "";
+                                                    if (notif.notificationType === "pending") actionText = "Có một bài báo mới được tạo.";
 
                                                     if (actionText) {
                                                         return (

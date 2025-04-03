@@ -147,7 +147,7 @@ const StaffHeader: FC = () => {
                                                 );
                                             }
                                         }
-                                        if (notif.objectType === "Recipient Certificate ") {
+                                        if (notif.objectType === "Recipient Certificate") {
                                             let actionText = "";
                                             if (notif.notificationType === "Pending") actionText = "Có chứng nhận mới được tạo";
                                             if (notif.notificationType === "Update") actionText = "Có chứng nhận mới được cập nhật";
