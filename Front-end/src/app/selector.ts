@@ -71,3 +71,7 @@ export const selectNotifications: Selector<NotificationDto[]> = (state: RootStat
 export const selectGetAllNews: Selector<NewsInfo[]> = (state: RootState) => {
     return state.news.listNews
 }
+
+export const selectGetNewsById: Selector<NewsInfo | null> = (state: RootState) => {
+    return state.news.currentNews;
+}

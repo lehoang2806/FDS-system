@@ -1,6 +1,6 @@
 import { selectGetAllNews } from '@/app/selector'
 import { useAppDispatch, useAppSelector } from '@/app/store'
-import { ActiveIcon, BlockIcon, TotalIcon } from '@/assets/icons'
+import { TotalIcon } from '@/assets/icons'
 import { navigateHook } from '@/routes/RouteApp'
 import { routes } from '@/routes/routeName'
 import { setLoading } from '@/services/app/appSlice'
