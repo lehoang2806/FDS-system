@@ -14,3 +14,8 @@ export const getNewsByIdApi = async (newsId: string) => {
     const data = await request.get(`api/news/GetNewById/${newsId}`);
     return data.data;
 }
+
+export const createNewsCommentApi = async (params: ActionParamNewsComment) => {
+    const data = await request.post('api/News/comment/CreateComment', params);
+    return data.data;
+}
