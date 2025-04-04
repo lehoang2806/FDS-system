@@ -19,3 +19,8 @@ export const createNewsCommentApi = async (params: ActionParamNewsComment) => {
     const data = await request.post('api/News/comment/CreateComment', params);
     return data.data;
 }
+
+export const interestNewsApi = async (newsId: string) => {
+    const data = await request.post(`api/NewOfInterest/NewOfInterest/${newsId}`);
+    return data.data;
+}

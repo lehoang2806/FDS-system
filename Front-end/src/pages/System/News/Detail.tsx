@@ -2,7 +2,7 @@ import { selectGetNewsById } from "@/app/selector";
 import { useAppDispatch, useAppSelector } from "@/app/store";
 import { SendIcon } from "@/assets/icons";
 import { setLoading } from "@/services/app/appSlice";
-import { createNewsCommentApiThunk, getNewsByIdApiThunk } from "@/services/news/newsThunk";
+import { createNewsCommentApiThunk, getNewsByIdApiThunk, interestNewsApiThunk } from "@/services/news/newsThunk";
 import { Field, Form, Formik, FormikHelpers } from "formik";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
@@ -41,7 +41,7 @@ const DetailNewsPage = () => {
             })
     }, [dispatch, id])
 
-    const onSubmit = (values: ActionParamNewsComment, helpers: FormikHelpers<ActionParamNewsComment>) => {
+    const onSubmitComment = (values: ActionParamNewsComment, helpers: FormikHelpers<ActionParamNewsComment>) => {
         dispatch(setLoading(true))
         dispatch(createNewsCommentApiThunk(values))
             .unwrap()
@@ -49,6 +49,22 @@ const DetailNewsPage = () => {
                 helpers.resetForm();
                 dispatch(getNewsByIdApiThunk(String(id)))
                 toast.success("Bạn đã bình luận thành công")
+            })
+            .catch()
+            .finally(() => {
+                setTimeout(() => {
+                    dispatch(setLoading(false))
+                }, 1000)
+            })
+    }
+
+    const onInterestNews = (newsId: string) => {
+        dispatch(setLoading(true))
+        dispatch(interestNewsApiThunk(newsId))
+            .unwrap()
+            .then(() => {
+                dispatch(getNewsByIdApiThunk(String(id)))
+                toast.success("Bạn đã quan tâm tin tức này")
             })
             .catch()
             .finally(() => {
@@ -71,7 +87,7 @@ const DetailNewsPage = () => {
                         </div>
                         <div className="dnscr2r2">
                             <p>Giới thiệu</p>
-                            <button className="sc-btn">Quan tâm</button>
+                            <button className="sc-btn" onClick={() => onInterestNews(String(id))}>Quan tâm</button>
                         </div>
                     </div>
                     <div className="dnscr3">
@@ -90,7 +106,7 @@ const DetailNewsPage = () => {
                             <h4>Bình luận</h4>
                             <Formik
                                 initialValues={initValuesNewsComment}
-                                onSubmit={onSubmit}
+                                onSubmit={onSubmitComment}
                                 validationSchema={newsCommentSchema}
                             >
                                 {({

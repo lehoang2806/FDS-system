@@ -1,13 +1,13 @@
 import { ResponseFromServer } from "@/types/app";
 import { TextResponse } from "@/types/auth";
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { createNewsApi, createNewsCommentApi, getAllNewsApi, getNewsByIdApi } from "./newsApi";
+import { createNewsApi, createNewsCommentApi, getAllNewsApi, getNewsByIdApi, interestNewsApi } from "./newsApi";
 
 const CREATE_NEWS = 'CREATE_NEWS';
 const GET_ALL_NEWS = 'GET_ALL_NEWS';
 const GET_NEWS_BY_ID = 'GET_NEWS_BY_ID';
 const CREATE_NEWS_COMMENT = 'CREATE_NEWS_COMMENT';
-// const APPROVE_CAMPAIGN = 'APPROVE_CAMPAIGN';
+const INTEREST_NEWS = "INTEREST_NEWS"
 // const REJECT_CAMPAIGN = 'REJECT_CAMPAIGN';
 // const ADDITIONAL_CAMPAIGN = 'ADDITIONAL_CAMPAIGN';
 
@@ -70,3 +70,18 @@ export const createNewsCommentApiThunk = createAsyncThunk<ResponseFromServer<Tex
         }
     },
 );
+
+export const interestNewsApiThunk = createAsyncThunk<ResponseFromServer<TextResponse>, string>(
+    INTEREST_NEWS,
+    async (payload, { rejectWithValue }) => {
+        try {
+            const response = await interestNewsApi(payload);
+            return response;
+        } catch (err: any) {
+            return rejectWithValue({
+                errorMessage: err.message,
+                data: err.response.data,
+            });
+        }
+    },
+)

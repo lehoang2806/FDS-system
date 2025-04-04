@@ -13,8 +13,8 @@ const ListNewsPage = () => {
     const dispatch = useAppDispatch();
     const news = useAppSelector(selectGetAllNews)
 
-    const handleToDetail = (campaignId: string) => {
-        const url = routes.user.news.detail.replace(":id", campaignId);
+    const handleToDetail = (newsId: string) => {
+        const url = routes.user.news.detail.replace(":id", newsId);
         return navigateHook(url)
     }
 
