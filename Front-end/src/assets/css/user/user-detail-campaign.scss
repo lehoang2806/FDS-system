@@ -4,6 +4,11 @@
     #udc-section {
         padding: 0 20px;
 
+        .pr-btn {
+            border-radius: var(--border-radius-16);
+            margin-top: 20px;
+        }
+
         .udcs-container {
             max-width: 1400px;
             margin: 0 auto;

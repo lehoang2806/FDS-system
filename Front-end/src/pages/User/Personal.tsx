@@ -1,4 +1,4 @@
-import { selectGetAllCampaign, selectGetAllDonorCertificate, selectGetAllRecipientCertificate, selectGetAllRegisterReceivers, selectUserLogin } from "@/app/selector";
+import { selectGetAllCampaign, selectGetAllDonorCertificate, selectGetAllRecipientCertificate, selectGetAllRegisterReceivers, selectGetProfileUser, selectIsAuthenticated, selectUserLogin } from "@/app/selector";
 import { useAppDispatch, useAppSelector } from "@/app/store";
 import { AvatarUser, NoResult } from "@/assets/images"
 import { Loading } from "@/components/Elements";
@@ -8,7 +8,7 @@ import { routes } from "@/routes/routeName";
 import { setLoading } from "@/services/app/appSlice";
 import { getAllCampaignApiThunk } from "@/services/campaign/campaignThunk";
 import { getAllRegisterReceiversApiThunk } from "@/services/registerReceive/registerReceiveThunk";
-import { getAllDonorCertificateApiThunk, getAllRecipientCertificateApiThunk } from "@/services/user/userThunk";
+import { getAllDonorCertificateApiThunk, getAllRecipientCertificateApiThunk, getProfileApiThunk } from "@/services/user/userThunk";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -16,6 +16,8 @@ const UserPersonalPage = () => {
     const dispatch = useAppDispatch();
 
     // Lấy dữ liệu từ Redux store
+    const profileUser = useAppSelector(selectGetProfileUser);
+    const isAuthenticated = useAppSelector(selectIsAuthenticated);
     const userLogin = useAppSelector(selectUserLogin);
     const campaigns = useAppSelector(selectGetAllCampaign);
     const donorCertificates = useAppSelector(selectGetAllDonorCertificate);
@@ -96,13 +98,20 @@ const UserPersonalPage = () => {
     }, [dispatch]);
 
     const handleCreateCampaign = () => {
-        if (userLogin?.isConfirm === false) {
+        if (profileUser?.isConfirm === false) {
             setIsSubmitCertificateModalOpen(true)
         }
-        if (userLogin?.isConfirm === true) {
+        if (profileUser?.isConfirm === true) {
             setIsCreateCampaignModalOpen(true)
         }
     }
+
+    useEffect(() => {
+        if (isAuthenticated) {
+            dispatch(getProfileApiThunk(String(userLogin?.accountId)))
+                .unwrap();
+        }
+    }, [isAuthenticated]);
 
     const handleToDetailCampaign = (campaignId: string) => {
         const url = routes.user.detail_campaign.replace(":id", campaignId);
@@ -141,20 +150,20 @@ const UserPersonalPage = () => {
                             <button className="pr-btn" onClick={() => navigateHook(routes.user.profile)}>Chỉnh sửa thông tin</button>
                         </div>
                     </div>
-                    {isFiltering && <Loading loading={true} isFullPage />} 
+                    {isFiltering && <Loading loading={true} isFullPage />}
                     {userLogin?.roleId === 3 && (
                         <>
                             <div className="upps2cr2">
                                 <div className="upp-tabs">
                                     <div
                                         className={`upp-tabs-item ${activeTab === "chiendich" ? "upp-tabs-item-actived" : ""}`}
-                                        onClick={() => {handleTabChange("chiendich"), handleFilter()}}
+                                        onClick={() => { handleTabChange("chiendich"), handleFilter() }}
                                     >
                                         Chiến dịch
                                     </div>
                                     <div
                                         className={`upp-tabs-item ${activeTab === "chungchi" ? "upp-tabs-item-actived" : ""}`}
-                                        onClick={() => {handleTabChange("chungchi"), handleFilter()}}
+                                        onClick={() => { handleTabChange("chungchi"), handleFilter() }}
                                     >
                                         Xác nhận danh tính
                                     </div>
@@ -253,13 +262,13 @@ const UserPersonalPage = () => {
                                 <div className="upp-tabs">
                                     <div
                                         className={`upp-tabs-item ${activeTab === "chiendich" ? "upp-tabs-item-actived" : ""}`}
-                                        onClick={() => {handleTabChange("chiendich"), handleFilter()}}
+                                        onClick={() => { handleTabChange("chiendich"), handleFilter() }}
                                     >
                                         Chiến dịch đăng ký
                                     </div>
                                     <div
                                         className={`upp-tabs-item ${activeTab === "chungchi" ? "upp-tabs-item-actived" : ""}`}
-                                        onClick={() => {handleTabChange("chungchi"), handleFilter()}}
+                                        onClick={() => { handleTabChange("chungchi"), handleFilter() }}
                                     >
                                         Xác nhận danh tính
                                     </div>
