@@ -1,6 +1,8 @@
 ﻿using FDSSYSTEM.DTOs;
 using FDSSYSTEM.Models;
 using FDSSYSTEM.Services.NewService;
+using Mapster;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -21,6 +23,7 @@ namespace FDSSYSTEM.Controllers
 
         // Tạo bài viết tin tức
         [HttpPost("CreateNews")]
+        [Authorize(Roles = "Staff")]
         public async Task<ActionResult> CreateNews(NewDto news)
         {
             try
@@ -35,13 +38,15 @@ namespace FDSSYSTEM.Controllers
         }
 
         // Lấy tất cả tin tức
+
         [HttpGet("GetAllNews")]
-        public async Task<ActionResult> GetAllNews()
+        /* [Authorize(Roles = "Admin,Staff,Donor")]*/
+        public async Task<ActionResult> GetAllNew()
         {
             try
             {
-                var newsList = await _newService.GetAll();
-                return Ok(newsList);
+                var news = await _newService.GetAllNew();
+                return Ok(news);
             }
             catch (Exception ex)
             {
@@ -49,8 +54,66 @@ namespace FDSSYSTEM.Controllers
             }
         }
 
+        [HttpGet("GetNewById/{id}")]
+        /* [Authorize(Roles = "Staff,Admin,Donor,Recipient")]*/
+        public async Task<ActionResult> GetNewById(string id)
+        {
+            try
+            {
+                // Gọi service để lấy chứng nhận theo ID
+                var news = await _newService.GetNewById(id);
+
+                // Nếu chứng nhận không tìm thấy, trả về lỗi NotFound
+                if (news == null)
+                {
+                    return NotFound(new { message = "News not found" });
+                }
+
+                // Trả về thông tin chi tiết của chứng nhận
+                return Ok(news);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+
+
+
+        /*[HttpPut("Approve")]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult> Approve(ApproveNewDto approveNewDto)
+        {
+            try
+            {
+                await _newService.Approve(approveNewDto);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpPut("Reject")]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult> Reject(RejectNewDto rejectNewDto)
+        {
+            try
+            {
+                await _newService.Reject(rejectNewDto);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
+*/
         // Cập nhật tin tức
         [HttpPut("UpdateNews/{id}")]
+        [Authorize(Roles = "Admin,Staff")]
         public async Task<ActionResult> UpdateNews(string id, NewDto news)
         {
             try
@@ -72,6 +135,7 @@ namespace FDSSYSTEM.Controllers
 
         // Xóa tin tức
         [HttpDelete("DeleteNews/{id}")]
+        [Authorize(Roles = "Admin,Staff")]
         public async Task<ActionResult> DeleteNews(string id)
         {
             try

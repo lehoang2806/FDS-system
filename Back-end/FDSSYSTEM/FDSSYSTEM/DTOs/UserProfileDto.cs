@@ -39,5 +39,7 @@
         public int RoleId { get; set; }
 
         public string? Address { get; set; }
+        public bool IsConfirm { get; set; }
+        public string Type { get; set; }
     }
 }

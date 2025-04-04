@@ -1,35 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+using System;
 
-namespace FDSSYSTEM.Models;
-
-public partial class Postlike
+namespace FDSSYSTEM.Models
 {
-    public int PostLikeId { get; set; }
+    public class PostLike
+    {
+        [BsonId]
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string Id { get; set; }
 
-    public int AccountId { get; set; }
-
-    public int PostId { get; set; }
-
-    public DateTime? LikeDate { get; set; }
-
-    public string? Status { get; set; }
-
-    public string? UserCreated { get; set; }
-
-    public DateTime? DateCreated { get; set; }
-
-    public string? UserUpdated { get; set; }
-
-    public DateTime? DateUpdated { get; set; }
-
-    public bool? IsDelete { get; set; }
-
-    public string? UserDelete { get; set; }
-
-    public DateTime? DateDelete { get; set; }
-
-    public virtual Account Account { get; set; } = null!;
-
-    public virtual Post Post { get; set; } = null!;
+        public string PostId { get; set; }
+        public string AccountId { get; set; }
+        public DateTime CreatedDate { get; set; } = DateTime.Now;
+    }
 }

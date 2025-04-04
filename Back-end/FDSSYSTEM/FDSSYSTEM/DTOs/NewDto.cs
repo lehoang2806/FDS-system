@@ -2,10 +2,11 @@
 {
     public class NewDto
     {
-        public string? PostText { get; set; }
-        public string? PostFile { get; set; }
-        public string? Image { get; set; }
-        public string Content { get; set; } = null!;
-        public required string Status { get; set; }
+
+        public List<string> Images { get; set; }
+        public string NewsDescripttion { get; set; }
+        public string SupportBeneficiaries { get; set; }
+        public string NewsTitle { get; set; }
     }
 }
+

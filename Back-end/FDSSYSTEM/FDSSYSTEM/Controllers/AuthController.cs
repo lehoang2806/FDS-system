@@ -1,5 +1,6 @@
 ﻿using FDSSYSTEM.DTOs;
 using FDSSYSTEM.Helpers;
+using FDSSYSTEM.Services.RoleService;
 using FDSSYSTEM.Services.UserService;
 using Mapster;
 using Microsoft.AspNetCore.Http;
@@ -13,10 +14,12 @@ namespace FDSSYSTEM.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IUserService _userService;
+        private readonly IRoleService _roleService;
         private readonly JwtHelper _jwtHelper;
-        public AuthController(IUserService userService, JwtHelper jwtHelper)
+        public AuthController(IUserService userService, IRoleService roleService, JwtHelper jwtHelper)
         {
             _userService = userService;
+            _roleService = roleService;
             _jwtHelper = jwtHelper;
         }
 
@@ -27,13 +30,17 @@ namespace FDSSYSTEM.Controllers
             if (user == null || !_userService.VerifyPassword(loginRequest.Password, user.Password))
                 return Unauthorized("Invalid credentials.");
 
-            var token = _jwtHelper.GenerateToken(new UserDto
+
+            var role = await _roleService.GetRoleById(user.RoleId);
+
+            var token = _jwtHelper.GenerateToken(new UserTokenDto
             {
-                UserEmail =user.Email,
-                Role = user.RoleId.ToString()
+                Id = user.AccountId,
+                UserEmail = user.Email,
+                Role = role.RoleName
             });
 
-            return Ok(new { token, UserInfo= user.Adapt<UserProfileDto>() });
+            return Ok(new { token, UserInfo = user.Adapt<UserProfileDto>() });
         }
 
         [HttpPost("register")]
@@ -42,9 +49,65 @@ namespace FDSSYSTEM.Controllers
             var existingUser = await _userService.GetUserByUsernameAsync(user.UserEmail);
             if (existingUser != null) return BadRequest("Username already exists.");
 
-            await _userService.CreateUserAsync(user);
+            if (user.RoleId != 3 && user.RoleId != 4)
+            {
+                return BadRequest();
+            }
 
-            return Ok("User registered successfully.");
+            try
+            {
+                await _userService.CreateUserAsync(user, true);
+                return Ok("User registered successfully.");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
+
+        [HttpPost("RequestOtp")]
+        public async Task<IActionResult> RequestOtp([FromBody] RequestOtpDto requestOtpDto)
+        {
+            try
+            {
+                await _userService.RequestOtp(requestOtpDto);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPut("VerifyOtp")]
+        public async Task<IActionResult> VerifyOtp([FromBody] VerifyOtpDto user)
+        {
+            try
+            {
+                var result = await _userService.VerifyOtp(user);
+                return Ok("Verify successfully.");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
+        [HttpGet("CheckEmail/{email}")]
+        public async Task<IActionResult> CheckEmail(string email)
+        {
+            try
+            {
+                var existingUser = await _userService.GetUserByUsernameAsync(email);
+                return Ok(new CheckExistingEmailDto { IsExisting = existingUser != null });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
     }
 }

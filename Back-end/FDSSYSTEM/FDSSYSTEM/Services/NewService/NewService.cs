@@ -8,33 +8,69 @@ using Microsoft.Extensions.Hosting;
 using MongoDB.Driver;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using FDSSYSTEM.Services.UserContextService;
+using FDSSYSTEM.Services.UserService;
+using FDSSYSTEM.SignalR;
+using Mapster;
+using FDSSYSTEM.Services.NotificationService;
+using Microsoft.AspNetCore.SignalR;
 namespace FDSSYSTEM.Services.NewService
 {
     public class NewService : INewService
     {
         private readonly INewRepository _newRepository;
+        private readonly IUserService _userService;
+        private readonly IUserContextService _userContextService;
+        private readonly INotificationService _notificationService;
+        private readonly IHubContext<NotificationHub> _hubNotificationContext;
         private object _newsCollection;
 
-        public NewService(INewRepository newRepository)
+        public NewService(INewRepository newRepository
+            , IUserContextService userContextService, IUserService userService
+            , INotificationService notificationService
+            , IHubContext<NotificationHub> hubContext
+            )
         {
             _newRepository = newRepository;
+            _userContextService = userContextService;
+            _userService = userService;
+            _notificationService = notificationService;
+            _hubNotificationContext = hubContext;
         }
 
-      
+
 
         public async Task Create(NewDto newDto)
         {
-            await _newRepository.AddAsync(new New
+            var news = new New
             {
-                PostText = newDto.PostText,
-                DateCreated = DateTime.Now,
-                PostFile = newDto.PostFile,
-                Image = newDto.Image,
+                NewsDescripttion = newDto.NewsDescripttion,
+                NewsTitle = newDto.NewsTitle,
+                Images = newDto.Images,
                 NewId = Guid.NewGuid().ToString(),
-                Content = newDto.Content,
-                Status = "Pending"
+                SupportBeneficiaries = newDto.SupportBeneficiaries,
+            };
+            await _newRepository.AddAsync(news);
 
-            });
+            //Send notifiction all staff and admin
+            var userReceiveNotifications = await _userService.GetAllDonorAndRecipientConfirmedId();
+            foreach (var userId in userReceiveNotifications)
+            {
+                var notificationDto = new NotificationDto
+                {
+                    Title = "Có một bài báo mới được tạo",
+                    Content = "Có một bài báo mới được tạo ra",
+                    NotificationType = "pending",
+                    ObjectType = "New",
+                    OjectId = news.NewId,
+                    AccountId = userId
+                };
+                //save notifiation to db
+                await _notificationService.AddNotificationAsync(notificationDto);
+                //send notification via signalR
+                await _hubNotificationContext.Clients.User(notificationDto.AccountId).SendAsync("ReceiveNotification", notificationDto);
+            }
+
         }
 
         public async Task Delete(string id)
@@ -43,44 +79,127 @@ namespace FDSSYSTEM.Services.NewService
             await _newRepository.DeleteAsync(filter);
         }
 
-        public async Task<List<New>> GetAll()
-        {
-            var filter = Builders<New>.Filter.Eq(news => news.Status, "Approved");
-            return (List<New>)await _newRepository.GetAllAsync(filter);
-        }
+       
 
         public async Task<New> GetById(string id)
         {
             return await _newRepository.GetByIdAsync(id);
         }
 
-        public async Task Approve(string id)
-        {
-            //var filter = Builders<New>.Filter.Eq(news => news.NewId, id);
-            //var update = Builders<New>.Update.Set(news => news.Status, "Approved");
-            //await _newRepository.UpdateAsync(filter, update);
-        }
 
-        // Reject a news post (set status to Rejected)
-        public async Task Reject(string id)
-        {
-            //var filter = Builders<New>.Filter.Eq(news => news.NewId, id);
-            //var update = Builders<New>.Update.Set(news => news.Status, "Rejected");
-
-            //await _newRepository.UpdateAsync(filter, update);
-        }
 
         // Update an existing news post
         public async Task Update(string id, NewDto newDto)
         {
             var news = await _newRepository.GetByIdAsync(id);
-            news.PostFile = newDto.PostFile;
-            news.Image = newDto.Image;
-            news.Content = newDto.Content;
-            news.PostText = newDto.PostText;
 
-           await _newRepository.UpdateAsync(id, news);
-            
+            news.NewsDescripttion = newDto.NewsDescripttion;
+            news.NewsTitle = newDto.NewsTitle;
+            news.Images = newDto.Images;
+            news.SupportBeneficiaries = newDto.SupportBeneficiaries;
+
+
+            await _newRepository.UpdateAsync(news.Id, news);
+
+            //Send notifiction all staff and admin
+            var userReceiveNotifications = await _userService.GetAllAdminAndStaffId();
+            foreach (var userId in userReceiveNotifications)
+            {
+                var notificationDto = new NotificationDto
+                {
+                    Title = "Có một bài báo mới được cập nhật",
+                    Content = "Có một bài báo mới được cập nhật",
+                    NotificationType = "Update",
+                    ObjectType = "New",
+                    OjectId = news.NewId,
+                    AccountId = userId
+                };
+                //save notifiation to db
+                await _notificationService.AddNotificationAsync(notificationDto);
+                //send notification via signalR
+                await _hubNotificationContext.Clients.User(notificationDto.AccountId).SendAsync("ReceiveNotification", notificationDto);
+            }
+
+        }
+
+/*        public async Task Approve(ApproveNewDto approveNewDto)
+        {
+            var filter = Builders<New>.Filter.Eq(c => c.NewId, approveNewDto.NewId);
+            var news = (await _newRepository.GetAllAsync(filter)).FirstOrDefault();
+
+            news.Status = "Approved";
+            await _newRepository.UpdateAsync(news.Id, news);
+
+            //Send notifiction
+            var notificationDto = new NotificationDto
+            {
+                Title = "Bài báo đã được phê duyệt",
+                Content = "Bài báo đã được phê duyệt",
+                NotificationType = "Approve",
+                ObjectType = "New",
+                OjectId = news.NewId,
+                AccountId = news.AccountId
+            };
+            //save notifiation to db
+            await _notificationService.AddNotificationAsync(notificationDto);
+            //send notification via signalR
+            await _hubNotificationContext.Clients.User(notificationDto.AccountId).SendAsync("ReceiveNotification", notificationDto);
+
+        }
+
+        public async Task Reject(RejectNewDto rejectNewDto)
+        {
+            var filter = Builders<New>.Filter.Eq(c => c.NewId, rejectNewDto.NewId);
+            var news = (await _newRepository.GetAllAsync(filter)).FirstOrDefault();
+
+            news.Status = "Rejected";
+            news.RejectComment = rejectNewDto.Comment;
+            await _newRepository.UpdateAsync(news.Id, news);
+
+            //Send notifiction
+            var notificationDto = new NotificationDto
+            {
+                Title = "Bài báo không được phê duyệt",
+                Content = "Bài báo không được phê duyệt",
+                NotificationType = "Reject",
+                ObjectType = "New",
+                OjectId = news.NewId,
+                AccountId = news.AccountId
+            };
+            //save notifiation to db
+            await _notificationService.AddNotificationAsync(notificationDto);
+            //send notification via signalR
+            await _hubNotificationContext.Clients.User(notificationDto.AccountId).SendAsync("ReceiveNotification", notificationDto);
+
+        }*/
+
+     
+       /* public async Task<List<New>> GetAllNewsApproved()
+        {
+            var filter = Builders<New>.Filter.Eq(news => news.Status, "Approved");
+            return (await _newRepository.GetAllAsync(filter)).ToList();
+        }
+
+        public async Task<List<New>> GetAllNewsPending()
+        {
+            var filter = Builders<New>.Filter.Eq(news => news.Status, "Pending");
+            return (await _newRepository.GetAllAsync(filter)).ToList();
+        }*/
+
+
+        public async Task<List<New>> GetAllNew()
+        {
+            return (await _newRepository.GetAllAsync()).ToList();
+        }
+
+
+
+        public async Task<New> GetNewById(string id)
+        {
+            var filter = Builders<New>.Filter.Eq(c => c.NewId, id);
+            var getbyId = await _newRepository.GetAllAsync(filter);
+            return getbyId.FirstOrDefault();
         }
     }
 }
+

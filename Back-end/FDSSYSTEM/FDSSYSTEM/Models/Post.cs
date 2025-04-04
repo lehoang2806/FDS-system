@@ -15,26 +15,19 @@ public partial class Post
 
     public string AccountId { get; set; }
 
-    public string? PostText { get; set; }
-
-    public string? PostFile { get; set; }
 
     public string Status { get; set; } = "Pending";  // Mặc định là chờ duyệt
 
-    public string? UserCreated { get; set; }
+    public DateTime CreatedDate { get; set; } = DateTime.Now;
+    public List<string> Images { get; set; }
+    public string RejectComment { get; set; }
 
-    public DateTime? DateCreated { get; set; }
+    public string PosterName { get; set; }
 
-    public string? UserUpdated { get; set; }
+    public string PostContent { get; set; } = null!;
+    public string PublicDate { get; set; }
+    public string PosterRole { get; set; }
+    public string PosterApproverId { get; set; }
+    public string PosterApproverName { get; set; }
 
-    public DateTime? DateUpdated { get; set; }
-
-    public bool? IsDelete { get; set; }
-
-    public string? UserDelete { get; set; }
-
-    public DateTime? DateDelete { get; set; }
-
-    public int EventId { get; set; }
-    
 }

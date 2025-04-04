@@ -1,0 +1,35 @@
+﻿using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Bson;
+
+namespace FDSSYSTEM.Models
+{
+    public class PersonalDonorCertificate
+    {
+        [BsonId]
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string Id { get; set; }
+        public string DonorId { get; set; }
+        public string PersonalDonorCertificateId {  get; set; }
+        public string CitizenId { get; set; }
+        public string Status { get; set; } = "Pending";
+        public string RejectComment { get; set; }
+        public DateTime CreatedDate { get; set; } = DateTime.Now;
+        public string FullName { get; set; }
+        public string BirthDay  { get; set; }
+        public string Email { get; set; }   
+        public string Phone { get; set; }
+        public string Address { get; set; }
+        public string SocialMediaLink { get; set; }
+        public string MainSourceIncome { get; set; }
+        public string MonthlyIncome { get; set; }
+        public List<string> Images { get; set; }
+
+        public List<PersonalDonorCertificateReViewComment> ReviewComments { get; set; }
+    }
+
+    public class PersonalDonorCertificateReViewComment
+    {
+        public DateTime CreatedDate { get; set; }
+        public string Content { get; set; }
+    }
+}

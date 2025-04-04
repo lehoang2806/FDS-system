@@ -19,12 +19,12 @@ namespace FDSSYSTEM.SeedData
                     UserEmail = "admin@gmail.com",
                     Password = "123",
                     RoleId = 1,
-                    FullName ="Admin",
-                    Phone="123456789"
+                    FullName = "Admin",
+                    Phone = "123456789",
                 };
 
                 // Lưu tài khoản admin vào MongoDB
-                await userService.CreateUserAsync(newAdmin);
+                await userService.CreateUserAsync(newAdmin,false);
             }
         }
     }
