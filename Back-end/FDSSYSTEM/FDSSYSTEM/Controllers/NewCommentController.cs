@@ -34,20 +34,21 @@ namespace FDSSYSTEM.Controllers
             }
         }
 
-        // Lấy tất cả bình luận của một bài viết theo postId
-        [HttpGet("GetCommentsByPost/{newId}")]
-        public async Task<ActionResult> GetCommentsByPost(string newId)
+        [HttpGet("GetCommentsByNew/{newId}")]
+        public async Task<ActionResult<List<NewCommentResponseDto>>> GetCommentsByNew(string newId)
         {
             try
             {
                 var comments = await _newCommentService.GetByNewId(newId);
-                return Ok(comments);
+                return Ok(comments);  // Đảm bảo trả về danh sách đúng với AccountName và AccountId
             }
             catch (Exception ex)
             {
-                return BadRequest();
+                return BadRequest(new { message = ex.Message });
             }
         }
+
+
 
         // Cập nhật bình luận
         [HttpPut("UpdateComment/{id}")]

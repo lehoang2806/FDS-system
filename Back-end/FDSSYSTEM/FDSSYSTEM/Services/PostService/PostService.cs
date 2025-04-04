@@ -199,10 +199,21 @@ namespace FDSSYSTEM.Services.PostService
             return (await _postRepository.GetAllAsync(filter)).ToList();
         }
 
-        public async Task<List<Post>> GetAllPosts()
+        public async Task<List<PostResponseDto>> GetAllPosts()
         {
-            return (await _postRepository.GetAllAsync()).ToList();
+            var posts = await _postRepository.GetAllAsync();
+            return posts.Select(post => new PostResponseDto
+            {
+                PostContent = post.PostContent,
+                Images = post.Images,
+                PosterId = post.AccountId,
+                PosterRole = post.PosterRole,
+                PosterName = post.PosterName,
+                Status = post.Status,  // Thêm trạng thái bài viết
+                RejectComment = post.RejectComment  // Thêm lý do từ chối
+            }).ToList();
         }
+
 
         public async Task<PostDetailDto> GetPostDetail(string postId)
         {
@@ -223,6 +234,7 @@ namespace FDSSYSTEM.Services.PostService
                                     join account in accounts on like.AccountId equals account.AccountId
                                     select new PostLikeDetailDto
                                     {
+                                        AccountId = account.AccountId,
                                         FullName = account.FullName,
                                         CreatedDate = like.CreatedDate.ToString()
                                     },

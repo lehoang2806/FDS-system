@@ -21,6 +21,7 @@ public class PostDetailDto
 
 public class PostLikeDetailDto
 {
+    public string AccountId { get; set; }
     public string FullName {  get; set; }
     public string CreatedDate { get; set; }
 }
