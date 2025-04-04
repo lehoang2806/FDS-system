@@ -1,5 +1,6 @@
 type EventCardProps = {
     type: 1 | 2,
+    news?: NewsInfo;
 };
 
 type CampaignCardProps = {
@@ -12,5 +13,6 @@ type SupporterCardProps = {
 }
 
 type NewsCardProps = {
+    news?: NewsInfo,
     onClickDetail?: () => void,
 }

@@ -1,6 +1,5 @@
 .news-card {
     width: 445px;
-    cursor: pointer;
 
     .nc-img {
         width: 100%;
@@ -14,18 +13,17 @@
         border-radius: 0 0 16px 16px;
         padding: 12px 24px;
 
-        .nc-status {
-            font-size: 14px;
-            font-weight: 500;
-            color: #F54A00;
-        }
-
         .nc-name {
             font-size: 14px;
             font-weight: 700;
             color: #393939;
             margin-top: 4px;
             margin-bottom: 10px;
+            cursor: pointer;
+
+            &:hover {
+                text-decoration: underline;
+            }
         }
 
         .nc-interested {

@@ -1,15 +1,37 @@
+import { selectGetAllNews } from "@/app/selector";
+import { useAppDispatch, useAppSelector } from "@/app/store";
 import { NewsCard } from "@/components/Card";
 import { navigateHook } from "@/routes/RouteApp";
 import { routes } from "@/routes/routeName";
-import { useState } from "react";
+import { setLoading } from "@/services/app/appSlice";
+import { getAllNewsApiThunk } from "@/services/news/newsThunk";
+import { useEffect, useState } from "react";
 
 const ListNewsPage = () => {
     const [activeTab, setActiveTab] = useState<"noibat" | "theodoi">("noibat");
 
+    const dispatch = useAppDispatch();
+    const news = useAppSelector(selectGetAllNews)
+
     const handleToDetail = (campaignId: string) => {
-            const url = routes.user.news.detail.replace(":id", campaignId);
-            return navigateHook(url)
-        }
+        const url = routes.user.news.detail.replace(":id", campaignId);
+        return navigateHook(url)
+    }
+
+    useEffect(() => {
+        document.title = "Trang chủ";
+        dispatch(setLoading(true));
+        dispatch(getAllNewsApiThunk())
+            .unwrap()
+            .catch((error) => {
+                console.error("Error fetching data:", error);
+            })
+            .finally(() => {
+                setTimeout(() => {
+                    dispatch(setLoading(false));
+                }, 1000)
+            });
+    }, [dispatch]);
 
     return (
         <main id="list-news">
@@ -41,13 +63,11 @@ const ListNewsPage = () => {
                         <div className="ln-main">
                             {activeTab === "noibat" ? (
                                 <>
-                                    <NewsCard onClickDetail={() => handleToDetail("1")}/>
-                                    <NewsCard />
-                                    <NewsCard />
-                                    <NewsCard />
-                                    <NewsCard />
-                                    <NewsCard />
-                                    <button className="view-more">Xem thêm</button>
+                                {
+                                    news && news.map((item, index) => (
+                                        <NewsCard news={item} key={index} onClickDetail={() => handleToDetail(item.newId)} />
+                                    ))
+                                }
                                 </>
                             ) : (
                                 <>

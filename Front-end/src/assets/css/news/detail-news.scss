@@ -11,6 +11,8 @@
             margin: 0 auto;
 
             .dnscr1 {
+                display: flex;
+                justify-content: center;
                 background: linear-gradient(to bottom, #a05e44 0%, #ffbe99 0%, #ffffff 100%);
 
                 .dn-img {
@@ -107,6 +109,7 @@
                         font-size: 14px;
                         font-weight: 400;
                         color: #393939;
+                        margin-bottom: 20px;
                     }
                 }
             }
@@ -114,11 +117,60 @@
             .dnscr4 {
                 padding: 24px;
 
-                h4 {
-                    font-size: 17px;
-                    font-weight: 500;
-                    color: #393939;
+                .dnscr4r1 {
                     margin-bottom: 20px;
+
+                    h4 {
+                        font-size: 17px;
+                        font-weight: 500;
+                        color: #393939;
+                        margin-bottom: 10px;
+                    }
+
+                    .input-comment-container {
+                        position: relative;
+                        width: fit-content;
+                        display: flex;
+                        justify-content: start;
+                        align-items: center;
+
+                        .input-comment {
+                            width: 600px;
+                            background: #f4f4f4;
+                            padding: 8px 30px 8px 12px;
+                            border: 1px solid #e0e0e0;
+                            border-radius: var(--border-radius-12);
+                        }
+
+                        .send-btn {
+                            position: absolute;
+                            height: 18px;
+                            right: 10px;
+                            background: none;
+                            border: none;
+                            padding: 0;
+                            cursor: pointer;
+
+                            .icon-comment {
+                                color: gray;
+                                transition: color 0.2s ease;
+                            }
+
+                            &:disabled {
+                                cursor: not-allowed;
+
+                                .icon-comment {
+                                    color: #b0b0b0;
+                                }
+                            }
+
+                            &:not(:disabled) .icon-comment {
+                                path {
+                                    stroke: #ff5238;
+                                }
+                            }
+                        }
+                    }
                 }
 
                 .dnscr4r2 {

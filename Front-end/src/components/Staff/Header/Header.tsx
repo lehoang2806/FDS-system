@@ -147,7 +147,7 @@ const StaffHeader: FC = () => {
                                                 );
                                             }
                                         }
-                                        if (notif.objectType === "Recipient Certificate ") {
+                                        if (notif.objectType === "Recipient Certificate") {
                                             let actionText = "";
                                             if (notif.notificationType === "Pending") actionText = "Có chứng nhận mới được tạo";
                                             if (notif.notificationType === "Update") actionText = "Có chứng nhận mới được cập nhật";
@@ -176,6 +176,24 @@ const StaffHeader: FC = () => {
                                                         key={notif.objectId || notif.createdDate}
                                                         className={`notification-item ${notif.isRead ? "read" : "unread"}`}
                                                         onClick={() => { markAsRead(notifications.indexOf(notif)); handleToDetailDonorCertificate(notif.objectId, "Organization") }}
+                                                    >
+                                                        <strong>{notif.content}</strong>
+                                                        <p>{actionText}</p>
+                                                    </div>
+                                                );
+                                            }
+                                        }
+                                        if (notif.objectType === "Post") {
+                                            let actionText = "";
+                                            if (notif.notificationType === "pending") actionText = "Có một bài đăng mới được tạo";
+                                            if (notif.notificationType === "Update") actionText = "Có một bài đăng mới được cập nhật";
+
+                                            if (actionText) {
+                                                return (
+                                                    <div
+                                                        key={notif.objectId || notif.createdDate}
+                                                        className={`notification-item ${notif.isRead ? "read" : "unread"}`}
+                                                        onClick={() => { markAsRead(notifications.indexOf(notif)); handleToDetailDonorCertificate(notif.objectId, "Personal") }}
                                                     >
                                                         <strong>{notif.content}</strong>
                                                         <p>{actionText}</p>

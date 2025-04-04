@@ -3,10 +3,11 @@ import { CampaignCard, EventCard, HightlightCard } from "../../components/Card/i
 import { routes } from "@/routes/routeName";
 import { navigateHook } from "@/routes/RouteApp";
 import { useAppDispatch, useAppSelector } from "@/app/store";
-import { selectGetAllCampaign } from "@/app/selector";
+import { selectGetAllCampaign, selectGetAllNews } from "@/app/selector";
 import { useEffect } from "react";
 import { getAllCampaignApiThunk } from "@/services/campaign/campaignThunk";
 import { setLoading } from "@/services/app/appSlice";
+import { getAllNewsApiThunk } from "@/services/news/newsThunk";
 
 export default function () {
     const dispatch = useAppDispatch();
@@ -17,10 +18,9 @@ export default function () {
     }
 
     const campaigns = useAppSelector(selectGetAllCampaign)
+    const news = useAppSelector(selectGetAllNews)
 
     const approvedCampaigns = campaigns.filter((campaign) => campaign.status === "Approved");
-
-    console.log(approvedCampaigns)
 
     const personalCampaigns = approvedCampaigns.filter((campaign) => campaign.typeAccount === "Personal Donor");
 
@@ -29,15 +29,18 @@ export default function () {
     useEffect(() => {
         document.title = "Trang chủ";
         dispatch(setLoading(true));
-        dispatch(getAllCampaignApiThunk())
-            .unwrap()
-            .catch(() => {
-            }).finally(() => {
-                setTimeout(() => {
-                    dispatch(setLoading(false));
-                }, 1000)
+
+        Promise.all([
+            dispatch(getAllCampaignApiThunk()).unwrap(),
+            dispatch(getAllNewsApiThunk()).unwrap()
+        ])
+            .catch((error) => {
+                console.error("Error fetching data:", error);
+            })
+            .finally(() => {
+                dispatch(setLoading(false));
             });
-    }, [dispatch])
+    }, []);
 
     return (
         <>
@@ -122,15 +125,17 @@ export default function () {
             <section id="landing-s5" className="landing-section">
                 <div className="landing-container ls5-container">
                     <div className="ls5cr1">
-                        <h2><span>Sự kiện </span>thiện nghiện</h2>
+                        <h2><span>Tin tức </span>thiện nghiện</h2>
                         <Link to={routes.user.news.list} className="view-all">Xem tất cả</Link>
                     </div>
                     <div className="ls5cr2">
                         <div className="ls5cr2c1">
-                            <EventCard type={1} />
+                            {news?.[0] && <EventCard type={1} news={news[0]} />}
                         </div>
                         <div className="ls5cr2c2">
-                            <EventCard type={2} />
+                            {news.slice(1, 6).map((item, index) => (
+                                <EventCard key={index} type={2} news={item} />
+                            ))}
                         </div>
                     </div>
                 </div>

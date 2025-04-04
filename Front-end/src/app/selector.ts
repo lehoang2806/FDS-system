@@ -66,3 +66,12 @@ export const selectGetAllRegisterReceivers: Selector<RegisterReceiver[]> = (stat
 export const selectNotifications: Selector<NotificationDto[]> = (state: RootState) => {
     return state.notificate.notifications;
 }
+
+//News
+export const selectGetAllNews: Selector<NewsInfo[]> = (state: RootState) => {
+    return state.news.listNews
+}
+
+export const selectGetNewsById: Selector<NewsInfo | null> = (state: RootState) => {
+    return state.news.currentNews;
+}

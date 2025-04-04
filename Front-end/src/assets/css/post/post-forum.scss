@@ -90,11 +90,22 @@
             .pfscc2 {
                 flex: 2;
 
+                .pfscc2r1 {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+
+                    .pr-btn {
+                        font-size: 14px;
+                        padding: 8px 15px;
+                        border-radius: var(--border-radius-12);
+                    }
+                }
+
                 .pf-tabs {
                     display: flex;
                     align-items: center;
                     justify-content: start;
-                    margin-bottom: 30px;
                     gap: 24px;
     
                     .pf-tabs-item {
