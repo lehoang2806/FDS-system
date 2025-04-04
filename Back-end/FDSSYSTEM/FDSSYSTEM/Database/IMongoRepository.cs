@@ -10,4 +10,5 @@ public interface IMongoRepository<T> where T : class
     Task AddAsync(T entity);
     Task UpdateAsync(string id, T entity);
     Task DeleteAsync(string id);
+    IQueryable<T> GetAllAsQueryable();
 }

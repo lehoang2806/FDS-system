@@ -45,11 +45,12 @@ namespace FDSSYSTEM.Services.PostCommentService
         {
             await _postCommentRepository.AddAsync(new PostComment
             {
+                PostCommentId = Guid.NewGuid().ToString(),
                 PostId = comment.PostId,
                 AccountId = _userContextService.UserId ?? "",
                 Content = comment.Content,
                 DateCreated = DateTime.Now,
-                FileComment = Guid.NewGuid().ToString()
+                FileComment = comment.FileComment
             });
 
             // Lấy thông tin người tạo bài viết

@@ -49,7 +49,7 @@ namespace FDSSYSTEM.Controllers
                      .Map(dest => dest.PosterId, src => src.AccountId);
 
                 var posts = await _postService.GetAllPosts();
-                return Ok(posts.Adapt<List<PostDto>>());
+                return Ok(posts.Adapt<List<PostDto>>(config));
             }
             catch (Exception ex)
             {
@@ -158,6 +158,13 @@ namespace FDSSYSTEM.Controllers
             {
                 return BadRequest();
             }
+        }
+
+        [HttpGet("Detail/{postId}")]
+        public async Task<IActionResult> Detail(string postId)
+        {
+            var post = await _postService.GetPostDetail(postId);
+            return Ok(post);
         }
 
 

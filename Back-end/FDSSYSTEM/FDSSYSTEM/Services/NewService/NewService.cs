@@ -44,6 +44,7 @@ namespace FDSSYSTEM.Services.NewService
         {
             var news = new New
             {
+                AccountId = _userContextService.UserId ?? "",
                 NewsDescripttion = newDto.NewsDescripttion,
                 NewsTitle = newDto.NewsTitle,
                 Images = newDto.Images,

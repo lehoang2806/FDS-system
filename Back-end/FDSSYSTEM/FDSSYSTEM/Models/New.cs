@@ -12,7 +12,6 @@ public partial class New
     public string Id { get; set; }
     public string NewId { get; set; }
 
-    public string NewCategoryId { get; set; }
 
     public string AccountId { get; set; }
 

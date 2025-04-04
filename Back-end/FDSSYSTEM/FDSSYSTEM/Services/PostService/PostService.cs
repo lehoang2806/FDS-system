@@ -11,6 +11,10 @@ using Mapster;
 using Microsoft.AspNetCore.SignalR;
 using FDSSYSTEM.Repositories.UserRepository;
 using FDSSYSTEM.Services.NotificationService;
+using FDSSYSTEM.DTOs.Posts;
+using FDSSYSTEM.Repositories.PostLikeRepository;
+using FDSSYSTEM.Repositories.PostCommentRepository;
+using MongoDB.Driver.Linq;
 namespace FDSSYSTEM.Services.PostService
 
 {
@@ -22,10 +26,17 @@ namespace FDSSYSTEM.Services.PostService
         private readonly INotificationService _notificationService;
         private readonly IHubContext<NotificationHub> _hubNotificationContext;
 
+        private readonly IUserRepository _userRepository;
+        private readonly IPostLikeRepository _postLikeRepository;
+        private readonly IPostCommentRepository _postCommentRepository;
+
         public PostService(IPostRepository postRepository
             , IUserContextService userContextService, IUserService userService
             , INotificationService notificationService
             , IHubContext<NotificationHub> hubContext
+            , IUserRepository userRepository
+            , IPostLikeRepository postLikeRepository
+            , IPostCommentRepository postCommentRepository
             )
         {
             _postRepository = postRepository;
@@ -33,6 +44,9 @@ namespace FDSSYSTEM.Services.PostService
             _userService = userService;
             _notificationService = notificationService;
             _hubNotificationContext = hubContext;
+            _postLikeRepository = postLikeRepository;
+            _postCommentRepository = postCommentRepository;
+            _userRepository = userRepository;
         }
 
         public async Task Create(PostDto post)
@@ -44,8 +58,9 @@ namespace FDSSYSTEM.Services.PostService
                 PostId = Guid.NewGuid().ToString(),
                 Images = post.Images,
                 AccountId = accountId,
-                PosterRole = _userContextService.Role??"",
-               PosterName = post.PosterName,
+                PosterRole = _userContextService.Role ?? "",
+                PosterName = post.PosterName,
+                PostContent = post.PostContent,
             };
             await _postRepository.AddAsync(newPost);
 
@@ -77,7 +92,7 @@ namespace FDSSYSTEM.Services.PostService
 
         public async Task<List<Post>> GetAll()
         {
-           return (await _postRepository.GetAllAsync()).ToList();
+            return (await _postRepository.GetAllAsync()).ToList();
         }
 
         public async Task<Post> GetById(string id)
@@ -107,7 +122,7 @@ namespace FDSSYSTEM.Services.PostService
                     ObjectType = "Post",
                     OjectId = post.PostId,
                     AccountId = userId,
-                    
+
                 };
                 //save notifiation to db
                 await _notificationService.AddNotificationAsync(notificationDto);
@@ -189,5 +204,41 @@ namespace FDSSYSTEM.Services.PostService
             return (await _postRepository.GetAllAsync()).ToList();
         }
 
+        public async Task<PostDetailDto> GetPostDetail(string postId)
+        {
+            var posts = await _postRepository.GetAllAsync();
+            var accounts = await _userRepository.GetAllAsync();
+            var postLikes = await _postLikeRepository.GetAllAsync();
+            var postComments = await _postCommentRepository.GetAllAsync();
+
+            var query = from post in posts
+                        join like in postLikes on post.PostId equals like.PostId into likesGroup
+                        join comment in postComments on post.PostId equals comment.PostId into commentsGroup
+                        select new PostDetailDto
+                        {
+                            PostId = post.PostId,
+                            PostContent = post.PostContent,
+                            Images = post.Images,
+                            Likes = from like in likesGroup
+                                    join account in accounts on like.AccountId equals account.AccountId
+                                    select new PostLikeDetailDto
+                                    {
+                                        FullName = account.FullName,
+                                        CreatedDate = like.CreatedDate.ToString()
+                                    },
+                            Comments = from comment in commentsGroup
+                                       join account in accounts on comment.AccountId equals account.AccountId
+                                       select new PostCommentDetailDto
+                                       {
+                                           FullName = account.FullName,
+                                           CreatedDate = comment.DateCreated.ToString(),
+                                           Content = comment.Content,
+                                           FileComment = comment.FileComment
+                                       }
+                        };
+
+            return query.FirstOrDefault(x => x.PostId == postId);
+
+        }
     }
 }

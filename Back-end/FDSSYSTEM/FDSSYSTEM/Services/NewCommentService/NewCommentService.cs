@@ -45,6 +45,7 @@ namespace FDSSYSTEM.Services.NewCommentService
         {
             await _newCommentRepository.AddAsync(new NewComment
             {
+                NewCommentId = Guid.NewGuid().ToString(),
                 NewId = comment.NewId,
                 AccountId = _userContextService.UserId ?? "",
                 Content = comment.Content,

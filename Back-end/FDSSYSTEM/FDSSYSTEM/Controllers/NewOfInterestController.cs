@@ -30,5 +30,12 @@ namespace FDSSYSTEM.Controllers
             return Ok(new { message = "Post unsaved successfully" });
         }
 
+        [HttpGet("GetNewOfInterest/{newId}")]
+        public async Task<IActionResult> GetNewOfInterest(string newId)
+        {
+            var rs = await _newOfInterestService.GetNewOfInterest(newId);
+            return Ok(rs);
+        }
+
     }
 }

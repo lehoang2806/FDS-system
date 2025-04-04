@@ -23,21 +23,11 @@ public partial class PostComment
 
     public string? Status { get; set; }
 
-    public DateTime? CommentDate { get; set; }
-
-    public string? UserCreated { get; set; }
-
     public DateTime? DateCreated { get; set; }
-
-    public string? UserUpdated { get; set; }
 
     public DateTime? DateUpdated { get; set; }
 
     public bool? IsDelete { get; set; }
 
-    public string? UserDelete { get; set; }
-
     public DateTime? DateDelete { get; set; }
-
-    public string CommentId { get; internal set; }
 }

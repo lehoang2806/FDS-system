@@ -47,4 +47,9 @@ public class MongoRepository<T> : IMongoRepository<T> where T : class
     {
         return await _collection.Find(filter).ToListAsync();
     }
+
+    public IQueryable<T> GetAllAsQueryable()
+    {
+       return _collection.AsQueryable();
+    }
 }
