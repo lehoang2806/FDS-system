@@ -1,6 +1,6 @@
 import { FC } from "react"
 
-const EventCard: FC<EventCardProps> = ({ type, news }) => {
+const EventCard: FC<EventCardProps> = ({ type, news, onClickDetail }) => {
     const createdDate = news?.createdDate && news?.createdDate.split('T')[0]
 
     console.log(news)
@@ -8,7 +8,7 @@ const EventCard: FC<EventCardProps> = ({ type, news }) => {
     if (type === 1) return (
         <div className="event-card-1">
             <img src={news?.images[0]} className="ec1-img" />
-            <h4 className="ec1-name">{news?.newsTitle}</h4>
+            <h4 className="ec1-name" onClick={onClickDetail}>{news?.newsTitle}</h4>
             <p className="ec1-date">{createdDate}</p>
         </div>
     )

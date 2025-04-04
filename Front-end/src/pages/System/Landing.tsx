@@ -12,8 +12,13 @@ import { getAllNewsApiThunk } from "@/services/news/newsThunk";
 export default function () {
     const dispatch = useAppDispatch();
 
-    const handleToDetail = (campaignId: string) => {
+    const handleToDetailCampaign = (campaignId: string) => {
         const url = routes.user.campaign.detail.replace(":id", campaignId);
+        return navigateHook(url)
+    }
+
+    const handleToDetailNews = (newsId: string) => {
+        const url = routes.user.news.detail.replace(":id", newsId);
         return navigateHook(url)
     }
 
@@ -58,7 +63,7 @@ export default function () {
                         </div>
                         <div className="ls2cr2r2">
                             {organizationCampaigns.length > 0 ? organizationCampaigns.map((campaign) => (
-                                <CampaignCard campaign={campaign} key={campaign.campaignId} onClickDetail={() => handleToDetail(campaign.campaignId)} />
+                                <CampaignCard campaign={campaign} key={campaign.campaignId} onClickDetail={() => handleToDetailCampaign(campaign.campaignId)} />
                             )) : (
                                 <h1>Chưa có dữ liệu</h1>
                             )}
@@ -71,7 +76,7 @@ export default function () {
                         </div>
                         <div className="ls2cr3r2">
                             {personalCampaigns.length > 0 ? personalCampaigns.map((campaign) => (
-                                <CampaignCard campaign={campaign} key={campaign.campaignId} onClickDetail={() => handleToDetail(campaign.campaignId)} />
+                                <CampaignCard campaign={campaign} key={campaign.campaignId} onClickDetail={() => handleToDetailCampaign(campaign.campaignId)} />
                             )) : (
                                 <h1>Chưa có dữ liệu</h1>
                             )}
@@ -130,7 +135,7 @@ export default function () {
                     </div>
                     <div className="ls5cr2">
                         <div className="ls5cr2c1">
-                            {news?.[0] && <EventCard type={1} news={news[0]} />}
+                            {news?.[0] && <EventCard type={1} news={news[0]} onClickDetail={() => handleToDetailNews(news[0].newId)}/>}
                         </div>
                         <div className="ls5cr2c2">
                             {news.slice(1, 6).map((item, index) => (
