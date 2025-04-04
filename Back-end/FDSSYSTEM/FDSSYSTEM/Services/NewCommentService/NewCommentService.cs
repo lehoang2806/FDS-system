@@ -30,7 +30,8 @@ namespace FDSSYSTEM.Services.NewCommentService
              , IUserContextService userContextService, IUserService userService
             , INotificationService notificationService
             , IHubContext<NotificationHub> hubContext
-            , INewRepository newRepository)
+            , INewRepository newRepository
+            ,IUserRepository userRepository)
         {
             _newCommentRepository = newCommentRepository;
             _userContextService = userContextService;
@@ -38,6 +39,7 @@ namespace FDSSYSTEM.Services.NewCommentService
             _notificationService = notificationService;
             _userService = userService;
             _newRepository = newRepository;
+            _userRepository = userRepository;
         }
 
         // Tạo bình luận mới
@@ -72,11 +74,35 @@ namespace FDSSYSTEM.Services.NewCommentService
 
         }
 
-        // Lấy tất cả bình luận theo postId
-        public async Task<List<NewComment>> GetByNewId(string newId)
+        public async Task<List<NewCommentResponseDto>> GetByNewId(string newId)
         {
-            return (await _newCommentRepository.GetByNewIdAsync(newId)).ToList();
+            var comments = await _newCommentRepository.GetByNewIdAsync(newId);
+            var accounts = await _userRepository.GetAllAsync();
+
+            // Tạo từ điển để tra cứu tài khoản nhanh hơn
+            var accountDictionary = accounts.ToDictionary(a => a.AccountId, a => a);
+
+            return comments.Select(comment => new NewCommentResponseDto
+            {
+                NewId = comment.NewId,
+                Content = comment.Content,
+                FileComment = comment.FileComment,
+                DateCreated = comment.DateCreated,
+                AccountName = accountDictionary.ContainsKey(comment.AccountId)
+                                ? accountDictionary[comment.AccountId].FullName
+                                : "Unknown",  // Gán tên người dùng hoặc giá trị mặc định
+                AccountId = accountDictionary.ContainsKey(comment.AccountId)
+                                ? comment.AccountId
+                                : "Unknown"  // Gán ID tài khoản hoặc giá trị mặc định
+            }).ToList();
         }
+
+
+
+
+
+
+
 
         // Lấy bình luận theo Id
         public async Task<NewComment> GetById(string id)

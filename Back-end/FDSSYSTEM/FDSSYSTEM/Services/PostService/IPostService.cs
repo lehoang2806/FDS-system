@@ -7,7 +7,7 @@ namespace FDSSYSTEM.Services.PostService
 {
     public interface IPostService
     {
-        Task<List<Post>> GetAllPosts();
+        Task<List<PostResponseDto>> GetAllPosts();
         Task<List<Post>> GetAllPostsApproved();
         Task<List<Post>> GetAllPostsPending();
         Task<Post> GetById(string id);

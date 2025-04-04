@@ -39,7 +39,7 @@ namespace FDSSYSTEM.Controllers
         // Lấy tất cả post
 
         [HttpGet("GetAllPosts")]
-        [Authorize(Roles = "Admin,Staff,Donor,Staff")]
+        /*[Authorize(Roles = "Admin,Staff,Donor,Staff")]*/
         public async Task<ActionResult> GetAllPosts()
         {
             try
@@ -89,7 +89,7 @@ namespace FDSSYSTEM.Controllers
 
 
         [HttpPut("Approve")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,Staff")]
         public async Task<ActionResult> Approve(ApprovePostDto approvePostDto)
         {
             try
@@ -140,7 +140,7 @@ namespace FDSSYSTEM.Controllers
         }
 
         [HttpDelete("DeletePost/{id}")]
-        [Authorize(Roles = "Admin,Staff,Donor,Staff")]
+        /*[Authorize(Roles = "Admin,Staff,Donor,Staff")]*/
         public async Task<ActionResult> DeletePost(string id, PostDto post)
         {
             try
