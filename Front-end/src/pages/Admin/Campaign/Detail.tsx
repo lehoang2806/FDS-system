@@ -19,9 +19,9 @@ const AdminDetailCampaignPage: FC = () => {
 
     const currentRegisterReceivers = registerReceivers.filter((registerReceiver) => registerReceiver.campaignId === id);
 
-    const date = currentCampaign?.receiveDate.split("T")[0];
-    const dateCreate = currentCampaign?.dateCreated.split("T")[0];
-    const time = currentCampaign?.receiveDate.split("T")[1].replace("Z", "");
+    const date = currentCampaign?.implementationTime.split("T")[0];
+    const dateCreate = currentCampaign?.createdDate.split("T")[0];
+    const time = currentCampaign?.implementationTime.split("T")[1].replace("Z", "");
 
     useEffect(() => {
         if (id) {

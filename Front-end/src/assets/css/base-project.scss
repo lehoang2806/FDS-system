@@ -47,6 +47,106 @@
     font-style: normal;
 }
 
+//Inter
+@font-face {
+    font-family: "Inter";
+    src: url(@/assets/fonts/inter/Inter_18pt-ExtraLight.ttf);
+    font-weight: 200;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Inter";
+    src: url(@/assets/fonts/inter/Inter_18pt-Light.ttf);
+    font-weight: 300;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Inter";
+    src: url(@/assets/fonts/inter/Inter_18pt-Regular.ttf);
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Inter";
+    src: url(@/assets/fonts/inter/Inter_18pt-Medium.ttf);
+    font-weight: 500;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Inter";
+    src: url(@/assets/fonts/inter/Inter_18pt-SemiBold.ttf);
+    font-weight: 600;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Inter";
+    src: url(@/assets/fonts/inter/Inter_18pt-Bold.ttf);
+    font-weight: 700;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Inter";
+    src: url(@/assets/fonts/inter/Inter_18pt-ExtraBold.ttf);
+    font-weight: 800;
+    font-style: normal;
+}
+
+//Rebond_Grotesque
+@font-face {
+    font-family: "Rebond Grotesque";
+    src: url("../fonts/rebond_grotesque/Rebond\ Grotesque\ Extralight.otf") format("truetype");
+    font-weight: 200;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Rebond Grotesque";
+    src: url("../fonts/rebond_grotesque/Rebond\ Grotesque\ Light.otf") format("truetype");
+    font-weight: 300;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Rebond Grotesque";
+    src: url("../fonts/rebond_grotesque/Rebond\ Grotesque\ Regular.otf") format("truetype");
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Rebond Grotesque";
+    src: url("../fonts/rebond_grotesque/Rebond\ Grotesque\ Medium.otf") format("truetype");
+    font-weight: 500;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Rebond Grotesque";
+    src: url("../fonts/rebond_grotesque/Rebond\ Grotesque\ SemiBold.otf") format("truetype");
+    font-weight: 600;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Rebond Grotesque";
+    src: url("../fonts/rebond_grotesque/Rebond\ Grotesque\ Bold.otf") format("truetype");
+    font-weight: 700;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Rebond Grotesque";
+    src: url("../fonts/rebond_grotesque/Rebond\ Grotesque\ Extrabold.otf") format("truetype");
+    font-weight: 800;
+    font-style: normal;
+}
+
 :root {
     --main-black: #444444;
     --sc-black: #626262;
@@ -80,7 +180,7 @@ input,
 textarea {
     margin: 0;
     box-sizing: border-box;
-    font-family: "Manrope";
+    font-family: "Inter";
 }
 
 input.is-error {
@@ -176,7 +276,7 @@ input.is-error {
     font-size: 14px;
     font-weight: 400;
     color: #fff;
-    padding: 2px 14px;
+    padding: 6px 14px;
     border-radius: 24px;
 }
 
@@ -193,7 +293,7 @@ input.is-error {
 }
 
 .reject-btn, .approve-btn, .view-btn, .additional-btn {
-    width: 100px;
+    width: 140px;
     font-size: 14px;
     font-weight: 400;
     color: #fff;

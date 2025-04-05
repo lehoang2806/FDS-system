@@ -8,7 +8,7 @@
         h1 {
             font-size: 30px;
             font-weight: 800;
-            color: #272d4e;
+            color: var(--main-color);
             margin-bottom: 40px;
         }
 
@@ -25,6 +25,13 @@
 
             .form-field {
                 text-align: start;
+            }
+
+            .cpm-form-r1, .cpm-form-r2, .cpm-form-r3 {
+                display: flex;
+                justify-content: space-between;
+                flex-wrap: wrap;
+                gap: 20px;
             }
         }
 

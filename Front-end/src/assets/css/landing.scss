@@ -1,7 +1,8 @@
 #landing {
     h2 {
         font-size: 40px;
-        font-weight: 900;
+        font-weight: 700;
+        font-family: "Rebond Grotesque", sans-serif;
         color: var(--main-black);
         text-align: center;
     }
@@ -17,18 +18,7 @@
         }
     }
 
-    #landing-s1 {
-        background-image: url("@/assets/images/ls1.svg");
-        background-repeat: no-repeat;
-        background-position: center;
-        background-size: cover;
-        height: 800px;
-    }
-
     #landing-s2 {
-        h2 {
-            margin-bottom: 40px;
-        }
 
         h3 {
             font-size: 24px;
@@ -56,27 +46,6 @@
             flex-wrap: wrap;
             gap: 24px;
         }
-
-        .pagination-lists {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            margin-top: 32px;
-
-            .pagination-item {
-                width: 12px;
-                height: 12px;
-                background: var(--light-orange);
-                border-radius: var(--border-radius-circle);
-            }
-
-            .pagination-item-active {
-                width: 32px;
-                background: var(--main-color);
-                border-radius: var(--border-radius-16);
-            }
-        }
     }
 
     #landing-s3 {
@@ -96,7 +65,11 @@
                 .ls3-img {
                     width: 408px;
                     height: 462px;
-                    background: red;
+
+                    img {
+                        width: 100%;
+                        object-fit: cover;
+                    }
                 }
             }
 

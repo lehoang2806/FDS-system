@@ -48,7 +48,7 @@ const AdminSidebar: FC = () => {
                     >
                         <div className="ascr2-nav-link">
                             <DashboardtIcon className="ascr2-nav-icon" />
-                            <span>Dashboard</span>
+                            <span>Trang tổng quan</span>
                         </div>
                     </Link>
                     <Link
@@ -59,7 +59,7 @@ const AdminSidebar: FC = () => {
                     >
                         <div className="ascr2-nav-link">
                             <StaffIcon className="ascr2-nav-icon" />
-                            <span>Staff</span>
+                            <span>Nhân viên</span>
                         </div>
                     </Link>
                     <div
@@ -67,7 +67,7 @@ const AdminSidebar: FC = () => {
                         onClick={handleDropdownToggle}
                     >
                         <CampaignIcon className="ascr2-nav-icon" />
-                        <span>Campaign</span>
+                        <span>Chiến dịch</span>
                     </div>
                     <div ref={dropdownRef} className={classNames("asrc2-nav-dropdown-content", {
                         'open': location.pathname.startsWith(routes.admin.campaign.list),
@@ -82,7 +82,7 @@ const AdminSidebar: FC = () => {
                         >
                             <div className="ascr2-nav-link">
                                 <StaffIcon className="ascr2-nav-icon" />
-                                <span>All</span>
+                                <span>Tất cả</span>
                             </div>
                         </Link>
                         <Link
@@ -93,7 +93,7 @@ const AdminSidebar: FC = () => {
                         >
                             <div className="ascr2-nav-link">
                                 <StaffIcon className="ascr2-nav-icon" />
-                                <span>Staff</span>
+                                <span>Nhân viên</span>
                             </div>
                         </Link>
                         <Link
@@ -104,7 +104,7 @@ const AdminSidebar: FC = () => {
                         >
                             <div className="ascr2-nav-link">
                                 <UserIcon className="ascr2-nav-icon" />
-                                <span>Donor</span>
+                                <span>Người hiến tặng thực phẩm</span>
                             </div>
                         </Link>
                     </div>
@@ -116,7 +116,7 @@ const AdminSidebar: FC = () => {
                     >
                         <div className="ascr2-nav-link">
                             <NewsIcon className="ascr2-nav-icon" />
-                            <span>News</span>
+                            <span>Tin tức</span>
                         </div>
                     </Link>
                     <div
@@ -124,7 +124,7 @@ const AdminSidebar: FC = () => {
                         onClick={handleDropdownToggle}
                     >
                         <PostIcon className="ascr2-nav-icon" />
-                        <span>Post</span>
+                        <span>Bài viết</span>
                     </div>
                     <div ref={dropdownRef} className={classNames("asrc2-nav-dropdown-content", {
                         'open': location.pathname.startsWith(routes.admin.post.forum),
@@ -137,7 +137,7 @@ const AdminSidebar: FC = () => {
                         >
                             <div className="ascr2-nav-link">
                                 <ForumIcon className="ascr2-nav-icon" />
-                                <span>Forum</span>
+                                <span>Diễn đàn</span>
                             </div>
                         </Link>
                         <Link
@@ -148,7 +148,7 @@ const AdminSidebar: FC = () => {
                         >
                             <div className="ascr2-nav-link">
                                 <UserIcon className="ascr2-nav-icon" />
-                                <span>User</span>
+                                <span>Người dùng</span>
                             </div>
                         </Link>
                         <Link
@@ -159,7 +159,7 @@ const AdminSidebar: FC = () => {
                         >
                             <div className="ascr2-nav-link">
                                 <StaffIcon className="ascr2-nav-icon" />
-                                <span>Staff</span>
+                                <span>Nhân viên</span>
                             </div>
                         </Link>
                     </div>
@@ -170,7 +170,7 @@ const AdminSidebar: FC = () => {
                     >
                         <div className="ascr2-nav-link">
                             <LogoutIcon className="ascr2-nav-icon" />
-                            <span>Logout</span>
+                            <span>Đăng xuất</span>
                         </div>
                     </Link>
                 </div>

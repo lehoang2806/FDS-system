@@ -1,0 +1,29 @@
+.carousel-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    flex-wrap: wrap;
+    gap: 24px;
+}
+
+.pagination-lists {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 32px;
+
+    .pagination-item {
+        width: 12px;
+        height: 12px;
+        background: var(--light-orange);
+        border-radius: var(--border-radius-circle);
+        cursor: pointer;
+    }
+
+    .pagination-item-active {
+        width: 32px;
+        background: var(--main-color);
+        border-radius: var(--border-radius-16);
+    }
+}

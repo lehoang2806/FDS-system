@@ -34,8 +34,8 @@ const StaffListUserPage = () => {
         <section id="staff-list-user" className="staff-section">
             <div className="staff-container slu-container">
                 <div className="slucr1">
-                    <h1>User</h1>
-                    <p>Dashboard<span className="staff-tag">User</span></p>
+                    <h1>Người dùng</h1>
+                    <p>Trang tổng quan<span className="staff-tag">Người dùng</span></p>
                 </div>
                 <div className="slucr2">
                     <div className="staff-tab staff-tab-1">
@@ -43,16 +43,7 @@ const StaffListUserPage = () => {
                             <TotalIcon className="st-icon" />
                         </div>
                         <div className="st-info">
-                            <h3>Total</h3>
-                            <p>7 Users</p>
-                        </div>
-                    </div>
-                    <div className="staff-tab staff-tab-2">
-                        <div className="st-figure st-figure-2">
-                            <BlockIcon className="st-icon" />
-                        </div>
-                        <div className="st-info">
-                            <h3>Forbidden</h3>
+                            <h3>Tổng cộng</h3>
                             <p>7 Users</p>
                         </div>
                     </div>
@@ -61,7 +52,7 @@ const StaffListUserPage = () => {
                             <ActiveIcon className="st-icon" />
                         </div>
                         <div className="st-info">
-                            <h3>Donor</h3>
+                            <h3>Người hiến tặng thực phẩm</h3>
                             <p>7 Users</p>
                         </div>
                     </div>
@@ -70,7 +61,7 @@ const StaffListUserPage = () => {
                             <ActiveIcon className="st-icon" />
                         </div>
                         <div className="st-info">
-                            <h3>Recipient</h3>
+                            <h3>Người nhận hỗ trợ</h3>
                             <p>7 Users</p>
                         </div>
                     </div>

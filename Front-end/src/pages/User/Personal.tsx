@@ -1,4 +1,4 @@
-import { selectGetAllCampaign, selectGetAllDonorCertificate, selectGetAllRecipientCertificate, selectGetAllRegisterReceivers, selectUserLogin } from "@/app/selector";
+import { selectGetAllCampaign, selectGetAllDonorCertificate, selectGetAllRecipientCertificate, selectGetAllRegisterReceivers, selectGetProfileUser, selectIsAuthenticated, selectUserLogin } from "@/app/selector";
 import { useAppDispatch, useAppSelector } from "@/app/store";
 import { AvatarUser, NoResult } from "@/assets/images"
 import { Loading } from "@/components/Elements";
@@ -8,7 +8,7 @@ import { routes } from "@/routes/routeName";
 import { setLoading } from "@/services/app/appSlice";
 import { getAllCampaignApiThunk } from "@/services/campaign/campaignThunk";
 import { getAllRegisterReceiversApiThunk } from "@/services/registerReceive/registerReceiveThunk";
-import { getAllDonorCertificateApiThunk, getAllRecipientCertificateApiThunk } from "@/services/user/userThunk";
+import { getAllDonorCertificateApiThunk, getAllRecipientCertificateApiThunk, getProfileApiThunk } from "@/services/user/userThunk";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -16,6 +16,8 @@ const UserPersonalPage = () => {
     const dispatch = useAppDispatch();
 
     // Lấy dữ liệu từ Redux store
+    const profileUser = useAppSelector(selectGetProfileUser);
+    const isAuthenticated = useAppSelector(selectIsAuthenticated);
     const userLogin = useAppSelector(selectUserLogin);
     const campaigns = useAppSelector(selectGetAllCampaign);
     const donorCertificates = useAppSelector(selectGetAllDonorCertificate);
@@ -96,13 +98,20 @@ const UserPersonalPage = () => {
     }, [dispatch]);
 
     const handleCreateCampaign = () => {
-        if (userLogin?.isConfirm === false) {
+        if (profileUser?.isConfirm === false) {
             setIsSubmitCertificateModalOpen(true)
         }
-        if (userLogin?.isConfirm === true) {
+        if (profileUser?.isConfirm === true) {
             setIsCreateCampaignModalOpen(true)
         }
     }
+
+    useEffect(() => {
+        if (isAuthenticated) {
+            dispatch(getProfileApiThunk(String(userLogin?.accountId)))
+                .unwrap();
+        }
+    }, [isAuthenticated]);
 
     const handleToDetailCampaign = (campaignId: string) => {
         const url = routes.user.detail_campaign.replace(":id", campaignId);
@@ -141,20 +150,20 @@ const UserPersonalPage = () => {
                             <button className="pr-btn" onClick={() => navigateHook(routes.user.profile)}>Chỉnh sửa thông tin</button>
                         </div>
                     </div>
-                    {isFiltering && <Loading loading={true} isFullPage />} 
+                    {isFiltering && <Loading loading={true} isFullPage />}
                     {userLogin?.roleId === 3 && (
                         <>
                             <div className="upps2cr2">
                                 <div className="upp-tabs">
                                     <div
                                         className={`upp-tabs-item ${activeTab === "chiendich" ? "upp-tabs-item-actived" : ""}`}
-                                        onClick={() => {handleTabChange("chiendich"), handleFilter()}}
+                                        onClick={() => { handleTabChange("chiendich"), handleFilter() }}
                                     >
                                         Chiến dịch
                                     </div>
                                     <div
                                         className={`upp-tabs-item ${activeTab === "chungchi" ? "upp-tabs-item-actived" : ""}`}
-                                        onClick={() => {handleTabChange("chungchi"), handleFilter()}}
+                                        onClick={() => { handleTabChange("chungchi"), handleFilter() }}
                                     >
                                         Xác nhận danh tính
                                     </div>
@@ -176,16 +185,13 @@ const UserPersonalPage = () => {
                                                 <thead className="table-head">
                                                     <tr className="table-head-row">
                                                         <th className="table-head-cell">
-                                                            Campaign Name
+                                                            Tên chiến dịch
                                                         </th>
                                                         <th className="table-head-cell">
-                                                            Description
+                                                            Trạng thái
                                                         </th>
                                                         <th className="table-head-cell">
-                                                            Status
-                                                        </th>
-                                                        <th className="table-head-cell">
-                                                            Action
+                                                            Hành động
                                                         </th>
                                                     </tr>
                                                 </thead>
@@ -193,10 +199,10 @@ const UserPersonalPage = () => {
                                                     {currentCampaigns.map((campaign, index) => (
                                                         <tr className="table-body-row" key={index}>
                                                             <td className='table-body-cell'>{campaign.campaignName}</td>
-                                                            <td className='table-body-cell'>{campaign.campaignDescription}</td>
-                                                            <td className='table-body-cell'>{campaign.status === "Pending" ? <span className='status-pending'>Pending</span> : campaign.status === "Approved" ? <span className='status-approve'>Approve</span> : <span className='status-reject'>Reject</span>}</td>
+                                                            <td className='table-body-cell'>{campaign.status === "Pending" ? <span className='status-pending'>Đang chờ phê duyệt</span> : campaign.status === "Approved" ? <span className='status-approve'>Đã được phê duyệt</span> : <span className='status-reject'>Đã bị từ chối</span>}</td>
                                                             <td className="table-body-cell">
-                                                                <button className='view-btn' onClick={() => handleToDetailCampaign(campaign.campaignId)}>View Detail</button>
+                                                                <button className='view-btn' onClick={() => handleToDetailCampaign(campaign.campaignId)}>Xem chi tiết</button>
+                                                                <button className='reject-btn' onClick={() => handleToDetailCampaign(campaign.campaignId)}>Hủy chiến dịch</button>
                                                             </td>
                                                         </tr>
                                                     ))}
@@ -219,13 +225,13 @@ const UserPersonalPage = () => {
                                                 <thead className="table-head">
                                                     <tr className="table-head-row">
                                                         <th className="table-head-cell">
-                                                            Type
+                                                            Đối tượng xác thực
                                                         </th>
                                                         <th className="table-head-cell">
-                                                            Status
+                                                            Trạng thái
                                                         </th>
                                                         <th className="table-head-cell">
-                                                            Action
+                                                            Hành động
                                                         </th>
                                                     </tr>
                                                 </thead>
@@ -233,9 +239,9 @@ const UserPersonalPage = () => {
                                                     {currentDonorCertificates.map((row, index) => (
                                                         <tr key={index} className="table-body-row">
                                                             <td className='table-body-cell'>{row.citizenId === null ? "Organization" : "Personal"}</td>
-                                                            <td className='table-body-cell'>{row.status === "Pending" ? <span className='status-pending'>Pending</span> : row.status === "Approved" ? <span className='status-approve'>Approve</span> : <span className='status-reject'>Reject</span>}</td>
+                                                            <td className='table-body-cell'>{row.status === "Pending" ? <span className='status-pending'>Đang chờ phê duyệt</span> : row.status === "Approved" ? <span className='status-approve'>Đã được phê duyệt</span> : <span className='status-reject'>Đã bị từ chối</span>}</td>
                                                             <td className="table-body-cell">
-                                                                <button className="view-btn" onClick={() => row.citizenId === null ? handleToDetailCertificate(row.donorCertificateId, "Organization") : handleToDetailCertificate(row.donorCertificateId, "Personal")}>View Detail</button>
+                                                                <button className="view-btn" onClick={() => row.citizenId === null ? handleToDetailCertificate(row.donorCertificateId, "Organization") : handleToDetailCertificate(row.donorCertificateId, "Personal")}>Xem chi tiết</button>
                                                             </td>
                                                         </tr>
                                                     ))}
@@ -253,13 +259,13 @@ const UserPersonalPage = () => {
                                 <div className="upp-tabs">
                                     <div
                                         className={`upp-tabs-item ${activeTab === "chiendich" ? "upp-tabs-item-actived" : ""}`}
-                                        onClick={() => {handleTabChange("chiendich"), handleFilter()}}
+                                        onClick={() => { handleTabChange("chiendich"), handleFilter() }}
                                     >
                                         Chiến dịch đăng ký
                                     </div>
                                     <div
                                         className={`upp-tabs-item ${activeTab === "chungchi" ? "upp-tabs-item-actived" : ""}`}
-                                        onClick={() => {handleTabChange("chungchi"), handleFilter()}}
+                                        onClick={() => { handleTabChange("chungchi"), handleFilter() }}
                                     >
                                         Xác nhận danh tính
                                     </div>

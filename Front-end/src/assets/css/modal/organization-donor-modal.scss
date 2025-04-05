@@ -37,6 +37,13 @@
             .form-field {
                 text-align: start;
             }
+
+            .odm-form-r1, .odm-form-r2 {
+                display: flex;
+                justify-content: space-between;
+                flex-wrap: wrap;
+                gap: 20px;
+            }
         }
 
         .sc-btn {

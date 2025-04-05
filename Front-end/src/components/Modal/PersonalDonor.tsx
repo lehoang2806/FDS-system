@@ -45,11 +45,12 @@ const PersonalDonorModal: FC<PersonalDonorModalProps> = ({ isOpen, setIsOpen }) 
             .required('Số điện thoại không được để trống'),
         address: Yup.string().required('Địa chỉ không được để trống'),
         socialMediaLink: Yup.string().url('Liên kết mạng xã hội không hợp lệ'),
-        mainSourceIncome: Yup.string().required('Nguồn thu nhập chính không được để trống'),
-        monthlyIncome: Yup.number()
-            .typeError('Thu nhập hàng tháng phải là số')
-            .min(0, 'Thu nhập hàng tháng không được âm')
-            .required('Thu nhập hàng tháng không được để trống'),
+        monthlyIncome: Yup.string()
+            .test('is-valid-number', 'Thu nhập hàng tháng phải là số', value => {
+                if (!value) return true; // allow empty
+                const numeric = value.replace(/,/g, '');
+                return !isNaN(Number(numeric));
+            }),
         images: Yup.array().of(Yup.string().required('Mỗi ảnh phải là một chuỗi hợp lệ')).min(1, 'Cần ít nhất một ảnh').required('Danh sách ảnh là bắt buộc'),
     });
 
@@ -95,6 +96,19 @@ const PersonalDonorModal: FC<PersonalDonorModalProps> = ({ isOpen, setIsOpen }) 
         });
     }
 
+    const formatCurrency = (value: string) => {
+        const numericValue = value.replace(/,/g, ''); // Remove commas
+        if (!isNaN(Number(numericValue))) {
+            return Number(numericValue).toLocaleString('en-US');
+        }
+        return value;
+    };
+
+    const handleIncomeChange = (e: ChangeEvent<HTMLInputElement>, setFieldValue: Function) => {
+        const formattedValue = formatCurrency(e.target.value);
+        setFieldValue('monthlyIncome', formattedValue);
+    };
+
     return (
         <Modal isOpen={isOpen} setIsOpen={setIsOpen}>
             <section id="personal-donor-modal">
@@ -114,56 +128,68 @@ const PersonalDonorModal: FC<PersonalDonorModalProps> = ({ isOpen, setIsOpen }) 
                         }) => (
                             <Form onSubmit={handleSubmit} className="form">
                                 <h3>Thông tin cá nhân</h3>
-                                <div className="form-field">
-                                    <label className="form-label">Họ Và Tên</label>
-                                    <Field name="fullName" type="text" placeholder="Hãy nhập họ và tên của bạn" className={classNames("form-input", { "is-error": errors.fullName && touched.fullName })} />
-                                    {errors.fullName && touched.fullName && <span className="text-error">{errors.fullName}</span>}
-                                </div>
-                                <div className="form-field">
-                                    <label className="form-label">Ngày Sinh</label>
-                                    <Field
-                                        name="birthDay"
-                                        type="date"
-                                        className={classNames("form-input", { "is-error": errors.birthDay && touched.birthDay })}
-                                    />
-                                    {errors.birthDay && touched.birthDay && <span className="text-error">{errors.birthDay}</span>}
-                                </div>
+                                <div className="pdm-form-r1">
+                                    <div className="form-50 form-field">
+                                        <label className="form-label">Họ Và Tên<span>*</span></label>
+                                        <Field name="fullName" type="text" placeholder="Hãy nhập họ và tên của bạn" className={classNames("form-input", { "is-error": errors.fullName && touched.fullName })} />
+                                        {errors.fullName && touched.fullName && <span className="text-error">{errors.fullName}</span>}
+                                    </div>
+                                    <div className="form-50 form-field">
+                                        <label className="form-label">Ngày Sinh<span>*</span></label>
+                                        <Field
+                                            name="birthDay"
+                                            type="date"
+                                            className={classNames("form-input", { "is-error": errors.birthDay && touched.birthDay })}
+                                        />
+                                        {errors.birthDay && touched.birthDay && <span className="text-error">{errors.birthDay}</span>}
+                                    </div>
 
-                                <div className="form-field">
-                                    <label className="form-label">Email</label>
-                                    <Field name="email" type="text" placeholder="Hãy nhập CCCD của bạn" className={classNames("form-input", { "is-error": errors.email && touched.email })} />
-                                    {errors.email && touched.email && <span className="text-error">{errors.email}</span>}
-                                </div>
-                                <div className="form-field">
-                                    <label className="form-label">Số Điện Thoại</label>
-                                    <Field name="phone" type="text" placeholder="Hãy nhập CCCD của bạn" className={classNames("form-input", { "is-error": errors.phone && touched.phone })} />
-                                    {errors.phone && touched.phone && <span className="text-error">{errors.phone}</span>}
-                                </div>
-                                <div className="form-field">
-                                    <label className="form-label">Địa Chỉ</label>
-                                    <Field name="address" type="text" placeholder="Hãy nhập CCCD của bạn" className={classNames("form-input", { "is-error": errors.address && touched.address })} />
-                                    {errors.address && touched.address && <span className="text-error">{errors.address}</span>}
-                                </div>
-                                <div className="form-field">
-                                    <label className="form-label">Căn cước công dân</label>
-                                    <Field name="citizenId" type="text" placeholder="Hãy nhập CCCD của bạn" className={classNames("form-input", { "is-error": errors.citizenId && touched.citizenId })} />
-                                    {errors.citizenId && touched.citizenId && <span className="text-error">{errors.citizenId}</span>}
-                                </div>
-                                <div className="form-field">
-                                    <label className="form-label">Liên kết Mạng Xã Hội</label>
-                                    <Field name="socialMediaLink" type="text" placeholder="Hãy nhập CCCD của bạn" className={classNames("form-input", { "is-error": errors.socialMediaLink && touched.socialMediaLink })} />
-                                    {errors.socialMediaLink && touched.socialMediaLink && <span className="text-error">{errors.socialMediaLink}</span>}
+                                    <div className="form-50 form-field">
+                                        <label className="form-label">Email<span>*</span></label>
+                                        <Field name="email" type="text" placeholder="Hãy nhập email của bạn" className={classNames("form-input", { "is-error": errors.email && touched.email })} />
+                                        {errors.email && touched.email && <span className="text-error">{errors.email}</span>}
+                                    </div>
+                                    <div className="form-50 form-field">
+                                        <label className="form-label">Số Điện Thoại<span>*</span></label>
+                                        <Field name="phone" type="text" placeholder="Hãy nhập số điện thoại của bạn" className={classNames("form-input", { "is-error": errors.phone && touched.phone })} />
+                                        {errors.phone && touched.phone && <span className="text-error">{errors.phone}</span>}
+                                    </div>
+                                    <div className="form-50 form-field">
+                                        <label className="form-label">Địa Chỉ<span>*</span></label>
+                                        <Field name="address" type="text" placeholder="Hãy nhập địa chỉ của bạn" className={classNames("form-input", { "is-error": errors.address && touched.address })} />
+                                        {errors.address && touched.address && <span className="text-error">{errors.address}</span>}
+                                    </div>
+                                    <div className="form-50 form-field">
+                                        <label className="form-label">Căn cước công dân<span>*</span></label>
+                                        <Field name="citizenId" type="text" placeholder="Hãy nhập CCCD của bạn" className={classNames("form-input", { "is-error": errors.citizenId && touched.citizenId })} />
+                                        {errors.citizenId && touched.citizenId && <span className="text-error">{errors.citizenId}</span>}
+                                    </div>
+                                    <div className="form-100 form-field">
+                                        <label className="form-label">Liên kết Mạng Xã Hội</label>
+                                        <Field name="socialMediaLink" type="text" placeholder="Hãy liên kết xã hội của bạn của bạn" className={classNames("form-input", { "is-error": errors.socialMediaLink && touched.socialMediaLink })} />
+                                        {errors.socialMediaLink && touched.socialMediaLink && <span className="text-error">{errors.socialMediaLink}</span>}
+                                    </div>
                                 </div>
                                 <h3>Thông tin tài chính</h3>
-                                <div className="form-field">
-                                    <label className="form-label">Nguồn Thu Nhập Chính</label>
-                                    <Field name="mainSourceIncome" type="text" placeholder="Hãy nhập CCCD của bạn" className={classNames("form-input", { "is-error": errors.mainSourceIncome && touched.mainSourceIncome })} />
-                                    {errors.mainSourceIncome && touched.mainSourceIncome && <span className="text-error">{errors.mainSourceIncome}</span>}
-                                </div>
-                                <div className="form-field">
-                                    <label className="form-label">Thu Nhập Hàng Tháng</label>
-                                    <Field name="monthlyIncome" type="text" placeholder="Hãy nhập CCCD của bạn" className={classNames("form-input", { "is-error": errors.monthlyIncome && touched.monthlyIncome })} />
-                                    {errors.monthlyIncome && touched.monthlyIncome && <span className="text-error">{errors.monthlyIncome}</span>}
+                                <div className="pdm-form-r2">
+                                    <div className="form-50 form-field">
+                                        <label className="form-label">Nguồn Thu Nhập Chính</label>
+                                        <Field name="mainSourceIncome" type="text" placeholder="Hãy nhập nguồn Thu Nhập Chính của bạn" className={classNames("form-input", { "is-error": errors.mainSourceIncome && touched.mainSourceIncome })} />
+                                        {errors.mainSourceIncome && touched.mainSourceIncome && <span className="text-error">{errors.mainSourceIncome}</span>}
+                                    </div>
+                                    <div className="form-50 form-field">
+                                        <label className="form-label">Thu Nhập Hàng Tháng (VNĐ)</label>
+                                        <Field
+                                            name="monthlyIncome"
+                                            type="text"
+                                            placeholder="Hãy nhập thu nhập hàng tháng của bạn"
+                                            className={classNames('form-input', { 'is-error': errors.monthlyIncome && touched.monthlyIncome })}
+                                            onChange={(e: ChangeEvent<HTMLInputElement>) => handleIncomeChange(e, setFieldValue)}
+                                        />
+                                        {errors.monthlyIncome && touched.monthlyIncome && (
+                                            <span className="text-error">{errors.monthlyIncome}</span>
+                                        )}
+                                    </div>
                                 </div>
                                 <h2>Vui lòng nộp các giấy tờ sau:</h2>
                                 <div className="document-section">
@@ -211,7 +237,7 @@ const PersonalDonorModal: FC<PersonalDonorModalProps> = ({ isOpen, setIsOpen }) 
                                         ))}
                                     </div>
                                 )}
-                                <Button loading={isSubmitting} type="submit" title="Nộp chứng chỉ" />
+                                <Button loading={isSubmitting} type="submit" title="Xác nhận" />
                             </Form>
                         )}
                     </Formik>

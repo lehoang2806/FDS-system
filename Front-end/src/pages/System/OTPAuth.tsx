@@ -42,7 +42,7 @@ const OTPAuthPage = () => {
                 .finally(() => {
                 });
         } else {
-            alert("Vui lòng nhập đủ 6 số OTP");
+            toast.error("Vui lòng nhập đủ 6 số OTP");
         }
     };
 
@@ -54,6 +54,7 @@ const OTPAuthPage = () => {
                     <div className="col-flex oascc2">
                         <div className="oascc2-main">
                             <h1>Xác thực OTP</h1>
+                            <p style={{ textAlign: "start" }}>Vui lòng nhập mã xác thực đã gửi đến: <span>{userData.userEmail}</span></p>
                             <OTPInput onChange={setOtp} />
                             <Button loading={isLoading} onClick={handleVerifyOTP} title="Xác thực" />
                             <p>

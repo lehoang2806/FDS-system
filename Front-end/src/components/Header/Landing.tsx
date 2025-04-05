@@ -52,8 +52,6 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
     const [isNotifOpen, setIsNotifOpen] = useState(false);
     const notifications = useAppSelector(selectNotifications)
 
-    console.log(notifications)
-
     const handleNewNotification = (notification: any) => {
         const correctedNotification: NotificationDto = {
             ...notification,

@@ -63,9 +63,9 @@ const UserDetailCertificate = () => {
         <main id="user-detail-certificate">
             <section id="udc-section">
                 <h1>Thông tin xác minh tài khoản</h1>
-                {currentPersonalDonorCertificate && certificateType === "Personal" && <h2>Trạng thái: <span>{currentPersonalDonorCertificate.status}</span></h2>}
-                {currentOrganizationDonorCertificate && certificateType === "Organization" && <h2>Trạng thái: <span>{currentOrganizationDonorCertificate.status}</span></h2>}
-                {currentRecipientCertificate && certificateType === "Recipient" && <h2>Trạng thái: <span>{currentRecipientCertificate.status}</span></h2>}
+                {currentPersonalDonorCertificate && certificateType === "Personal" && <h2>Trạng thái: <span>{currentPersonalDonorCertificate?.status === "Pending" ? <span className='status-pending'>Đang chờ phê duyệt</span> : currentPersonalDonorCertificate?.status === "Approved" ? <span className='status-approve'>Đã được phê duyệt</span> : <span className='status-reject'>Đã bị từ chối</span>}</span></h2>}
+                {currentOrganizationDonorCertificate && certificateType === "Organization" && <h2>Trạng thái: <span>{currentOrganizationDonorCertificate?.status === "Pending" ? <span className='status-pending'>Đang chờ phê duyệt</span> : currentOrganizationDonorCertificate?.status === "Approved" ? <span className='status-approve'>Đã được phê duyệt</span> : <span className='status-reject'>Đã bị từ chối</span>}</span></h2>}
+                {currentRecipientCertificate && certificateType === "Recipient" && <h2>Trạng thái: <span>{currentRecipientCertificate?.status === "Pending" ? <span className='status-pending'>Đang chờ phê duyệt</span> : currentRecipientCertificate?.status === "Approved" ? <span className='status-approve'>Đã được phê duyệt</span> : <span className='status-reject'>Đã bị từ chối</span>}</span></h2>}
                 {currentPersonalDonorCertificate && certificateType === "Personal" && <button className="pr-btn" onClick={() => setIsUpdatePersonalDonorCertificateModalOpen(true)}>Cập nhật</button>}
                 {currentOrganizationDonorCertificate && certificateType === "Organization" && <button className="pr-btn" onClick={() => setIsUpdateOrganizationDonorCertificateModalOpen(true)}>Cập nhật</button>}
                 {currentRecipientCertificate && certificateType === "Recipient" && <button className="pr-btn" onClick={() => setIsUpdateRecipientCertificateModalOpen(true)}>Cập nhật</button>}

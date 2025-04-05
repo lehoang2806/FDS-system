@@ -1,3 +1,4 @@
+import { CampaignImage } from "@/assets/images";
 import { FC } from "react"
 
 const CampaignCard: FC<CampaignCardProps> = ({onClickDetail, campaign}) => {
@@ -6,7 +7,7 @@ const CampaignCard: FC<CampaignCardProps> = ({onClickDetail, campaign}) => {
 
     return (
         <div className="campaign-card" onClick={onClickDetail}>
-            <div className="campaign-img"></div>
+            <img src={CampaignImage} className="campaign-img"/>
             <h4>{campaign.campaignName}</h4>
             <p>{date} - {time}</p>
             <p>{campaign.typeGift}</p>

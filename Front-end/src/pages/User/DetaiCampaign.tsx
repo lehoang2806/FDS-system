@@ -98,36 +98,19 @@ const UserDetailCampaignPage: React.FC = () => {
                 <div className="udcs-container">
                     <div className="udcscr1">
                         <div className="udcscr1c1">
-                            <div className="udcscr1c1r1">
-                                <h1>{currentCampaign?.campaignName} - <span>{currentCampaign?.status}</span></h1>
-                                <button className='pr-btn' onClick={() => setIsUpdateCampaignModalOpend(true)}>Cập nhật</button>
-                            </div>
-                            <div className="udcscr1c1r3">
-                                <div
-                                    className={`udcscr1c1r3-tags-item ${activeTab === "mota" ? "udcscr1c1r3-tags-item-actived" : ""}`}
-                                    onClick={() => setActiveTab("mota")}
-                                >
-                                    Mô tả
-                                </div>
-                            </div>
-                            <div className="udcscr1c1r4">
-                                <div className="udcscr1c1r4-content">{currentCampaign?.campaignDescription}</div>
-                            </div>
-                            <div className="udcscr1c1r4">
-                                {selectedImage && (
-                                    <img
-                                        src={selectedImage}
-                                        alt="Selected Campaign Image"
-                                        style={{
-                                            width: "400px",
-                                            height: "400px",
-                                            objectFit: "cover",
-                                            borderRadius: "10px",
-                                            marginBottom: "10px"
-                                        }}
-                                    />
-                                )}
-                            </div>
+                            {selectedImage && (
+                                <img
+                                    src={selectedImage}
+                                    alt="Selected Campaign Image"
+                                    style={{
+                                        width: "600px",
+                                        height: "600px",
+                                        objectFit: "cover",
+                                        borderRadius: "10px",
+                                        marginBottom: "10px"
+                                    }}
+                                />
+                            )}
                             <div className="udcscr1c1r4">
                                 {currentCampaign?.images?.map((img, index) => (
                                     <img
@@ -148,12 +131,38 @@ const UserDetailCampaignPage: React.FC = () => {
                                     />
                                 ))}
                             </div>
+                            <div className="udcscr1c1r1">
+                                <h1>{currentCampaign?.campaignName} - <span>{currentCampaign?.status === "Pending" ? <span className='status-pending'>Đang chờ phê duyệt</span> : currentCampaign?.status === "Approved" ? <span className='status-approve'>Đã được phê duyệt</span> : <span className='status-reject'>Đã bị từ chối</span>}</span></h1>
+                            </div>
+                            <div className="udcscr1c1r3">
+                                <div
+                                    className={`udcscr1c1r3-tags-item ${activeTab === "mota" ? "udcscr1c1r3-tags-item-actived" : ""}`}
+                                    onClick={() => setActiveTab("mota")}
+                                >
+                                    Mô tả
+                                </div>
+                            </div>
+                            <div className="udcscr1c1r4">
+                                <div className="udcscr1c1r4-content">{currentCampaign?.campaignDescription}</div>
+                            </div>
                         </div>
                         <div className="udcscr1c2">
+                            <button className='pr-btn' onClick={() => setIsUpdateCampaignModalOpend(true)}>Cập nhật</button>
                             <div className="udcscr1c2r1">
                                 <div>
-                                    <h4>Phần quà</h4>
-                                    <p>{currentCampaign?.limitedQuantity} - {currentCampaign?.typeGift}</p>
+                                    {currentCampaign?.campaignType === "Limited" ? (
+                                        <>
+                                            <h4>Phần quà</h4>
+                                            <p>{currentCampaign?.limitedQuantity} - {currentCampaign?.typeGift}</p>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <h4>Ngày mở đăng ký</h4>
+                                            <p>{currentCampaign?.startRegisterDate}</p>
+                                            <h4>Ngày đóng đăng ký</h4>
+                                            <p>{currentCampaign?.endRegisterDate}</p>
+                                        </>
+                                    )}
                                 </div>
                                 <div>
                                     <h4>Thời gian & Địa điểm</h4>

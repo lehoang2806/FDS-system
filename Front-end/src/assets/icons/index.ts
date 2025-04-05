@@ -16,6 +16,7 @@ import PostIcon from "./post-icon.svg?react";
 import CertificateIcon from "./certificate-icon.svg?react";
 import LogoutIcon from "./logout-icon.svg?react";
 import SendIcon from "./send-icon.svg?react";
+import RightIcon from "./right-icon.svg?react";
 
 export {
     MenuIcon,
@@ -35,5 +36,6 @@ export {
     PostIcon,
     CertificateIcon,
     LogoutIcon,
-    SendIcon
+    SendIcon,
+    RightIcon
 };

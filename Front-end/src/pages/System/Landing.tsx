@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { CampaignCard, EventCard, HightlightCard } from "../../components/Card/index";
+import { EventCard } from "../../components/Card/index";
 import { routes } from "@/routes/routeName";
 import { navigateHook } from "@/routes/RouteApp";
 import { useAppDispatch, useAppSelector } from "@/app/store";
@@ -8,6 +8,8 @@ import { useEffect } from "react";
 import { getAllCampaignApiThunk } from "@/services/campaign/campaignThunk";
 import { setLoading } from "@/services/app/appSlice";
 import { getAllNewsApiThunk } from "@/services/news/newsThunk";
+import { CampaignCarousel, CarouselLanding } from "@/components/Elements";
+import { LS2 } from "@/assets/images";
 
 export default function () {
     const dispatch = useAppDispatch();
@@ -49,7 +51,8 @@ export default function () {
 
     return (
         <>
-            <section id='landing-s1'>
+            <section id="landing-s1">
+                <CarouselLanding />
             </section>
             <section id="landing-s2" className="landing-section">
                 <div className="landing-container ls2-container">
@@ -62,11 +65,7 @@ export default function () {
                             <Link to={`${routes.user.campaign.list}?tab=1`} className="view-all">Xem tất cả</Link>
                         </div>
                         <div className="ls2cr2r2">
-                            {organizationCampaigns.length > 0 ? organizationCampaigns.map((campaign) => (
-                                <CampaignCard campaign={campaign} key={campaign.campaignId} onClickDetail={() => handleToDetailCampaign(campaign.campaignId)} />
-                            )) : (
-                                <h1>Chưa có dữ liệu</h1>
-                            )}
+                            <CampaignCarousel campaigns={organizationCampaigns} handleToDetailCampaign={handleToDetailCampaign} />
                         </div>
                     </div>
                     <div className="ls2cr3">
@@ -75,11 +74,7 @@ export default function () {
                             <Link to={`${routes.user.campaign.list}?tab=2`} className="view-all">Xem tất cả</Link>
                         </div>
                         <div className="ls2cr3r2">
-                            {personalCampaigns.length > 0 ? personalCampaigns.map((campaign) => (
-                                <CampaignCard campaign={campaign} key={campaign.campaignId} onClickDetail={() => handleToDetailCampaign(campaign.campaignId)} />
-                            )) : (
-                                <h1>Chưa có dữ liệu</h1>
-                            )}
+                            <CampaignCarousel campaigns={personalCampaigns} handleToDetailCampaign={handleToDetailCampaign} />
                         </div>
                     </div>
                 </div>
@@ -89,7 +84,7 @@ export default function () {
                     <h2>Đồng Hành Cùng Chúng Tôi</h2>
                     <div className="ls3r1">
                         <div className="ls3r1c1">
-                            <figure className="ls3-img"><img src="assets/images/ls3.svg" alt="" /></figure>
+                            <figure className="ls3-img"><img src={LS2} alt="" /></figure>
                         </div>
                         <div className="ls3r1c2">
                             <div className="ls3r1c2-item">
@@ -114,7 +109,7 @@ export default function () {
                     </div>
                 </div>
             </section>
-            <section id="landing-s4" className="landing-section">
+            {/* <section id="landing-s4" className="landing-section">
                 <div className="landing-container ls4-container">
                     <div className="ls4cr1">
                         <h2>Các tổ chức, cá nhân nổi bật</h2>
@@ -126,7 +121,7 @@ export default function () {
                         <HightlightCard />
                     </div>
                 </div>
-            </section>
+            </section> */}
             <section id="landing-s5" className="landing-section">
                 <div className="landing-container ls5-container">
                     <div className="ls5cr1">

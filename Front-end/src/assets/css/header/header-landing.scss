@@ -28,10 +28,15 @@
                         font-style: 14px;
                         font-weight: 500;
                         color: #626262;
+
+                        &:hover {
+                            color: var(--main-color);
+                        }
                     }
 
                     .sub-menu {
                         position: absolute;
+                        z-index: 1;
                         min-width: 200px;
                         top: 100%;
                         left: 0;
@@ -99,6 +104,7 @@
 
             .sub-menu-profile {
                 position: absolute;
+                z-index: 1;
                 width: 200px;
                 top: 150%;
                 left: 50%;

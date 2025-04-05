@@ -1,26 +1,16 @@
 import { selectGetAllCampaign } from '@/app/selector'
 import { useAppDispatch, useAppSelector } from '@/app/store'
 import { ActiveIcon, BlockIcon, TotalIcon } from '@/assets/icons'
-import { RejectCampaignModal, RejectReasonModal } from '@/components/Modal'
 import { navigateHook } from '@/routes/RouteApp'
 import { routes } from '@/routes/routeName'
 import { setLoading } from '@/services/app/appSlice'
-import { approveCampaignApiThunk, getAllCampaignApiThunk } from '@/services/campaign/campaignThunk'
-import { FC, useEffect, useState } from 'react'
-import { toast } from 'react-toastify'
+import { getAllCampaignApiThunk } from '@/services/campaign/campaignThunk'
+import { FC, useEffect } from 'react'
 
 const AdminListCampaignPage: FC = () => {
     const dispatch = useAppDispatch()
 
     const campaigns = useAppSelector(selectGetAllCampaign)
-
-    const [selectedCampaign, setSelectedCampaign] = useState<RejectCampaign | null>(null);
-
-    const [selectedReason, setSelectReason] = useState<string | null>('');
-
-    const [isRejectCampaignModalOpen, setIsRejectCampaignModalOpen] = useState(false);
-
-    const [isRejectReasonModalOpen, setIsRejectReasonModalOpen] = useState(false);
 
     useEffect(() => {
         dispatch(setLoading(true));
@@ -39,34 +29,12 @@ const AdminListCampaignPage: FC = () => {
         return navigateHook(url)
     }
 
-    const handleApproveCampaign = async (values: ApproveCampaign) => {
-        try {
-            await dispatch(approveCampaignApiThunk(values)).unwrap();
-            toast.success("Approve Campaign Successfully");
-            dispatch(getAllCampaignApiThunk());
-        } catch (error) {
-            console.error("Error in approval process:", error);
-            toast.error("An error occurred while approving the certificate.");
-        }
-    };
-
-
-    const handleRejectCampaign = (campaignId: string) => {
-        setSelectedCampaign({ campaignId, comment: "" });
-        setIsRejectCampaignModalOpen(true);
-    };
-
-    const handleViewReason = (comment: string | null) => {
-        setSelectReason(comment);
-        setIsRejectReasonModalOpen(true);
-    };
-
     return (
         <section id="admin-list-campaign" className="admin-section">
             <div className="admin-container alc-container">
                 <div className="alccr1">
-                    <h1>Campain</h1>
-                    <p>Dashboard<span className="admin-tag">Campaign</span></p>
+                    <h1>Chiến dịch</h1>
+                    <p>Trang tổng quan<span className="admin-tag">Chiến dịch</span></p>
                 </div>
                 <div className="alccr2">
                     <div className="admin-tab admin-tab-1">
@@ -74,8 +42,8 @@ const AdminListCampaignPage: FC = () => {
                             <TotalIcon className="at-icon" />
                         </div>
                         <div className="at-info">
-                            <h3>Total</h3>
-                            <p>7 Campaigns</p>
+                            <h3>Tổng cộng</h3>
+                            <p>7 Chiến dịch</p>
                         </div>
                     </div>
                     <div className="admin-tab admin-tab-2">
@@ -83,8 +51,8 @@ const AdminListCampaignPage: FC = () => {
                             <BlockIcon className="at-icon" />
                         </div>
                         <div className="at-info">
-                            <h3>Reject</h3>
-                            <p>7 Campaigns</p>
+                            <h3>Bị từ chối</h3>
+                            <p>7 Chiến dịch</p>
                         </div>
                     </div>
                     <div className="admin-tab admin-tab-3">
@@ -92,8 +60,8 @@ const AdminListCampaignPage: FC = () => {
                             <ActiveIcon className="at-icon" />
                         </div>
                         <div className="at-info">
-                            <h3>Approve</h3>
-                            <p>7 Campaigns</p>
+                            <h3>Được phê duyệt</h3>
+                            <p>7 Chiến dịch</p>
                         </div>
                     </div>
                 </div>
@@ -103,12 +71,6 @@ const AdminListCampaignPage: FC = () => {
                             <tr className="table-head-row">
                                 <th className="table-head-cell">
                                     Campaign Name
-                                </th>
-                                <th className="table-head-cell">
-                                    Address
-                                </th>
-                                <th className="table-head-cell">
-                                    Receive Date
                                 </th>
                                 <th className="table-head-cell">
                                     Description
@@ -124,20 +86,11 @@ const AdminListCampaignPage: FC = () => {
                         <tbody className="table-body">
                             {campaigns.map((campaign, index) => (
                                 <tr className="table-body-row" key={index}>
-                                    <td className='table-body-cell'>{campaign.nameCampaign}</td>
-                                    <td className='table-body-cell'>{campaign.address}</td>
-                                    <td className='table-body-cell'>{campaign.receiveDate}</td>
-                                    <td className='table-body-cell'>{campaign.description}</td>
+                                    <td className='table-body-cell'>{campaign.campaignName}</td>
+                                    <td className='table-body-cell'>{campaign.campaignDescription}</td>
                                     <td className='table-body-cell'>{campaign.status === "Pending" ? <span className='status-pending'>Pending</span> : campaign.status === "Approved" ? <span className='status-approve'>Approve</span> : <span className='status-reject'>Reject</span>}</td>
                                     <td className="table-body-cell">
                                         <button className='view-btn' onClick={() => handleToDetail(campaign.campaignId)}>View</button>
-                                        {campaign.status === "Pending" && (
-                                            <>
-                                                <button className='approve-btn' onClick={() => handleApproveCampaign({ campaignId: campaign.campaignId })}>Approve</button>
-                                                <button className='reject-btn' onClick={() => handleRejectCampaign(campaign.campaignId)}>Reject</button>
-                                            </>
-                                        )}
-                                        {campaign.status === "Rejected" && <button className='reject-btn' onClick={() => handleViewReason(campaign.rejectComment)}>View Reason</button>}
                                     </td>
                                 </tr>
                             ))}
@@ -145,8 +98,6 @@ const AdminListCampaignPage: FC = () => {
                     </table>
                 </div>
             </div>
-            <RejectCampaignModal isOpen={isRejectCampaignModalOpen} setIsOpen={setIsRejectCampaignModalOpen} selectedCampaign={selectedCampaign} />
-            <RejectReasonModal isOpen={isRejectReasonModalOpen} setIsOpen={setIsRejectReasonModalOpen} reason={selectedReason} />
         </section>
     )
 }

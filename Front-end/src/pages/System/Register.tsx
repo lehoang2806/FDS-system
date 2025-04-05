@@ -10,11 +10,14 @@ import { get } from "lodash";
 import Button from "@/components/Elements/Button";
 import classNames from "classnames";
 import { selectIsAuthenticated } from "@/app/selector";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { RightIcon } from "@/assets/icons";
 
 const RegisterPage = () => {
     const dispatch = useAppDispatch();
     const isAuthenticated = useAppSelector(selectIsAuthenticated);
+
+    const [isSelectRoleOpen, setIsSelectRoleOpen] = useState(false);
 
     const initialValues: IRegisterEmail = {
         userEmail: "",
@@ -106,16 +109,24 @@ const RegisterPage = () => {
                                         </div>
                                         <div className="form-field">
                                             <label className="form-label">Số điện thoại</label>
-                                            <Field name="phone" type="text" placeholder="Hãy nhập số điện thoại cảu bạn" className={classNames("form-input", { "is-error": errors.phone && touched.phone })} />
+                                            <Field name="phone" type="text" placeholder="Hãy nhập số điện thoại của bạn" className={classNames("form-input", { "is-error": errors.phone && touched.phone })} />
                                             {errors.phone && touched.phone && <span className="text-error">{errors.phone}</span>}
                                         </div>
                                         <div className="form-field">
                                             <label className="form-label">Lựa chọn vai trò</label>
-                                            <Field as="select" name="roleId" className={classNames("form-input", { "is-error": errors.roleId && touched.roleId })}>
-                                                <option value={0}>Chọn vai trò</option>
-                                                <option value={3}>Người ủng hộ</option>
-                                                <option value={4}>Người thu nhập thấp</option>
-                                            </Field>
+                                            <div className="form-input-select-container">
+                                                <Field
+                                                    as="select"
+                                                    name="roleId"
+                                                    className={classNames("form-input-select form-input", { "is-error": errors.roleId && touched.roleId })}
+                                                    onClick={() => setIsSelectRoleOpen(!isSelectRoleOpen)}
+                                                >
+                                                    <option value={0}>Chọn vai trò</option>
+                                                    <option value={3}>Người tặng thực phẩm</option>
+                                                    <option value={4}>Người nhận hỗ trợ</option>
+                                                </Field>
+                                                <RightIcon className={classNames("form-icon-select", { "rotate-45": isSelectRoleOpen })} />
+                                            </div>
                                             {errors.roleId && touched.roleId && <span className="text-error">{errors.roleId}</span>}
                                         </div>
                                         <Button loading={isSubmitting} type="submit" title="Đăng ký" />
