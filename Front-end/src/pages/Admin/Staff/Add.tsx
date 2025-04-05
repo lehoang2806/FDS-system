@@ -43,7 +43,7 @@ const AdminAddStaffPage: FC = () => {
     const onSubmit = async (values: AddStaff, helpers: FormikHelpers<AddStaff>) => {
         dispatch(setLoading(true));
         await dispatch(addStaffApiThunk(values)).unwrap().then(() => {
-            toast.success("Add staff successfully");
+            toast.success("Tạo nhân viên mới thành công");
             helpers.resetForm();
         }).catch((error) => {
             const errorData = get(error, 'data.message', null);
@@ -71,26 +71,15 @@ const AdminAddStaffPage: FC = () => {
                     <section id="admin-add-staff" className="admin-section">
                         <div className="admin-container aas-container">
                             <div className="aascr1">
-                                <h1>Staff</h1>
-                                <p>Dashboard<span className="admin-tag">Add Staff</span></p>
+                                <h1>Nhân viên</h1>
+                                <p>Trang tổng quan<span className="admin-tag">Tạo nhân viên mới</span></p>
                             </div>
                             <div className="aascr2">
                                 <div className="aascr2r1">
-                                    <h2>#1</h2>
+                                    <h2></h2>
                                     <div className="group-btn">
-                                        <button onClick={() => navigateHook(routes.admin.staff.list)}>Cancel</button>
-                                        <Button type="submit" title="Create Staff" loading={isSubmitting}/>
-                                    </div>
-                                </div>
-                                <hr />
-                                <div className="aascr2r2">
-                                    <div className="aascr2r2c1">
-                                        <h3>Staff Status:</h3>
-                                        <p>Active</p>
-                                    </div>
-                                    <div className="aascr2r2c2">
-                                        <h3>Created Date:</h3>
-                                        <p>25-02-2025</p>
+                                        <button onClick={() => navigateHook(routes.admin.staff.list)}>Quay lại</button>
+                                        <Button type="submit" title="Tạo nhân viên mới" loading={isSubmitting}/>
                                     </div>
                                 </div>
                                 <hr />
@@ -102,17 +91,17 @@ const AdminAddStaffPage: FC = () => {
                                             {errors.userEmail && touched.userEmail && <span className="text-error">{errors.userEmail}</span>}
                                         </div>
                                         <div className="form-field">
-                                            <label className="form-label">Username</label>
-                                            <Field name="fullName" type="text" placeholder="Hãy nhập tên người dung" className={classNames("form-input", { "is-error": errors.fullName && touched.fullName })} />
+                                            <label className="form-label">Họ và tên</label>
+                                            <Field name="fullName" type="text" placeholder="Hãy nhập tên người dùng" className={classNames("form-input", { "is-error": errors.fullName && touched.fullName })} />
                                             {errors.fullName && touched.fullName && <span className="text-error">{errors.fullName}</span>}
                                         </div>
                                         <div className="form-field">
-                                            <label className="form-label">Password</label>
+                                            <label className="form-label">Mật khẩu</label>
                                             <Field name="password" type="password" placeholder="Hãy nhập mật khẩu" className={classNames("form-input", { "is-error": errors.password && touched.password })} />
                                             {errors.password && touched.password && <span className="text-error">{errors.password}</span>}
                                         </div>
                                         <div className="form-field">
-                                            <label className="form-label">Phone</label>
+                                            <label className="form-label">Số điện thoại</label>
                                             <Field name="phone" type="text" placeholder="Hãy nhập số diện thoại" className={classNames("form-input", { "is-error": errors.phone && touched.phone })} />
                                             {errors.phone && touched.phone && <span className="text-error">{errors.phone}</span>}
                                         </div>

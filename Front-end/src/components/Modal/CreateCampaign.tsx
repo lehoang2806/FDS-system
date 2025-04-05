@@ -58,20 +58,8 @@ const CreateCampaignModal: FC<CreateCampaignModalProps> = ({ isOpen, setIsOpen }
                 return selectedDate.isAfter(minDate);
             }),
 
-        estimatedBudget: Yup.string()
-            .required('Ngân sách ước tính là bắt buộc'),
-
-        averageCostPerGift: Yup.string()
-            .required('Chi phí trung bình mỗi quà tặng là bắt buộc'),
-
-        sponsors: Yup.string()
-            .required('Nhà tài trợ là bắt buộc'),
-
         implementationMethod: Yup.string()
             .required('Phương thức thực hiện là bắt buộc'),
-
-        communication: Yup.string()
-            .required('Thông tin truyền thông là bắt buộc'),
 
         campaignType: Yup.string()
             .required("Loại chiến dịch là bắt buộc"),
@@ -106,7 +94,23 @@ const CreateCampaignModal: FC<CreateCampaignModalProps> = ({ isOpen, setIsOpen }
                         ),
             }),
 
-            images: Yup.array().of(Yup.string().required('Mỗi ảnh phải là một chuỗi hợp lệ')).min(1, 'Cần ít nhất một ảnh').required('Danh sách ảnh là bắt buộc'),
+        estimatedBudget: Yup.string()
+            .test('is-valid-number', 'Nhân sách ước tính phải lớn hơn 0', value => {
+                if (!value) return true; // allow empty
+                const numeric = value.replace(/,/g, '');
+                const parsedValue = Number(numeric);
+                return !isNaN(parsedValue) && parsedValue > 0; // ensure the number is greater than zero
+            }),
+
+        averageCostPerGift: Yup.string()
+            .test('is-valid-number', 'Chi phí trung bình mỗi quà tặng phải lớn hơn 0', value => {
+                if (!value) return true; // allow empty
+                const numeric = value.replace(/,/g, '');
+                const parsedValue = Number(numeric);
+                return !isNaN(parsedValue) && parsedValue > 0; // ensure the number is greater than zero
+            }),
+
+        images: Yup.array().of(Yup.string().required('Mỗi ảnh phải là một chuỗi hợp lệ')).min(1, 'Cần ít nhất một ảnh').required('Danh sách ảnh là bắt buộc'),
 
     });
 
@@ -140,25 +144,25 @@ const CreateCampaignModal: FC<CreateCampaignModalProps> = ({ isOpen, setIsOpen }
             const offset = localDate.getTimezoneOffset();
             return new Date(localDate.getTime() - offset * 6000).toISOString();
         };
-    
+
         const formattedValues: AddCampaign = {
             ...values,
             implementationTime: toUTC(values.implementationTime),
             ...(values.campaignType === "Voluntary"
                 ? {
-                      startRegisterDate: toUTC(values.startRegisterDate),
-                      endRegisterDate: toUTC(values.endRegisterDate),
-                      limitedQuantity: "",
-                  }
+                    startRegisterDate: toUTC(values.startRegisterDate),
+                    endRegisterDate: toUTC(values.endRegisterDate),
+                    limitedQuantity: "",
+                }
                 : {
-                      startRegisterDate: "",
-                      endRegisterDate: "",
-                  }),
+                    startRegisterDate: "",
+                    endRegisterDate: "",
+                }),
         };
-    
+
         try {
             await dispatch(addCampaignApiThunk(formattedValues)).unwrap();
-            toast.success("Add Campaign successfully");
+            toast.success("Tạo chiến dịch thành công");
             dispatch(setLoading(true));
             dispatch(getAllCampaignApiThunk());
         } catch (error) {
@@ -172,11 +176,23 @@ const CreateCampaignModal: FC<CreateCampaignModalProps> = ({ isOpen, setIsOpen }
             }, 1000);
         }
     };
-    
 
+    const formatCurrency = (value: string) => {
+        const numericValue = value.replace(/,/g, ''); // Remove commas
+        if (!isNaN(Number(numericValue))) {
+            return Number(numericValue).toLocaleString('en-US');
+        }
+        return value;
+    };
+
+    const handleIncomeChange = (e: ChangeEvent<HTMLInputElement>, setFieldValue: Function) => {
+        const formattedValue = formatCurrency(e.target.value);
+        if (e.target.name === "estimatedBudget") setFieldValue('estimatedBudget', formattedValue);
+        if (e.target.name === "averageCostPerGift") setFieldValue('averageCostPerGift', formattedValue);
+    };
 
     return (
-        <Modal isOpen={isOpen} setIsOpen={setIsOpen} title="Tạo chiến dịch">
+        <Modal isOpen={isOpen} setIsOpen={setIsOpen}>
             <section id="create-campaign-modal">
                 <div className="ccm-container">
                     <Formik
@@ -193,102 +209,125 @@ const CreateCampaignModal: FC<CreateCampaignModalProps> = ({ isOpen, setIsOpen }
                             setFieldValue,
                         }) => (
                             <Form onSubmit={handleSubmit} className='form'>
+                                <h1>Tạo chiến dịch</h1>
                                 <h3>Thông tin chiến dịch</h3>
-                                <div className="form-field">
-                                    <label className="form-label">Tên chiến dịch</label>
-                                    <Field name="campaignName" type="text" placeholder="Hãy nhập tên chiến dịch" className={classNames("form-input", { "is-error": errors.campaignName && touched.campaignName })} />
-                                    {errors.campaignName && touched.campaignName && <span className="text-error">{errors.campaignName}</span>}
-                                </div>
-                                <div className="form-field">
-                                    <label className="form-label">Mô tả</label>
-                                    <Field name="campaignDescription" type="text" placeholder="Hãy nhập mô tả về chiến dịch" className={classNames("form-input", { "is-error": errors.campaignDescription && touched.campaignDescription })} />
-                                    {errors.campaignDescription && touched.campaignDescription && <span className="text-error">{errors.campaignDescription}</span>}
-                                </div>
-                                <div className="form-field">
-                                    <label className="form-label">Loại quà tặng</label>
-                                    <Field name="typeGift" type="text" placeholder="Hãy nhập loại quà tặng" className={classNames("form-input", { "is-error": errors.typeGift && touched.typeGift })} />
-                                    {errors.typeGift && touched.typeGift && <span className="text-error">{errors.typeGift}</span>}
-                                </div>
-                                <div className="form-field">
-                                    <label className="form-label">Địa điểm</label>
-                                    <Field name="location" type="text" placeholder="Hãy nhập địa điểm nhận quà tặng" className={classNames("form-input", { "is-error": errors.location && touched.location })} />
-                                    {errors.location && touched.location && <span className="text-error">{errors.location}</span>}
-                                </div>
-                                <div className="form-field">
-                                    <label className="form-label">Thời gian và ngày nhận quà</label>
-                                    <Field
-                                        name="imple"
-                                        type="datetime-local"
-                                        value={values.implementationTime ? format(new Date(values.implementationTime), "yyyy-MM-dd'T'HH:mm") : ""}
-                                        onChange={(e: ChangeEvent<HTMLInputElement>) => setFieldValue("implementationTime", e.target.value)}
-                                        className={classNames("form-input", { "is-error": errors.implementationTime && touched.implementationTime })}
-                                    />
-                                    {errors.implementationTime && touched.implementationTime && <span className="text-error">{errors.implementationTime}</span>}
-                                </div>
-                                <div className="form-field">
-                                    <label className="form-label">Phương thức thực hiện</label>
-                                    <Field name="implementationMethod" type="text" placeholder="Hãy nhập phương thức thực hiện" className={classNames("form-input", { "is-error": errors.implementationMethod && touched.implementationMethod })} />
-                                    {errors.implementationMethod && touched.implementationMethod && <span className="text-error">{errors.implementationMethod}</span>}
-                                </div>
-                                <div className="form-field">
-                                    <label className="form-label">Loại chiến dịch</label>
-                                    <div className="radio-group">
-                                        <label>
-                                            <Field className="form-radio" type="radio" name="campaignType" value="Limited" />
-                                            <span>Số lượng giới hạn</span>
-                                        </label>
-                                        <label>
-                                            <Field className="form-radio" type="radio" name="campaignType" value="Voluntary" />
-                                            <span>Đăng ký theo nguyện vọng</span>
-                                        </label>
+                                <div className="cpm-form-r1">
+                                    <div className="form-50 form-field">
+                                        <label className="form-label">Tên chiến dịch <span>*</span></label>
+                                        <Field name="campaignName" type="text" placeholder="Hãy nhập tên chiến dịch" className={classNames("form-input", { "is-error": errors.campaignName && touched.campaignName })} />
+                                        {errors.campaignName && touched.campaignName && <span className="text-error">{errors.campaignName}</span>}
                                     </div>
-                                </div>
-                                {values.campaignType === "Limited" && (
-                                    <div className="form-field">
-                                        <label className="form-label">Số lượng giới hạn</label>
-                                        <Field name="limitedQuantity" type="text" placeholder="Nhập số lượng" className="form-input" />
-                                        {errors.limitedQuantity && touched.limitedQuantity && <span className="text-error">{errors.limitedQuantity}</span>}
+                                    <div className="form-50 form-field">
+                                        <label className="form-label">Mô tả<span>*</span></label>
+                                        <Field name="campaignDescription" type="text" placeholder="Hãy nhập mô tả về chiến dịch" className={classNames("form-input", { "is-error": errors.campaignDescription && touched.campaignDescription })} />
+                                        {errors.campaignDescription && touched.campaignDescription && <span className="text-error">{errors.campaignDescription}</span>}
                                     </div>
-                                )}
-                                {values.campaignType === "Voluntary" && (
-                                    <>
-                                        <div className="form-field">
-                                            <label className="form-label">Ngày mở đăng ký</label>
-                                            <Field name="startRegisterDate" type="datetime-local" className="form-input" />
-                                            {errors.startRegisterDate && touched.startRegisterDate && <span className="text-error">{errors.startRegisterDate}</span>}
+                                    <div className="form-50 form-field">
+                                        <label className="form-label">Loại quà tặng<span>*</span></label>
+                                        <Field name="typeGift" type="text" placeholder="Hãy nhập loại quà tặng" className={classNames("form-input", { "is-error": errors.typeGift && touched.typeGift })} />
+                                        {errors.typeGift && touched.typeGift && <span className="text-error">{errors.typeGift}</span>}
+                                    </div>
+                                    <div className="form-50 form-field">
+                                        <label className="form-label">Địa điểm<span>*</span></label>
+                                        <Field name="location" type="text" placeholder="Hãy nhập địa điểm nhận quà tặng" className={classNames("form-input", { "is-error": errors.location && touched.location })} />
+                                        {errors.location && touched.location && <span className="text-error">{errors.location}</span>}
+                                    </div>
+                                    <div className="form-50 form-field">
+                                        <label className="form-label">Thời gian và ngày nhận quà<span>*</span></label>
+                                        <Field
+                                            name="imple"
+                                            type="datetime-local"
+                                            value={values.implementationTime ? format(new Date(values.implementationTime), "yyyy-MM-dd'T'HH:mm") : ""}
+                                            onChange={(e: ChangeEvent<HTMLInputElement>) => setFieldValue("implementationTime", e.target.value)}
+                                            className={classNames("form-input", { "is-error": errors.implementationTime && touched.implementationTime })}
+                                        />
+                                        {errors.implementationTime && touched.implementationTime && <span className="text-error">{errors.implementationTime}</span>}
+                                    </div>
+                                    <div className="form-50 form-field">
+                                        <label className="form-label">Phương thức thực hiện<span>*</span></label>
+                                        <Field name="implementationMethod" type="text" placeholder="Hãy nhập phương thức thực hiện" className={classNames("form-input", { "is-error": errors.implementationMethod && touched.implementationMethod })} />
+                                        {errors.implementationMethod && touched.implementationMethod && <span className="text-error">{errors.implementationMethod}</span>}
+                                    </div>
+                                    <div className="form-100 form-field">
+                                        <label className="form-label">Loại chiến dịch</label>
+                                        <div className="radio-group">
+                                            <label>
+                                                <Field className="form-radio" type="radio" name="campaignType" value="Limited" />
+                                                <span>Số lượng giới hạn</span>
+                                            </label>
+                                            <label>
+                                                <Field className="form-radio" type="radio" name="campaignType" value="Voluntary" />
+                                                <span>Đăng ký theo nguyện vọng</span>
+                                            </label>
                                         </div>
+                                    </div>
+                                    {values.campaignType === "Limited" && (
+                                        <div className="form-50 form-field">
+                                            <label className="form-label">Số lượng giới hạn<span>*</span></label>
+                                            <Field name="limitedQuantity" type="text" placeholder="Nhập số lượng" className="form-input" />
+                                            {errors.limitedQuantity && touched.limitedQuantity && <span className="text-error">{errors.limitedQuantity}</span>}
+                                        </div>
+                                    )}
+                                    {values.campaignType === "Voluntary" && (
+                                        <>
+                                            <div className="form-50 form-field">
+                                                <label className="form-label">Ngày mở đăng ký<span>*</span></label>
+                                                <Field name="startRegisterDate" type="datetime-local" className="form-input" />
+                                                {errors.startRegisterDate && touched.startRegisterDate && <span className="text-error">{errors.startRegisterDate}</span>}
+                                            </div>
 
-                                        <div className="form-field">
-                                            <label className="form-label">Ngày đóng đăng ký</label>
-                                            <Field name="endRegisterDate" type="datetime-local" className="form-input" />
-                                            {errors.endRegisterDate && touched.endRegisterDate && <span className="text-error">{errors.endRegisterDate}</span>}
-                                        </div>
-                                    </>
-                                )}
-                                <h3>Thông tin tài chính</h3>
-                                <div className="form-field">
-                                    <label className="form-label">Ngân sách ước tính</label>
-                                    <Field name="estimatedBudget" type="text" placeholder="Hãy nhập ngân sách ước tính" className={classNames("form-input", { "is-error": errors.estimatedBudget && touched.estimatedBudget })} />
-                                    {errors.estimatedBudget && touched.estimatedBudget && <span className="text-error">{errors.estimatedBudget}</span>}
+                                            <div className="form-50 form-field">
+                                                <label className="form-label">Ngày đóng đăng ký<span>*</span></label>
+                                                <Field name="endRegisterDate" type="datetime-local" className="form-input" />
+                                                {errors.endRegisterDate && touched.endRegisterDate && <span className="text-error">{errors.endRegisterDate}</span>}
+                                            </div>
+                                        </>
+                                    )}
                                 </div>
-                                <div className="form-field">
-                                    <label className="form-label">Chi phí trung bình mỗi quà tặng</label>
-                                    <Field name="averageCostPerGift" type="text" placeholder="Hãy nhập chi phí trung bình mỗi quà tặng" className={classNames("form-input", { "is-error": errors.averageCostPerGift && touched.averageCostPerGift })} />
-                                    {errors.averageCostPerGift && touched.averageCostPerGift && <span className="text-error">{errors.averageCostPerGift}</span>}
+                                <h3>Thông tin tài chính</h3>
+                                <div className="cpm-form-r2">
+                                    <div className="form-50 form-field">
+                                        <label className="form-label">Ngân sách ước tính (VNĐ)</label>
+                                        <Field
+                                            name="estimatedBudget"
+                                            type="text"
+                                            placeholder="Hãy nhập ngân sách ước tính"
+                                            className={classNames('form-input', { 'is-error': errors.estimatedBudget && touched.estimatedBudget })}
+                                            onChange={(e: ChangeEvent<HTMLInputElement>) => handleIncomeChange(e, setFieldValue)}
+                                        />
+                                        {errors.estimatedBudget && touched.estimatedBudget && (
+                                            <span className="text-error">{errors.estimatedBudget}</span>
+                                        )}
+                                    </div>
+                                    <div className="form-50 form-field">
+                                        <label className="form-label">Chi phí trung bình mỗi quà tặng (VNĐ)</label>
+                                        <Field
+                                            name="averageCostPerGift"
+                                            type="text"
+                                            placeholder="Hãy nhập chi phí trung bình mỗi quà tặng"
+                                            className={classNames('form-input', { 'is-error': errors.averageCostPerGift && touched.averageCostPerGift })}
+                                            onChange={(e: ChangeEvent<HTMLInputElement>) => handleIncomeChange(e, setFieldValue)}
+                                        />
+                                        {errors.averageCostPerGift && touched.averageCostPerGift && (
+                                            <span className="text-error">{errors.averageCostPerGift}</span>
+                                        )}
+                                    </div>
                                 </div>
                                 <h3>Truyền thông</h3>
-                                <div className="form-field">
-                                    <label className="form-label">Nhà tài trợ</label>
-                                    <Field name="sponsors" type="text" placeholder="Hãy nhập nhà tài trợ" className={classNames("form-input", { "is-error": errors.sponsors && touched.sponsors })} />
-                                    {errors.sponsors && touched.sponsors && <span className="text-error">{errors.sponsors}</span>}
+                                <div className="cpm-form-r3">
+                                    <div className="form-50 form-field">
+                                        <label className="form-label">Nhà tài trợ</label>
+                                        <Field name="sponsors" type="text" placeholder="Hãy nhập nhà tài trợ" className={classNames("form-input", { "is-error": errors.sponsors && touched.sponsors })} />
+                                        {errors.sponsors && touched.sponsors && <span className="text-error">{errors.sponsors}</span>}
+                                    </div>
+                                    <div className="form-50 form-field">
+                                        <label className="form-label">Thông tin truyền thông</label>
+                                        <Field name="communication" type="text" placeholder="Hãy nhập Thông tin truyền thông" className={classNames("form-input", { "is-error": errors.communication && touched.communication })} />
+                                        {errors.communication && touched.communication && <span className="text-error">{errors.communication}</span>}
+                                    </div>
                                 </div>
                                 <div className="form-field">
-                                    <label className="form-label">Thông tin truyền thông</label>
-                                    <Field name="communication" type="text" placeholder="Hãy nhập Thông tin truyền thông" className={classNames("form-input", { "is-error": errors.communication && touched.communication })} />
-                                    {errors.communication && touched.communication && <span className="text-error">{errors.communication}</span>}
-                                </div>
-                                <div className="form-field">
-                                    <label className="form-label">Ảnh</label>
+                                    <label className="form-label">Ảnh<span>*</span></label>
                                     <input type="file" accept="image/*" multiple onChange={(e) => handleFileChange(e, setFieldValue)} className={classNames("form-input", { "is-error": errors.images && touched.images })} />
                                     {errors.images && touched.images && <span className="text-error">{errors.images}</span>}
                                 </div>

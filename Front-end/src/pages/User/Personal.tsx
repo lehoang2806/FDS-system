@@ -185,16 +185,13 @@ const UserPersonalPage = () => {
                                                 <thead className="table-head">
                                                     <tr className="table-head-row">
                                                         <th className="table-head-cell">
-                                                            Campaign Name
+                                                            Tên chiến dịch
                                                         </th>
                                                         <th className="table-head-cell">
-                                                            Description
+                                                            Trạng thái
                                                         </th>
                                                         <th className="table-head-cell">
-                                                            Status
-                                                        </th>
-                                                        <th className="table-head-cell">
-                                                            Action
+                                                            Hành động
                                                         </th>
                                                     </tr>
                                                 </thead>
@@ -202,10 +199,10 @@ const UserPersonalPage = () => {
                                                     {currentCampaigns.map((campaign, index) => (
                                                         <tr className="table-body-row" key={index}>
                                                             <td className='table-body-cell'>{campaign.campaignName}</td>
-                                                            <td className='table-body-cell'>{campaign.campaignDescription}</td>
-                                                            <td className='table-body-cell'>{campaign.status === "Pending" ? <span className='status-pending'>Pending</span> : campaign.status === "Approved" ? <span className='status-approve'>Approve</span> : <span className='status-reject'>Reject</span>}</td>
+                                                            <td className='table-body-cell'>{campaign.status === "Pending" ? <span className='status-pending'>Đang chờ phê duyệt</span> : campaign.status === "Approved" ? <span className='status-approve'>Đã được phê duyệt</span> : <span className='status-reject'>Đã bị từ chối</span>}</td>
                                                             <td className="table-body-cell">
-                                                                <button className='view-btn' onClick={() => handleToDetailCampaign(campaign.campaignId)}>View Detail</button>
+                                                                <button className='view-btn' onClick={() => handleToDetailCampaign(campaign.campaignId)}>Xem chi tiết</button>
+                                                                <button className='reject-btn' onClick={() => handleToDetailCampaign(campaign.campaignId)}>Hủy chiến dịch</button>
                                                             </td>
                                                         </tr>
                                                     ))}
@@ -228,13 +225,13 @@ const UserPersonalPage = () => {
                                                 <thead className="table-head">
                                                     <tr className="table-head-row">
                                                         <th className="table-head-cell">
-                                                            Type
+                                                            Đối tượng xác thực
                                                         </th>
                                                         <th className="table-head-cell">
-                                                            Status
+                                                            Trạng thái
                                                         </th>
                                                         <th className="table-head-cell">
-                                                            Action
+                                                            Hành động
                                                         </th>
                                                     </tr>
                                                 </thead>
@@ -242,9 +239,9 @@ const UserPersonalPage = () => {
                                                     {currentDonorCertificates.map((row, index) => (
                                                         <tr key={index} className="table-body-row">
                                                             <td className='table-body-cell'>{row.citizenId === null ? "Organization" : "Personal"}</td>
-                                                            <td className='table-body-cell'>{row.status === "Pending" ? <span className='status-pending'>Pending</span> : row.status === "Approved" ? <span className='status-approve'>Approve</span> : <span className='status-reject'>Reject</span>}</td>
+                                                            <td className='table-body-cell'>{row.status === "Pending" ? <span className='status-pending'>Đang chờ phê duyệt</span> : row.status === "Approved" ? <span className='status-approve'>Đã được phê duyệt</span> : <span className='status-reject'>Đã bị từ chối</span>}</td>
                                                             <td className="table-body-cell">
-                                                                <button className="view-btn" onClick={() => row.citizenId === null ? handleToDetailCertificate(row.donorCertificateId, "Organization") : handleToDetailCertificate(row.donorCertificateId, "Personal")}>View Detail</button>
+                                                                <button className="view-btn" onClick={() => row.citizenId === null ? handleToDetailCertificate(row.donorCertificateId, "Organization") : handleToDetailCertificate(row.donorCertificateId, "Personal")}>Xem chi tiết</button>
                                                             </td>
                                                         </tr>
                                                     ))}

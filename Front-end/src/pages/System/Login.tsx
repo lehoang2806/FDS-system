@@ -34,7 +34,7 @@ const LoginPage = () => {
 
     const onSubmit = async (values: ILoginEmail, helpers: FormikHelpers<ILoginEmail>) => {
         await dispatch(loginApiThunk(values)).unwrap().then(() => {
-            toast.success("Login successfully");
+            toast.success("Đăng nhập thành công");
         }).catch((error) => {
             const errorData = get(error, 'data', 'An error occurred');
             toast.error(errorData);
@@ -66,12 +66,12 @@ const LoginPage = () => {
                                         <div className="form-field">
                                             <label className="form-label">Email</label>
                                             <Field name="userEmail" type="email" placeholder="Hãy nhập email của bạn" className={classNames("form-input", { "is-error": errors.userEmail && touched.userEmail })} />
-                                            {errors.userEmail && touched.userEmail && <span className="error">{errors.userEmail}</span>}
+                                            {errors.userEmail && touched.userEmail && <span className="text-error">{errors.userEmail}</span>}
                                         </div>
                                         <div className="form-field">
                                             <label className="form-label">Mật Khẩu</label>
                                             <Field name="password" type="password" placeholder="Hãy nhập mật khẩu của bạn" className={classNames("form-input", { "is-error": errors.password && touched.password })} />
-                                            {errors.password && touched.password && <span className="error">{errors.password}</span>}
+                                            {errors.password && touched.password && <span className="text-error">{errors.password}</span>}
                                         </div>
                                         <Link to={routes.forgot_pass}>Quên mật khẩu</Link>
                                         <Button loading={isSubmitting} type="submit" title="Đăng nhập" />

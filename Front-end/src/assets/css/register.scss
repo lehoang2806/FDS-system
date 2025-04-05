@@ -16,7 +16,7 @@
                 align-items: center;
 
                 .rscc2-main {
-                    max-width: 560px;
+                    width: 750px;
                     margin: 0 auto;
 
                     h1 {
@@ -35,6 +35,7 @@
                     }
 
                     p {
+                        text-align: center;
                         color: var(--main-black);
                         font-size: 17px;
                         font-weight: 500;

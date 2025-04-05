@@ -1,6 +1,6 @@
 import { selectGetAllUser } from "@/app/selector"
 import { useAppDispatch, useAppSelector } from "@/app/store"
-import { ActiveIcon, BlockIcon, TotalIcon } from "@/assets/icons"
+import { TotalIcon } from "@/assets/icons"
 import { navigateHook } from "@/routes/RouteApp"
 import { routes } from "@/routes/routeName"
 import { setLoading } from "@/services/app/appSlice"
@@ -34,8 +34,8 @@ const AdminListStaffPage = () => {
         <section id="admin-list-staff" className="admin-section">
             <div className="admin-container als-container">
                 <div className="alscr1">
-                    <h1>Staff</h1>
-                    <p>Dashboard<span className="admin-tag">Staff</span></p>
+                    <h1>Nhân viên</h1>
+                    <p>Trang tổng quan<span className="admin-tag">Nhân viên</span></p>
                 </div>
                 <div className="alscr2">
                     <div className="admin-tab admin-tab-1">
@@ -43,31 +43,13 @@ const AdminListStaffPage = () => {
                             <TotalIcon className="at-icon" />
                         </div>
                         <div className="at-info">
-                            <h3>Total</h3>
-                            <p>7 Staff</p>
-                        </div>
-                    </div>
-                    <div className="admin-tab admin-tab-2">
-                        <div className="at-figure at-figure-2">
-                            <BlockIcon className="at-icon" />
-                        </div>
-                        <div className="at-info">
-                            <h3>Forbidden</h3>
-                            <p>7 Staff</p>
-                        </div>
-                    </div>
-                    <div className="admin-tab admin-tab-3">
-                        <div className="at-figure at-figure-3">
-                            <ActiveIcon className="at-icon" />
-                        </div>
-                        <div className="at-info">
-                            <h3>Active</h3>
-                            <p>7 Staff</p>
+                            <h3>Tổng cộng</h3>
+                            <p>{accountStaffs.length} Nhân viên</p>
                         </div>
                     </div>
                 </div>
                 <div className="alscr3">
-                    <button className="admin-add-btn" onClick={() => navigateHook(routes.admin.staff.add)}>Add Staff</button>
+                    <button className="admin-add-btn" onClick={() => navigateHook(routes.admin.staff.add)}>Tạo nhân viên mới</button>
                 </div>
                 <div className="alscr4">
                     <table className="table">
@@ -77,16 +59,13 @@ const AdminListStaffPage = () => {
                                     Email
                                 </th>
                                 <th className="table-head-cell">
-                                    Full Name
+                                    Họ và tên
                                 </th>
                                 <th className="table-head-cell">
-                                    Phone
+                                    Số điện thoại
                                 </th>
                                 <th className="table-head-cell">
-                                    Address
-                                </th>
-                                <th className="table-head-cell">
-                                    Action
+                                    Hành động
                                 </th>
                             </tr>
                         </thead>
@@ -96,9 +75,8 @@ const AdminListStaffPage = () => {
                                     <td className='table-body-cell'>{row.email}</td>
                                     <td className='table-body-cell'>{row.fullName}</td>
                                     <td className='table-body-cell'>{row.phone}</td>
-                                    <td className='table-body-cell'>{row.address}</td>
                                     <td className="table-body-cell">
-                                        <button className="view-btn" onClick={() => handleToDetail(row.id)}>View</button>
+                                        <button className="view-btn" onClick={() => handleToDetail(row.accountId)}>Xem chi tiết</button>
                                     </td>
                                 </tr>
                             ))}

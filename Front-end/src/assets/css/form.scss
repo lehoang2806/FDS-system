@@ -1,12 +1,28 @@
 .form {
+    .form-50 {
+        width: calc(50% - 10px);
+    }
+
+    .form-100 {
+        width: 100%;
+    }
+    
     .form-field {
         margin-bottom: 16px;
     }
 
     .form-label {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
         font-size: 14px;
         font-weight: 500;
         color: #393939;
+
+        span {
+            color: red;
+            font-size: 20px;
+        }
     }
 
     .form-input {
@@ -22,6 +38,27 @@
         &:focus {
             outline: none;
             border: 1px solid var(--main-color);
+        }
+    }
+
+    .form-input-select-container {
+        position: relative;
+        display: flex;
+        align-items: center;
+
+        .form-input-select {
+            cursor: pointer;
+            appearance: none;
+        }
+
+        .form-icon-select {
+            position: absolute;
+            top: 22px;
+            right: 10px;
+        }
+
+        .rotate-45 {
+            transform: rotate(90deg);
         }
     }
 

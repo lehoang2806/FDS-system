@@ -56,7 +56,7 @@ const ManageLogin = () => {
                         <figure className="mlsc1-logo">
                             Logo
                         </figure>
-                        <h1>Let's get you signed in</h1>
+                        <h1>Tiến hành đăng nhập</h1>
                         <Formik
                             initialValues={initialValues}
                             onSubmit={onSubmit}

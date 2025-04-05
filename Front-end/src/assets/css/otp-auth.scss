@@ -16,7 +16,7 @@
                 align-items: center;
 
                 .oascc2-main {
-                    max-width: 560px;
+                    max-width: 400px;
                     margin: 0 auto;
 
                     h1 {
@@ -43,9 +43,11 @@
                     }
 
                     p {
+                        text-align: center;
                         color: var(--main-black);
                         font-size: 17px;
                         font-weight: 500;
+                        margin-bottom: 32px;
 
                         span {
                             color: #F54A00;

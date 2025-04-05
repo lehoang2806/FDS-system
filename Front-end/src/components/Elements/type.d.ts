@@ -5,3 +5,8 @@ type PostProps = {
 interface SubcriberProps {
     registerReceiver: RegisterReceiver
 }
+
+interface CampaignCarouselProps {
+    campaigns: CampaignInfo[];
+    handleToDetailCampaign: (campaignId: string) => void
+}
