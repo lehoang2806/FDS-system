@@ -21,6 +21,8 @@
 
 @use "./notification.scss";
 
+@use "./paginator.scss";
+
 @use "admin/header/admin-header.scss";
 @use "admin/sidebar/admin-sidebar.scss";
 @use "admin/admin.scss";
@@ -106,3 +108,4 @@
 @use "./modal/additional-campaign-modal.scss";
 @use "./modal/additional-certificate-modal.scss";
 @use "./modal/create-post-modal.scss";
+@use "./modal/cancel-campaign-modal.scss";

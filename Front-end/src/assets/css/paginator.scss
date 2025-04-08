@@ -1,0 +1,51 @@
+.paginator {
+    padding: 30px;
+
+    .p-container {
+        display: flex;
+        justify-content: end;
+        align-items: center;
+    }
+
+    .pcc1, .pcc2 {
+        font-size: 12px;
+        color: #000000DE;
+    }
+
+    .pcc2 {
+        margin: 0 32px 0 24px;
+    }
+
+    .pcc3 {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        button {
+            padding: 0;
+            border: none;
+            padding: 14px;
+            background: none;
+            cursor: pointer;
+
+            .pcc3-icon {
+                width: 20px;
+            }
+
+            
+
+            &:hover {
+                background-color: rgba(99, 91, 255, 0.1);
+                border-radius: 50%;
+
+                &:disabled {
+                    cursor: not-allowed;
+
+                    .pcc3-icon {
+                        cursor: not-allowed;
+                    }
+                }
+            }
+        }
+    }
+}

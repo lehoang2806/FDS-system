@@ -48,6 +48,10 @@ interface AdditionalCampaignModalProps extends ModalCommonProps {
     selectedCampaign?: AdditionalCampaign | null;
 }
 
+interface CancelCampaignModalProps extends ModalCommonProps {
+    selectedCampaign?: CancelCampaign | null;
+}
+
 interface AdditionalCertificateModalProps extends ModalCommonProps {
     selectedCertificate?: ReviewCertificate | null;
 }

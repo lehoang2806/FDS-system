@@ -32,13 +32,22 @@ const CampaignCarousel: FC<CampaignCarouselProps> = ({ campaigns, handleToDetail
                     </div>
 
                     <div className="pagination-lists">
-                        {Array.from({ length: totalPages }).map((_, index) => (
-                            <div
-                                key={index}
-                                className={`pagination-item ${index === currentPage ? 'pagination-item-active' : ''}`}
-                                onClick={() => handlePageClick(index)}
-                            />
-                        ))}
+                        {Array.from({ length: Math.min(totalPages, 5) }).map((_, index) => {
+                            let pageIndex = index;
+
+                            if (totalPages > 5) {
+                                const start = Math.max(0, Math.min(totalPages - 5, currentPage - 2));
+                                pageIndex = start + index;
+                            }
+
+                            return (
+                                <div
+                                    key={pageIndex}
+                                    className={`pagination-item ${pageIndex === currentPage ? 'pagination-item-active' : ''}`}
+                                    onClick={() => handlePageClick(pageIndex)}
+                                />
+                            );
+                        })}
                     </div>
                 </>
             ) : (

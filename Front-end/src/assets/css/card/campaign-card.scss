@@ -1,11 +1,13 @@
 .campaign-card {
     cursor: pointer;
 
-    .campaign-img, h4 {
+    .campaign-img,
+    h4 {
         margin-bottom: 16px;
     }
 
-    h4, p {
+    h4,
+    p {
         text-align: start;
         margin-left: 16px;
     }
@@ -18,9 +20,13 @@
     }
 
     h4 {
+        width: 360px;
         font-size: 20px;
         font-weight: 800;
         color: var(--main-black);
+        white-space: nowrap; /* Không xuống dòng */
+        overflow: hidden; /* Ẩn phần văn bản bị tràn */
+        text-overflow: ellipsis;
     }
 
     p {

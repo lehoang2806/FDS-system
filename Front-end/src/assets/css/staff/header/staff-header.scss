@@ -42,5 +42,11 @@
                 border-radius: 50%;
             }
         }
+
+        .notification-wrapper {
+            .notification-dropdown {
+                transform: translateX(-90%);
+            }
+        }
     }
 }

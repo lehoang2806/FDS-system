@@ -1,8 +1,9 @@
 import { selectGetAllCampaign, selectGetAllDonorCertificate, selectGetAllRecipientCertificate, selectGetAllRegisterReceivers, selectGetProfileUser, selectIsAuthenticated, selectUserLogin } from "@/app/selector";
 import { useAppDispatch, useAppSelector } from "@/app/store";
+import { ArrowLeft, ArrowRight } from "@/assets/icons";
 import { AvatarUser, NoResult } from "@/assets/images"
 import { Loading } from "@/components/Elements";
-import { CreateCampaignModal, RecipientCertificateModal, SubmitCertificateModal } from "@/components/Modal";
+import { CancelCampaignModal, CreateCampaignModal, RecipientCertificateModal, SubmitCertificateModal } from "@/components/Modal";
 import { navigateHook } from "@/routes/RouteApp";
 import { routes } from "@/routes/routeName";
 import { setLoading } from "@/services/app/appSlice";
@@ -45,7 +46,10 @@ const UserPersonalPage = () => {
     const [isSubmitCertificateModalOpen, setIsSubmitCertificateModalOpen] = useState(false);
     const [isRecipientCertificateModalOpen, setIsRecipientCertificateModalOpen] = useState(false);
     const [isCreateCampaignModalOpen, setIsCreateCampaignModalOpen] = useState(false);
+    const [isCancelCampaignModalOpen, setIsCancelCampaignModalOpen] = useState(false);
+
     const [isFiltering, setIsFiltering] = useState(false);
+    const [selectedCancelCampaign, setSelectedCancelCampaign] = useState<CancelCampaign | null>(null);
 
     // Hooks điều hướng
     const location = useLocation();
@@ -131,6 +135,86 @@ const UserPersonalPage = () => {
         }
     }
 
+    const handelCancelCampain = (campaignId: string) => {
+        setIsCancelCampaignModalOpen(true);
+        setSelectedCancelCampaign({ campaignId, comment: "" });
+    }
+
+    //Phân trang
+    const ITEMS_PER_PAGE = 5;
+
+    //Campaign
+    const [currentCampaignPage, setCurrentCampaignPage] = useState(1);
+
+    const totalCampaignPages = Math.ceil(currentCampaigns.length / ITEMS_PER_PAGE);
+
+    const currentCampaignsPage = currentCampaigns.slice(
+        (currentCampaignPage - 1) * ITEMS_PER_PAGE,
+        currentCampaignPage * ITEMS_PER_PAGE
+    );
+
+    const onPreviousCampaignPage = () => {
+        if (currentCampaignPage > 1) setCurrentCampaignPage(currentCampaignPage - 1);
+    };
+
+    const onNextCampaignPage = () => {
+        if (currentCampaignPage < totalCampaignPages) setCurrentCampaignPage(currentCampaignPage + 1);
+    };
+
+    //Donor certificate
+    const [currentDonorCertificatePage, setCurrentDonorCertificatePage] = useState(1);
+
+    const totalDonorCertificatePages = Math.ceil(currentDonorCertificates.length / ITEMS_PER_PAGE);
+
+    const currentDonorCertificatesPage = currentDonorCertificates.slice(
+        (currentDonorCertificatePage - 1) * ITEMS_PER_PAGE,
+        currentDonorCertificatePage * ITEMS_PER_PAGE
+    );
+
+    const onPreviousDonorCertificatePage = () => {
+        if (currentDonorCertificatePage > 1) setCurrentDonorCertificatePage(currentDonorCertificatePage - 1);
+    };
+
+    const onNextDonorCertificatePage = () => {
+        if (currentDonorCertificatePage < totalDonorCertificatePages) setCurrentDonorCertificatePage(currentDonorCertificatePage + 1);
+    };
+
+    //Register Receiver
+    const [currentRegisterReceiverPage, setCurrentRegisterReceiverPage] = useState(1);
+
+    const totalRegisterReceiverPages = Math.ceil(currentRegisterReceivers.length / ITEMS_PER_PAGE);
+
+    const currentRegisterReceiversPage = currentRegisterReceivers.slice(
+        (currentRegisterReceiverPage - 1) * ITEMS_PER_PAGE,
+        currentRegisterReceiverPage * ITEMS_PER_PAGE
+    );
+
+    const onPreviousRegisterReceiverPage = () => {
+        if (currentRegisterReceiverPage > 1) setCurrentRegisterReceiverPage(currentRegisterReceiverPage - 1);
+    };
+
+    const onNextRegisterReceiverPage = () => {
+        if (currentRegisterReceiverPage < totalRegisterReceiverPages) setCurrentRegisterReceiverPage(currentRegisterReceiverPage + 1);
+    };
+
+    //Recipient certificate
+    const [currentRecipientCertificatePage, setCurrentRecipientCertificatePage] = useState(1);
+
+    const totalRecipientCertificatePages = Math.ceil(currentRecipientCertificates.length / ITEMS_PER_PAGE);
+
+    const currentRecipientCertificatesPage = currentRecipientCertificates.slice(
+        (currentRecipientCertificatePage - 1) * ITEMS_PER_PAGE,
+        currentRecipientCertificatePage * ITEMS_PER_PAGE
+    );
+
+    const onPreviousRecipientCertificatePage = () => {
+        if (currentRecipientCertificatePage > 1) setCurrentRecipientCertificatePage(currentRecipientCertificatePage - 1);
+    };
+
+    const onNextRecipientCertificatePage = () => {
+        if (currentRecipientCertificatePage < totalRecipientCertificatePages) setCurrentRecipientCertificatePage(currentRecipientCertificatePage + 1);
+    };
+
     return (
         <main id="user-personal-page">
             <section id="upp-s1"></section>
@@ -181,33 +265,61 @@ const UserPersonalPage = () => {
                                                 <h1>Chưa có dữ liệu</h1>
                                             </>
                                         ) : (
-                                            <table className="table">
-                                                <thead className="table-head">
-                                                    <tr className="table-head-row">
-                                                        <th className="table-head-cell">
-                                                            Tên chiến dịch
-                                                        </th>
-                                                        <th className="table-head-cell">
-                                                            Trạng thái
-                                                        </th>
-                                                        <th className="table-head-cell">
-                                                            Hành động
-                                                        </th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody className="table-body">
-                                                    {currentCampaigns.map((campaign, index) => (
-                                                        <tr className="table-body-row" key={index}>
-                                                            <td className='table-body-cell'>{campaign.campaignName}</td>
-                                                            <td className='table-body-cell'>{campaign.status === "Pending" ? <span className='status-pending'>Đang chờ phê duyệt</span> : campaign.status === "Approved" ? <span className='status-approve'>Đã được phê duyệt</span> : <span className='status-reject'>Đã bị từ chối</span>}</td>
-                                                            <td className="table-body-cell">
-                                                                <button className='view-btn' onClick={() => handleToDetailCampaign(campaign.campaignId)}>Xem chi tiết</button>
-                                                                <button className='reject-btn' onClick={() => handleToDetailCampaign(campaign.campaignId)}>Hủy chiến dịch</button>
-                                                            </td>
+                                            <>
+                                                <table className="table">
+                                                    <thead className="table-head">
+                                                        <tr className="table-head-row">
+                                                            <th className="table-head-cell">
+                                                                Tên chiến dịch
+                                                            </th>
+                                                            <th className="table-head-cell">
+                                                                Trạng thái
+                                                            </th>
+                                                            <th className="table-head-cell">
+                                                                Hành động
+                                                            </th>
                                                         </tr>
-                                                    ))}
-                                                </tbody>
-                                            </table>
+                                                    </thead>
+                                                    <tbody className="table-body">
+                                                        {currentCampaignsPage.map((campaign, index) => (
+                                                            <tr className="table-body-row" key={index}>
+                                                                <td className='table-body-cell'>{campaign.campaignName}</td>
+                                                                <td className='table-body-cell'>
+                                                                    {campaign.status === "Pending" ? (
+                                                                        <span className='status-pending'>Đang chờ phê duyệt</span>
+                                                                    ) : campaign.status === "Approved" ? (
+                                                                        <span className='status-approve'>Đã được phê duyệt</span>
+                                                                    ) : (
+                                                                        <span className='status-reject'>Đã bị từ chối</span>
+                                                                    )}
+                                                                </td>
+                                                                <td className="table-body-cell">
+                                                                    <button className='view-btn' onClick={() => handleToDetailCampaign(campaign.campaignId)}>Xem chi tiết</button>
+                                                                    <button className='reject-btn' onClick={() => handelCancelCampain(campaign.campaignId)}>Hủy chiến dịch</button>
+                                                                </td>
+                                                            </tr>
+                                                        ))}
+                                                    </tbody>
+                                                </table>
+                                                <div className='paginator'>
+                                                    <div className="p-container">
+                                                        <div className="pcc2">{currentCampaignPage} of {totalCampaignPages}</div>
+                                                        <div className="pcc3">
+                                                            <button disabled={currentCampaignPage === 1} onClick={onPreviousCampaignPage}>
+                                                                <ArrowLeft className="pcc3-icon" />
+                                                            </button>
+                                                            <button
+                                                                disabled={currentCampaignPage >= totalCampaignPages}
+                                                                onClick={onNextCampaignPage}
+                                                            >
+                                                                <ArrowRight
+                                                                    className={`pcc3-icon ${currentCampaignPage >= totalCampaignPages ? 'pcc3-icon-disabled' : ''}`}
+                                                                />
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </>
                                         )}
                                     </div>
                                 ) : (
@@ -221,32 +333,52 @@ const UserPersonalPage = () => {
                                                 <h1>Chưa có dữ liệu</h1>
                                             </>
                                         ) : (
-                                            <table className="table">
-                                                <thead className="table-head">
-                                                    <tr className="table-head-row">
-                                                        <th className="table-head-cell">
-                                                            Đối tượng xác thực
-                                                        </th>
-                                                        <th className="table-head-cell">
-                                                            Trạng thái
-                                                        </th>
-                                                        <th className="table-head-cell">
-                                                            Hành động
-                                                        </th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody className="table-body">
-                                                    {currentDonorCertificates.map((row, index) => (
-                                                        <tr key={index} className="table-body-row">
-                                                            <td className='table-body-cell'>{row.citizenId === null ? "Organization" : "Personal"}</td>
-                                                            <td className='table-body-cell'>{row.status === "Pending" ? <span className='status-pending'>Đang chờ phê duyệt</span> : row.status === "Approved" ? <span className='status-approve'>Đã được phê duyệt</span> : <span className='status-reject'>Đã bị từ chối</span>}</td>
-                                                            <td className="table-body-cell">
-                                                                <button className="view-btn" onClick={() => row.citizenId === null ? handleToDetailCertificate(row.donorCertificateId, "Organization") : handleToDetailCertificate(row.donorCertificateId, "Personal")}>Xem chi tiết</button>
-                                                            </td>
+                                            <>
+                                                <table className="table">
+                                                    <thead className="table-head">
+                                                        <tr className="table-head-row">
+                                                            <th className="table-head-cell">
+                                                                Đối tượng xác thực
+                                                            </th>
+                                                            <th className="table-head-cell">
+                                                                Trạng thái
+                                                            </th>
+                                                            <th className="table-head-cell">
+                                                                Hành động
+                                                            </th>
                                                         </tr>
-                                                    ))}
-                                                </tbody>
-                                            </table>
+                                                    </thead>
+                                                    <tbody className="table-body">
+                                                        {currentDonorCertificatesPage.map((row, index) => (
+                                                            <tr key={index} className="table-body-row">
+                                                                <td className='table-body-cell'>{row.citizenId === null ? "Organization" : "Personal"}</td>
+                                                                <td className='table-body-cell'>{row.status === "Pending" ? <span className='status-pending'>Đang chờ phê duyệt</span> : row.status === "Approved" ? <span className='status-approve'>Đã được phê duyệt</span> : <span className='status-reject'>Đã bị từ chối</span>}</td>
+                                                                <td className="table-body-cell">
+                                                                    <button className="view-btn" onClick={() => row.citizenId === null ? handleToDetailCertificate(row.donorCertificateId, "Organization") : handleToDetailCertificate(row.donorCertificateId, "Personal")}>Xem chi tiết</button>
+                                                                </td>
+                                                            </tr>
+                                                        ))}
+                                                    </tbody>
+                                                </table>
+                                                <div className='paginator'>
+                                                    <div className="p-container">
+                                                        <div className="pcc2">{currentDonorCertificatePage} of {totalDonorCertificatePages}</div>
+                                                        <div className="pcc3">
+                                                            <button disabled={currentDonorCertificatePage === 1} onClick={onPreviousDonorCertificatePage}>
+                                                                <ArrowLeft className="pcc3-icon" />
+                                                            </button>
+                                                            <button
+                                                                disabled={currentDonorCertificatePage >= totalDonorCertificatePages}
+                                                                onClick={onNextDonorCertificatePage}
+                                                            >
+                                                                <ArrowRight
+                                                                    className={`pcc3-icon ${currentDonorCertificatePage >= totalDonorCertificatePages ? 'pcc3-icon-disabled' : ''}`}
+                                                                />
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </>
                                         )}
                                     </div>
                                 )}
@@ -282,36 +414,56 @@ const UserPersonalPage = () => {
                                                 <h1>Chưa có dữ liệu</h1>
                                             </>
                                         ) : (
-                                            <table className="table">
-                                                <thead className="table-head">
-                                                    <tr className="table-head-row">
-                                                        <th className="table-head-cell">
-                                                            Name Receiver
-                                                        </th>
-                                                        <th className="table-head-cell">
-                                                            Quantity
-                                                        </th>
-                                                        <th className="table-head-cell">
-                                                            Register Date
-                                                        </th>
-                                                        <th className="table-head-cell">
-                                                            Action
-                                                        </th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody className="table-body">
-                                                    {currentRegisterReceivers.map((registerReceiver, index) => (
-                                                        <tr className="table-body-row" key={index}>
-                                                            <td className='table-body-cell'>{registerReceiver.registerReceiverName}</td>
-                                                            <td className='table-body-cell'>{registerReceiver.quantity}</td>
-                                                            <td className='table-body-cell'>{registerReceiver.creatAt}</td>
-                                                            <td className='table-body-cell'>
-                                                                <button className="view-btn" onClick={() => handleToDetailCampaign(registerReceiver.campaignId)}>Go to Campaign</button>
-                                                            </td>
+                                            <>
+                                                <table className="table">
+                                                    <thead className="table-head">
+                                                        <tr className="table-head-row">
+                                                            <th className="table-head-cell">
+                                                                Name Receiver
+                                                            </th>
+                                                            <th className="table-head-cell">
+                                                                Quantity
+                                                            </th>
+                                                            <th className="table-head-cell">
+                                                                Register Date
+                                                            </th>
+                                                            <th className="table-head-cell">
+                                                                Action
+                                                            </th>
                                                         </tr>
-                                                    ))}
-                                                </tbody>
-                                            </table>
+                                                    </thead>
+                                                    <tbody className="table-body">
+                                                        {currentRegisterReceiversPage.map((registerReceiver, index) => (
+                                                            <tr className="table-body-row" key={index}>
+                                                                <td className='table-body-cell'>{registerReceiver.registerReceiverName}</td>
+                                                                <td className='table-body-cell'>{registerReceiver.quantity}</td>
+                                                                <td className='table-body-cell'>{registerReceiver.creatAt}</td>
+                                                                <td className='table-body-cell'>
+                                                                    <button className="view-btn" onClick={() => handleToDetailCampaign(registerReceiver.campaignId)}>Go to Campaign</button>
+                                                                </td>
+                                                            </tr>
+                                                        ))}
+                                                    </tbody>
+                                                </table>
+                                                <div className='paginator'>
+                                                    <div className="p-container">
+                                                        <div className="pcc2">{currentRegisterReceiverPage} of {totalRegisterReceiverPages}</div>
+                                                        <div className="pcc3">
+                                                            <button disabled={currentRegisterReceiverPage === 1} onClick={onPreviousRegisterReceiverPage}>
+                                                                <ArrowLeft className="pcc3-icon" />
+                                                            </button>
+                                                            <button
+                                                                disabled={currentRegisterReceiverPage >= totalRegisterReceiverPages}
+                                                                onClick={onNextRegisterReceiverPage}
+                                                            >
+                                                                <ArrowRight
+                                                                    className={`pcc3-icon ${currentRegisterReceiverPage >= totalRegisterReceiverPages ? 'pcc3-icon-disabled' : ''}`}
+                                                                />
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </>
                                         )}
                                     </div>
                                 ) : (
@@ -325,44 +477,64 @@ const UserPersonalPage = () => {
                                                 <h1>Chưa có dữ liệu</h1>
                                             </>
                                         ) : (
-                                            <table className="table">
-                                                <thead className="table-head">
-                                                    <tr className="table-head-row">
-                                                        <th className="table-head-cell">
-                                                            CCCD
-                                                        </th>
-                                                        <th className="table-head-cell">
-                                                            Họ và tên
-                                                        </th>
-                                                        <th className="table-head-cell">
-                                                            Số điện thoại
-                                                        </th>
-                                                        <th className="table-head-cell">
-                                                            Lí do đăng ký hỗ trợ
-                                                        </th>
-                                                        <th className="table-head-cell">
-                                                            Trạng thái
-                                                        </th>
-                                                        <th className="table-head-cell">
-                                                            Hành động
-                                                        </th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody className="table-body">
-                                                    {currentRecipientCertificates.map((row, index) => (
-                                                        <tr key={index} className="table-body-row">
-                                                            <td className='table-body-cell'>{row.citizenId}</td>
-                                                            <td className='table-body-cell'>{row.fullName}</td>
-                                                            <td className='table-body-cell'>{row.phone}</td>
-                                                            <td className='table-body-cell'>{row.registerSupportReason}</td>
-                                                            <td className='table-body-cell'>{row.status === "Pending" ? <span className='status-pending'>Pending</span> : row.status === "Approved" ? <span className='status-approve'>Approve</span> : <span className='status-reject'>Reject</span>}</td>
-                                                            <td className="table-body-cell">
-                                                                <button className="view-btn" onClick={() => handleToDetailCertificate(row.recipientCertificateId, "Recipient")}>View Detail</button>
-                                                            </td>
+                                            <>
+                                                <table className="table">
+                                                    <thead className="table-head">
+                                                        <tr className="table-head-row">
+                                                            <th className="table-head-cell">
+                                                                CCCD
+                                                            </th>
+                                                            <th className="table-head-cell">
+                                                                Họ và tên
+                                                            </th>
+                                                            <th className="table-head-cell">
+                                                                Số điện thoại
+                                                            </th>
+                                                            <th className="table-head-cell">
+                                                                Lí do đăng ký hỗ trợ
+                                                            </th>
+                                                            <th className="table-head-cell">
+                                                                Trạng thái
+                                                            </th>
+                                                            <th className="table-head-cell">
+                                                                Hành động
+                                                            </th>
                                                         </tr>
-                                                    ))}
-                                                </tbody>
-                                            </table>
+                                                    </thead>
+                                                    <tbody className="table-body">
+                                                        {currentRecipientCertificatesPage.map((row, index) => (
+                                                            <tr key={index} className="table-body-row">
+                                                                <td className='table-body-cell'>{row.citizenId}</td>
+                                                                <td className='table-body-cell'>{row.fullName}</td>
+                                                                <td className='table-body-cell'>{row.phone}</td>
+                                                                <td className='table-body-cell'>{row.registerSupportReason}</td>
+                                                                <td className='table-body-cell'>{row.status === "Pending" ? <span className='status-pending'>Pending</span> : row.status === "Approved" ? <span className='status-approve'>Approve</span> : <span className='status-reject'>Reject</span>}</td>
+                                                                <td className="table-body-cell">
+                                                                    <button className="view-btn" onClick={() => handleToDetailCertificate(row.recipientCertificateId, "Recipient")}>View Detail</button>
+                                                                </td>
+                                                            </tr>
+                                                        ))}
+                                                    </tbody>
+                                                </table>
+                                                <div className='paginator'>
+                                                    <div className="p-container">
+                                                        <div className="pcc2">{currentRecipientCertificatePage} of {totalRecipientCertificatePages}</div>
+                                                        <div className="pcc3">
+                                                            <button disabled={currentRecipientCertificatePage === 1} onClick={onPreviousRecipientCertificatePage}>
+                                                                <ArrowLeft className="pcc3-icon" />
+                                                            </button>
+                                                            <button
+                                                                disabled={currentRecipientCertificatePage >= totalRecipientCertificatePages}
+                                                                onClick={onNextRecipientCertificatePage}
+                                                            >
+                                                                <ArrowRight
+                                                                    className={`pcc3-icon ${currentRecipientCertificatePage >= totalRecipientCertificatePages ? 'pcc3-icon-disabled' : ''}`}
+                                                                />
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </>
                                         )}
                                     </div>
                                 )}
@@ -374,6 +546,7 @@ const UserPersonalPage = () => {
             <SubmitCertificateModal isOpen={isSubmitCertificateModalOpen} setIsOpen={setIsSubmitCertificateModalOpen} />
             <CreateCampaignModal isOpen={isCreateCampaignModalOpen} setIsOpen={setIsCreateCampaignModalOpen} />
             <RecipientCertificateModal isOpen={isRecipientCertificateModalOpen} setIsOpen={setIsRecipientCertificateModalOpen} />
+            <CancelCampaignModal isOpen={isCancelCampaignModalOpen} setIsOpen={setIsCancelCampaignModalOpen} selectedCampaign={selectedCancelCampaign} />
         </main>
     )
 }

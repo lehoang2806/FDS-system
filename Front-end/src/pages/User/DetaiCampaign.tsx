@@ -1,15 +1,12 @@
 import { selectCurrentCampaign, selectGetAllCampaign, selectGetAllRegisterReceivers, selectUserLogin } from '@/app/selector';
 import { useAppDispatch, useAppSelector } from '@/app/store';
-import { CampaignCard } from '@/components/Card/index';
 import { Subscriber } from '@/components/Elements/index'
 import { RegisterReceiverModal, RemindCertificateModal, UpdateCampaignModal } from '@/components/Modal';
-import { navigateHook } from '@/routes/RouteApp';
-import { routes } from '@/routes/routeName';
 import { setLoading } from '@/services/app/appSlice';
 import { getAllCampaignApiThunk, getCampaignByIdApiThunk } from '@/services/campaign/campaignThunk';
 import { getAllRegisterReceiversApiThunk } from '@/services/registerReceive/registerReceiveThunk';
 import React, { useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 const UserDetailCampaignPage: React.FC = () => {
     const userLogin = useAppSelector(selectUserLogin);
@@ -21,12 +18,6 @@ const UserDetailCampaignPage: React.FC = () => {
     const dispatch = useAppDispatch();
 
     const currentCampaign = useAppSelector(selectCurrentCampaign);
-
-    const campaigns = useAppSelector(selectGetAllCampaign)
-
-    const approvedCampaigns = campaigns.filter((campaign) => campaign.status === "Approved");
-
-    const otherCampaigns = approvedCampaigns.filter((campaign) => campaign.campaignId !== id);
 
     const [isRemindCertificateModalOpend, setIsRemindCertificateModalOpend] = useState(false);
 
@@ -41,23 +32,6 @@ const UserDetailCampaignPage: React.FC = () => {
     const registeredReceiver = currentRegisterReceivers.find((registerReceiver) => registerReceiver.accountId === userLogin?.accountId);
 
     const [selectedImage, setSelectedImage] = useState(currentCampaign?.images?.[0] || "")
-
-    const handleToDetail = (campaignId: string) => {
-        const url = routes.user.campaign.detail.replace(":id", campaignId);
-        return navigateHook(url)
-    }
-
-    useEffect(() => {
-        dispatch(setLoading(true));
-        dispatch(getAllCampaignApiThunk())
-            .unwrap()
-            .catch(() => {
-            }).finally(() => {
-                setTimeout(() => {
-                    dispatch(setLoading(false));
-                }, 1000)
-            });
-    }, [dispatch])
 
     const date = currentCampaign?.implementationTime.split("T")[0];
     const time = currentCampaign?.implementationTime.split("T")[1].replace("Z", "");
@@ -207,31 +181,6 @@ const UserDetailCampaignPage: React.FC = () => {
                             )}
                         </div>
                     </div>
-                    {currentCampaign?.status === "Approved" && (
-                        <>
-                            <div className="line"></div>
-                            <div className="udcscr2">
-                                <div className="udcscr2r1">
-                                    <h2>Các chiến dịch khác</h2>
-                                    <Link to={routes.user.campaign.list}>Xem tất cả</Link>
-                                </div>
-                                <div className="udcscr2r2">
-                                    {otherCampaigns.length > 0 ? (
-                                        otherCampaigns.map((campaign) => (
-                                            <CampaignCard
-                                                campaign={campaign}
-                                                key={campaign.campaignId}
-                                                onClickDetail={() => handleToDetail(campaign.campaignId)}
-                                            />
-                                        ))
-                                    ) : (
-                                        <h1>Chưa có dữ liệu</h1>
-                                    )
-                                    }
-                                </div>
-                            </div>
-                        </>
-                    )}
                 </div>
             </section>
             <RemindCertificateModal isOpen={isRemindCertificateModalOpend} setIsOpen={setIsRemindCertificateModalOpend} />

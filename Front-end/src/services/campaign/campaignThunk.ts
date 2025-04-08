@@ -3,6 +3,7 @@ import {
     addCampaignApi,
     additionalCampaignApi,
     approveCampaignApi,
+    cancelCampaignApi,
     getAllCampaignApi,
     getCampaignByIdApi,
     rejectCampaignApi,
@@ -17,6 +18,7 @@ const GET_ALL_CAMPAIGNS = "GET_ALL_CAMPAIGNS";
 const GET_CURRENT_CAMPAIGN = "GET_CURRENT_CAMPAIGN";
 const APPROVE_CAMPAIGN = "APPROVE_CAMPAIGN";
 const REJECT_CAMPAIGN = "REJECT_CAMPAIGN";
+const CANCEL_CAMPAIGN = "CANCEL_CAMPAIGN";
 const ADDITIONAL_CAMPAIGN = "ADDITIONAL_CAMPAIGN";
 
 export const addCampaignApiThunk = createAsyncThunk<
@@ -115,6 +117,21 @@ export const additionalCampaignApiThunk = createAsyncThunk<
 >(ADDITIONAL_CAMPAIGN, async (payload, { rejectWithValue }) => {
     try {
         const response = await additionalCampaignApi(payload);
+        return response;
+    } catch (err: any) {
+        return rejectWithValue({
+            errorMessage: err.message,
+            data: err.response.data,
+        });
+    }
+});
+
+export const cancelCampaignApiThunk = createAsyncThunk<
+    ResponseFromServer<TextResponse>,
+    CancelCampaign
+>(CANCEL_CAMPAIGN, async (payload, { rejectWithValue }) => {
+    try {
+        const response = await cancelCampaignApi(payload);
         return response;
     } catch (err: any) {
         return rejectWithValue({

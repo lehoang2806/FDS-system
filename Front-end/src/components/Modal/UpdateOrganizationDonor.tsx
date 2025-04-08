@@ -11,10 +11,12 @@ import { getOrganizationDonorCertificateByIdApiThunk, updateOrganizationDonorCer
 import { toast } from 'react-toastify';
 import { get } from 'lodash';
 import { setLoading } from '@/services/app/appSlice';
+import Lightbox from 'react-awesome-lightbox';
 
 const UpdateOrganizationDonorCertificateModal: FC<UpdateOrganizationDonorCertificateModalProps> = ({ isOpen, setIsOpen, selectedCurrentOrganizationDonorCertificate }) => {
     const dispatch = useAppDispatch();
     const [imagePreview, setImagePreview] = useState<string[]>([]);
+    const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
     const initialValues: OrganizationDonor = {
         organizationName: selectedCurrentOrganizationDonorCertificate?.organizationName || '',
@@ -134,76 +136,80 @@ const UpdateOrganizationDonorCertificateModal: FC<UpdateOrganizationDonorCertifi
                         }) => (
                             <Form onSubmit={handleSubmit} className="form">
                                 <h3>Thông tin tổ chức</h3>
-                                <div className="form-field">
-                                    <label className="form-label">Tên tổ chức</label>
-                                    <Field name="organizationName" type="text" placeholder="Hãy nhập tên tổ chức của bạn" className={classNames("form-input", { "is-error": errors.organizationName && touched.organizationName })} />
-                                    {errors.organizationName && touched.organizationName && <span className="error">{errors.organizationName}</span>}
-                                </div>
+                                <div className="odm-form-r1">
+                                    <div className="form-50 form-field">
+                                        <label className="form-label">Tên tổ chức<span>*</span></label>
+                                        <Field name="organizationName" type="text" placeholder="Hãy nhập tên tổ chức của bạn" className={classNames("form-input", { "is-error": errors.organizationName && touched.organizationName })} />
+                                        {errors.organizationName && touched.organizationName && <span className="error">{errors.organizationName}</span>}
+                                    </div>
 
-                                <div className="form-field">
-                                    <label className="form-label">Mã số thuế</label>
-                                    <Field name="taxIdentificationNumber" type="text" placeholder="Nhập mã số thuế" className={classNames("form-input", { "is-error": errors.taxIdentificationNumber && touched.taxIdentificationNumber })} />
-                                    {errors.taxIdentificationNumber && touched.taxIdentificationNumber && <span className="error">{errors.taxIdentificationNumber}</span>}
-                                </div>
+                                    <div className="form-50 form-field">
+                                        <label className="form-label">Mã số thuế<span>*</span></label>
+                                        <Field name="taxIdentificationNumber" type="text" placeholder="Nhập mã số thuế" className={classNames("form-input", { "is-error": errors.taxIdentificationNumber && touched.taxIdentificationNumber })} />
+                                        {errors.taxIdentificationNumber && touched.taxIdentificationNumber && <span className="error">{errors.taxIdentificationNumber}</span>}
+                                    </div>
 
-                                <div className="form-field">
-                                    <label className="form-label">Tên viết tắt</label>
-                                    <Field name="organizationAbbreviatedName" type="text" placeholder="Nhập tên viết tắt" className={classNames("form-input", { "is-error": errors.organizationAbbreviatedName && touched.organizationAbbreviatedName })} />
-                                    {errors.organizationAbbreviatedName && touched.organizationAbbreviatedName && <span className="error">{errors.organizationAbbreviatedName}</span>}
-                                </div>
+                                    <div className="form-50 form-field">
+                                        <label className="form-label">Tên viết tắt</label>
+                                        <Field name="organizationAbbreviatedName" type="text" placeholder="Nhập tên viết tắt" className={classNames("form-input", { "is-error": errors.organizationAbbreviatedName && touched.organizationAbbreviatedName })} />
+                                        {errors.organizationAbbreviatedName && touched.organizationAbbreviatedName && <span className="error">{errors.organizationAbbreviatedName}</span>}
+                                    </div>
 
-                                <div className="form-field">
-                                    <label className="form-label">Loại hình tổ chức</label>
-                                    <Field name="organizationType" type="text" placeholder="Nhập loại hình tổ chức" className={classNames("form-input", { "is-error": errors.organizationType && touched.organizationType })} />
-                                    {errors.organizationType && touched.organizationType && <span className="error">{errors.organizationType}</span>}
-                                </div>
+                                    <div className="form-50 form-field">
+                                        <label className="form-label">Loại hình tổ chức<span>*</span></label>
+                                        <Field name="organizationType" type="text" placeholder="Nhập loại hình tổ chức" className={classNames("form-input", { "is-error": errors.organizationType && touched.organizationType })} />
+                                        {errors.organizationType && touched.organizationType && <span className="error">{errors.organizationType}</span>}
+                                    </div>
 
-                                <div className="form-field">
-                                    <label className="form-label">Ngành nghề chính</label>
-                                    <Field name="mainBusiness" type="text" placeholder="Nhập ngành nghề chính" className={classNames("form-input", { "is-error": errors.mainBusiness && touched.mainBusiness })} />
-                                    {errors.mainBusiness && touched.mainBusiness && <span className="error">{errors.mainBusiness}</span>}
-                                </div>
+                                    <div className="form-50 form-field">
+                                        <label className="form-label">Ngành nghề chính<span>*</span></label>
+                                        <Field name="mainBusiness" type="text" placeholder="Nhập ngành nghề chính" className={classNames("form-input", { "is-error": errors.mainBusiness && touched.mainBusiness })} />
+                                        {errors.mainBusiness && touched.mainBusiness && <span className="error">{errors.mainBusiness}</span>}
+                                    </div>
 
-                                <div className="form-field">
-                                    <label className="form-label">Địa chỉ tổ chức</label>
-                                    <Field name="organizationAddress" type="text" placeholder="Nhập địa chỉ tổ chức" className={classNames("form-input", { "is-error": errors.organizationAddress && touched.organizationAddress })} />
-                                    {errors.organizationAddress && touched.organizationAddress && <span className="error">{errors.organizationAddress}</span>}
-                                </div>
+                                    <div className="form-50 form-field">
+                                        <label className="form-label">Địa chỉ tổ chức<span>*</span></label>
+                                        <Field name="organizationAddress" type="text" placeholder="Nhập địa chỉ tổ chức" className={classNames("form-input", { "is-error": errors.organizationAddress && touched.organizationAddress })} />
+                                        {errors.organizationAddress && touched.organizationAddress && <span className="error">{errors.organizationAddress}</span>}
+                                    </div>
 
-                                <div className="form-field">
-                                    <label className="form-label">Số điện thoại</label>
-                                    <Field name="contactPhone" type="tel" placeholder="Nhập số điện thoại" className={classNames("form-input", { "is-error": errors.contactPhone && touched.contactPhone })} />
-                                    {errors.contactPhone && touched.contactPhone && <span className="error">{errors.contactPhone}</span>}
-                                </div>
+                                    <div className="form-50 form-field">
+                                        <label className="form-label">Số điện thoại<span>*</span></label>
+                                        <Field name="contactPhone" type="tel" placeholder="Nhập số điện thoại tổ chức" className={classNames("form-input", { "is-error": errors.contactPhone && touched.contactPhone })} />
+                                        {errors.contactPhone && touched.contactPhone && <span className="error">{errors.contactPhone}</span>}
+                                    </div>
 
-                                <div className="form-field">
-                                    <label className="form-label">Email tổ chức</label>
-                                    <Field name="organizationEmail" type="email" placeholder="Nhập email tổ chức" className={classNames("form-input", { "is-error": errors.organizationEmail && touched.organizationEmail })} />
-                                    {errors.organizationEmail && touched.organizationEmail && <span className="error">{errors.organizationEmail}</span>}
-                                </div>
+                                    <div className="form-50 form-field">
+                                        <label className="form-label">Email tổ chức<span>*</span></label>
+                                        <Field name="organizationEmail" type="email" placeholder="Nhập email tổ chức" className={classNames("form-input", { "is-error": errors.organizationEmail && touched.organizationEmail })} />
+                                        {errors.organizationEmail && touched.organizationEmail && <span className="error">{errors.organizationEmail}</span>}
+                                    </div>
 
-                                <div className="form-field">
-                                    <label className="form-label">Website</label>
-                                    <Field name="websiteLink" type="url" placeholder="Nhập liên kết website" className={classNames("form-input", { "is-error": errors.websiteLink && touched.websiteLink })} />
-                                    {errors.websiteLink && touched.websiteLink && <span className="error">{errors.websiteLink}</span>}
+                                    <div className="form-100 form-field">
+                                        <label className="form-label">Website</label>
+                                        <Field name="websiteLink" type="url" placeholder="Nhập liên kết website" className={classNames("form-input", { "is-error": errors.websiteLink && touched.websiteLink })} />
+                                        {errors.websiteLink && touched.websiteLink && <span className="error">{errors.websiteLink}</span>}
+                                    </div>
                                 </div>
                                 <h3>Thông tin người đại diện</h3>
-                                <div className="form-field">
-                                    <label className="form-label">Tên người đại diện</label>
-                                    <Field name="representativeName" type="text" placeholder="Nhập tên người đại diện" className={classNames("form-input", { "is-error": errors.representativeName && touched.representativeName })} />
-                                    {errors.representativeName && touched.representativeName && <span className="error">{errors.representativeName}</span>}
-                                </div>
+                                <div className="odm-form-r2">
+                                    <div className="form-50 form-field">
+                                        <label className="form-label">Tên người đại diện<span>*</span></label>
+                                        <Field name="representativeName" type="text" placeholder="Nhập tên người đại diện" className={classNames("form-input", { "is-error": errors.representativeName && touched.representativeName })} />
+                                        {errors.representativeName && touched.representativeName && <span className="error">{errors.representativeName}</span>}
+                                    </div>
 
-                                <div className="form-field">
-                                    <label className="form-label">Số điện thoại người đại diện</label>
-                                    <Field name="representativePhone" type="tel" placeholder="Nhập số điện thoại người đại diện" className={classNames("form-input", { "is-error": errors.representativePhone && touched.representativePhone })} />
-                                    {errors.representativePhone && touched.representativePhone && <span className="error">{errors.representativePhone}</span>}
-                                </div>
+                                    <div className="form-50 form-field">
+                                        <label className="form-label">Số điện thoại người đại diện<span>*</span></label>
+                                        <Field name="representativePhone" type="tel" placeholder="Nhập số điện thoại người đại diện" className={classNames("form-input", { "is-error": errors.representativePhone && touched.representativePhone })} />
+                                        {errors.representativePhone && touched.representativePhone && <span className="error">{errors.representativePhone}</span>}
+                                    </div>
 
-                                <div className="form-field">
-                                    <label className="form-label">Email người đại diện</label>
-                                    <Field name="representativeEmail" type="email" placeholder="Nhập email người đại diện" className={classNames("form-input", { "is-error": errors.representativeEmail && touched.representativeEmail })} />
-                                    {errors.representativeEmail && touched.representativeEmail && <span className="error">{errors.representativeEmail}</span>}
+                                    <div className="form-50 form-field">
+                                        <label className="form-label">Email người đại diện<span>*</span></label>
+                                        <Field name="representativeEmail" type="email" placeholder="Nhập email người đại diện" className={classNames("form-input", { "is-error": errors.representativeEmail && touched.representativeEmail })} />
+                                        {errors.representativeEmail && touched.representativeEmail && <span className="error">{errors.representativeEmail}</span>}
+                                    </div>
                                 </div>
                                 <h2>Vui lòng nộp các giấy tờ sau:</h2>
 
@@ -229,7 +235,7 @@ const UpdateOrganizationDonorCertificateModal: FC<UpdateOrganizationDonorCertifi
                                     </ul>
                                 </div>
                                 <div className="form-field">
-                                    <label className="form-label">Chọn ảnh cần tải lên</label>
+                                    <label className="form-label">Chọn ảnh cần tải lên <span>*</span></label>
                                     <input
                                         type="file"
                                         accept="image/*"
@@ -250,11 +256,26 @@ const UpdateOrganizationDonorCertificateModal: FC<UpdateOrganizationDonorCertifi
                                                     src={img}
                                                     alt={`Preview ${index}`}
                                                     className="image-preview"
-                                                    style={{ width: "100px", height: "100px", marginRight: "8px", borderRadius: "5px" }}
+                                                    style={{
+                                                        width: '100px',
+                                                        height: '100px',
+                                                        marginRight: '8px',
+                                                        borderRadius: '5px',
+                                                        cursor: 'pointer'
+                                                    }}
+                                                    onClick={() => setLightboxIndex(index)} // mở lightbox khi click ảnh
                                                 />
                                             </div>
                                         ))}
                                     </div>
+                                )}
+
+                                {lightboxIndex !== null && (
+                                    <Lightbox
+                                        images={imagePreview.map((src) => ({ url: src }))}
+                                        startIndex={lightboxIndex}
+                                        onClose={() => setLightboxIndex(null)}
+                                    />
                                 )}
                                 <Button loading={isSubmitting} type="submit" title="Cập nhật" />
                             </Form>

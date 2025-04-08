@@ -9,11 +9,13 @@ import { Field, Form, Formik, FormikHelpers } from "formik";
 import { toast } from "react-toastify";
 import { createNewsApiThunk } from "@/services/news/newsThunk";
 import { get } from "lodash";
+import Lightbox from "react-awesome-lightbox";
 
 const StaffAddNewsPage: FC = () => {
     const dispatch = useAppDispatch();
 
     const [imagePreview, setImagePreview] = useState<string[]>([]);
+    const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
     const initialValues: ActionParamNews = {
         newsTitle: "",
@@ -120,22 +122,22 @@ const StaffAddNewsPage: FC = () => {
                                 <hr />
                                 <div className="sancr2r3">
                                     <div className="form">
-                                        <div className="form-field">
+                                        <div className="form-50 form-field">
                                             <label className="form-label">Title</label>
                                             <Field name="newsTitle" type="text" placeholder="Hãy nhập tiêu đề" className={classNames("form-input", { "is-error": errors.newsTitle && touched.newsTitle })} />
                                             {errors.newsTitle && touched.newsTitle && <span className="text-error">{errors.newsTitle}</span>}
                                         </div>
-                                        <div className="form-field">
+                                        <div className="form-50 form-field">
                                             <label className="form-label">Description</label>
                                             <Field name="newsDescripttion" type="text" placeholder="Hãy nhập nội dung" className={classNames("form-input", { "is-error": errors.newsDescripttion && touched.newsDescripttion })} />
                                             {errors.newsDescripttion && touched.newsDescripttion && <span className="text-error">{errors.newsDescripttion}</span>}
                                         </div>
-                                        <div className="form-field">
+                                        <div className="form-50 form-field">
                                             <label className="form-label">Support Beneficiaries</label>
                                             <Field name="supportBeneficiaries" type="text" placeholder="Hãy nhập đối tượng hỗ trợ" className={classNames("form-input", { "is-error": errors.supportBeneficiaries && touched.supportBeneficiaries })} />
                                             {errors.supportBeneficiaries && touched.supportBeneficiaries && <span className="text-error">{errors.supportBeneficiaries}</span>}
                                         </div>
-                                        <div className="form-field">
+                                        <div className="form-50 form-field">
                                             <label className="form-label">Ảnh</label>
                                             <input type="file" accept="image/*" multiple onChange={(e) => handleFileChange(e, setFieldValue)} className={classNames("form-input", { "is-error": errors.images && touched.images })} />
                                             {errors.images && touched.images && <span className="text-error">{errors.images}</span>}
@@ -144,9 +146,31 @@ const StaffAddNewsPage: FC = () => {
                                         {imagePreview.length > 0 && (
                                             <div className="image-preview-container">
                                                 {imagePreview.map((img, index) => (
-                                                    <img key={index} src={img} alt={`Preview ${index}`} className="image-preview" style={{ width: "100px", height: "100px" }} />
+                                                    <div key={index} className="image-wrapper">
+                                                        <img
+                                                            src={img}
+                                                            alt={`Preview ${index}`}
+                                                            className="image-preview"
+                                                            style={{
+                                                                width: '100px',
+                                                                height: '100px',
+                                                                marginRight: '8px',
+                                                                borderRadius: '5px',
+                                                                cursor: 'pointer'
+                                                            }}
+                                                            onClick={() => setLightboxIndex(index)} // mở lightbox khi click ảnh
+                                                        />
+                                                    </div>
                                                 ))}
                                             </div>
+                                        )}
+
+                                        {lightboxIndex !== null && (
+                                            <Lightbox
+                                                images={imagePreview.map((src) => ({ url: src }))}
+                                                startIndex={lightboxIndex}
+                                                onClose={() => setLightboxIndex(null)}
+                                            />
                                         )}
                                     </div>
                                 </div>

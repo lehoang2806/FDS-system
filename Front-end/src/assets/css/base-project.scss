@@ -316,3 +316,10 @@ input.is-error {
 .view-btn {
     background: #635BFF;
 }
+
+.image-preview-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}

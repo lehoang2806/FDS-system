@@ -13,10 +13,12 @@ import { navigateHook } from '@/routes/RouteApp';
 import { routes } from '@/routes/routeName';
 import { get } from 'lodash';
 import { setLoading } from '@/services/app/appSlice';
+import Lightbox from 'react-awesome-lightbox';
 
 const OrganizationDonorModal: FC<OrganizationDonorModalProps> = ({ isOpen, setIsOpen }) => {
     const dispatch = useAppDispatch();
     const [imagePreview, setImagePreview] = useState<string[]>([]);
+    const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
     const initialValues: OrganizationDonor = {
         organizationName: '',
@@ -92,7 +94,7 @@ const OrganizationDonorModal: FC<OrganizationDonorModalProps> = ({ isOpen, setIs
     const onSubmit = async (values: OrganizationDonor, helpers: FormikHelpers<OrganizationDonor>) => {
         dispatch(setLoading(true));
         await dispatch(createOrganizationDonorCertificateApiThunk(values)).unwrap().then(() => {
-            toast.success("Nộp chứng chỉ thành công");
+            toast.success("Hoàn thành xác minh tài khoản tổ chức");
             setIsOpen(false);
             navigateHook(`${routes.user.personal}?tab=chungchi`);
         }).catch((error) => {
@@ -106,11 +108,17 @@ const OrganizationDonorModal: FC<OrganizationDonorModalProps> = ({ isOpen, setIs
             }, 1000);
         });
     }
+
+    const handleResetForm = (resetForm: Function) => {
+        resetForm(); // Reset Formik form fields
+        setImagePreview([]); // Clear the image preview
+    };
+
     return (
         <Modal isOpen={isOpen} setIsOpen={setIsOpen}>
             <section id="organization-donor-modal">
                 <div className="odm-container">
-                    <h1>Trở thành tài khoản tổ chức</h1>
+                    <h1>Xác minh tài khoản tổ chức</h1>
                     <Formik
                         initialValues={initialValues}
                         onSubmit={onSubmit}
@@ -121,7 +129,8 @@ const OrganizationDonorModal: FC<OrganizationDonorModalProps> = ({ isOpen, setIs
                             errors,
                             touched,
                             isSubmitting,
-                            setFieldValue
+                            setFieldValue,
+                            resetForm
                         }) => (
                             <Form onSubmit={handleSubmit} className="form">
                                 <h3>Thông tin tổ chức</h3>
@@ -224,7 +233,7 @@ const OrganizationDonorModal: FC<OrganizationDonorModalProps> = ({ isOpen, setIs
                                     </ul>
                                 </div>
                                 <div className="form-field">
-                                    <label className="form-label">Chọn ảnh cần tải lên</label>
+                                    <label className="form-label">Chọn ảnh cần tải lên<span>*</span></label>
                                     <input
                                         type="file"
                                         accept="image/*"
@@ -245,12 +254,30 @@ const OrganizationDonorModal: FC<OrganizationDonorModalProps> = ({ isOpen, setIs
                                                     src={img}
                                                     alt={`Preview ${index}`}
                                                     className="image-preview"
-                                                    style={{ width: "100px", height: "100px", marginRight: "8px", borderRadius: "5px" }}
+                                                    style={{
+                                                        width: '100px',
+                                                        height: '100px',
+                                                        marginRight: '8px',
+                                                        borderRadius: '5px',
+                                                        cursor: 'pointer'
+                                                    }}
+                                                    onClick={() => setLightboxIndex(index)} // mở lightbox khi click ảnh
                                                 />
                                             </div>
                                         ))}
                                     </div>
                                 )}
+
+                                {lightboxIndex !== null && (
+                                    <Lightbox
+                                        images={imagePreview.map((src) => ({ url: src }))}
+                                        startIndex={lightboxIndex}
+                                        onClose={() => setLightboxIndex(null)}
+                                    />
+                                )}
+                                <div className="pr-btn" onClick={() => handleResetForm(resetForm)}>
+                                    Làm mới
+                                </div>
                                 <Button loading={isSubmitting} type="submit" title="Xác nhận" />
                             </Form>
                         )}
