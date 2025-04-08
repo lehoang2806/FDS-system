@@ -11,10 +11,12 @@ import { toast } from 'react-toastify';
 import { get } from 'lodash';
 import { UpdatePersonalDonorCertificateModalProps } from './type';
 import { setLoading } from '@/services/app/appSlice';
+import Lightbox from 'react-awesome-lightbox';
 
 const UpdatePersonalDonorCertificateModal: FC<UpdatePersonalDonorCertificateModalProps> = ({ isOpen, setIsOpen, selectedCurrentPersonalDonorCertificate }) => {
     const dispatch = useAppDispatch();
     const [imagePreview, setImagePreview] = useState<string[]>([]);
+    const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
     const initialValues: PersonalDonor = {
         citizenId: selectedCurrentPersonalDonorCertificate?.citizenId || '',
@@ -75,7 +77,7 @@ const UpdatePersonalDonorCertificateModal: FC<UpdatePersonalDonorCertificateModa
 
     const onSubmit = async (values: PersonalDonor, helpers: FormikHelpers<PersonalDonor>) => {
         dispatch(setLoading(true));
-        await dispatch(updatePersonalDonorCertificateApiThunk({id: String(selectedCurrentPersonalDonorCertificate?.personalDonorCertificateId), params: values})).unwrap().then(() => {
+        await dispatch(updatePersonalDonorCertificateApiThunk({ id: String(selectedCurrentPersonalDonorCertificate?.personalDonorCertificateId), params: values })).unwrap().then(() => {
             toast.success("Cập nhật thành công");
             setIsOpen(false);
             dispatch(getPersonalDonorCertificateByIdApiThunk(String(selectedCurrentPersonalDonorCertificate?.personalDonorCertificateId)));
@@ -90,6 +92,19 @@ const UpdatePersonalDonorCertificateModal: FC<UpdatePersonalDonorCertificateModa
             }, 1000)
         });
     }
+
+    const formatCurrency = (value: string) => {
+        const numericValue = value.replace(/,/g, ''); // Remove commas
+        if (!isNaN(Number(numericValue))) {
+            return Number(numericValue).toLocaleString('en-US');
+        }
+        return value;
+    };
+
+    const handleIncomeChange = (e: ChangeEvent<HTMLInputElement>, setFieldValue: Function) => {
+        const formattedValue = formatCurrency(e.target.value);
+        setFieldValue('monthlyIncome', formattedValue);
+    };
 
     useEffect(() => {
         if (selectedCurrentPersonalDonorCertificate?.images?.length) {
@@ -118,56 +133,68 @@ const UpdatePersonalDonorCertificateModal: FC<UpdatePersonalDonorCertificateModa
                         }) => (
                             <Form onSubmit={handleSubmit} className="form">
                                 <h3>Thông tin cá nhân</h3>
-                                <div className="form-field">
-                                    <label className="form-label">Họ Và Tên</label>
-                                    <Field name="fullName" type="text" placeholder="Hãy nhập họ và tên của bạn" className={classNames("form-input", { "is-error": errors.fullName && touched.fullName })} />
-                                    {errors.fullName && touched.fullName && <span className="text-error">{errors.fullName}</span>}
-                                </div>
-                                <div className="form-field">
-                                    <label className="form-label">Ngày Sinh</label>
-                                    <Field
-                                        name="birthDay"
-                                        type="date"
-                                        className={classNames("form-input", { "is-error": errors.birthDay && touched.birthDay })}
-                                    />
-                                    {errors.birthDay && touched.birthDay && <span className="text-error">{errors.birthDay}</span>}
-                                </div>
+                                <div className="pdm-form-r1">
+                                    <div className="form-50 form-field">
+                                        <label className="form-label">Họ Và Tên<span>*</span></label>
+                                        <Field name="fullName" type="text" placeholder="Hãy nhập họ và tên của bạn" className={classNames("form-input", { "is-error": errors.fullName && touched.fullName })} />
+                                        {errors.fullName && touched.fullName && <span className="text-error">{errors.fullName}</span>}
+                                    </div>
+                                    <div className="form-50 form-field">
+                                        <label className="form-label">Ngày Sinh<span>*</span></label>
+                                        <Field
+                                            name="birthDay"
+                                            type="date"
+                                            className={classNames("form-input", { "is-error": errors.birthDay && touched.birthDay })}
+                                        />
+                                        {errors.birthDay && touched.birthDay && <span className="text-error">{errors.birthDay}</span>}
+                                    </div>
 
-                                <div className="form-field">
-                                    <label className="form-label">Email</label>
-                                    <Field name="email" type="text" placeholder="Hãy nhập CCCD của bạn" className={classNames("form-input", { "is-error": errors.email && touched.email })} />
-                                    {errors.email && touched.email && <span className="text-error">{errors.email}</span>}
-                                </div>
-                                <div className="form-field">
-                                    <label className="form-label">Số Điện Thoại</label>
-                                    <Field name="phone" type="text" placeholder="Hãy nhập CCCD của bạn" className={classNames("form-input", { "is-error": errors.phone && touched.phone })} />
-                                    {errors.phone && touched.phone && <span className="text-error">{errors.phone}</span>}
-                                </div>
-                                <div className="form-field">
-                                    <label className="form-label">Địa Chỉ</label>
-                                    <Field name="address" type="text" placeholder="Hãy nhập CCCD của bạn" className={classNames("form-input", { "is-error": errors.address && touched.address })} />
-                                    {errors.address && touched.address && <span className="text-error">{errors.address}</span>}
-                                </div>
-                                <div className="form-field">
-                                    <label className="form-label">Căn cước công dân</label>
-                                    <Field name="citizenId" type="text" placeholder="Hãy nhập CCCD của bạn" className={classNames("form-input", { "is-error": errors.citizenId && touched.citizenId })} />
-                                    {errors.citizenId && touched.citizenId && <span className="text-error">{errors.citizenId}</span>}
-                                </div>
-                                <div className="form-field">
-                                    <label className="form-label">Liên kết Mạng Xã Hội</label>
-                                    <Field name="socialMediaLink" type="text" placeholder="Hãy nhập CCCD của bạn" className={classNames("form-input", { "is-error": errors.socialMediaLink && touched.socialMediaLink })} />
-                                    {errors.socialMediaLink && touched.socialMediaLink && <span className="text-error">{errors.socialMediaLink}</span>}
+                                    <div className="form-50 form-field">
+                                        <label className="form-label">Email<span>*</span></label>
+                                        <Field name="email" type="text" placeholder="Hãy nhập email của bạn" className={classNames("form-input", { "is-error": errors.email && touched.email })} />
+                                        {errors.email && touched.email && <span className="text-error">{errors.email}</span>}
+                                    </div>
+                                    <div className="form-50 form-field">
+                                        <label className="form-label">Số Điện Thoại<span>*</span></label>
+                                        <Field name="phone" type="text" placeholder="Hãy nhập số điện thoại của bạn" className={classNames("form-input", { "is-error": errors.phone && touched.phone })} />
+                                        {errors.phone && touched.phone && <span className="text-error">{errors.phone}</span>}
+                                    </div>
+                                    <div className="form-50 form-field">
+                                        <label className="form-label">Địa Chỉ<span>*</span></label>
+                                        <Field name="address" type="text" placeholder="Hãy nhập địa chỉ của bạn" className={classNames("form-input", { "is-error": errors.address && touched.address })} />
+                                        {errors.address && touched.address && <span className="text-error">{errors.address}</span>}
+                                    </div>
+                                    <div className="form-50 form-field">
+                                        <label className="form-label">Căn cước công dân<span>*</span></label>
+                                        <Field name="citizenId" type="text" placeholder="Hãy nhập CCCD của bạn" className={classNames("form-input", { "is-error": errors.citizenId && touched.citizenId })} />
+                                        {errors.citizenId && touched.citizenId && <span className="text-error">{errors.citizenId}</span>}
+                                    </div>
+                                    <div className="form-100 form-field">
+                                        <label className="form-label">Liên kết Mạng Xã Hội</label>
+                                        <Field name="socialMediaLink" type="text" placeholder="Hãy liên kết xã hội của bạn của bạn" className={classNames("form-input", { "is-error": errors.socialMediaLink && touched.socialMediaLink })} />
+                                        {errors.socialMediaLink && touched.socialMediaLink && <span className="text-error">{errors.socialMediaLink}</span>}
+                                    </div>
                                 </div>
                                 <h3>Thông tin tài chính</h3>
-                                <div className="form-field">
-                                    <label className="form-label">Nguồn Thu Nhập Chính</label>
-                                    <Field name="mainSourceIncome" type="text" placeholder="Hãy nhập CCCD của bạn" className={classNames("form-input", { "is-error": errors.mainSourceIncome && touched.mainSourceIncome })} />
-                                    {errors.mainSourceIncome && touched.mainSourceIncome && <span className="text-error">{errors.mainSourceIncome}</span>}
-                                </div>
-                                <div className="form-field">
-                                    <label className="form-label">Thu Nhập Hàng Tháng</label>
-                                    <Field name="monthlyIncome" type="text" placeholder="Hãy nhập CCCD của bạn" className={classNames("form-input", { "is-error": errors.monthlyIncome && touched.monthlyIncome })} />
-                                    {errors.monthlyIncome && touched.monthlyIncome && <span className="text-error">{errors.monthlyIncome}</span>}
+                                <div className="pdm-form-r2">
+                                    <div className="form-50 form-field">
+                                        <label className="form-label">Nguồn Thu Nhập Chính</label>
+                                        <Field name="mainSourceIncome" type="text" placeholder="Hãy nhập nguồn Thu Nhập Chính của bạn" className={classNames("form-input", { "is-error": errors.mainSourceIncome && touched.mainSourceIncome })} />
+                                        {errors.mainSourceIncome && touched.mainSourceIncome && <span className="text-error">{errors.mainSourceIncome}</span>}
+                                    </div>
+                                    <div className="form-50 form-field">
+                                        <label className="form-label">Thu Nhập Hàng Tháng (VNĐ)</label>
+                                        <Field
+                                            name="monthlyIncome"
+                                            type="text"
+                                            placeholder="Hãy nhập thu nhập hàng tháng của bạn"
+                                            className={classNames('form-input', { 'is-error': errors.monthlyIncome && touched.monthlyIncome })}
+                                            onChange={(e: ChangeEvent<HTMLInputElement>) => handleIncomeChange(e, setFieldValue)}
+                                        />
+                                        {errors.monthlyIncome && touched.monthlyIncome && (
+                                            <span className="text-error">{errors.monthlyIncome}</span>
+                                        )}
+                                    </div>
                                 </div>
                                 <h2>Vui lòng nộp các giấy tờ sau:</h2>
                                 <div className="document-section">
@@ -209,11 +236,26 @@ const UpdatePersonalDonorCertificateModal: FC<UpdatePersonalDonorCertificateModa
                                                     src={img}
                                                     alt={`Preview ${index}`}
                                                     className="image-preview"
-                                                    style={{ width: "100px", height: "100px", marginRight: "8px", borderRadius: "5px" }}
+                                                    style={{
+                                                        width: '100px',
+                                                        height: '100px',
+                                                        marginRight: '8px',
+                                                        borderRadius: '5px',
+                                                        cursor: 'pointer'
+                                                    }}
+                                                    onClick={() => setLightboxIndex(index)} // mở lightbox khi click ảnh
                                                 />
                                             </div>
                                         ))}
                                     </div>
+                                )}
+
+                                {lightboxIndex !== null && (
+                                    <Lightbox
+                                        images={imagePreview.map((src) => ({ url: src }))}
+                                        startIndex={lightboxIndex}
+                                        onClose={() => setLightboxIndex(null)}
+                                    />
                                 )}
                                 <Button loading={isSubmitting} type="submit" title="Cập nhật" />
                             </Form>

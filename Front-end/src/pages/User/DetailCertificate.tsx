@@ -117,11 +117,13 @@ const UserDetailCertificate = () => {
                                 </div>
                                 <div className="udcsc2r2">
                                     <h1>Hình ảnh xác minh</h1>
-                                    {currentPersonalDonorCertificate?.images.map((image, index) => (
-                                        <div key={index}>
-                                            <img src={image} alt={`Image ${index}`} style={{ width: '200px', height: '200px' }} />
-                                        </div>
-                                    ))}
+                                    <div className="image-preview-container">
+                                        {currentPersonalDonorCertificate?.images.map((image, index) => (
+                                            <div key={index}>
+                                                <img src={image} alt={`Image ${index}`} style={{ width: '200px', height: '200px' }} />
+                                            </div>
+                                        ))}
+                                    </div>
                                 </div>
                             </div>
                         </>
@@ -179,11 +181,13 @@ const UserDetailCertificate = () => {
                                 </div>
                                 <div className="udcsc2r2">
                                     <h1>Hình ảnh xác minh</h1>
-                                    {currentOrganizationDonorCertificate?.images.map((image, index) => (
-                                        <div key={index}>
-                                            <img src={image} alt={`Image ${index}`} style={{ width: '200px', height: '200px' }} />
-                                        </div>
-                                    ))}
+                                    <div className="image-preview-container">
+                                        {currentOrganizationDonorCertificate?.images.map((image, index) => (
+                                            <div key={index}>
+                                                <img src={image} alt={`Image ${index}`} style={{ width: '200px', height: '200px' }} />
+                                            </div>
+                                        ))}
+                                    </div>
                                 </div>
                             </div>
                         </>
@@ -237,11 +241,13 @@ const UserDetailCertificate = () => {
                                 </div>
                                 <div className="udcsc2r2">
                                     <h1>Hình ảnh xác minh</h1>
-                                    {currentRecipientCertificate?.images.map((image, index) => (
-                                        <div key={index}>
-                                            <img src={image} alt={`Image ${index}`} style={{ width: '200px', height: '200px' }} />
-                                        </div>
-                                    ))}
+                                    <div className="image-preview-container">
+                                        {currentRecipientCertificate?.images.map((image, index) => (
+                                            <div key={index}>
+                                                <img src={image} alt={`Image ${index}`} style={{ width: '200px', height: '200px' }} />
+                                            </div>
+                                        ))}
+                                    </div>
                                 </div>
                             </div>
                         </>

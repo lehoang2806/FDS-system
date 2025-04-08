@@ -12,6 +12,7 @@ const ListNewsPage = () => {
 
     const dispatch = useAppDispatch();
     const news = useAppSelector(selectGetAllNews)
+    const sortedNews = [...news].reverse();
 
     const handleToDetail = (newsId: string) => {
         const url = routes.user.news.detail.replace(":id", newsId);
@@ -53,29 +54,11 @@ const ListNewsPage = () => {
                             >
                                 Nổi bật
                             </div>
-                            <div
-                                className={`ln-tabs-item ${activeTab === "theodoi" ? "ln-tabs-item-actived" : ""}`}
-                                onClick={() => setActiveTab("theodoi")}
-                            >
-                                Theo dõi
-                            </div>
                         </div>
                         <div className="ln-main">
-                            {activeTab === "noibat" ? (
-                                <>
-                                {
-                                    news && news.map((item, index) => (
-                                        <NewsCard news={item} key={index} onClickDetail={() => handleToDetail(item.newId)} />
-                                    ))
-                                }
-                                </>
-                            ) : (
-                                <>
-                                    <NewsCard />
-                                    <NewsCard />
-                                    <NewsCard />
-                                </>
-                            )}
+                            {sortedNews && sortedNews.map((item, index) => (
+                                <NewsCard news={item} key={index} onClickDetail={() => handleToDetail(item.newId)} />
+                            ))}
                         </div>
                     </div>
                 </div>

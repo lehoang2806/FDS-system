@@ -100,13 +100,14 @@
 
             .sancr2r3 {
                 .form {
-                    display: grid;
-                    grid-template-columns: 49% 49%;
-                    gap: 2%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    flex-wrap: wrap;
+                    gap: 24px;
 
-                    .form-input:focus {
-                        outline: none;
-                        border: 1px solid #FF6692;
+                    .form-field {
+                        width: calc(50% - 12px);
                     }
                 }
             }

@@ -14,10 +14,12 @@ import { routes } from '@/routes/routeName';
 import { PersonalDonorModalProps } from './type';
 import { setLoading } from '@/services/app/appSlice';
 import { selectUserLogin } from '@/app/selector';
+import Lightbox from 'react-awesome-lightbox';
 
 const PersonalDonorModal: FC<PersonalDonorModalProps> = ({ isOpen, setIsOpen }) => {
     const dispatch = useAppDispatch();
     const [imagePreview, setImagePreview] = useState<string[]>([]);
+    const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
     const userLogin = useAppSelector(selectUserLogin);
 
     const initialValues: PersonalDonor = {
@@ -81,7 +83,7 @@ const PersonalDonorModal: FC<PersonalDonorModalProps> = ({ isOpen, setIsOpen }) 
     const onSubmit = async (values: PersonalDonor, helpers: FormikHelpers<PersonalDonor>) => {
         dispatch(setLoading(true));
         await dispatch(createPersonalDonorCertificateApiThunk(values)).unwrap().then(() => {
-            toast.success("Nộp chứng chỉ thành công");
+            toast.success("Hoàn thành xác minh tài khoản cá nhân");
             setIsOpen(false);
             navigateHook(`${routes.user.personal}?tab=chungchi`);
         }).catch((error) => {
@@ -109,6 +111,11 @@ const PersonalDonorModal: FC<PersonalDonorModalProps> = ({ isOpen, setIsOpen }) 
         setFieldValue('monthlyIncome', formattedValue);
     };
 
+    const handleResetForm = (resetForm: Function) => {
+        resetForm(); // Reset Formik form fields
+        setImagePreview([]); // Clear the image preview
+    };
+
     return (
         <Modal isOpen={isOpen} setIsOpen={setIsOpen}>
             <section id="personal-donor-modal">
@@ -124,7 +131,8 @@ const PersonalDonorModal: FC<PersonalDonorModalProps> = ({ isOpen, setIsOpen }) 
                             errors,
                             touched,
                             isSubmitting,
-                            setFieldValue
+                            setFieldValue,
+                            resetForm
                         }) => (
                             <Form onSubmit={handleSubmit} className="form">
                                 <h3>Thông tin cá nhân</h3>
@@ -210,7 +218,7 @@ const PersonalDonorModal: FC<PersonalDonorModalProps> = ({ isOpen, setIsOpen }) 
                                     </ul>
                                 </div>
                                 <div className="form-field">
-                                    <label className="form-label">Chọn ảnh cần tải lên</label>
+                                    <label className="form-label">Chọn ảnh cần tải lên<span>*</span></label>
                                     <input
                                         type="file"
                                         accept="image/*"
@@ -231,13 +239,35 @@ const PersonalDonorModal: FC<PersonalDonorModalProps> = ({ isOpen, setIsOpen }) 
                                                     src={img}
                                                     alt={`Preview ${index}`}
                                                     className="image-preview"
-                                                    style={{ width: "100px", height: "100px", marginRight: "8px", borderRadius: "5px" }}
+                                                    style={{
+                                                        width: '100px',
+                                                        height: '100px',
+                                                        marginRight: '8px',
+                                                        borderRadius: '5px',
+                                                        cursor: 'pointer'
+                                                    }}
+                                                    onClick={() => setLightboxIndex(index)} // mở lightbox khi click ảnh
                                                 />
                                             </div>
                                         ))}
                                     </div>
                                 )}
-                                <Button loading={isSubmitting} type="submit" title="Xác nhận" />
+
+                                {lightboxIndex !== null && (
+                                    <Lightbox
+                                        images={imagePreview.map((src) => ({ url: src }))}
+                                        startIndex={lightboxIndex}
+                                        onClose={() => setLightboxIndex(null)}
+                                    />
+                                )}
+                                <div className="pr-btn" onClick={() => handleResetForm(resetForm)}>
+                                    Làm mới
+                                </div>
+                                <Button
+                                    loading={isSubmitting}
+                                    type="submit"
+                                    title="Hoàn thành"
+                                />
                             </Form>
                         )}
                     </Formik>

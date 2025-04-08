@@ -12,6 +12,8 @@ import Modal from './Modal';
 import { get } from 'lodash';
 import { setLoading } from '@/services/app/appSlice';
 import { selectUserLogin } from '@/app/selector';
+import Lightbox from 'react-awesome-lightbox';
+import 'react-awesome-lightbox/build/style.css'; // import style
 
 const RecipientCertificateModal: FC<RecipientCertificateModalProps> = ({ isOpen, setIsOpen }) => {
     const userLogin = useAppSelector(selectUserLogin);
@@ -19,6 +21,7 @@ const RecipientCertificateModal: FC<RecipientCertificateModalProps> = ({ isOpen,
     const dispatch = useAppDispatch();
 
     const [imagePreview, setImagePreview] = useState<string[]>([]);
+    const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
     const initialValues: AddRecipientCertificate = {
         citizenId: '',
@@ -46,18 +49,19 @@ const RecipientCertificateModal: FC<RecipientCertificateModalProps> = ({ isOpen,
             .matches(/^\d{4}-\d{2}-\d{2}$/, 'Ngày sinh không hợp lệ, định dạng YYYY-MM-DD')
             .required('Vui lòng nhập ngày sinh'),
         circumstances: Yup.string().required('Vui lòng nhập hoàn cảnh'),
-        registerSupportReason: Yup.string().required('Vui lòng nhập lý do đăng ký hỗ trợ'),
-        mainSourceIncome: Yup.string().required('Vui lòng nhập nguồn thu nhập chính'),
         monthlyIncome: Yup.string()
-            .matches(/^\d+$/, 'Thu nhập hàng tháng phải là số')
-            .required('Vui lòng nhập thu nhập hàng tháng'),
+            .test('is-valid-number', 'Thu nhập hàng tháng phải là số', value => {
+                if (!value) return true; // allow empty
+                const numeric = value.replace(/,/g, '');
+                return !isNaN(Number(numeric));
+            }),
         images: Yup.array().of(Yup.string().required('Mỗi ảnh phải là một chuỗi hợp lệ')).min(1, 'Cần ít nhất một ảnh').required('Danh sách ảnh là bắt buộc'),
     });
 
     const onSubmit = async (values: AddRecipientCertificate, helpers: FormikHelpers<AddRecipientCertificate>) => {
         dispatch(setLoading(true));
         await dispatch(createRecipientCertificateApiThunk(values)).unwrap().then(() => {
-            toast.success("Nộp chứng chỉ thành công");
+            toast.success("Hoàn thành xác minh tài khoản");
             setIsOpen(false);
             dispatch(getAllRecipientCertificateApiThunk());
         }).catch((error) => {
@@ -96,11 +100,24 @@ const RecipientCertificateModal: FC<RecipientCertificateModalProps> = ({ isOpen,
         });
     };
 
+    const formatCurrency = (value: string) => {
+        const numericValue = value.replace(/,/g, ''); // Remove commas
+        if (!isNaN(Number(numericValue))) {
+            return Number(numericValue).toLocaleString('en-US');
+        }
+        return value;
+    };
+
+    const handleIncomeChange = (e: ChangeEvent<HTMLInputElement>, setFieldValue: Function) => {
+        const formattedValue = formatCurrency(e.target.value);
+        setFieldValue('monthlyIncome', formattedValue);
+    };
+
     return (
-        <Modal isOpen={isOpen} setIsOpen={setIsOpen} title="Recipient Certificate">
+        <Modal isOpen={isOpen} setIsOpen={setIsOpen}>
             <section id="recipient-certificate-modal">
                 <div className="rcm-container">
-                    <h1>Đăng ký chứng chỉ thu nhập thấp</h1>
+                    <h1>Xác minh tài khoản</h1>
                     <Formik
                         initialValues={initialValues}
                         onSubmit={onSubmit}
@@ -115,60 +132,72 @@ const RecipientCertificateModal: FC<RecipientCertificateModalProps> = ({ isOpen,
                         }) => (
                             <Form onSubmit={handleSubmit} className="form">
                                 <h3>Thông tin cá nhân</h3>
-                                <div className="form-field">
-                                    <label className="form-label">Họ Và Tên</label>
-                                    <Field name="fullName" type="text" placeholder="Hãy nhập họ và tên của bạn" className={classNames("form-input", { "is-error": errors.fullName && touched.fullName })} />
-                                    {errors.fullName && touched.fullName && <span className="text-error">{errors.fullName}</span>}
-                                </div>
-                                <div className="form-field">
-                                    <label className="form-label">Ngày Sinh</label>
-                                    <Field
-                                        name="birthDay"
-                                        type="date"
-                                        className={classNames("form-input", { "is-error": errors.birthDay && touched.birthDay })}
-                                    />
-                                    {errors.birthDay && touched.birthDay && <span className="text-error">{errors.birthDay}</span>}
-                                </div>
-                                <div className="form-field">
-                                    <label className="form-label">Email</label>
-                                    <Field name="email" type="text" placeholder="Hãy nhập CCCD của bạn" className={classNames("form-input", { "is-error": errors.email && touched.email })} />
-                                    {errors.email && touched.email && <span className="text-error">{errors.email}</span>}
-                                </div>
-                                <div className="form-field">
-                                    <label className="form-label">Số Điện Thoại</label>
-                                    <Field name="phone" type="text" placeholder="Hãy nhập CCCD của bạn" className={classNames("form-input", { "is-error": errors.phone && touched.phone })} />
-                                    {errors.phone && touched.phone && <span className="text-error">{errors.phone}</span>}
-                                </div>
-                                <div className="form-field">
-                                    <label className="form-label">Địa Chỉ</label>
-                                    <Field name="address" type="text" placeholder="Hãy nhập CCCD của bạn" className={classNames("form-input", { "is-error": errors.address && touched.address })} />
-                                    {errors.address && touched.address && <span className="text-error">{errors.address}</span>}
-                                </div>
-                                <div className="form-field">
-                                    <label className="form-label">Căn cước công dân</label>
-                                    <Field name="citizenId" type="text" placeholder="Hãy nhập CCCD của bạn" className={classNames("form-input", { "is-error": errors.citizenId && touched.citizenId })} />
-                                    {errors.citizenId && touched.citizenId && <span className="text-error">{errors.citizenId}</span>}
-                                </div>
-                                <div className="form-field">
-                                    <label className="form-label">Hoàn cảnh gia đình</label>
-                                    <Field name="circumstances" type="text" placeholder="Hãy nhập CCCD của bạn" className={classNames("form-input", { "is-error": errors.circumstances && touched.circumstances })} />
-                                    {errors.circumstances && touched.circumstances && <span className="text-error">{errors.circumstances}</span>}
+                                <div className="rcm-form-r1">
+                                    <div className="form-50 form-field">
+                                        <label className="form-label">Họ Và Tên<span>*</span></label>
+                                        <Field name="fullName" type="text" placeholder="Hãy nhập họ và tên của bạn" className={classNames("form-input", { "is-error": errors.fullName && touched.fullName })} />
+                                        {errors.fullName && touched.fullName && <span className="text-error">{errors.fullName}</span>}
+                                    </div>
+                                    <div className="form-50 form-field">
+                                        <label className="form-label">Ngày Sinh<span>*</span></label>
+                                        <Field
+                                            name="birthDay"
+                                            type="date"
+                                            className={classNames("form-input", { "is-error": errors.birthDay && touched.birthDay })}
+                                        />
+                                        {errors.birthDay && touched.birthDay && <span className="text-error">{errors.birthDay}</span>}
+                                    </div>
+                                    <div className="form-50 form-field">
+                                        <label className="form-label">Email<span>*</span></label>
+                                        <Field name="email" type="text" placeholder="Hãy nhập email của bạn" className={classNames("form-input", { "is-error": errors.email && touched.email })} />
+                                        {errors.email && touched.email && <span className="text-error">{errors.email}</span>}
+                                    </div>
+                                    <div className="form-50 form-field">
+                                        <label className="form-label">Số Điện Thoại<span>*</span></label>
+                                        <Field name="phone" type="text" placeholder="Hãy nhập số điện thoại của bạn" className={classNames("form-input", { "is-error": errors.phone && touched.phone })} />
+                                        {errors.phone && touched.phone && <span className="text-error">{errors.phone}</span>}
+                                    </div>
+                                    <div className="form-50 form-field">
+                                        <label className="form-label">Địa Chỉ<span>*</span></label>
+                                        <Field name="address" type="text" placeholder="Hãy nhập địa chỉ của bạn" className={classNames("form-input", { "is-error": errors.address && touched.address })} />
+                                        {errors.address && touched.address && <span className="text-error">{errors.address}</span>}
+                                    </div>
+                                    <div className="form-50 form-field">
+                                        <label className="form-label">Căn cước công dân<span>*</span></label>
+                                        <Field name="citizenId" type="text" placeholder="Hãy nhập CCCD của bạn" className={classNames("form-input", { "is-error": errors.citizenId && touched.citizenId })} />
+                                        {errors.citizenId && touched.citizenId && <span className="text-error">{errors.citizenId}</span>}
+                                    </div>
+                                    <div className="form-50 form-field">
+                                        <label className="form-label">Hoàn cảnh gia đình<span>*</span></label>
+                                        <Field name="circumstances" type="text" placeholder="Hãy nhập hoàn cảnh gia đình của bạn" className={classNames("form-input", { "is-error": errors.circumstances && touched.circumstances })} />
+                                        {errors.circumstances && touched.circumstances && <span className="text-error">{errors.circumstances}</span>}
+                                    </div>
                                 </div>
                                 <h3>Thông tin tài chính</h3>
-                                <div className="form-field">
-                                    <label className="form-label">Nguồn Thu Nhập Chính</label>
-                                    <Field name="mainSourceIncome" type="text" placeholder="Hãy nhập CCCD của bạn" className={classNames("form-input", { "is-error": errors.mainSourceIncome && touched.mainSourceIncome })} />
-                                    {errors.mainSourceIncome && touched.mainSourceIncome && <span className="text-error">{errors.mainSourceIncome}</span>}
-                                </div>
-                                <div className="form-field">
-                                    <label className="form-label">Thu Nhập Hàng Tháng</label>
-                                    <Field name="monthlyIncome" type="text" placeholder="Hãy nhập CCCD của bạn" className={classNames("form-input", { "is-error": errors.monthlyIncome && touched.monthlyIncome })} />
-                                    {errors.monthlyIncome && touched.monthlyIncome && <span className="text-error">{errors.monthlyIncome}</span>}
-                                </div>
-                                <div className="form-field">
-                                    <label className="form-label">Lý do đăng ký hỗ trợ</label>
-                                    <Field name="registerSupportReason" type="text" placeholder="Hãy nhập CCCD của bạn" className={classNames("form-input", { "is-error": errors.registerSupportReason && touched.registerSupportReason })} />
-                                    {errors.registerSupportReason && touched.registerSupportReason && <span className="text-error">{errors.registerSupportReason}</span>}
+                                <div className="rcm-form-r2">
+                                    <div className="form-50 form-field">
+                                        <label className="form-label">Nguồn Thu Nhập Chính</label>
+                                        <Field name="mainSourceIncome" type="text" placeholder="Hãy nhập nguông thu nhập chính của bạn" className={classNames("form-input", { "is-error": errors.mainSourceIncome && touched.mainSourceIncome })} />
+                                        {errors.mainSourceIncome && touched.mainSourceIncome && <span className="text-error">{errors.mainSourceIncome}</span>}
+                                    </div>
+                                    <div className="form-50 form-field">
+                                        <label className="form-label">Thu Nhập Hàng Tháng (VNĐ)</label>
+                                        <Field
+                                            name="monthlyIncome"
+                                            type="text"
+                                            placeholder="Hãy nhập thu nhập hàng tháng của bạn"
+                                            className={classNames('form-input', { 'is-error': errors.monthlyIncome && touched.monthlyIncome })}
+                                            onChange={(e: ChangeEvent<HTMLInputElement>) => handleIncomeChange(e, setFieldValue)}
+                                        />
+                                        {errors.monthlyIncome && touched.monthlyIncome && (
+                                            <span className="text-error">{errors.monthlyIncome}</span>
+                                        )}
+                                    </div>
+                                    <div className="form-50 form-field">
+                                        <label className="form-label">Lý do đăng ký hỗ trợ<span>*</span></label>
+                                        <Field name="registerSupportReason" type="text" placeholder="Hãy nhập lý do đăng ký hỗ trợ của bạn" className={classNames("form-input", { "is-error": errors.registerSupportReason && touched.registerSupportReason })} />
+                                        {errors.registerSupportReason && touched.registerSupportReason && <span className="text-error">{errors.registerSupportReason}</span>}
+                                    </div>
                                 </div>
                                 <h2>Vui lòng nộp các giấy tờ sau:</h2>
                                 <div className="document-section">
@@ -184,7 +213,7 @@ const RecipientCertificateModal: FC<RecipientCertificateModalProps> = ({ isOpen,
                                     </ul>
                                 </div>
                                 <div className="form-field">
-                                    <label className="form-label">Chọn ảnh cần tải lên</label>
+                                    <label className="form-label">Chọn ảnh cần tải lên<span>*</span></label>
                                     <input
                                         type="file"
                                         accept="image/*"
@@ -205,11 +234,26 @@ const RecipientCertificateModal: FC<RecipientCertificateModalProps> = ({ isOpen,
                                                     src={img}
                                                     alt={`Preview ${index}`}
                                                     className="image-preview"
-                                                    style={{ width: "100px", height: "100px", marginRight: "8px", borderRadius: "5px" }}
+                                                    style={{
+                                                        width: '100px',
+                                                        height: '100px',
+                                                        marginRight: '8px',
+                                                        borderRadius: '5px',
+                                                        cursor: 'pointer'
+                                                    }}
+                                                    onClick={() => setLightboxIndex(index)} // mở lightbox khi click ảnh
                                                 />
                                             </div>
                                         ))}
                                     </div>
+                                )}
+
+                                {lightboxIndex !== null && (
+                                    <Lightbox
+                                        images={imagePreview.map((src) => ({ url: src }))}
+                                        startIndex={lightboxIndex}
+                                        onClose={() => setLightboxIndex(null)}
+                                    />
                                 )}
                                 <Button loading={isSubmitting} type="submit" title="Nộp chứng chỉ" />
                             </Form>

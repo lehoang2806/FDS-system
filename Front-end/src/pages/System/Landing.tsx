@@ -24,10 +24,12 @@ export default function () {
         return navigateHook(url)
     }
 
-    const campaigns = useAppSelector(selectGetAllCampaign)
+    const campaigns = useAppSelector(selectGetAllCampaign);
+    const sortedCampaigns = [...campaigns].reverse();
     const news = useAppSelector(selectGetAllNews)
+    const sortedNews = [...news].reverse();
 
-    const approvedCampaigns = campaigns.filter((campaign) => campaign.status === "Approved");
+    const approvedCampaigns = sortedCampaigns.filter((campaign) => campaign.status === "Approved");
 
     const personalCampaigns = approvedCampaigns.filter((campaign) => campaign.typeAccount === "Personal Donor");
 
@@ -62,7 +64,7 @@ export default function () {
                     <div className="ls2cr2">
                         <div className="ls2cr2r1">
                             <h3>Chiến dịch của tổ chức</h3>
-                            <Link to={`${routes.user.campaign.list}?tab=1`} className="view-all">Xem tất cả</Link>
+                            <Link to={`${routes.user.campaign.list}?tab=2`} className="view-all">Xem tất cả</Link>
                         </div>
                         <div className="ls2cr2r2">
                             <CampaignCarousel campaigns={organizationCampaigns} handleToDetailCampaign={handleToDetailCampaign} />
@@ -71,7 +73,7 @@ export default function () {
                     <div className="ls2cr3">
                         <div className="ls2cr3r1">
                             <h3>Chiến dịch của Cá nhân</h3>
-                            <Link to={`${routes.user.campaign.list}?tab=2`} className="view-all">Xem tất cả</Link>
+                            <Link to={`${routes.user.campaign.list}?tab=1`} className="view-all">Xem tất cả</Link>
                         </div>
                         <div className="ls2cr3r2">
                             <CampaignCarousel campaigns={personalCampaigns} handleToDetailCampaign={handleToDetailCampaign} />
@@ -130,10 +132,10 @@ export default function () {
                     </div>
                     <div className="ls5cr2">
                         <div className="ls5cr2c1">
-                            {news?.[0] && <EventCard type={1} news={news[0]} onClickDetail={() => handleToDetailNews(news[0].newId)}/>}
+                            {sortedNews?.[0] && <EventCard type={1} news={sortedNews[0]} onClickDetail={() => handleToDetailNews(sortedNews[0].newId)}/>}
                         </div>
                         <div className="ls5cr2c2">
-                            {news.slice(1, 6).map((item, index) => (
+                            {sortedNews.slice(1, 6).map((item, index) => (
                                 <EventCard key={index} type={2} news={item} />
                             ))}
                         </div>

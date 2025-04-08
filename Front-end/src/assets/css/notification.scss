@@ -4,18 +4,76 @@
     .notification-dropdown {
         position: absolute;
         z-index: 1;
-        width: 350px;
-        right: 0;
-        padding: 10px;
+        width: 450px;
+        max-height: 500px;
+        overflow-y: auto;
+        transform: translateX(-50%);
+        padding: 20px;
         background: #fff;
         border-radius: var(--border-radius-16);
         box-shadow: 0px 1px 16px 0px rgba(0, 0, 0, 0.15);
 
+        .nd-tabs {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+
+            .notification-badge {
+                position: absolute;
+                top: 5px;
+                right: -5px;
+                background-color: red;
+                color: white;
+                border-radius: 50%;
+                width: 25px;
+                height: 25px;
+                font-size: 12px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .nd-tabs-item {
+                position: relative;
+                padding: 15px 22px;
+                font-size: 16px;
+                font-weight: 500;
+                color: var(--main-gray);
+                cursor: pointer;
+                transition: color 0.3s ease;
+
+                &.nd-tabs-item-actived {
+                    color: var(--main-color);
+
+                    &::after {
+                        content: "";
+                        position: absolute;
+                        bottom: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 3px;
+                        background-color: var(--main-color);
+                        transition: width 0.3s ease, left 0.3s ease;
+                    }
+                }
+            }
+        }
+
         .notification-item {
+            display: flex;
+            align-items: center;
+            justify-content: start;
             padding: 10px;
             border-radius: var(--border-radius-12);
             cursor: pointer;
             margin: 10px;
+
+            .notification-icon {
+                width: 35px;
+                height: 35px;
+                margin-right: 20px;
+            }
 
             strong {
                 font-size: 18px;

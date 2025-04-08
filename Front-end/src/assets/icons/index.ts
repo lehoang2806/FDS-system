@@ -17,6 +17,8 @@ import CertificateIcon from "./certificate-icon.svg?react";
 import LogoutIcon from "./logout-icon.svg?react";
 import SendIcon from "./send-icon.svg?react";
 import RightIcon from "./right-icon.svg?react";
+import ArrowRight from "./arrow-right.svg?react";
+import ArrowLeft from "./arrow-left.svg?react";
 
 export {
     MenuIcon,
@@ -37,5 +39,7 @@ export {
     CertificateIcon,
     LogoutIcon,
     SendIcon,
-    RightIcon
+    RightIcon,
+    ArrowLeft,
+    ArrowRight,
 };

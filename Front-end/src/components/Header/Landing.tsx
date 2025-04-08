@@ -1,4 +1,4 @@
-import { MenuIcon, NotificationIcon } from "@/assets/icons"
+import { CampaignIcon, CertificateIcon, MenuIcon, NewsIcon, NotificationIcon } from "@/assets/icons"
 import { navigateHook } from "@/routes/RouteApp"
 import { routes } from "@/routes/routeName"
 import { FC, useEffect, useState } from "react"
@@ -10,18 +10,8 @@ import { logout } from "@/utils/helper"
 import connection, { startConnection } from "@/signalRService"
 import { toast } from "react-toastify"
 import { getProfileApiThunk } from "@/services/user/userThunk"
-import { addNotification, markNotificationAsRead, setNotifications } from "@/services/notification/notificationSlice"
-
-interface NotificationDto {
-    title: string;
-    content: string;
-    notificationType: string;
-    objectType: string;
-    objectId: string;
-    accountId: string;
-    createdDate?: string;
-    isRead?: boolean;
-}
+import { addNotification, setNotifications } from "@/services/notification/notificationSlice"
+import { readNotificationApiThunk } from "@/services/notification/notificationThunk"
 
 const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
     const dispatch = useAppDispatch();
@@ -52,34 +42,59 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
     const [isNotifOpen, setIsNotifOpen] = useState(false);
     const notifications = useAppSelector(selectNotifications)
 
+    console.log(notifications)
+
     const handleNewNotification = (notification: any) => {
+        console.log("Received notification:", notification);
+
         const correctedNotification: NotificationDto = {
             ...notification,
-            objectId: notification.objectId || notification.ojectId,
+            notificationId: notification.notificationId || notification.id || notification._id,
+            ojectId: notification.ojectId || notification.ojectId,
         };
 
-        dispatch(addNotification(correctedNotification)); // Redux lưu trữ
+        if (!correctedNotification.notificationId) {
+            console.warn("⚠️ Missing notificationId!", correctedNotification);
+        }
+
+        console.log("Corrected notification:", correctedNotification);
+
+        dispatch(addNotification(correctedNotification));
+
         toast.info(`🔔 ${correctedNotification.content}`);
+
+        // 👉 Reload trang sau khi nhận thông báo (ví dụ sau 1 giây)
+        setTimeout(() => {
+            window.location.reload();
+        }, 1000); // Bạn có thể điều chỉnh thời gian delay
     };
 
     useEffect(() => {
         if (!isAuthenticated) return;
 
-        startConnection();
+        // Kiểm tra xem kết nối SignalR có tồn tại không, nếu không, tạo kết nối mới
+        if (!connection?.state || connection?.state === "Disconnected") {
+            startConnection();  // Tạo kết nối nếu chưa có
+        }
 
+        // Đăng ký các sự kiện SignalR
         connection.on("ReceiveNotification", handleNewNotification);
         connection.on("LoadOldNotifications", (oldNotifications: any[]) => {
-            dispatch(setNotifications(oldNotifications.map((notif) => ({
-                ...notif,
-                objectId: notif.objectId || notif.ojectId,
-            }))));
+            dispatch(setNotifications(
+                oldNotifications.map((notif) => ({
+                    ...notif,
+                    notificationId: notif.notificationId || notif.id || notif._id,
+                    ojectId: notif.ojectId || notif.ojectId,
+                }))
+            ));
         });
 
         return () => {
+            // Ngắt kết nối khi component unmount
             connection.off("ReceiveNotification", handleNewNotification);
             connection.off("LoadOldNotifications");
         };
-    }, [isAuthenticated]);
+    }, [isAuthenticated, connection]);  // Thêm connection vào dependency array    
 
 
     useEffect(() => {
@@ -91,12 +106,48 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
 
     const unreadCount = notifications.filter((notif) => !notif.isRead).length;
 
+    const unReadCampaignCount = notifications.filter((notif) => notif.objectType === "Campain").length;
+
+    const unReadCertificateCount = notifications.filter((notif) => notif.objectType === "Certificate").length;
+
+    const unReadNewsCount = notifications.filter((notif) => notif.objectType === "New").length;
+
     const toggleNotifications = () => {
         setIsNotifOpen((prev) => !prev);
     };
 
-    const markAsRead = (index: number) => {
-        dispatch(markNotificationAsRead(index));
+    const markAsRead = (notificationId: string) => {
+        // Cập nhật UI ngay lập tức
+        dispatch(
+            setNotifications(
+                notifications.map((notification) =>
+                    notification.notificationId === notificationId
+                        ? { ...notification, isRead: true }
+                        : notification
+                )
+            )
+        );
+
+        // Gọi API và xử lý kết quả
+        dispatch(readNotificationApiThunk(notificationId))
+            .unwrap() // Lấy kết quả trả về nếu thành công
+            .then(() => {
+                // Cập nhật lại trong Redux khi API thành công
+                dispatch(
+                    setNotifications(
+                        notifications.map((notification) =>
+                            notification.notificationId === notificationId
+                                ? { ...notification, isRead: true }
+                                : notification
+                        )
+                    )
+                );
+            })
+            .catch((error) => {
+                console.error("Error marking notification as read:", error);
+                // Hiển thị thông báo lỗi nếu có
+                toast.error(error?.errorMessage || "Có lỗi xảy ra khi đánh dấu thông báo là đã đọc.");
+            });
     };
 
     const menuItems = [
@@ -155,6 +206,13 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
         navigateHook(fullUrl);
     };
 
+    const handleToDetailNews = (NewsId: string) => {
+        const url = routes.user.news.detail.replace(":id", NewsId);
+        return navigateHook(url)
+    }
+
+    const [notificationTab, setNotificationTab] = useState("chiendich");
+
     return (
         <header id="header-landing">
             <div className="hl-container">
@@ -211,127 +269,204 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
                             <div className="notification-wrapper">
                                 <div className="notification-icon-wrapper">
                                     <NotificationIcon width={30} height={30} className="menu-icon" onClick={toggleNotifications} />
-                                    {unreadCount > 0 && <span className="notification-badge">{unreadCount}</span>}
+                                    {unreadCount > 0 && <span className="notification-badge">{unreadCount > 9 ? "9+" : unreadCount}</span>}
                                 </div>
                                 {isNotifOpen && (
                                     <div className="notification-dropdown">
+                                        <div className="nd-tabs">
+                                            <div
+                                                className={`nd-tabs-item ${notificationTab === "chiendich" ? "nd-tabs-item-actived" : ""}`}
+                                                onClick={() => { setNotificationTab("chiendich") }}
+                                            >
+                                                Chiến dịch
+                                                {unReadCampaignCount > 0 && <span className="notification-badge">{unReadCampaignCount > 9 ? "9+" : unReadCampaignCount}</span>}
+                                            </div>
+                                            <div
+                                                className={`nd-tabs-item ${notificationTab === "chungnhan" ? "nd-tabs-item-actived" : ""}`}
+                                                onClick={() => { setNotificationTab("chungnhan") }}
+                                            >
+                                                Chứng nhận
+                                                {unReadCertificateCount > 0 && <span className="notification-badge">{unReadCertificateCount > 9 ? "9+" : unReadCertificateCount}</span>}
+                                            </div>
+                                            <div
+                                                className={`nd-tabs-item ${notificationTab === "tintuc" ? "nd-tabs-item-actived" : ""}`}
+                                                onClick={() => { setNotificationTab("tintuc") }}
+                                            >
+                                                Tin tức
+                                                {unReadNewsCount > 0 && <span className="notification-badge">{unReadNewsCount > 9 ? "9+" : unReadNewsCount}</span>}
+                                            </div>
+                                        </div>
                                         {notifications.length > 0 ? (
                                             notifications.map((notif) => {
-                                                if (notif.objectType === "Campain") {
+                                                if (notificationTab === "chiendich" && notif.objectType === "Campain") {
                                                     let actionText = "";
                                                     if (notif.notificationType === "Approve") actionText = "Chiến dịch đã được phê duyệt.";
+                                                    if (notif.notificationType === "Pending") actionText = "Có chiến dịch mới được tạo ra.";
                                                     if (notif.notificationType === "Reject") actionText = "Chiến dịch đã bị từ chối.";
                                                     if (notif.notificationType === "Review") actionText = "Chiến dịch đang chờ xem xét.";
 
                                                     if (actionText) {
                                                         return (
                                                             <div
-                                                                key={notif.objectId || notif.createdDate}
+                                                                key={notif.ojectId || notif.createdDate}
                                                                 className={`notification-item ${notif.isRead ? "read" : "unread"}`}
-                                                                onClick={() => { markAsRead(notifications.indexOf(notif)); handleToDetailCampaign(notif.objectId || "") }}
+                                                                onClick={() => {
+                                                                    markAsRead(notif.notificationId);
+                                                                    handleToDetailCampaign(notif.ojectId || "");
+                                                                }}
                                                             >
-                                                                <strong>{notif.content}</strong>
-                                                                <p>{actionText}</p>
+                                                                <CampaignIcon className="notification-icon" />
+                                                                <div>
+                                                                    <strong>{notif.content}</strong>
+                                                                    <p>{actionText}</p>
+                                                                </div>
                                                             </div>
                                                         );
                                                     }
+                                                } else {
+                                                    <div className="notification-empty">Không có thông báo</div>
                                                 }
-                                                if (notif.objectType === "Personal Donor Certificate") {
-                                                    let actionText = "";
-                                                    if (notif.notificationType === "Approve") actionText = "Đơn xác minh danh tính đã được phê duyệt.";
-                                                    if (notif.notificationType === "Reject") actionText = "Đơn xác minh danh tính đã bị từ chối.";
-                                                    if (notif.notificationType === "Review") actionText = "Đơn xác minh danh tính đang chờ xem xét.";
 
-                                                    if (actionText) {
-                                                        return (
-                                                            <div
-                                                                key={notif.objectId || notif.createdDate}
-                                                                className={`notification-item ${notif.isRead ? "read" : "unread"}`}
-                                                                onClick={() => { markAsRead(notifications.indexOf(notif)), handleToDetailCertificate(notif.objectId, "Personal") }}
-                                                            >
-                                                                <strong>{notif.content}</strong>
-                                                                <p>{actionText}</p>
-                                                            </div>
-                                                        );
-                                                    }
-                                                }
-                                                if (notif.objectType === "RegisterReceiver") {
+                                                if (notificationTab === "chiendich" && notif.objectType === "RegisterReceiver") {
                                                     let actionText = "";
                                                     if (notif.notificationType === "Pending") actionText = "Có người đăng ký chiến dịch của bạn.";
 
                                                     if (actionText) {
                                                         return (
                                                             <div
-                                                                key={notif.objectId || notif.createdDate}
+                                                                key={notif.ojectId || notif.createdDate}
                                                                 className={`notification-item ${notif.isRead ? "read" : "unread"}`}
-                                                                onClick={() => { markAsRead(notifications.indexOf(notif)), handleToDetailCertificate(notif.objectId, "Personal") }}
+                                                                onClick={() => {
+                                                                    markAsRead(notif.notificationId);
+                                                                    handleToDetailCertificate(notif.ojectId, "Personal");
+                                                                }}
                                                             >
-                                                                <strong>{notif.content}</strong>
-                                                                <p>{actionText}</p>
+                                                                <CampaignIcon className="notification-icon" />
+                                                                <div>
+                                                                    <strong>{notif.content}</strong>
+                                                                    <p>{actionText}</p>
+                                                                </div>
                                                             </div>
                                                         );
                                                     }
+                                                } else {
+                                                    <div className="notification-empty">Không có thông báo</div>
                                                 }
-                                                if (notif.objectType === "New") {
+
+                                                if (notificationTab === "tintuc" && notif.objectType === "New") {
                                                     let actionText = "";
                                                     if (notif.notificationType === "pending") actionText = "Có một bài báo mới được tạo.";
 
                                                     if (actionText) {
                                                         return (
                                                             <div
-                                                                key={notif.objectId || notif.createdDate}
+                                                                key={notif.ojectId || notif.createdDate}
                                                                 className={`notification-item ${notif.isRead ? "read" : "unread"}`}
-                                                                onClick={() => { markAsRead(notifications.indexOf(notif)), handleToDetailCertificate(notif.objectId, "Personal") }}
+                                                                onClick={() => {
+                                                                    markAsRead(notif.notificationId);
+                                                                    handleToDetailNews(notif.ojectId);
+                                                                }}
                                                             >
-                                                                <strong>{notif.content}</strong>
-                                                                <p>{actionText}</p>
+                                                                <NewsIcon className="notification-icon" />
+                                                                <div>
+                                                                    <strong>{notif.content}</strong>
+                                                                    <p>{actionText}</p>
+                                                                </div>
                                                             </div>
                                                         );
                                                     }
+                                                } else {
+                                                    <div className="notification-empty">Không có thông báo</div>
                                                 }
-                                                if (notif.objectType === "Organization Donor Certificate") {
-                                                    let actionText = "";
-                                                    if (notif.notificationType === "Approve") actionText = "Đơn xác minh danh tính đã được phê duyệt.";
-                                                    if (notif.notificationType === "Reject") actionText = "Đơn xác minh danh tính đã bị từ chối.";
-                                                    if (notif.notificationType === "Review") actionText = "Đơn xác minh danh tính đang chờ xem xét.";
 
-                                                    if (actionText) {
-                                                        return (
-                                                            <div
-                                                                key={notif.objectId || notif.createdDate}
-                                                                className={`notification-item ${notif.isRead ? "read" : "unread"}`}
-                                                                onClick={() => { markAsRead(notifications.indexOf(notif)), handleToDetailCertificate(notif.objectId, "Organization") }}
-                                                            >
-                                                                <strong>{notif.content}</strong>
-                                                                <p>{actionText}</p>
-                                                            </div>
-                                                        );
-                                                    }
-                                                }
-                                                if (notif.objectType === "Recipient Certificate") {
-                                                    let actionText = "";
-                                                    if (notif.notificationType === "Approve") actionText = "Đơn xác minh danh tính đã được phê duyệt.";
-                                                    if (notif.notificationType === "Reject") actionText = "Đơn xác minh danh tính đã bị từ chối.";
-                                                    if (notif.notificationType === "Review") actionText = "Đơn xác minh danh tính đang chờ xem xét.";
+                                                if (notificationTab === "chungnhan") {
+                                                    if (notif.objectType === "Personal Donor Certificate") {
+                                                        let actionText = "";
+                                                        if (notif.notificationType === "Approve") actionText = "Đơn xác minh danh tính đã được phê duyệt.";
+                                                        if (notif.notificationType === "Reject") actionText = "Đơn xác minh danh tính đã bị từ chối.";
+                                                        if (notif.notificationType === "Review") actionText = "Đơn xác minh danh tính đang chờ xem xét.";
 
-                                                    if (actionText) {
-                                                        return (
-                                                            <div
-                                                                key={notif.objectId || notif.createdDate}
-                                                                className={`notification-item ${notif.isRead ? "read" : "unread"}`}
-                                                                onClick={() => { markAsRead(notifications.indexOf(notif)), handleToDetailCertificate(notif.objectId, "Recipient") }}
-                                                            >
-                                                                <strong>{notif.content}</strong>
-                                                                <p>{actionText}</p>
-                                                            </div>
-                                                        );
+                                                        if (actionText) {
+                                                            return (
+                                                                <div
+                                                                    key={notif.ojectId || notif.createdDate}
+                                                                    className={`notification-item ${notif.isRead ? "read" : "unread"}`}
+                                                                    onClick={() => {
+                                                                        markAsRead(notif.notificationId);
+                                                                        handleToDetailCertificate(notif.ojectId, "Personal");
+                                                                    }}
+                                                                >
+                                                                    <CertificateIcon className="notification-icon" />
+                                                                    <div>
+                                                                        <strong>{notif.content}</strong>
+                                                                        <p>{actionText}</p>
+                                                                    </div>
+                                                                </div>
+                                                            );
+                                                        }
                                                     }
+
+                                                    if (notif.objectType === "Organization Donor Certificate") {
+                                                        let actionText = "";
+                                                        if (notif.notificationType === "Approve") actionText = "Đơn xác minh danh tính đã được phê duyệt.";
+                                                        if (notif.notificationType === "Reject") actionText = "Đơn xác minh danh tính đã bị từ chối.";
+                                                        if (notif.notificationType === "Review") actionText = "Đơn xác minh danh tính đang chờ xem xét.";
+
+                                                        if (actionText) {
+                                                            return (
+                                                                <div
+                                                                    key={notif.ojectId || notif.createdDate}
+                                                                    className={`notification-item ${notif.isRead ? "read" : "unread"}`}
+                                                                    onClick={() => {
+                                                                        markAsRead(notif.notificationId);
+                                                                        handleToDetailCertificate(notif.ojectId, "Organization");
+                                                                    }}
+                                                                >
+                                                                    <CertificateIcon className="notification-icon" />
+                                                                    <div>
+                                                                        <strong>{notif.content}</strong>
+                                                                        <p>{actionText}</p>
+                                                                    </div>
+                                                                </div>
+                                                            );
+                                                        }
+                                                    }
+
+                                                    if (notif.objectType === "Recipient Certificate") {
+                                                        let actionText = "";
+                                                        if (notif.notificationType === "Approve") actionText = "Đơn xác minh danh tính đã được phê duyệt.";
+                                                        if (notif.notificationType === "Reject") actionText = "Đơn xác minh danh tính đã bị từ chối.";
+                                                        if (notif.notificationType === "Review") actionText = "Đơn xác minh danh tính đang chờ xem xét.";
+
+                                                        if (actionText) {
+                                                            return (
+                                                                <div
+                                                                    key={notif.ojectId || notif.createdDate}
+                                                                    className={`notification-item ${notif.isRead ? "read" : "unread"}`}
+                                                                    onClick={() => {
+                                                                        markAsRead(notif.notificationId);
+                                                                        handleToDetailCertificate(notif.ojectId, "Recipient");
+                                                                    }}
+                                                                >
+                                                                    <CertificateIcon className="notification-icon" />
+                                                                    <div>
+                                                                        <strong>{notif.content}</strong>
+                                                                        <p>{actionText}</p>
+                                                                    </div>
+                                                                </div>
+                                                            );
+                                                        }
+                                                    }
+                                                } else {
+                                                    <div className="notification-empty">Không có thông báo</div>
                                                 }
+
                                                 return null;
                                             })
                                         ) : (
                                             <div className="notification-empty">Không có thông báo</div>
                                         )}
+
                                     </div>
                                 )}
                             </div>

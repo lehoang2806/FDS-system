@@ -12,10 +12,12 @@ import Button from '../Elements/Button';
 import classNames from "classnames";
 import { format } from "date-fns";
 import { setLoading } from '@/services/app/appSlice';
+import Lightbox from 'react-awesome-lightbox';
 
 const CreateCampaignModal: FC<CreateCampaignModalProps> = ({ isOpen, setIsOpen }) => {
     const dispatch = useAppDispatch();
     const [imagePreview, setImagePreview] = useState<string[]>([]);
+    const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
     const initialValues: AddCampaign = {
         campaignName: "",
@@ -64,13 +66,14 @@ const CreateCampaignModal: FC<CreateCampaignModalProps> = ({ isOpen, setIsOpen }
         campaignType: Yup.string()
             .required("Loại chiến dịch là bắt buộc"),
 
-        limitedQuantity: Yup.string()
+        limitedQuantity: Yup.number()
             .nullable()
             .when("campaignType", {
                 is: "Limited",
+                then: (schema) => schema.min(1, "Số lượng phải lớn hơn 0").required("Số lượng giới hạn là bắt buộc"),
                 otherwise: (schema) => schema.notRequired().nullable(),
             }),
-
+            
         startRegisterDate: Yup.date()
             .nullable()
             .when("campaignType", {
@@ -191,6 +194,11 @@ const CreateCampaignModal: FC<CreateCampaignModalProps> = ({ isOpen, setIsOpen }
         if (e.target.name === "averageCostPerGift") setFieldValue('averageCostPerGift', formattedValue);
     };
 
+    const handleResetForm = (resetForm: Function) => {
+        resetForm(); // Reset Formik form fields
+        setImagePreview([]); // Clear the image preview
+    };
+
     return (
         <Modal isOpen={isOpen} setIsOpen={setIsOpen}>
             <section id="create-campaign-modal">
@@ -207,11 +215,12 @@ const CreateCampaignModal: FC<CreateCampaignModalProps> = ({ isOpen, setIsOpen }
                             isSubmitting,
                             values,
                             setFieldValue,
+                            resetForm
                         }) => (
                             <Form onSubmit={handleSubmit} className='form'>
                                 <h1>Tạo chiến dịch</h1>
                                 <h3>Thông tin chiến dịch</h3>
-                                <div className="cpm-form-r1">
+                                <div className="ccm-form-r1">
                                     <div className="form-50 form-field">
                                         <label className="form-label">Tên chiến dịch <span>*</span></label>
                                         <Field name="campaignName" type="text" placeholder="Hãy nhập tên chiến dịch" className={classNames("form-input", { "is-error": errors.campaignName && touched.campaignName })} />
@@ -285,7 +294,7 @@ const CreateCampaignModal: FC<CreateCampaignModalProps> = ({ isOpen, setIsOpen }
                                     )}
                                 </div>
                                 <h3>Thông tin tài chính</h3>
-                                <div className="cpm-form-r2">
+                                <div className="ccm-form-r2">
                                     <div className="form-50 form-field">
                                         <label className="form-label">Ngân sách ước tính (VNĐ)</label>
                                         <Field
@@ -314,7 +323,7 @@ const CreateCampaignModal: FC<CreateCampaignModalProps> = ({ isOpen, setIsOpen }
                                     </div>
                                 </div>
                                 <h3>Truyền thông</h3>
-                                <div className="cpm-form-r3">
+                                <div className="ccm-form-r3">
                                     <div className="form-50 form-field">
                                         <label className="form-label">Nhà tài trợ</label>
                                         <Field name="sponsors" type="text" placeholder="Hãy nhập nhà tài trợ" className={classNames("form-input", { "is-error": errors.sponsors && touched.sponsors })} />
@@ -335,10 +344,35 @@ const CreateCampaignModal: FC<CreateCampaignModalProps> = ({ isOpen, setIsOpen }
                                 {imagePreview.length > 0 && (
                                     <div className="image-preview-container">
                                         {imagePreview.map((img, index) => (
-                                            <img key={index} src={img} alt={`Preview ${index}`} className="image-preview" style={{ width: "100px", height: "100px" }} />
+                                            <div key={index} className="image-wrapper">
+                                                <img
+                                                    src={img}
+                                                    alt={`Preview ${index}`}
+                                                    className="image-preview"
+                                                    style={{
+                                                        width: '100px',
+                                                        height: '100px',
+                                                        marginRight: '8px',
+                                                        borderRadius: '5px',
+                                                        cursor: 'pointer'
+                                                    }}
+                                                    onClick={() => setLightboxIndex(index)} // mở lightbox khi click ảnh
+                                                />
+                                            </div>
                                         ))}
                                     </div>
                                 )}
+
+                                {lightboxIndex !== null && (
+                                    <Lightbox
+                                        images={imagePreview.map((src) => ({ url: src }))}
+                                        startIndex={lightboxIndex}
+                                        onClose={() => setLightboxIndex(null)}
+                                    />
+                                )}
+                                <div className="pr-btn" onClick={() => handleResetForm(resetForm)}>
+                                    Làm mới
+                                </div>
                                 <Button type="submit" title="Tạo chiến dịch" loading={isSubmitting} />
                             </Form>
                         )}

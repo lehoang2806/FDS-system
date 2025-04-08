@@ -1,0 +1,40 @@
+#cancel-campaign-modal {
+    padding: 0 30px;
+
+    .ccm-container {
+        width: 1000px;
+        text-align: center;
+
+        h1 {
+            font-size: 30px;
+            font-weight: 800;
+            color: var(--main-color);
+            margin-bottom: 40px;
+        }
+
+        p {
+            text-align: start;
+            font-size: 18px;
+            font-weight: 500;
+            color: var(--main-black);
+            margin-bottom: 10px;
+
+            span {
+                font-size: 20px;
+                font-weight: 700;
+                color: var(--main-color);
+            }
+        }
+
+        .form {
+            .form-field {
+                text-align: start;
+            }
+        }
+
+        .sc-btn {
+            margin-top: 30px;
+            padding: 10px 30px;
+        }
+    }
+}

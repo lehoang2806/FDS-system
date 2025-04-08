@@ -110,6 +110,11 @@ interface AdditionalCampaign {
     content: string;
 }
 
+interface CancelCampaign {
+    campaignId: string;
+    comment: string;
+}
+
 interface ReviewComment {
     createDate: string;
     content: string;

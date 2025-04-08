@@ -78,12 +78,11 @@
                     }
                 }
 
-                .cscr2r2 {
+                .cscr2r2-list {
                     display: flex;
-                    align-items: center;
-                    justify-content: center;
+                    justify-content: space-between;
                     flex-wrap: wrap;
-                    gap: 24px;
+                    gap: 20px;
                     margin-bottom: 50px;
                 }
             }

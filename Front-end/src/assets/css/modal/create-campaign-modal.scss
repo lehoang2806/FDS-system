@@ -27,7 +27,7 @@
                 text-align: start;
             }
 
-            .cpm-form-r1, .cpm-form-r2, .cpm-form-r3 {
+            .ccm-form-r1, .ccm-form-r2, .ccm-form-r3 {
                 display: flex;
                 justify-content: space-between;
                 flex-wrap: wrap;
@@ -35,9 +35,22 @@
             }
         }
 
-        .sc-btn {
-            margin-top: 30px;
+        .sc-btn,
+        .pr-btn {
+            margin: 20px 0 0;
             padding: 10px 30px;
+        }
+
+        .pr-btn {
+            width: fit-content;
+            margin: 0 auto;
+            color: var(--white-color);
+            font-size: 14px;
+            font-weight: 800;
+            border: none;
+            border-radius: var(--border-radius-12);
+            cursor: pointer;
+            margin-top: 30px;
         }
     }
 }
