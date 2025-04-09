@@ -90,10 +90,7 @@ namespace FDSSYSTEM.Services.PostService
             throw new NotImplementedException();
         }
 
-        public async Task<List<Post>> GetAll()
-        {
-            return (await _postRepository.GetAllAsync()).ToList();
-        }
+   
 
         public async Task<Post> GetById(string id)
         {
@@ -202,17 +199,23 @@ namespace FDSSYSTEM.Services.PostService
         public async Task<List<PostResponseDto>> GetAllPosts()
         {
             var posts = await _postRepository.GetAllAsync();
-            return posts.Select(post => new PostResponseDto
+
+            var result = posts.Select(p => new PostResponseDto
             {
-                PostContent = post.PostContent,
-                Images = post.Images,
-                PosterId = post.AccountId,
-                PosterRole = post.PosterRole,
-                PosterName = post.PosterName,
-                Status = post.Status,  // Thêm trạng thái bài viết
-                RejectComment = post.RejectComment  // Thêm lý do từ chối
+                PostContent = p.PostContent,
+                Images = p.Images,
+                PosterId = p.AccountId,
+                PosterRole = p.PosterRole,
+                PosterName = p.PosterName,
+                Status = p.Status,
+                RejectComment = p.RejectComment,
+                PosterApproverId = p.PosterApproverId,
+                PosterApproverName = p.PosterApproverName
             }).ToList();
+
+            return result;
         }
+
 
 
         public async Task<PostDetailDto> GetPostDetail(string postId)

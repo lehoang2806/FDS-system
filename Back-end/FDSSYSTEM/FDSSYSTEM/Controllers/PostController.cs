@@ -45,11 +45,11 @@ namespace FDSSYSTEM.Controllers
             try
             {
                 var config = new TypeAdapterConfig();
-                config.NewConfig<Post, PostDto>()
+                config.NewConfig<Post, PostResponseDto>()
                      .Map(dest => dest.PosterId, src => src.AccountId);
 
                 var posts = await _postService.GetAllPosts();
-                return Ok(posts.Adapt<List<PostDto>>(config));
+                return Ok(posts.Adapt<List<PostResponseDto>>(config));
             }
             catch (Exception ex)
             {
