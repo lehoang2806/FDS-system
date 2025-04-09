@@ -1,9 +1,9 @@
-import { selectCurrentCampaign, selectGetAllCampaign, selectGetAllRegisterReceivers, selectUserLogin } from '@/app/selector';
+import { selectCurrentCampaign, selectGetAllRegisterReceivers, selectUserLogin } from '@/app/selector';
 import { useAppDispatch, useAppSelector } from '@/app/store';
 import { Subscriber } from '@/components/Elements/index'
 import { RegisterReceiverModal, RemindCertificateModal, UpdateCampaignModal } from '@/components/Modal';
 import { setLoading } from '@/services/app/appSlice';
-import { getAllCampaignApiThunk, getCampaignByIdApiThunk } from '@/services/campaign/campaignThunk';
+import { getCampaignByIdApiThunk } from '@/services/campaign/campaignThunk';
 import { getAllRegisterReceiversApiThunk } from '@/services/registerReceive/registerReceiveThunk';
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom';

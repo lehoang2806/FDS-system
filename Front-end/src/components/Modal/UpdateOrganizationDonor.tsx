@@ -39,7 +39,6 @@ const UpdateOrganizationDonorCertificateModal: FC<UpdateOrganizationDonorCertifi
         taxIdentificationNumber: Yup.string()
             .matches(/^\d+$/, "Mã số thuế phải là số")
             .required("Mã số thuế không được để trống"),
-        organizationAbbreviatedName: Yup.string().required("Tên viết tắt không được để trống"),
         organizationType: Yup.string().required("Loại hình tổ chức không được để trống"),
         mainBusiness: Yup.string().required("Ngành nghề chính không được để trống"),
         organizationAddress: Yup.string().required("Địa chỉ tổ chức không được để trống"),
@@ -50,8 +49,7 @@ const UpdateOrganizationDonorCertificateModal: FC<UpdateOrganizationDonorCertifi
             .email("Email không hợp lệ")
             .required("Email tổ chức không được để trống"),
         websiteLink: Yup.string()
-            .url("Liên kết website không hợp lệ")
-            .notRequired(), // Không bắt buộc
+            .url("Liên kết website không hợp lệ"),
         representativeName: Yup.string().required("Tên người đại diện không được để trống"),
         representativePhone: Yup.string()
             .matches(/^\d+$/, "Số điện thoại người đại diện phải là số")

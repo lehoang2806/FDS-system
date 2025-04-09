@@ -58,8 +58,8 @@ const RegisterReceiverModal: FC<RegisterReceiverModalProps> = ({ isOpen, setIsOp
 
     return (
         <Modal isOpen={isOpen} setIsOpen={setIsOpen}>
-            <section id="recipient-certificate-modal">
-                <div className="rcm-container">
+            <section id="register-receiver-modal">
+                <div className="rrm-container">
                     <h1>Đăng ký nhận quà</h1>
                     <Formik
                         initialValues={initialValues}
@@ -74,7 +74,7 @@ const RegisterReceiverModal: FC<RegisterReceiverModalProps> = ({ isOpen, setIsOp
                         }) => (
                             <Form onSubmit={handleSubmit} className="form">
                                 <div className="form-field">
-                                    <label className="form-label">Tên người nhận quà</label>
+                                    <label className="form-label">Tên người đại diện nhận quà</label>
                                     <Field name="registerReceiverName" type="text" placeholder="Hãy nhập tên của bạn" className={classNames("form-input", { "is-error": errors.registerReceiverName && touched.registerReceiverName })} />
                                     {errors.registerReceiverName && touched.registerReceiverName && <span className="error">{errors.registerReceiverName}</span>}
                                 </div>
@@ -83,6 +83,7 @@ const RegisterReceiverModal: FC<RegisterReceiverModalProps> = ({ isOpen, setIsOp
                                     <Field name="quantity" type="number" placeholder="Hãy nhập tên của bạn" className={classNames("form-input", { "is-error": errors.quantity && touched.quantity })} />
                                     {errors.quantity && touched.quantity && <span className="error">{errors.quantity}</span>}
                                 </div>
+                                <p><span>Ghi chú:</span> Số lượng bạn đăng ký tương ứng với số người có mặt tại địa điểm.</p>
                                 <Button loading={isSubmitting} type="submit" title="Đăng ký" />
                             </Form>
                         )}
