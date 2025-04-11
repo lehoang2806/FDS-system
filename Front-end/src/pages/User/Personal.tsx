@@ -20,25 +20,33 @@ const UserPersonalPage = () => {
     const profileUser = useAppSelector(selectGetProfileUser);
     const isAuthenticated = useAppSelector(selectIsAuthenticated);
     const userLogin = useAppSelector(selectUserLogin);
+
     const campaigns = useAppSelector(selectGetAllCampaign);
+    const sortedCampaigns = [...campaigns].reverse();
+
     const donorCertificates = useAppSelector(selectGetAllDonorCertificate);
+    const sortedDonorCertificates = [...donorCertificates].reverse();
+
     const recipientCertificates = useAppSelector(selectGetAllRecipientCertificate);
+    const sortedRecipientCertificates = [...recipientCertificates].reverse();
+
     const registerReceivers = useAppSelector(selectGetAllRegisterReceivers);
+    const sortedRegisterReceivers = [...registerReceivers].reverse();
 
     // Lọc dữ liệu theo tài khoản đăng nhập
-    const currentCampaigns = campaigns.filter(
+    const currentCampaigns = sortedCampaigns.filter(
         (campaign) => campaign.accountId === userLogin?.accountId
     );
 
-    const currentDonorCertificates = donorCertificates.filter(
+    const currentDonorCertificates = sortedDonorCertificates.filter(
         (donorCertificate) => donorCertificate.donorId === userLogin?.accountId
     );
 
-    const currentRecipientCertificates = recipientCertificates.filter(
+    const currentRecipientCertificates = sortedRecipientCertificates.filter(
         (recipientCertificate) => recipientCertificate.recipientId === userLogin?.accountId
     );
-
-    const currentRegisterReceivers = registerReceivers.filter(
+    
+    const currentRegisterReceivers = sortedRegisterReceivers.filter(
         (registerReceiver) => registerReceiver.accountId === userLogin?.accountId
     );
 
@@ -419,16 +427,16 @@ const UserPersonalPage = () => {
                                                     <thead className="table-head">
                                                         <tr className="table-head-row">
                                                             <th className="table-head-cell">
-                                                                Name Receiver
+                                                                Tên người đại diện nhận
                                                             </th>
                                                             <th className="table-head-cell">
-                                                                Quantity
+                                                                Số lượng đăng ký
                                                             </th>
                                                             <th className="table-head-cell">
-                                                                Register Date
+                                                                Thời gian đăng ký
                                                             </th>
                                                             <th className="table-head-cell">
-                                                                Action
+                                                                Hành động
                                                             </th>
                                                         </tr>
                                                     </thead>
@@ -439,7 +447,7 @@ const UserPersonalPage = () => {
                                                                 <td className='table-body-cell'>{registerReceiver.quantity}</td>
                                                                 <td className='table-body-cell'>{registerReceiver.creatAt}</td>
                                                                 <td className='table-body-cell'>
-                                                                    <button className="view-btn" onClick={() => handleToDetailCampaign(registerReceiver.campaignId)}>Go to Campaign</button>
+                                                                    <button className="view-btn" onClick={() => handleToDetailCampaign(registerReceiver.campaignId)}>Đi đến chiến dịch</button>
                                                                 </td>
                                                             </tr>
                                                         ))}
@@ -510,7 +518,7 @@ const UserPersonalPage = () => {
                                                                 <td className='table-body-cell'>{row.registerSupportReason}</td>
                                                                 <td className='table-body-cell'>{row.status === "Pending" ? <span className='status-pending'>Pending</span> : row.status === "Approved" ? <span className='status-approve'>Approve</span> : <span className='status-reject'>Reject</span>}</td>
                                                                 <td className="table-body-cell">
-                                                                    <button className="view-btn" onClick={() => handleToDetailCertificate(row.recipientCertificateId, "Recipient")}>View Detail</button>
+                                                                    <button className="view-btn" onClick={() => handleToDetailCertificate(row.recipientCertificateId, "Recipient")}>Xem chi tiết</button>
                                                                 </td>
                                                             </tr>
                                                         ))}

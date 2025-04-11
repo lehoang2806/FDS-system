@@ -38,7 +38,7 @@ const ManageLogin = () => {
 
     const onSubmit = async (values: ILoginEmail, helpers: FormikHelpers<ILoginEmail>) => {
         await dispatch(loginApiThunk(values)).unwrap().then(() => {
-            toast.success("Login successfully");
+            toast.success("Đăng nhập thành công");
         }).catch((error) => {
             const errorData = get(error, 'data.message', null);
             helpers.setErrors({ userEmail: errorData });
@@ -72,12 +72,12 @@ const ManageLogin = () => {
                                     <div className="form-field">
                                         <label className="form-label">Email</label>
                                         <Field name="userEmail" type="email" placeholder="Hãy nhập email của bạn" className={classNames("form-input", { "is-error": errors.userEmail && touched.userEmail })} />
-                                        {errors.userEmail && touched.userEmail && <span className="error">{errors.userEmail}</span>}
+                                        {errors.userEmail && touched.userEmail && <span className="text-error">{errors.userEmail}</span>}
                                     </div>
                                     <div className="form-field">
                                         <label className="form-label">Mật Khẩu</label>
                                         <Field name="password" type="password" placeholder="Hãy nhập mật khẩu của bạn" className={classNames("form-input", { "is-error": errors.password && touched.password })} />
-                                        {errors.password && touched.password && <span className="error">{errors.password}</span>}
+                                        {errors.password && touched.password && <span className="text-error">{errors.password}</span>}
                                     </div>
                                     <Button loading={isSubmitting} type="submit" title="Đăng nhập" />
                                 </Form>

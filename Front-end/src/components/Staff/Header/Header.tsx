@@ -16,8 +16,6 @@ const StaffHeader: FC = () => {
     const notifications = useAppSelector(selectNotifications)
     const isAuthenticated = useAppSelector(selectIsAuthenticated);
 
-    console.log(notifications)
-
     const handleNewNotification = (notification: any) => {
         console.log("Received notification:", notification);
 
@@ -108,6 +106,16 @@ const StaffHeader: FC = () => {
 
     const unreadCount = notifications.filter((notif) => !notif.isRead).length;
 
+    const unReadCampaignCount = notifications.filter((notif) => notif.objectType === "Campain").length;
+
+    const unReadCertificateCount = notifications.filter((notif) =>
+        [
+            "Personal Donor Certificate",
+            "Organization Donor Certificate",
+            "Recipient Certificate"
+        ].includes(notif.objectType)
+    ).length;
+
     const toggleSidebar = () => {
         document.getElementById("staff-sidebar")?.classList.toggle("ss-expanded");
         document.getElementById("staff-sidebar")?.classList.toggle("ss-collapsed");
@@ -168,7 +176,7 @@ const StaffHeader: FC = () => {
                     <div className="notification-wrapper">
                         <div className="notification-icon-wrapper">
                             <NotificationIcon className="sh-icon" onClick={toggleNotifications} />
-                            {unreadCount > 0 && <span className="notification-badge">{unreadCount}</span>}
+                            {unreadCount > 0 && <span className="notification-badge">{unreadCount > 9 ? "9+" : unreadCount}</span>}
                         </div>
                         {isNotifOpen && (
                             <div className="notification-dropdown">
@@ -178,12 +186,14 @@ const StaffHeader: FC = () => {
                                         onClick={() => setNotificationTab("chiendich")}
                                     >
                                         Chiến dịch
+                                        {unReadCampaignCount > 0 && <span className="notification-badge">{unReadCampaignCount > 9 ? "9+" : unReadCampaignCount}</span>}
                                     </div>
                                     <div
                                         className={`nd-tabs-item ${notificationTab === "chungnhan" ? "nd-tabs-item-actived" : ""}`}
                                         onClick={() => setNotificationTab("chungnhan")}
                                     >
                                         Chứng nhận
+                                        {unReadCertificateCount > 0 && <span className="notification-badge">{unReadCertificateCount > 9 ? "9+" : unReadCertificateCount}</span>}
                                     </div>
                                 </div>
 

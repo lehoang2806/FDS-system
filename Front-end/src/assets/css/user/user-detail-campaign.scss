@@ -13,6 +13,16 @@
             max-width: 1400px;
             margin: 0 auto;
 
+            .pr-btn, .sc-btn {
+                padding: 15px 20px;
+                font-size: 16px;
+                font-weight: 500;
+            }
+
+            .pr-btn {
+                margin-right: 20px;
+            }
+
             .udcscr1 {
                 display: flex;
 

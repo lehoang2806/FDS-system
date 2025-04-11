@@ -44,10 +44,12 @@ const UpdateRecipientCertificateModal: FC<UpdateRecipientCertificateModalProps> 
             .required('Vui lòng nhập ngày sinh'),
         circumstances: Yup.string().required('Vui lòng nhập hoàn cảnh'),
         registerSupportReason: Yup.string().required('Vui lòng nhập lý do đăng ký hỗ trợ'),
-        mainSourceIncome: Yup.string().required('Vui lòng nhập nguồn thu nhập chính'),
         monthlyIncome: Yup.string()
-            .matches(/^\d+$/, 'Thu nhập hàng tháng phải là số')
-            .required('Vui lòng nhập thu nhập hàng tháng'),
+            .test('is-valid-number', 'Thu nhập hàng tháng phải là số', value => {
+                if (!value) return true; // allow empty
+                const numeric = value.replace(/,/g, '');
+                return !isNaN(Number(numeric));
+            }),
         images: Yup.array().of(Yup.string().required('Mỗi ảnh phải là một chuỗi hợp lệ')).min(1, 'Cần ít nhất một ảnh').required('Danh sách ảnh là bắt buộc'),
     });
 

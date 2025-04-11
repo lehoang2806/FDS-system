@@ -26,7 +26,7 @@ const RejectCampaignModal: FC<RejectCampaignModalProps> = ({ isOpen, setIsOpen, 
                 comment: reason
             })).unwrap()
                 .then(() => {
-                    toast.success("Reject Campaign successfully.");
+                    toast.success("Đã từ chối chiến dịch này.");
                     setIsOpen(false);
                     dispatch(getAllCampaignApiThunk());
                     dispatch(getCampaignByIdApiThunk(selectedCampaign.campaignId));
@@ -44,9 +44,10 @@ const RejectCampaignModal: FC<RejectCampaignModalProps> = ({ isOpen, setIsOpen, 
     };
 
     return (
-        <Modal isOpen={isOpen} setIsOpen={setIsOpen} title="Reject Campaign">
+        <Modal isOpen={isOpen} setIsOpen={setIsOpen}>
             <section id="reject-campaign-modal">
                 <div className="rcm-container">
+                    <h1>Từ chối chiến dịch</h1>
                     <form className="form" onSubmit={handleSubmit}>
                         <div className="form-field">
                             <label className="form-label">Lý do từ chối</label>

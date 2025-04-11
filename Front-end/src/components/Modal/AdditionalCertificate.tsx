@@ -27,7 +27,7 @@ const AdditionalCertificateModal: FC<AdditionalCertificateModalProps> = ({ isOpe
                 type: selectedCertificate.type
             })).unwrap()
                 .then(() => {
-                    toast.success("Request Addtional Certificate Successfully.");
+                    toast.success("Đã yêu cầu bổ sung.");
                     setIsOpen(false);
                     if (selectedCertificate.type === 1) {
                         dispatch(getPersonalDonorCertificateByIdApiThunk(selectedCertificate.certificateId));
@@ -54,6 +54,7 @@ const AdditionalCertificateModal: FC<AdditionalCertificateModalProps> = ({ isOpe
     return (
         <Modal isOpen={isOpen} setIsOpen={setIsOpen}>
             <section id="additional-certificate-modal">
+                <h1>Yêu cầu bổ sung đơn xác nhận</h1>
                 <div className="acm-container">
                     <form className="form" onSubmit={handleSubmit}>
                         <div className="form-field">

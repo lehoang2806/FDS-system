@@ -14,10 +14,25 @@ const ListNewsPage = () => {
     const news = useAppSelector(selectGetAllNews)
     const sortedNews = [...news].reverse();
 
+    const [visibleNewsCount, setVisibleNewsCount] = useState(6);
+
+    const handleShowMoreNews = () => {
+        setVisibleNewsCount((prev) => prev + 6);
+    };
+
     const handleToDetail = (newsId: string) => {
         const url = routes.user.news.detail.replace(":id", newsId);
         return navigateHook(url)
     }
+
+    //Search
+    const [searchTerm, setSearchTerm] = useState("");
+
+    const filteredNews = sortedNews.filter((item) =>
+        item.newsTitle.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    
+    const visibleFilteredNews = filteredNews.slice(0, visibleNewsCount);    
 
     useEffect(() => {
         document.title = "Trang chủ";
@@ -44,7 +59,13 @@ const ListNewsPage = () => {
                         <div className="line"></div>
                     </div>
                     <div className="lnscr2">
-                        <input type="text" className="ln-search-input" placeholder="Tìm kiếm tên sự kiện" />
+                        <input
+                            type="text"
+                            className="ln-search-input"
+                            placeholder="Tìm kiếm tên sự kiện"
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                        />
                     </div>
                     <div className="lnscr3">
                         <div className="ln-tabs">
@@ -56,9 +77,14 @@ const ListNewsPage = () => {
                             </div>
                         </div>
                         <div className="ln-main">
-                            {sortedNews && sortedNews.map((item, index) => (
+                            {sortedNews && visibleFilteredNews.map((item, index) => (
                                 <NewsCard news={item} key={index} onClickDetail={() => handleToDetail(item.newId)} />
                             ))}
+                            {visibleNewsCount < sortedNews.length && (
+                                <div className="view-more-container">
+                                    <button className="view-more" onClick={handleShowMoreNews}>Xem thêm</button>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>

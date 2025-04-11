@@ -60,20 +60,8 @@ const UpdateCampaignModal: FC<UpdateCampaignModalProps> = ({ isOpen, setIsOpen, 
                 return selectedDate.isAfter(minDate);
             }),
 
-        estimatedBudget: Yup.string()
-            .required('Ngân sách ước tính là bắt buộc'),
-
-        averageCostPerGift: Yup.string()
-            .required('Chi phí trung bình mỗi quà tặng là bắt buộc'),
-
-        sponsors: Yup.string()
-            .required('Nhà tài trợ là bắt buộc'),
-
         implementationMethod: Yup.string()
             .required('Phương thức thực hiện là bắt buộc'),
-
-        communication: Yup.string()
-            .required('Thông tin truyền thông là bắt buộc'),
 
         campaignType: Yup.string()
             .required("Loại chiến dịch là bắt buộc"),

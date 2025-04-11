@@ -19,6 +19,7 @@ import SendIcon from "./send-icon.svg?react";
 import RightIcon from "./right-icon.svg?react";
 import ArrowRight from "./arrow-right.svg?react";
 import ArrowLeft from "./arrow-left.svg?react";
+import PendingIcon from "./pending-icon.svg?react";
 
 export {
     MenuIcon,
@@ -42,4 +43,5 @@ export {
     RightIcon,
     ArrowLeft,
     ArrowRight,
+    PendingIcon
 };

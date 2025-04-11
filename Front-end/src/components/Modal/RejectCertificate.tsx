@@ -27,7 +27,7 @@ const RejectCertificateModal: FC<RejectCertificateModalProps> = ({ isOpen, setIs
                 comment: reason
             })).unwrap()
                 .then(() => {
-                    toast.success("Reject Certificate successfully.");
+                    toast.success("Đã từ chối đơn xác nhận này");
                     setIsOpen(false);
                     if (selectedCertificate.type === 1) {
                         dispatch(getPersonalDonorCertificateByIdApiThunk(selectedCertificate.certificateId));
@@ -53,17 +53,17 @@ const RejectCertificateModal: FC<RejectCertificateModalProps> = ({ isOpen, setIs
     };
 
     return (
-        <Modal isOpen={isOpen} setIsOpen={setIsOpen} title="Reject Certificate">
+        <Modal isOpen={isOpen} setIsOpen={setIsOpen}>
             <section id="reject-certificate-modal">
                 <div className="rcm-container">
-                    <h1>Từ chối chứng chỉ</h1>
+                    <h1>Từ chối đơn xác nhân</h1>
                     <form className="form" onSubmit={handleSubmit}>
                         <div className="form-field">
                             <label className="form-label">Lý do từ chối</label>
                             <input
                                 type="text"
                                 className="form-input"
-                                placeholder="Vui lòng nhập lý do từ chối chứng chỉ"
+                                placeholder="Vui lòng nhập lý do từ chối"
                                 value={reason}
                                 onChange={(e) => setReason(e.target.value)}
                             />

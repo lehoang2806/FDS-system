@@ -3,13 +3,14 @@ import { EventCard } from "../../components/Card/index";
 import { routes } from "@/routes/routeName";
 import { navigateHook } from "@/routes/RouteApp";
 import { useAppDispatch, useAppSelector } from "@/app/store";
-import { selectGetAllCampaign, selectGetAllNews } from "@/app/selector";
+import { selectGetAllCampaign, selectGetAllNews, selectGetAllUser } from "@/app/selector";
 import { useEffect } from "react";
 import { getAllCampaignApiThunk } from "@/services/campaign/campaignThunk";
 import { setLoading } from "@/services/app/appSlice";
 import { getAllNewsApiThunk } from "@/services/news/newsThunk";
 import { CampaignCarousel, CarouselLanding } from "@/components/Elements";
 import { LS2 } from "@/assets/images";
+import { getAllUserApiThunk } from "@/services/user/userThunk";
 
 export default function () {
     const dispatch = useAppDispatch();
@@ -41,7 +42,8 @@ export default function () {
 
         Promise.all([
             dispatch(getAllCampaignApiThunk()).unwrap(),
-            dispatch(getAllNewsApiThunk()).unwrap()
+            dispatch(getAllNewsApiThunk()).unwrap(),
+            dispatch(getAllUserApiThunk())
         ])
             .catch((error) => {
                 console.error("Error fetching data:", error);
@@ -50,6 +52,11 @@ export default function () {
                 dispatch(setLoading(false));
             });
     }, []);
+
+    const users = useAppSelector(selectGetAllUser);
+    const confirmedUsers = users.filter(user => user.isConfirm === true);
+    const confirmedPersonalDonors = confirmedUsers.filter(user => user.type === "1");
+    const confirmedOrganizationDonors = confirmedUsers.filter(user => user.type === "2");
 
     return (
         <>
@@ -93,20 +100,20 @@ export default function () {
                                 <div style={{ display: "flex", alignItems: "center" }}>
                                     <div className="ls3r1c2-item-dot ls3r1c2-item-dot-1"></div><p className="ls3r1c2-item-title">Tổ chức</p>
                                 </div>
-                                <p className="ls3r1c2-item-quantity">123,123</p>
+                                <p className="ls3r1c2-item-quantity">{confirmedOrganizationDonors.length}</p>
                             </div>
                             <div className="ls3r1c2-item">
+                                <div style={{ display: "flex", alignItems: "center" }}>
+                                    <div className="ls3r1c2-item-dot ls3r1c2-item-dot-1"></div><p className="ls3r1c2-item-title">Cá nhân</p>
+                                </div>
+                                <p className="ls3r1c2-item-quantity">{confirmedPersonalDonors.length}</p>
+                            </div>
+                            {/* <div className="ls3r1c2-item">
                                 <div style={{ display: "flex", alignItems: "center" }}>
                                     <div className="ls3r1c2-item-dot ls3r1c2-item-dot-1"></div><p className="ls3r1c2-item-title">Tổ chức</p>
                                 </div>
                                 <p className="ls3r1c2-item-quantity">123,123</p>
-                            </div>
-                            <div className="ls3r1c2-item">
-                                <div style={{ display: "flex", alignItems: "center" }}>
-                                    <div className="ls3r1c2-item-dot ls3r1c2-item-dot-1"></div><p className="ls3r1c2-item-title">Tổ chức</p>
-                                </div>
-                                <p className="ls3r1c2-item-quantity">123,123</p>
-                            </div>
+                            </div> */}
                         </div>
                     </div>
                 </div>

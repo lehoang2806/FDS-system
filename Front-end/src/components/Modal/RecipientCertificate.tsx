@@ -55,6 +55,7 @@ const RecipientCertificateModal: FC<RecipientCertificateModalProps> = ({ isOpen,
                 const numeric = value.replace(/,/g, '');
                 return !isNaN(Number(numeric));
             }),
+        registerSupportReason: Yup.string().required('Vui lòng nhập lý do đăng ký hỗ trợ'),
         images: Yup.array().of(Yup.string().required('Mỗi ảnh phải là một chuỗi hợp lệ')).min(1, 'Cần ít nhất một ảnh').required('Danh sách ảnh là bắt buộc'),
     });
 

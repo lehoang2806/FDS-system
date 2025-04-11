@@ -1,9 +1,11 @@
-import { selectCurrentCampaign, selectGetAllCampaign, selectGetAllRegisterReceivers, selectUserLogin } from '@/app/selector';
+import { selectCurrentCampaign, selectGetAllRegisterReceivers, selectUserLogin } from '@/app/selector';
 import { useAppDispatch, useAppSelector } from '@/app/store';
 import { Subscriber } from '@/components/Elements/index'
 import { RegisterReceiverModal, RemindCertificateModal, UpdateCampaignModal } from '@/components/Modal';
+import { navigateHook } from '@/routes/RouteApp';
+import { routes } from '@/routes/routeName';
 import { setLoading } from '@/services/app/appSlice';
-import { getAllCampaignApiThunk, getCampaignByIdApiThunk } from '@/services/campaign/campaignThunk';
+import { getCampaignByIdApiThunk } from '@/services/campaign/campaignThunk';
 import { getAllRegisterReceiversApiThunk } from '@/services/registerReceive/registerReceiveThunk';
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom';
@@ -122,6 +124,7 @@ const UserDetailCampaignPage: React.FC = () => {
                         </div>
                         <div className="udcscr1c2">
                             <button className='pr-btn' onClick={() => setIsUpdateCampaignModalOpend(true)}>Cập nhật</button>
+                            <button className='sc-btn' onClick={() => navigateHook(routes.user.campaign.detail.replace(":id", String(id)))}>Đi đến bài đăng</button>
                             <div className="udcscr1c2r1">
                                 <div>
                                     {currentCampaign?.campaignType === "Limited" ? (

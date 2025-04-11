@@ -22,13 +22,12 @@ const DetailCampaignPage: React.FC = () => {
 
     const currentCampaign = useAppSelector(selectCurrentCampaign);
 
-    console.log(currentCampaign)
-
     const campaigns = useAppSelector(selectGetAllCampaign)
+    const sortedCampaigns = [...campaigns].reverse();
 
-    const approvedCampaigns = campaigns.filter((campaign) => campaign.status === "Approved");
+    const approvedCampaigns = sortedCampaigns.filter((campaign) => campaign.status === "Approved");
 
-    const otherCampaigns = approvedCampaigns.filter((campaign) => campaign.campaignId !== id);
+    const otherCampaigns = approvedCampaigns.filter((campaign) => campaign.campaignId !== id).slice(0, 3) as Array<CampaignInfo>;
 
     const [isRemindCertificateModalOpend, setIsRemindCertificateModalOpend] = useState(false);
 

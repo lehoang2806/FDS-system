@@ -43,11 +43,9 @@ const UpdatePersonalDonorCertificateModal: FC<UpdatePersonalDonorCertificateModa
             .required('Số điện thoại không được để trống'),
         address: Yup.string().required('Địa chỉ không được để trống'),
         socialMediaLink: Yup.string().url('Liên kết mạng xã hội không hợp lệ'),
-        mainSourceIncome: Yup.string().required('Nguồn thu nhập chính không được để trống'),
         monthlyIncome: Yup.number()
             .typeError('Thu nhập hàng tháng phải là số')
-            .min(0, 'Thu nhập hàng tháng không được âm')
-            .required('Thu nhập hàng tháng không được để trống'),
+            .min(0, 'Thu nhập hàng tháng không được âm'),
         images: Yup.array().of(Yup.string().required('Mỗi ảnh phải là một chuỗi hợp lệ')).min(1, 'Cần ít nhất một ảnh').required('Danh sách ảnh là bắt buộc'),
     });
 

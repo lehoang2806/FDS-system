@@ -88,7 +88,7 @@ const UserDetailCertificate = () => {
                                     <h2>Số CCCD</h2>
                                     <p>{currentPersonalDonorCertificate?.citizenId}</p>
                                     <h2>Liên kết mạng xã hội</h2>
-                                    <p>{currentPersonalDonorCertificate?.socialMediaLink}</p>
+                                    <p>{currentPersonalDonorCertificate?.socialMediaLink ? currentPersonalDonorCertificate.socialMediaLink : "Không có"}</p>
                                 </div>
                                 {currentPersonalDonorCertificate && currentPersonalDonorCertificate.reviewComments && currentPersonalDonorCertificate.status === "Pending" && (
                                     <div className="udcsc1r2">
@@ -111,9 +111,9 @@ const UserDetailCertificate = () => {
                                 <div className="udcsc2r1">
                                     <h1>Thông tin tài chính</h1>
                                     <h2>Thu nhập chính</h2>
-                                    <p>{currentPersonalDonorCertificate?.mainSourceIncome}</p>
+                                    <p>{currentPersonalDonorCertificate?.mainSourceIncome ? currentPersonalDonorCertificate?.mainSourceIncome : "Không có"}</p>
                                     <h2>Thu nhập hàng tháng</h2>
-                                    <p>{currentPersonalDonorCertificate?.monthlyIncome}</p>
+                                    <p>{currentPersonalDonorCertificate?.monthlyIncome ? currentPersonalDonorCertificate?.monthlyIncome : "Không có"}</p>
                                 </div>
                                 <div className="udcsc2r2">
                                     <h1>Hình ảnh xác minh</h1>
@@ -138,7 +138,7 @@ const UserDetailCertificate = () => {
                                     <h2>Mã số thuế</h2>
                                     <p>{currentOrganizationDonorCertificate?.taxIdentificationNumber}</p>
                                     <h2>Tên viết tắt</h2>
-                                    <p>{currentOrganizationDonorCertificate?.organizationAbbreviatedName}</p>
+                                    <p>{currentOrganizationDonorCertificate?.organizationAbbreviatedName ? currentOrganizationDonorCertificate.organizationAbbreviatedName : "Không có"}</p>
                                     <h2>Loại hình tổ chức</h2>
                                     <p>{currentOrganizationDonorCertificate?.organizationType}</p>
                                     <h2>Ngành nghề chính</h2>
@@ -150,7 +150,7 @@ const UserDetailCertificate = () => {
                                     <h2>Email tổ chức</h2>
                                     <p>{currentOrganizationDonorCertificate?.organizationEmail}</p>
                                     <h2>Website tổ chức</h2>
-                                    <p>{currentOrganizationDonorCertificate?.websiteLink}</p>
+                                    <p>{currentOrganizationDonorCertificate?.websiteLink ? currentOrganizationDonorCertificate.websiteLink : "Không có link website"}</p>
                                 </div>
                                 {currentOrganizationDonorCertificate && currentOrganizationDonorCertificate.reviewComments && currentOrganizationDonorCertificate.status === "Pending" && (
                                     <div className="udcsc1r2">
@@ -233,9 +233,9 @@ const UserDetailCertificate = () => {
                                 <div className="udcsc2r1">
                                     <h1>Thông tin tài chính</h1>
                                     <h2>Thu nhập chính</h2>
-                                    <p>{currentRecipientCertificate?.mainSourceIncome}</p>
+                                    <p>{currentRecipientCertificate?.mainSourceIncome ? currentRecipientCertificate?.mainSourceIncome : "Không có"}</p>
                                     <h2>Thu nhập hàng tháng</h2>
-                                    <p>{currentRecipientCertificate?.monthlyIncome}</p>
+                                    <p>{currentRecipientCertificate?.monthlyIncome ? currentRecipientCertificate?.monthlyIncome : "Không có"}</p>
                                     <h2>Lí do đăng ký hỗ trợ</h2>
                                     <p>{currentRecipientCertificate?.registerSupportReason}</p>
                                 </div>
