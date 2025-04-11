@@ -32,13 +32,13 @@ const StaffDetailNewsPage: FC = () => {
         <section id="staff-detail-news" className="staff-section">
             <div className="staff-container sdn-container">
                 <div className="sdncr1">
-                    <h1>News</h1>
-                    <p>Dashboard<span className="staff-tag">Detail News</span></p>
+                    <h1>Tin tức</h1>
+                    <p>Trang tổng quát<span className="staff-tag">Chi tiết tin tức</span></p>
                 </div>
                 <div className="sdncr2">
                     <div className="sdncr2r1">
                         <div className="group-btn">
-                            <button onClick={() => navigateHook(routes.staff.news.list)}>Back to list</button>
+                            <button onClick={() => navigateHook(routes.staff.news.list)}>Quay lại danh sách</button>
                         </div>
                     </div>
                     <hr />
@@ -46,18 +46,18 @@ const StaffDetailNewsPage: FC = () => {
                         <div className="sdncr2r2c1">
                         </div>
                         <div className="sdncr2r2c2">
-                            <h3>Created Date:</h3>
+                            <h3>Ngày tạo:</h3>
                             <p>{createDate}</p>
                         </div>
                     </div>
                     <hr />
                     <div className="sdncr2r3">
                         <div className="sdncr2r3c1">
-                            <h3>Title:</h3>
+                            <h3>Tiểu đề:</h3>
                             <p>{currentNews?.newsTitle}</p>
-                            <h3>Description:</h3>
+                            <h3>Mô tả:</h3>
                             <p>{currentNews?.newsDescripttion}</p>
-                            <h3>Support Beneficiaries:</h3>
+                            <h3>Đối tượng hỗ trợ:</h3>
                             <p>{currentNews?.supportBeneficiaries}</p>
                         </div>
                     </div>

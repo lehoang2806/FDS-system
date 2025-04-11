@@ -108,7 +108,13 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
 
     const unReadCampaignCount = notifications.filter((notif) => notif.objectType === "Campain").length;
 
-    const unReadCertificateCount = notifications.filter((notif) => notif.objectType === "Certificate").length;
+    const unReadCertificateCount = notifications.filter((notif) =>
+        [
+            "Personal Donor Certificate",
+            "Organization Donor Certificate",
+            "Recipient Certificate"
+        ].includes(notif.objectType)
+    ).length;
 
     const unReadNewsCount = notifications.filter((notif) => notif.objectType === "New").length;
 
@@ -186,6 +192,11 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
 
     const handleToDetailCampaign = (campaignId: string) => {
         const url = routes.user.detail_campaign.replace(":id", campaignId);
+        return navigateHook(url)
+    }
+
+    const handleGoToCampaign = (campaignId: string) => {
+        const url = routes.user.campaign.detail.replace(":id", campaignId);
         return navigateHook(url)
     }
 
@@ -338,7 +349,7 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
                                                                 className={`notification-item ${notif.isRead ? "read" : "unread"}`}
                                                                 onClick={() => {
                                                                     markAsRead(notif.notificationId);
-                                                                    handleToDetailCertificate(notif.ojectId, "Personal");
+                                                                    handleGoToCampaign(notif.ojectId);
                                                                 }}
                                                             >
                                                                 <CampaignIcon className="notification-icon" />

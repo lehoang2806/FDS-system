@@ -55,6 +55,9 @@
                 }
 
                 .group-btn {
+                    display: flex;
+                    gap: 20px;
+
                     button {
                         padding: 15px 20px;
                         font-size: 14px;
@@ -66,13 +69,23 @@
 
                         &:first-child {
                             background: #FF6692;
-                            margin-right: 10px;
                         }
 
                         &:last-child {
                             background: #36C76C;
                             margin: 0;
                         }
+                    }
+
+                    .pr-btn {
+                        width: fit-content;
+                        padding: 15px 20px;
+                        color: var(--white-color);
+                        font-size: 14px;
+                        font-weight: 800;
+                        border: none;
+                        border-radius: var(--border-radius-12);
+                        cursor: pointer;
                     }
                 }
             }
@@ -100,9 +113,12 @@
 
             .sacscr2r3 {
                 .form {
-                    display: grid;
-                    grid-template-columns: 49% 49%;
-                    gap: 2%;
+                    .ccm-form-r1, .ccm-form-r2, .ccm-form-r3 {
+                        display: flex;
+                        justify-content: space-between;
+                        flex-wrap: wrap;
+                        gap: 20px;
+                    }
 
                     .form-input:focus {
                         outline: none;

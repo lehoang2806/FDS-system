@@ -1,18 +1,36 @@
 import { selectGetAllUser } from "@/app/selector"
 import { useAppDispatch, useAppSelector } from "@/app/store"
-import { ActiveIcon, BlockIcon, TotalIcon } from "@/assets/icons"
+import { ActiveIcon, TotalIcon } from "@/assets/icons"
+import { Loading } from "@/components/Elements"
 import { navigateHook } from "@/routes/RouteApp"
 import { routes } from "@/routes/routeName"
 import { setLoading } from "@/services/app/appSlice"
 import { getAllUserApiThunk } from "@/services/user/userThunk"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 
 const StaffListUserPage = () => {
     const dispatch = useAppDispatch();
 
     const users = useAppSelector(selectGetAllUser);
-    const accountsWithoutStaff = users.filter(user => user.roleId !== 2);
+    const accountsWithoutStaff = users.filter(user => user.roleId === 4 || user.roleId === 3);
+    const donors = accountsWithoutStaff.filter(user => user.roleId === 3);
+    const recipients = accountsWithoutStaff.filter(user => user.roleId === 4);
 
+    const [isFiltering, setIsFiltering] = useState(false);
+    const [filterStatus, setFilterStatus] = useState<string | null>(null);
+
+    const handleFilter = (status: string | null) => {
+        setIsFiltering(true);
+        setTimeout(() => {
+            setFilterStatus(status);
+            setIsFiltering(false);
+        }, 500);
+    };
+
+    const filteredUsers = filterStatus
+        ? accountsWithoutStaff.filter((c) => c.roleId.toString() === filterStatus)
+        : accountsWithoutStaff;
+    
     useEffect(() => {
         dispatch(setLoading(true));
         dispatch(getAllUserApiThunk())
@@ -32,37 +50,38 @@ const StaffListUserPage = () => {
 
     return (
         <section id="staff-list-user" className="staff-section">
+            {isFiltering && <Loading loading={true} isFullPage />} 
             <div className="staff-container slu-container">
                 <div className="slucr1">
                     <h1>Người dùng</h1>
                     <p>Trang tổng quan<span className="staff-tag">Người dùng</span></p>
                 </div>
                 <div className="slucr2">
-                    <div className="staff-tab staff-tab-1">
+                    <div className="staff-tab staff-tab-1" onClick={() => handleFilter(null)}>
                         <div className="st-figure st-figure-1">
                             <TotalIcon className="st-icon" />
                         </div>
                         <div className="st-info">
                             <h3>Tổng cộng</h3>
-                            <p>7 Users</p>
+                            <p>{accountsWithoutStaff.length} Tài khoản</p>
                         </div>
                     </div>
-                    <div className="staff-tab staff-tab-3">
+                    <div className="staff-tab staff-tab-3" onClick={() => handleFilter("3")}>
                         <div className="st-figure st-figure-3">
                             <ActiveIcon className="st-icon" />
                         </div>
                         <div className="st-info">
                             <h3>Người hiến tặng thực phẩm</h3>
-                            <p>7 Users</p>
+                            <p>{donors.length} Tài khoản</p>
                         </div>
                     </div>
-                    <div className="staff-tab staff-tab-4">
+                    <div className="staff-tab staff-tab-4" onClick={() => handleFilter("4")}>
                         <div className="st-figure st-figure-4">
                             <ActiveIcon className="st-icon" />
                         </div>
                         <div className="st-info">
                             <h3>Người nhận hỗ trợ</h3>
-                            <p>7 Users</p>
+                            <p>{recipients.length} Tài khoản</p>
                         </div>
                     </div>
                 </div>
@@ -74,32 +93,28 @@ const StaffListUserPage = () => {
                                     Email
                                 </th>
                                 <th className="table-head-cell">
-                                    Full Name
+                                    Họ và tên
                                 </th>
                                 <th className="table-head-cell">
-                                    Phone
+                                    Trạng thái
                                 </th>
                                 <th className="table-head-cell">
-                                    Address
+                                    Vai trò
                                 </th>
                                 <th className="table-head-cell">
-                                    Role
-                                </th>
-                                <th className="table-head-cell">
-                                    Action
+                                    Hành động
                                 </th>
                             </tr>
                         </thead>
                         <tbody className="table-body">
-                            {accountsWithoutStaff.map((row, index) => (
+                            {filteredUsers.map((row, index) => (
                                 <tr key={index} className="table-body-row">
                                     <td className='table-body-cell'>{row.email}</td>
                                     <td className='table-body-cell'>{row.fullName}</td>
-                                    <td className='table-body-cell'>{row.phone}</td>
-                                    <td className='table-body-cell'>{row.address}</td>
-                                    <td className='table-body-cell'>{row.roleId === 3 ? "Donor" : "Recipient"}</td>
+                                    <td className='table-body-cell'>{row.isConfirm ? <span className="status-approve">Đã được xác minh</span> : <span className="status-reject">Chưa được xác minh</span>}</td>
+                                    <td className='table-body-cell'>{row.roleId === 3 ? "Người hiến tặng thực phẩm" : "Người nhận hỗ trợ"}</td>
                                     <td className="table-body-cell">
-                                        <button className="view-btn" onClick={() => handleToDetail(row.id)}>View</button>
+                                        <button className="view-btn" onClick={() => handleToDetail(row.accountId)}>Xem chi tiết</button>
                                     </td>
                                 </tr>
                             ))}

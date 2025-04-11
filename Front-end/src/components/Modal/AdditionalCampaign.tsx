@@ -26,7 +26,7 @@ const AdditionalCampaignModal: FC<AdditionalCampaignModalProps> = ({ isOpen, set
                 content: content
             })).unwrap()
                 .then(() => {
-                    toast.success("Request Addtional Campaign Successfully.");
+                    toast.success("Đã yêu cầu bổ sung.");
                     setIsOpen(false);
                     dispatch(getAllCampaignApiThunk());
                     dispatch(getCampaignByIdApiThunk(selectedCampaign.campaignId));
@@ -47,7 +47,8 @@ const AdditionalCampaignModal: FC<AdditionalCampaignModalProps> = ({ isOpen, set
         <Modal isOpen={isOpen} setIsOpen={setIsOpen}>
             <section id="additional-campaign-modal">
                 <div className="acm-container">
-                    <form className="form" onSubmit={handleSubmit}>
+                <h1>Yêu cầu bổ sung</h1>
+                <form className="form" onSubmit={handleSubmit}>
                         <div className="form-field">
                             <label className="form-label">Yêu cầu bổ sung</label>
                             <textarea

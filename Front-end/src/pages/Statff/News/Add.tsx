@@ -69,7 +69,7 @@ const StaffAddNewsPage: FC = () => {
 
     const onSubmit = async (values: ActionParamNews, helpers: FormikHelpers<ActionParamNews>) => {
         await dispatch(createNewsApiThunk(values)).unwrap().then(() => {
-            toast.success("Add News successfully");
+            toast.success("Tạo tin tức thành công");
             helpers.resetForm();
             setImagePreview([]);
         }).catch((error) => {
@@ -97,25 +97,23 @@ const StaffAddNewsPage: FC = () => {
                     <section id="staff-add-news" className="staff-section">
                         <div className="staff-container san-container">
                             <div className="sancr1">
-                                <h1>News</h1>
-                                <p>Dashboard<span className="staff-tag">Add News</span></p>
+                                <h1>Tin tức</h1>
+                                <p>Dashboard<span className="staff-tag">Tạo tin tức</span></p>
                             </div>
                             <div className="sancr2">
                                 <div className="sancr2r1">
                                     <h2></h2>
                                     <div className="group-btn">
-                                        <button onClick={() => navigateHook(routes.staff.news.list)}>Cancel</button>
-                                        <Button type="submit" title="Create News" loading={isSubmitting} />
+                                        <button onClick={() => navigateHook(routes.staff.news.list)}>Hủy</button>
+                                        <Button type="submit" title="Tạo tin tức" loading={isSubmitting} />
                                     </div>
                                 </div>
                                 <hr />
                                 <div className="sancr2r2">
                                     <div className="sancr2r2c1">
-                                        <h3>News Status:</h3>
-                                        <p>Pending</p>
                                     </div>
                                     <div className="sancr2r2c2">
-                                        <h3>Created Date:</h3>
+                                        <h3>Ngày tạo:</h3>
                                         <p>{dateCurrent}</p>
                                     </div>
                                 </div>
@@ -123,22 +121,22 @@ const StaffAddNewsPage: FC = () => {
                                 <div className="sancr2r3">
                                     <div className="form">
                                         <div className="form-50 form-field">
-                                            <label className="form-label">Title</label>
+                                            <label className="form-label">Tiêu đề <span>*</span></label>
                                             <Field name="newsTitle" type="text" placeholder="Hãy nhập tiêu đề" className={classNames("form-input", { "is-error": errors.newsTitle && touched.newsTitle })} />
                                             {errors.newsTitle && touched.newsTitle && <span className="text-error">{errors.newsTitle}</span>}
                                         </div>
                                         <div className="form-50 form-field">
-                                            <label className="form-label">Description</label>
+                                            <label className="form-label">Mô tả<span>*</span></label>
                                             <Field name="newsDescripttion" type="text" placeholder="Hãy nhập nội dung" className={classNames("form-input", { "is-error": errors.newsDescripttion && touched.newsDescripttion })} />
                                             {errors.newsDescripttion && touched.newsDescripttion && <span className="text-error">{errors.newsDescripttion}</span>}
                                         </div>
                                         <div className="form-50 form-field">
-                                            <label className="form-label">Support Beneficiaries</label>
+                                            <label className="form-label">Đối tượng hỗ trợ<span>*</span></label>
                                             <Field name="supportBeneficiaries" type="text" placeholder="Hãy nhập đối tượng hỗ trợ" className={classNames("form-input", { "is-error": errors.supportBeneficiaries && touched.supportBeneficiaries })} />
                                             {errors.supportBeneficiaries && touched.supportBeneficiaries && <span className="text-error">{errors.supportBeneficiaries}</span>}
                                         </div>
                                         <div className="form-50 form-field">
-                                            <label className="form-label">Ảnh</label>
+                                            <label className="form-label">Hình Ảnh<span>*</span></label>
                                             <input type="file" accept="image/*" multiple onChange={(e) => handleFileChange(e, setFieldValue)} className={classNames("form-input", { "is-error": errors.images && touched.images })} />
                                             {errors.images && touched.images && <span className="text-error">{errors.images}</span>}
                                         </div>

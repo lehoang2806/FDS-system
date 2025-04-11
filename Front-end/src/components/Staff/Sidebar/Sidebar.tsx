@@ -1,4 +1,4 @@
-import { CampaignIcon, CertificateIcon, DashboardtIcon, LogoutIcon, NewsIcon, PostIcon, StaffIcon, UserIcon } from '@/assets/icons';
+import { ArrowRight, CampaignIcon, CertificateIcon, DashboardtIcon, LogoutIcon, NewsIcon, PostIcon, StaffIcon, UserIcon } from '@/assets/icons';
 import { FC, useRef } from 'react'
 import { Link, useLocation } from 'react-router-dom';
 import classNames from 'classnames';
@@ -15,6 +15,9 @@ const StaffSidebar: FC = () => {
     const handleDropdownToggle = (event: React.MouseEvent<HTMLElement>) => {
         const dropdown = event.currentTarget.nextElementSibling as HTMLElement;
         dropdown.classList.toggle('open');
+
+        const arrowIcon = event.currentTarget.querySelector('.sscr2-arrow') as HTMLElement;
+        arrowIcon.classList.toggle('rotate-180');
     };
 
     const handleHover = () => {
@@ -65,8 +68,9 @@ const StaffSidebar: FC = () => {
                     >
                         <CampaignIcon className="sscr2-nav-icon" />
                         <span>Chiến dịch</span>
+                        <ArrowRight className={`mg-left-auto sscr2-arrow`} />
                     </div>
-                    <div ref={dropdownRef} className={classNames("ssrc2-nav-dropdown-content", {
+                    <div ref={dropdownRef} className={classNames("sscr2-nav-dropdown-content", {
                         'open': location.pathname.startsWith(routes.staff.campaign.staff.list || routes.staff.campaign.user.list),
                     })}>
                         <Link
@@ -120,8 +124,9 @@ const StaffSidebar: FC = () => {
                     >
                         <CertificateIcon className="sscr2-nav-icon" />
                         <span>Đơn xác nhận danh tính</span>
+                        <ArrowRight className={`mg-left-auto sscr2-arrow`} />
                     </div>
-                    <div ref={dropdownRef} className={classNames("ssrc2-nav-dropdown-content", {
+                    <div ref={dropdownRef} className={classNames("sscr2-nav-dropdown-content", {
                         'open': location.pathname.startsWith(routes.staff.certificate.donor.list || routes.staff.certificate.recipient.list),
                     })}>
                         <Link

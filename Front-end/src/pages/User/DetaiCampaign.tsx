@@ -2,6 +2,8 @@ import { selectCurrentCampaign, selectGetAllRegisterReceivers, selectUserLogin }
 import { useAppDispatch, useAppSelector } from '@/app/store';
 import { Subscriber } from '@/components/Elements/index'
 import { RegisterReceiverModal, RemindCertificateModal, UpdateCampaignModal } from '@/components/Modal';
+import { navigateHook } from '@/routes/RouteApp';
+import { routes } from '@/routes/routeName';
 import { setLoading } from '@/services/app/appSlice';
 import { getCampaignByIdApiThunk } from '@/services/campaign/campaignThunk';
 import { getAllRegisterReceiversApiThunk } from '@/services/registerReceive/registerReceiveThunk';
@@ -122,6 +124,7 @@ const UserDetailCampaignPage: React.FC = () => {
                         </div>
                         <div className="udcscr1c2">
                             <button className='pr-btn' onClick={() => setIsUpdateCampaignModalOpend(true)}>Cập nhật</button>
+                            <button className='sc-btn' onClick={() => navigateHook(routes.user.campaign.detail.replace(":id", String(id)))}>Đi đến bài đăng</button>
                             <div className="udcscr1c2r1">
                                 <div>
                                     {currentCampaign?.campaignType === "Limited" ? (

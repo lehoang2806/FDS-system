@@ -20,27 +20,33 @@ const UserPersonalPage = () => {
     const profileUser = useAppSelector(selectGetProfileUser);
     const isAuthenticated = useAppSelector(selectIsAuthenticated);
     const userLogin = useAppSelector(selectUserLogin);
+
     const campaigns = useAppSelector(selectGetAllCampaign);
+    const sortedCampaigns = [...campaigns].reverse();
+
     const donorCertificates = useAppSelector(selectGetAllDonorCertificate);
+    const sortedDonorCertificates = [...donorCertificates].reverse();
+
     const recipientCertificates = useAppSelector(selectGetAllRecipientCertificate);
+    const sortedRecipientCertificates = [...recipientCertificates].reverse();
+
     const registerReceivers = useAppSelector(selectGetAllRegisterReceivers);
+    const sortedRegisterReceivers = [...registerReceivers].reverse();
 
     // Lọc dữ liệu theo tài khoản đăng nhập
-    const currentCampaigns = campaigns.filter(
+    const currentCampaigns = sortedCampaigns.filter(
         (campaign) => campaign.accountId === userLogin?.accountId
     );
 
-    const currentDonorCertificates = donorCertificates.filter(
+    const currentDonorCertificates = sortedDonorCertificates.filter(
         (donorCertificate) => donorCertificate.donorId === userLogin?.accountId
     );
 
-    const currentRecipientCertificates = recipientCertificates.filter(
+    const currentRecipientCertificates = sortedRecipientCertificates.filter(
         (recipientCertificate) => recipientCertificate.recipientId === userLogin?.accountId
     );
-
-    console.log(currentRecipientCertificates)
-
-    const currentRegisterReceivers = registerReceivers.filter(
+    
+    const currentRegisterReceivers = sortedRegisterReceivers.filter(
         (registerReceiver) => registerReceiver.accountId === userLogin?.accountId
     );
 
