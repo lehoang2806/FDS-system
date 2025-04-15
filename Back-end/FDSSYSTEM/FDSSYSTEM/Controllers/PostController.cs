@@ -22,7 +22,7 @@ namespace FDSSYSTEM.Controllers
         }
 
         [HttpPost("CreatePost")]
-        [Authorize(Roles = "Donor,Staff")]
+        [Authorize(Roles = "Donor,Recipient")]
         public async Task<ActionResult> CreatePost(PostDto post)
         {
             try
@@ -119,7 +119,7 @@ namespace FDSSYSTEM.Controllers
         }
 
         [HttpPut("UpdatePost/{id}")]
-        [Authorize(Roles = "Donor,Staff")]
+        [Authorize(Roles = "Donor,Recipient")]
         public async Task<ActionResult> UpdatePost(string id, PostDto post)
         {
             try

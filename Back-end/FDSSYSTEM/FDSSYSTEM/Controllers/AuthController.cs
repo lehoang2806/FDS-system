@@ -1,8 +1,10 @@
 ﻿using FDSSYSTEM.DTOs;
+using FDSSYSTEM.DTOs.Users;
 using FDSSYSTEM.Helpers;
 using FDSSYSTEM.Services.RoleService;
 using FDSSYSTEM.Services.UserService;
 using Mapster;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.Scripting;
@@ -95,6 +97,7 @@ namespace FDSSYSTEM.Controllers
 
 
         [HttpGet("CheckEmail/{email}")]
+
         public async Task<IActionResult> CheckEmail(string email)
         {
             try
@@ -109,5 +112,47 @@ namespace FDSSYSTEM.Controllers
         }
 
 
+        [HttpPut("ChangePassword")]
+        [Authorize]
+        public async Task<IActionResult> ChangePassword(ChangePasswordDto changePassword)
+        {
+            try
+            {
+                await _userService.ChangePassword(changePassword);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost("RequestOtpForgetPassword")]
+        public async Task<IActionResult> RequestOtpForgetPassword([FromBody] RequestOtpDto requestOtpDto)
+        {
+            try
+            {
+                await _userService.RequestOtpForgetPassword(requestOtpDto);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPut("ResetPassword")]
+        public async Task<IActionResult> ResetPassword(ResetPasswordDto resetPassword)
+        {
+            try
+            {
+                await _userService.ResetPassword(resetPassword);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

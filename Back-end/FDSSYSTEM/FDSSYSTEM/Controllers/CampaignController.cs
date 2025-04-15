@@ -1,11 +1,15 @@
 ﻿using FDSSYSTEM.DTOs;
+using FDSSYSTEM.DTOs.Campaigns;
+using FDSSYSTEM.Helper;
 using FDSSYSTEM.Models;
 using FDSSYSTEM.Services.CampaignService;
 using FDSSYSTEM.Services.UserContextService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using System.Collections.Generic;
+using System.Net.Mail;
 using System.Threading.Tasks;
 
 namespace FDSSYSTEM.Controllers
@@ -15,11 +19,15 @@ namespace FDSSYSTEM.Controllers
     public class CampaignController : BaseController
     {
         private readonly ICampaignService _campaignService;
+        private readonly IWebHostEnvironment _env;
+        private readonly EmailHelper _emailHeper;
 
 
-        public CampaignController(ICampaignService campaignService)
+        public CampaignController(IWebHostEnvironment env, ICampaignService campaignService, EmailHelper emailHeper)
         {
+            _env = env;
             _campaignService = campaignService;
+            _emailHeper = emailHeper;
         }
 
         [HttpPost("CreateCampaign")]
@@ -171,6 +179,29 @@ namespace FDSSYSTEM.Controllers
             try
             {
                 await _campaignService.Cancel(cancelCampaignDto);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpPost("RequestDonorSupport")]
+        [Authorize(Roles = "Staff")]
+        public async Task<ActionResult> RequestDonorSupport(CampaignRequestDonorSupportDto requestDonorSupportDto)
+        {
+            try
+            {
+                string filePath = Path.Combine(_env.ContentRootPath, "EmailTemplates", "CampaignRequestSupport.html");
+                if (!System.IO.File.Exists(filePath))
+                {
+                    throw new FileNotFoundException("Không tìm thấy file template email.", filePath);
+                }
+                string htmlBody = await System.IO.File.ReadAllTextAsync(filePath);
+                string subject = "Lời mời trao gởi yêu thương";
+                await _emailHeper.SendEmailAsync(subject,htmlBody, requestDonorSupportDto.Emails, true);
+                
                 return Ok();
             }
             catch (Exception ex)

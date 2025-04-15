@@ -1,6 +1,7 @@
 ﻿using FDSSYSTEM.Database;
 using FDSSYSTEM.DTOs;
 using FDSSYSTEM.DTOs.Certificates;
+using FDSSYSTEM.DTOs.Users;
 using FDSSYSTEM.Helpers;
 using FDSSYSTEM.Models;
 using FDSSYSTEM.Repositories.UserRepository;
@@ -365,6 +366,38 @@ namespace FDSSYSTEM.Controllers
             {
                 await _userService.RejectCertificate(rejectCertificateDto);
                 return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
+
+        [HttpPut("UpdateProfile")]
+        [Authorize]
+        public async Task<ActionResult> UpdateProfile(UpdateProfileDto userProfile)
+        {
+            try
+            {
+                await _userService.UpdateUserProfile(userProfile);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpGet("GetAllConfirmedDonorEmail")]
+        [Authorize(Roles = "Staff")]
+        public async Task<ActionResult> GetAllConfirmedDonorEmail()
+        {
+            try
+            {
+                var result = (await _userService.GetAllDonorConfirmed()).Select(x=>x.Email).ToList();
+                return Ok(result);
             }
             catch (Exception ex)
             {

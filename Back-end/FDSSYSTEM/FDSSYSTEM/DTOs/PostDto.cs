@@ -5,7 +5,7 @@ namespace FDSSYSTEM.DTOs
     public class PostDto
     {
 
-        public string PostContent { get; set; } 
+        public string PostContent { get; set; }
         public List<string> Images { get; set; }
         public string PosterId { get; set; }
         public string PosterRole { get; set; }

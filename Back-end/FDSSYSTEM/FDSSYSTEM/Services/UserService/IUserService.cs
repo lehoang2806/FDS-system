@@ -1,6 +1,7 @@
 ﻿
 using FDSSYSTEM.DTOs;
 using FDSSYSTEM.DTOs.Certificates;
+using FDSSYSTEM.DTOs.Users;
 using FDSSYSTEM.Models;
 namespace FDSSYSTEM.Services.UserService;
 
@@ -40,6 +41,11 @@ public interface IUserService
     Task UpdatePersonalDonorCertificate(string id, CreatePersonalDonorCertificateDto personalDonorCertificate);
     Task UpdateOrganizationDonorCertificate(string id, CreateOrganizationDonorCertificateDto organizationDonorCertificate);
     Task UpdateRecipientCertificate(string id, CreateRecipientCertificateDto recipientCertificate);
-    Task RequestOtp( RequestOtpDto requestOtpDto);
+    Task RequestOtp(RequestOtpDto requestOtpDto);
+    Task RequestOtpForgetPassword(RequestOtpDto requestOtpDto);
     Task<bool> VerifyOtp( VerifyOtpDto verifyOtpDto);
+    Task UpdateUserProfile(UpdateProfileDto updateProfileDto);
+    Task ChangePassword (ChangePasswordDto changePassword);
+    Task ResetPassword (ResetPasswordDto resetPassword);
+    Task<List<Account>> GetAllDonorConfirmed();
 }
