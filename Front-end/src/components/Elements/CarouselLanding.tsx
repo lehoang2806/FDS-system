@@ -18,7 +18,8 @@ const CarouselLanding = () => {
         slidesToShow: 1,         // Hiển thị 1 slide
         slidesToScroll: 1,       // Cuộn 1 slide
         autoplay: true,          // Bật autoplay
-        autoplaySpeed: 2000,     // Thời gian chuyển slide tự động (3000ms = 3s)
+        autoplaySpeed: 1000,     // Thời gian chuyển slide tự động (3000ms = 3s)
+        pauseOnHover: false,   // Dựng khi chuyển slide khi hover
         beforeChange: (_: number, next: number) => setCurrentSlide(next),
     }
 
