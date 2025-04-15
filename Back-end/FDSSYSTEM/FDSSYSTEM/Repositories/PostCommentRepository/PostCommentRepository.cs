@@ -18,5 +18,12 @@ namespace FDSSYSTEM.Repositories.PostCommentRepository
             var allComment = await GetAllAsync();
             return allComment.Where(x => x.PostId == postId).ToList();
         }
+
+        public async Task<PostComment> GetByPostCommentIdAsync(string id)
+        {
+            var filter = Builders<PostComment>.Filter.Eq(p => p.PostCommentId, id);
+            var getbyId = await GetAllAsync(filter);
+            return getbyId.FirstOrDefault();
+        }
     }
 }

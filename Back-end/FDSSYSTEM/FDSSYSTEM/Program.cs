@@ -3,6 +3,8 @@ using FDSSYSTEM.Helper;
 using FDSSYSTEM.Helpers;
 using FDSSYSTEM.Options;
 using FDSSYSTEM.Repositories.CampaignRepository;
+using FDSSYSTEM.Repositories.FeedBackCommentRepository;
+using FDSSYSTEM.Repositories.FeedBackLikeRepository;
 using FDSSYSTEM.Repositories.NewCommentRepository;
 using FDSSYSTEM.Repositories.NewOfInterestRepository;
 using FDSSYSTEM.Repositories.NewRepository;
@@ -23,6 +25,9 @@ using FDSSYSTEM.Repositories.UserRepository;
 
 using FDSSYSTEM.SeedData;
 using FDSSYSTEM.Services.CampaignService;
+using FDSSYSTEM.Services.FeedBackCommentService;
+using FDSSYSTEM.Services.FeedBackLikeService;
+
 using FDSSYSTEM.Services.NewCommentService;
 using FDSSYSTEM.Services.NewOfInterest;
 using FDSSYSTEM.Services.NewService;
@@ -93,12 +98,23 @@ builder.Services.AddScoped<IRecipientCertificateRepository, RecipientCertificate
 builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
 
+
+builder.Services.AddScoped<ICampaignFeedBackLikeRepository, CampaignFeedBackLikeRepository>();
+builder.Services.AddScoped<ICampaignFeedBackLikeService, CampaignFeedBackLikeService>();
+
+builder.Services.AddScoped<ICampaignFeedBackRepository, CampaignFeedBackRepository>();
+builder.Services.AddScoped<ICampaignFeedBackService, FeedBackCommentService>();
+
+
+
 builder.Services.AddScoped<IOtpRepository, OtpRepository>();
 
 builder.Services.Configure<JwtSetting>(builder.Configuration.GetSection("JwtSettings"));
 builder.Services.AddSingleton<JwtHelper>();
 builder.Services.Configure<SmtpSetting>(builder.Configuration.GetSection("SmtpSetting"));
 builder.Services.AddSingleton<EmailHelper>();
+builder.Services.Configure<SmsTwilioSetting>(builder.Configuration.GetSection("SMSTwilio"));
+builder.Services.AddSingleton<SMSHelper>();
 
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

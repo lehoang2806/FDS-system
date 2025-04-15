@@ -1,4 +1,5 @@
 ﻿using FDSSYSTEM.DTOs;
+using FDSSYSTEM.DTOs.Posts;
 using FDSSYSTEM.Models;
 using FDSSYSTEM.Repositories.PostCommentRepository;
 using FDSSYSTEM.Repositories.PostRepository;
@@ -8,6 +9,7 @@ using FDSSYSTEM.Services.UserContextService;
 using FDSSYSTEM.Services.UserService;
 using FDSSYSTEM.SignalR;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Hosting;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
@@ -43,32 +45,74 @@ namespace FDSSYSTEM.Services.PostCommentService
         // Tạo bình luận mới
         public async Task Create(PostCommentDto comment)
         {
-            await _postCommentRepository.AddAsync(new PostComment
+            if (string.IsNullOrEmpty(comment.PostCommentId))
             {
-                PostCommentId = Guid.NewGuid().ToString(),
-                PostId = comment.PostId,
-                AccountId = _userContextService.UserId ?? "",
-                Content = comment.Content,
-                DateCreated = DateTime.Now,
-                FileComment = comment.FileComment
-            });
-
-            // Lấy thông tin người tạo bài viết
-            var post = await _postRepository.GetByPostIdAsync(comment.PostId);
-            if (post != null)
-            {
-                var notificationDto = new NotificationDto
+                //Đây là trường hợp tạo bình luận
+                await _postCommentRepository.AddAsync(new PostComment
                 {
-                    Title = "Bài đăng của bạn vừa có bình luận mới",
-                    Content = "Một người dùng vừa bình luận trên bài đăng của bạn.",
-                    NotificationType = "Comment",
-                    ObjectType = "Post",
-                    OjectId = comment.PostId,
-                    AccountId = post.AccountId
-                };
-                await _notificationService.AddNotificationAsync(notificationDto);
-                await _hubNotificationContext.Clients.User(post.AccountId).SendAsync("ReceiveNotification", notificationDto);
+                    PostCommentId = Guid.NewGuid().ToString(),
+                    PostId = comment.PostId,
+                    AccountId = _userContextService.UserId ?? "",
+                    Content = comment.Content,
+                    DateCreated = DateTime.Now,
+                    FileComment = comment.FileComment
+                });
+
+                // Lấy thông tin người tạo bài viết
+                var post = await _postRepository.GetByPostIdAsync(comment.PostId);
+                if (post != null)
+                {
+                    var notificationDto = new NotificationDto
+                    {
+                        Title = "Bài đăng của bạn vừa có bình luận mới",
+                        Content = "Một người dùng vừa bình luận trên bài đăng của bạn.",
+                        NotificationType = "Comment",
+                        ObjectType = "Post",
+                        OjectId = comment.PostId,
+                        AccountId = post.AccountId
+                    };
+                    await _notificationService.AddNotificationAsync(notificationDto);
+                    await _hubNotificationContext.Clients.User(post.AccountId).SendAsync("ReceiveNotification", notificationDto);
+                }
             }
+            else
+            {
+                //Đây là trả lời bình luận
+                var postComment = await _postCommentRepository.GetByPostCommentIdAsync(comment.PostCommentId);
+                if (postComment != null)
+                {
+                    if (postComment.Replies == null)
+                    {
+                        postComment.Replies = new List<ReplyPostComment>();
+                    }
+                    postComment.Replies.Add(new ReplyPostComment
+                    {
+                        ReplyPostCommentId = Guid.NewGuid().ToString(),
+                        PostCommentId = postComment.PostCommentId,
+                        AccountId = _userContextService.UserId ?? "",
+                        Content = comment.Content,
+                        DateCreated = DateTime.Now,
+                        FileComment = comment.FileComment
+                    });
+                    await _postCommentRepository.UpdateAsync(postComment.Id, postComment);
+
+                    //gửi thông báo cho người bình luận
+                    var notificationDto = new NotificationDto
+                    {
+                        Title = "Bài đăng của bạn vừa có bình luận mới",
+                        Content = "Một người dùng vừa bình luận trên bài đăng của bạn.",
+                        NotificationType = "Comment",
+                        ObjectType = "Post",
+                        OjectId = comment.PostId,
+                        AccountId = postComment.AccountId
+                    };
+                    await _notificationService.AddNotificationAsync(notificationDto);
+                    await _hubNotificationContext.Clients.User(postComment.AccountId).SendAsync("ReceiveNotification", notificationDto);
+
+                }
+            }
+
+
 
         }
 
@@ -87,15 +131,37 @@ namespace FDSSYSTEM.Services.PostCommentService
         }
 
         // Cập nhật bình luận
-        public async Task Update(string id, PostCommentDto comment)
+        public async Task Update(string id, UpdatePostCommentDto comment)
         {
             var existingComment = await GetById(id);
             if (existingComment != null)
             {
-                existingComment.Content = comment.Content;
-                existingComment.DateUpdated = DateTime.Now;
+                if (string.IsNullOrEmpty(comment.ReplyPostCommentId))
+                {
+                    //cập nhật bình luận
+                    existingComment.Content = comment.Content;
+                    existingComment.FileComment = comment.FileComment;
+                    existingComment.DateUpdated = DateTime.Now;
 
-                await _postCommentRepository.UpdateAsync(id, existingComment);
+                }
+                else
+                {
+                    //cập nhật trả lời bình luận
+                    if (existingComment.Replies != null)
+                    {
+                        foreach (var rp in existingComment.Replies)
+                        {
+                            if (rp.ReplyPostCommentId.Equals(comment.ReplyPostCommentId, StringComparison.OrdinalIgnoreCase))
+                            {
+                                rp.Content = comment.Content;
+                                rp.FileComment = comment.FileComment;
+                                rp.DateUpdated = DateTime.Now;
+                                break;
+                            }
+                        }
+                    }
+                }
+                await _postCommentRepository.UpdateAsync(existingComment.Id, existingComment);
             }
         }
 

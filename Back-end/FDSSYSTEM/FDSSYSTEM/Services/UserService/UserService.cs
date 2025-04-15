@@ -20,6 +20,8 @@ using FDSSYSTEM.Helper;
 using static System.Net.WebRequestMethods;
 using FDSSYSTEM.Repositories.OtpRepository;
 using ZstdSharp.Unsafe;
+using FDSSYSTEM.DTOs.Users;
+using Microsoft.AspNetCore.Identity.Data;
 
 
 namespace FDSSYSTEM.Services.UserService;
@@ -37,6 +39,7 @@ public class UserService : IUserService
 
     private readonly IHubContext<NotificationHub> _hubNotificationContext;
     private readonly EmailHelper _emailHeper;
+    private readonly SMSHelper _smsHeper;
 
     public UserService(IUserRepository userRepository
         , IUserContextService userContextService
@@ -47,6 +50,7 @@ public class UserService : IUserService
         , IHubContext<NotificationHub> hubContext
         , EmailHelper emailHeper
         , IOtpRepository otpRepository
+        , SMSHelper smsHelper
         )
     {
         _userRepository = userRepository;
@@ -58,6 +62,7 @@ public class UserService : IUserService
         _hubNotificationContext = hubContext;
         _emailHeper = emailHeper;
         _otpRepository = otpRepository;
+        _smsHeper = smsHelper;
     }
 
     public async Task AddUser(Account account)
@@ -633,7 +638,7 @@ public class UserService : IUserService
             Title = "Phê duyệt chứng nhận thành công",
             Content = "Chứng nhận của bạn đã được phê duyệt thành công",
             NotificationType = "Approve",
-            ObjectType =objectType,
+            ObjectType = objectType,
             OjectId = objectId,
             AccountId = accountId
         };
@@ -813,13 +818,13 @@ public class UserService : IUserService
                 }
                 pcert.ReviewComments.Add(new PersonalDonorCertificateReViewComment
                 {
-                    
+
                     Content = reviewCommentCertificateDto.Content,
                     CreatedDate = DateTime.Now,
                 });
                 await _personalDonorCertificateRepository.UpdateAsync(pcert.Id, pcert);
-                objectId = pcert.PersonalDonorCertificateId;  
-                accountId = pcert.DonorId; 
+                objectId = pcert.PersonalDonorCertificateId;
+                accountId = pcert.DonorId;
                 objectType = "Personal Donor Certificate";
                 break;
             case CertificateType.OrganizationDonor:
@@ -836,8 +841,8 @@ public class UserService : IUserService
                     CreatedDate = DateTime.Now
                 });
                 await _organizationDonorCertificateRepository.UpdateAsync(ogcert.Id, ogcert);
-                objectId = ogcert.OrganizationDonorCertificateId;  
-                accountId = ogcert.DonorId;  
+                objectId = ogcert.OrganizationDonorCertificateId;
+                accountId = ogcert.DonorId;
                 objectType = "Organization Donor Certificate";
 
                 break;
@@ -855,8 +860,8 @@ public class UserService : IUserService
                     CreatedDate = DateTime.Now
                 });
                 await _recipientCertificateRepository.UpdateAsync(rcert.Id, rcert);
-                objectId = rcert.RecipientCertificateId;  
-                accountId = rcert.RecipientId;  
+                objectId = rcert.RecipientCertificateId;
+                accountId = rcert.RecipientId;
                 objectType = "Recipient Certificate";
                 break;
             default:
@@ -885,9 +890,9 @@ public class UserService : IUserService
     {
         var latestOtp = await _otpRepository.GetLatestOtpCodeByEmail(verifyOtpDto.Email);
 
-        if (latestOtp == null) throw new Exception("User Notfoud");
-        if (latestOtp.Code != verifyOtpDto.Otp) throw new Exception("Invalid OTP");
-        if (latestOtp.ExpirationTime < DateTime.UtcNow) throw new Exception("OTP expired");
+        if (latestOtp == null) throw new Exception("Email không đúng");
+        if (latestOtp.Code != verifyOtpDto.Otp) throw new Exception("OTP không đúng");
+        if (latestOtp.ExpirationTime < DateTime.UtcNow) throw new Exception("OTP hết hạn");
 
         latestOtp.IsVerified = true;
         await _otpRepository.UpdateAsync(latestOtp.Id, latestOtp);
@@ -909,9 +914,30 @@ public class UserService : IUserService
         //Send via Email
         string subject = "Mã OTP";
         string content = $"Mã OTP xác thực đăng ký tài khoản của bạn: {otpCode.Code}";
-        await _emailHeper.SendEmailAsync(subject, content, otpCode.Email);
+        await _emailHeper.SendEmailAsync(subject, content, new List<string> { otpCode.Email });
 
         //TODO: Send OTP via SMS
+        //_smsHeper.SendSMS(requestOtpDto.PhoneNumber, $"FDSSystem OTP: {otpCode.Code}");
+
+    }
+
+    public async Task RequestOtpForgetPassword(RequestOtpDto requestOtpDto)
+    {
+        var otpCode = new OtpCode
+        {
+            Email = requestOtpDto.Email,
+            Code = OTPGenerator.GenerateOTP(),
+            ExpirationTime = DateTime.UtcNow.AddMinutes(5),
+            IsVerified = false
+        };
+        await _otpRepository.AddAsync(otpCode);
+
+        //Send OTP
+        //Send via Email
+        string subject = "Mã OTP";
+        string content = $"Mã OTP quên mật khẩu của bạn: {otpCode.Code}";
+        await _emailHeper.SendEmailAsync(subject, content, new List<string> { otpCode.Email });
+
     }
 
     public async Task<List<string>> GetAllDonorAndRecipientConfirmedId()
@@ -926,7 +952,57 @@ public class UserService : IUserService
               Builders<Account>.Filter.In(c => c.RoleId, roleIds),
               Builders<Account>.Filter.Eq(p => p.IsConfirm, true)
            );
-     
+
         return (await _userRepository.GetAllAsync(filter)).Select(x => x.AccountId).ToList();
+    }
+
+    public async Task UpdateUserProfile(UpdateProfileDto updateProfileDto)
+    {
+        var currentUser = await GetAccountById(_userContextService.UserId ?? "");
+        currentUser.FullName = updateProfileDto.FullName;
+        currentUser.Phone = updateProfileDto.Phone;
+        currentUser.Avatar = updateProfileDto.Avatar;
+        currentUser.BirthDay = updateProfileDto.BirthDay;
+        currentUser.Address = updateProfileDto.Address;
+        currentUser.Gender = updateProfileDto.Gender;
+
+        await _userRepository.UpdateAsync(currentUser.Id, currentUser);
+    }
+
+    public async Task ChangePassword(ChangePasswordDto changePassword)
+    {
+        var email = _userContextService.UserEmail;
+        var user = await GetUserByUsernameAsync(email);
+        if (user == null || !VerifyPassword(changePassword.OldPassword, user.Password))
+        {
+            throw new Exception("Mật khẩu cũ không đúng.");
+        }
+        var passwordHash = HashPassword(changePassword.NewPassword);
+        user.Password = passwordHash;
+        await _userRepository.UpdateAsync(user.Id, user);
+    }
+
+    public async Task ResetPassword(ResetPasswordDto resetPassword)
+    {
+        var latestOtp = await _otpRepository.GetLatestOtpCodeByEmail(resetPassword.Email);
+
+        if (latestOtp == null) throw new Exception("Email không đúng");
+        if (latestOtp.Code != resetPassword.Otp) throw new Exception(" OTP không đúng");
+        if (latestOtp.ExpirationTime < DateTime.UtcNow) throw new Exception("OTP hết hạn");
+
+
+        var user = await GetUserByUsernameAsync(resetPassword.Email);
+        var passwordHash = HashPassword(resetPassword.NewPassword);
+        user.Password = passwordHash;
+        await _userRepository.UpdateAsync(user.Id, user);
+    }
+
+    public async Task<List<Account>> GetAllDonorConfirmed()
+    {
+        var filter = Builders<Account>.Filter.And(
+              Builders<Account>.Filter.Eq(c => c.RoleId, 3),
+              Builders<Account>.Filter.Eq(p => p.IsConfirm, true)
+           );
+        return (await _userRepository.GetAllAsync(filter)).ToList();
     }
 }

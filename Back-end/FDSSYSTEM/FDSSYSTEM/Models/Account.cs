@@ -28,7 +28,7 @@ public partial class Account
     public string? Avatar { get; set; }
 
     public string? Gender { get; set; }
-
+    public string? Address { get; set; }
 
 
     public string? UserCreated { get; set; }
@@ -47,11 +47,12 @@ public partial class Account
 
     public int RoleId { get; set; }
 
-    public string? Address { get; set; }
+    
 
     public bool IsConfirm { get; set; }
 
     public string Type { get; set; }
     public string DonorType { get; set; }
     public DateTime CreatedDate { get; set; } = DateTime.Now;
+
 }
