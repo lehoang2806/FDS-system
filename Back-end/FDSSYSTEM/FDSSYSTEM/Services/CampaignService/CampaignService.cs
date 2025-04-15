@@ -278,7 +278,7 @@ namespace FDSSYSTEM.Services.CampaignService
             var notificationDto = new NotificationDto
             {
                 Title = "Cần bổ sung chiến dịch",
-                Content = "Chiến dịch của bạn còn thiếu sót.Bạn có thể xem lý do ",
+                Content = "Chiến dịch của bạn cần bổ sung thêm.Bạn có thể xem lý do",
                 NotificationType = "Review",
                 ObjectType = "Campain",
                 OjectId = campain.CampaignId,

@@ -280,7 +280,7 @@ public class UserService : IUserService
                 Title = "Chứng nhận mới được tạo",
                 Content = "Có chứng nhận mới được tạo ra",
                 NotificationType = "Pending",
-                ObjectType = "Personal Donor Certificate ",
+                ObjectType = "Personal Donor Certificate",
                 OjectId = certificateId,
                 AccountId = userId
             };
@@ -322,7 +322,7 @@ public class UserService : IUserService
                 Title = "Chứng nhận mới được tạo",
                 Content = "Có chứng nhận mới được tạo ra",
                 NotificationType = "Pending",
-                ObjectType = "Recipient Certificate ",
+                ObjectType = "Recipient Certificate",
                 OjectId = certificateId,
                 AccountId = userId
             };
@@ -874,7 +874,7 @@ public class UserService : IUserService
         var notificationDto = new NotificationDto
         {
             Title = "Cần bổ sung chứng nhận",
-            Content = "Chứng nhận của bạn còn thiếu sót.Bạn có thể xem lý do ",
+            Content = "Chứng nhận của bạn cần bổ sung thêm.Bạn có thể xem lý do",
             NotificationType = "Review",
             ObjectType = objectType,
             OjectId = objectId,
