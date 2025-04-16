@@ -57,10 +57,6 @@ const OTPAuthPage = () => {
                             <p style={{ textAlign: "start" }}>Vui lòng nhập mã xác thực đã gửi đến: <span>{userData.userEmail}</span></p>
                             <OTPInput onChange={setOtp} />
                             <Button loading={isLoading} onClick={handleVerifyOTP} title="Xác thực" />
-                            <p>
-                                Bạn đã có tài khoản?{" "}
-                                <span onClick={() => navigateHook(routes.login)}>Đăng nhập</span>
-                            </p>
                         </div>
                     </div>
                 </div>
