@@ -1,7 +1,8 @@
 import { CommentIcon, FarvoriteIcon } from "@/assets/icons"
 import { FC } from "react"
 
-const Post: FC<PostProps> = ({type = 1}) => {
+const Post: FC<PostProps> = ({type = 1, post}) => {
+    console.log(post)
     return (
         <div className="post-container">
             <div className="pcr1">

@@ -1,5 +1,6 @@
 type PostProps = {
-    type?: 1 | 2
+    type?: 1 | 2,
+    post: Post,
 }
 
 interface SubcriberProps {
