@@ -17,6 +17,12 @@ interface IRegisterEmail {
     roleId: number;
 }
 
+interface IForgetPassword {
+    email: string;
+    newPassword: string;
+    confirmNewPassword: string;
+}
+
 export type AuthResponse = {
     userInfo: UserProfile;
     token: string;
