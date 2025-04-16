@@ -234,6 +234,8 @@ namespace FDSSYSTEM.Services.PostService
                             PostId = post.PostId,
                             PostContent = post.PostContent,
                             Images = post.Images,
+                            Status = post.Status,
+                            PosterName = post.PosterName,
                             Likes = from like in likesGroup
                                     join account in accounts on like.AccountId equals account.AccountId
                                     select new PostLikeDetailDto

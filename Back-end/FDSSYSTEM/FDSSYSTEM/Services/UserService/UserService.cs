@@ -105,6 +105,7 @@ public class UserService : IUserService
             FullName = user.FullName,
             Phone = user.Phone,
             RoleId = user.RoleId,
+            IsConfirm = !verifyOtp,
             //CCCD = user.CCCD,
             //TaxIdentificationNumber = user.TaxIdentificationNumber,
             //OrganizationName = user.OrganizationName,
@@ -751,11 +752,11 @@ public class UserService : IUserService
             3,//donor
             2//staff
         };
-        var filter = Builders<Account>.Filter.In(c => c.RoleId, roleIds);
+        var filter = Builders<Account>.Filter.In(c => c.RoleId, roleIds);       
         return (await _userRepository.GetAllAsync(filter)).Select(x => x.AccountId).ToList();
     }
 
-    public async Task<List<string>> GetAllAdminAndStaffAndRecipientId()
+    public async Task<List<Account>> GetAllAdminAndStaffAndRecipientId()
     {
         List<int> roleIds = new List<int>
         {
@@ -763,18 +764,24 @@ public class UserService : IUserService
             2,//staff
             4//recipient
         };
-        var filter = Builders<Account>.Filter.In(c => c.RoleId, roleIds);
-        return (await _userRepository.GetAllAsync(filter)).Select(x => x.AccountId).ToList();
+        var filter = Builders<Account>.Filter.And(
+             Builders<Account>.Filter.In(c => c.RoleId, roleIds),
+             Builders<Account>.Filter.Eq(p => p.IsConfirm, true)
+          );
+        return (await _userRepository.GetAllAsync(filter)).ToList();
     }
-    public async Task<List<string>> GetAllAdminAndRecipientId()
+    public async Task<List<Account>> GetAllAdminAndRecipientId()
     {
         List<int> roleIds = new List<int>
         {
             1,//admin
             4//recipient
         };
-        var filter = Builders<Account>.Filter.In(c => c.RoleId, roleIds);
-        return (await _userRepository.GetAllAsync(filter)).Select(x => x.AccountId).ToList();
+        var filter = Builders<Account>.Filter.And(
+             Builders<Account>.Filter.In(c => c.RoleId, roleIds),
+             Builders<Account>.Filter.Eq(p => p.IsConfirm, true)
+          );
+        return (await _userRepository.GetAllAsync(filter)).ToList();
     }
 
 
@@ -1005,4 +1012,13 @@ public class UserService : IUserService
            );
         return (await _userRepository.GetAllAsync(filter)).ToList();
     }
+    public async Task<List<Account>> GetAllRecipientConfirmed()
+    {
+        var filter = Builders<Account>.Filter.And(
+              Builders<Account>.Filter.Eq(c => c.RoleId, 4),
+              Builders<Account>.Filter.Eq(p => p.IsConfirm, true)
+           );
+        return (await _userRepository.GetAllAsync(filter)).ToList();
+    }
+
 }

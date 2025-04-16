@@ -2,15 +2,15 @@
 {
     public class CampaignFeedBackDto
     {
-        public string FeedBackId { get; set; }
-        public string CampaignId { get; set; }
+        public string? FeedBackId { get; set; }
+        public string  CampaignId { get; set; }
         public string FeedBackContent { get; set; }
         public List<string> Images { get; set; }
     }
 
     public class UpdateCampaignFeedBackDto
     {
-        public string ReplyCampaignFeedbackId { get; set; }
+        public string? ReplyCampaignFeedbackId { get; set; }
         public string CampaignId { get; set; }
         public string FeedBackContent { get; set; }
         public List<string> Images { get; set; }

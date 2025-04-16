@@ -1,4 +1,5 @@
 ﻿using FDSSYSTEM.DTOs;
+using FDSSYSTEM.Helper;
 using FDSSYSTEM.Models;
 using FDSSYSTEM.Repositories.CampaignRepository;
 using FDSSYSTEM.Repositories.UserRepository;
@@ -24,11 +25,13 @@ namespace FDSSYSTEM.Services.CampaignService
         private readonly INotificationService _notificationService;
 
         private readonly IHubContext<NotificationHub> _hubNotificationContext;
+        private readonly SMSHelper _smsHeper;
 
         public CampaignService(ICampaignRepository campaignRepository, IUserRepository userRepository
             , IUserContextService userContextService, IUserService userService
             , INotificationService notificationService
-            , IHubContext<NotificationHub> hubContext)
+            , IHubContext<NotificationHub> hubContext
+            , SMSHelper smsHeper)
         {
             _campaignRepository = campaignRepository;
             _userRepository = userRepository;
@@ -36,6 +39,7 @@ namespace FDSSYSTEM.Services.CampaignService
             _userService = userService;
             _notificationService = notificationService;
             _hubNotificationContext = hubContext;
+            _smsHeper = smsHeper;
         }
 
         public async Task Create(CampaignDto campaign)
@@ -78,9 +82,13 @@ namespace FDSSYSTEM.Services.CampaignService
             await _campaignRepository.AddAsync(newCampain);
 
             //Send notifiction all staff and admin
-            var userReceiveNotifications = isDonorCreate? await _userService.GetAllAdminAndStaffAndRecipientId() : await _userService.GetAllAdminAndRecipientId();
-            foreach (var userId in userReceiveNotifications)
+            var userReceiveNotifications = isDonorCreate? 
+                await _userService.GetAllAdminAndStaffAndRecipientId() //donor tạo gửi cho admin, staff, recipient
+                : await _userService.GetAllAdminAndRecipientId(); //staff tạo gửi cho admin, recipient
+            
+            foreach (var user in userReceiveNotifications)
             {
+                //Gửi thông báo trong hệ thống
                 var notificationDto = new NotificationDto
                 {
                     Title = "Campain mới được tạo",
@@ -88,13 +96,26 @@ namespace FDSSYSTEM.Services.CampaignService
                     NotificationType = "Pending",
                     ObjectType = "Campain",
                     OjectId = newCampain.CampaignId,
-                    AccountId = userId
+                    AccountId = user.AccountId
                 };
                 //save notifiation to db
                 await _notificationService.AddNotificationAsync(notificationDto);
                 //send notification via signalR
                 await _hubNotificationContext.Clients.User(notificationDto.AccountId).SendAsync("ReceiveNotification", notificationDto);
+
             }
+
+            //Send SMS recipient
+            var userRecieveSsms = await _userService.GetAllRecipientConfirmed();
+            foreach(var rp in userRecieveSsms)
+            {
+                if (!string.IsNullOrEmpty(rp.Phone))
+                {
+                    _smsHeper.SendSMS(rp.Phone, "Có chiến dịch vừa được tạo ra trên Website. Bạn có thể vào đăng ký ngay");
+                }
+               
+            }
+
         }
 
         //public async Task<List<CampaignDto>> GetAllCampaignAccount()
@@ -301,7 +322,7 @@ namespace FDSSYSTEM.Services.CampaignService
             await _campaignRepository.UpdateAsync(campain.Id, campain);
 
             var userReceiveNotifications = await _userService.GetAllAdminAndStaffAndRecipientId();
-            foreach (var userId in userReceiveNotifications)
+            foreach (var user in userReceiveNotifications)
             {
                 var notificationDto = new NotificationDto
                 {
@@ -310,7 +331,7 @@ namespace FDSSYSTEM.Services.CampaignService
                     NotificationType = "Cancel",
                     ObjectType = "Campain",
                     OjectId = campain.CampaignId,
-                    AccountId = userId
+                    AccountId = user.AccountId
                 };
                 //save notifiation to db
                 await _notificationService.AddNotificationAsync(notificationDto);
