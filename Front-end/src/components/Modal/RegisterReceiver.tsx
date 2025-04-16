@@ -1,27 +1,42 @@
-import { useAppDispatch } from '@/app/store';
+import { useAppDispatch, useAppSelector } from '@/app/store';
 import * as Yup from "yup";
 import Button from '../Elements/Button';
 import classNames from "classnames";
 import { Field, Form, Formik, FormikHelpers } from 'formik';
 import { toast } from 'react-toastify';
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 import Modal from './Modal';
 import { get } from 'lodash';
 import { RegisterReceiverModalProps } from './type';
 import { createRegisterReceiverApiThunk, getAllRegisterReceiversApiThunk } from '@/services/registerReceive/registerReceiveThunk';
 import { setLoading } from '@/services/app/appSlice';
+import { selectGetAllRegisterReceivers } from '@/app/selector';
 
-const RegisterReceiverModal: FC<RegisterReceiverModalProps> = ({ isOpen, setIsOpen, campaignId }) => {
+const RegisterReceiverModal: FC<RegisterReceiverModalProps> = ({ isOpen, setIsOpen, campaign }) => {
     const dispatch = useAppDispatch();
 
     const localDate = new Date();
     const offset = localDate.getTimezoneOffset();
 
+    const registerReceivers = useAppSelector(selectGetAllRegisterReceivers);
+    const currentRegisterReceivers = registerReceivers.filter((registerReceiver) => registerReceiver.campaignId === campaign?.campaignId);
+    const totalRegisteredQuantity = currentRegisterReceivers.reduce((sum, receiver) => sum + (receiver.quantity || 0), 0);
+
+    useEffect(() => {
+        if (campaign?.campaignId) {
+            dispatch(getAllRegisterReceiversApiThunk())
+                .unwrap()
+                .catch(() => {
+                }).finally(() => {
+                });
+        }
+    }, [dispatch])
+
     const initialValues: CreateRegisterReceiver = {
         registerReceiverName: '',
         quantity: 0,
         creatAt: new Date(localDate.getTime() - offset * 60000).toISOString(),
-        campaignId: campaignId
+        campaignId: campaign?.campaignId
     };
 
     const schema = Yup.object().shape({
@@ -61,6 +76,14 @@ const RegisterReceiverModal: FC<RegisterReceiverModalProps> = ({ isOpen, setIsOp
             <section id="register-receiver-modal">
                 <div className="rrm-container">
                     <h1>Đăng ký nhận quà</h1>
+                    {
+                        campaign?.campaignType === "Limited" && (
+                            <>
+                                <p>Số lượng còn lại: {Number(campaign?.limitedQuantity) - totalRegisteredQuantity}</p>
+                            </>
+                        )
+                    }
+                    <p>Số lượng đã đăng ký: {totalRegisteredQuantity}</p>
                     <Formik
                         initialValues={initialValues}
                         onSubmit={onSubmit}

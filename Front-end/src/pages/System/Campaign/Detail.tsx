@@ -58,8 +58,22 @@ const DetailCampaignPage: React.FC = () => {
             });
     }, [dispatch])
 
-    const date = currentCampaign?.implementationTime.split("T")[0];
-    const time = currentCampaign?.implementationTime.split("T")[1].replace("Z", "");
+    // Formated Date
+    const formattedDate = currentCampaign?.implementationTime
+        ? (() => {
+            const dateStr = currentCampaign.implementationTime.split("T")[0];
+            const [year, month, day] = dateStr.split("-");
+            return `${day}-${month}-${year}`;
+        })()
+        : "";
+
+    // Formated Time
+    const formattedTime = currentCampaign?.implementationTime
+        .split("T")[1]
+        .replace("Z", "")
+        .split(":")
+        .slice(0, 2)
+        .join(":");
 
     useEffect(() => {
         if (id) {
@@ -90,6 +104,10 @@ const DetailCampaignPage: React.FC = () => {
             setIsRegisterReceiverModalOpend(true);
         }
     }
+
+    const currentDate = new Date();
+
+    const totalRegisteredQuantity = currentRegisterReceivers.reduce((sum, receiver) => sum + (receiver.quantity || 0), 0);
 
     return (
         <main id="detail-campaign">
@@ -151,16 +169,49 @@ const DetailCampaignPage: React.FC = () => {
                             <div className="dcscr1c2r1">
                                 <div>
                                     <h4>Phần quà</h4>
-                                    <p>{currentCampaign?.limitedQuantity} - {currentCampaign?.typeGift}</p>
+                                    <p>{currentCampaign?.typeGift}</p>
                                 </div>
                                 <div>
-                                    <h4>Thời gian & Địa điểm</h4>
+                                    <h4>Địa điểm</h4>
                                     <p>{currentCampaign?.location}</p>
-                                    <p>{date} - {time}</p>
+                                    <h4>Thời gian</h4>
+                                    <p>{formattedDate} - {formattedTime}</p>
                                 </div>
-                                {userLogin?.roleId === 4 && (
-                                    <button className='sc-btn' onClick={handleRegisterReceiver}>Đăng ký nhận hỗ trợ</button>
+                                {userLogin?.roleId === 4 && currentCampaign && (
+                                    <>
+                                        {/* Campaign dạng Limited */}
+                                        {currentCampaign.campaignType === "Limited" &&
+                                            currentCampaign.implementationTime &&
+                                            currentCampaign.implementationTime > currentDate.toISOString() && (
+                                                totalRegisteredQuantity >= (Number(currentCampaign.limitedQuantity) || 0) ? (
+                                                    <p className="sc-text">Đã đăng ký đủ số lượng</p>
+                                                ) : (
+                                                    <button className='sc-btn' onClick={handleRegisterReceiver}>
+                                                        Đăng ký nhận hỗ trợ
+                                                    </button>
+                                                )
+                                            )}
+
+                                        {/* Campaign dạng Voluntary */}
+                                        {currentCampaign.campaignType === "Voluntary" &&
+                                            currentCampaign.implementationTime &&
+                                            currentDate.toISOString() <= currentCampaign.implementationTime && (
+                                                currentCampaign.startRegisterDate &&
+                                                currentCampaign.endRegisterDate && (
+                                                    currentDate.toISOString() < currentCampaign.startRegisterDate ? (
+                                                        <p className="sc-text">Chưa mở đăng ký</p>
+                                                    ) : currentDate.toISOString() > currentCampaign.endRegisterDate ? (
+                                                        <p className="sc-text">Đã đóng đăng ký nhận quà</p>
+                                                    ) : (
+                                                        <button className='sc-btn' onClick={handleRegisterReceiver}>
+                                                            Đăng ký nhận quà
+                                                        </button>
+                                                    )
+                                                )
+                                            )}
+                                    </>
                                 )}
+
                             </div>
                             <div className="dcscr1c2r2">
                                 <h3>Danh sách dăng ký nhận hỗ trợ</h3>
@@ -201,7 +252,7 @@ const DetailCampaignPage: React.FC = () => {
                 </div>
             </section>
             <RemindCertificateModal isOpen={isRemindCertificateModalOpend} setIsOpen={setIsRemindCertificateModalOpend} />
-            <RegisterReceiverModal isOpen={isRegisterReceiverModalOpend} setIsOpen={setIsRegisterReceiverModalOpend} campaignId={id} />
+            <RegisterReceiverModal isOpen={isRegisterReceiverModalOpend} setIsOpen={setIsRegisterReceiverModalOpend} campaign={currentCampaign} />
         </main>
     )
 }

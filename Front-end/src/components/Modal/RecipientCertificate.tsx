@@ -256,7 +256,7 @@ const RecipientCertificateModal: FC<RecipientCertificateModalProps> = ({ isOpen,
                                         onClose={() => setLightboxIndex(null)}
                                     />
                                 )}
-                                <Button loading={isSubmitting} type="submit" title="Nộp chứng chỉ" />
+                                <Button loading={isSubmitting} type="submit" title="Hoàn thành" />
                             </Form>
                         )}
                     </Formik>

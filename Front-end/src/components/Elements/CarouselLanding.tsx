@@ -3,9 +3,9 @@ import { useState } from "react";
 import Slider from "react-slick";
 
 const images = [
-    ImageCarousel1,
-    ImageCarousel2,
-    ImageCarousel3
+    { src: ImageCarousel1, caption: "Giúp người hôm nay – Gieo hy vọng ngày mai." },
+    { src: ImageCarousel2, caption: "Từng hạt gạo nhỏ, thắp sáng bao cuộc đời." },
+    { src: ImageCarousel3, caption: "Thiện nguyện không lớn lao, chỉ cần chân thành." }
 ];
 
 const CarouselLanding = () => {
@@ -18,7 +18,8 @@ const CarouselLanding = () => {
         slidesToShow: 1,         // Hiển thị 1 slide
         slidesToScroll: 1,       // Cuộn 1 slide
         autoplay: true,          // Bật autoplay
-        autoplaySpeed: 2000,     // Thời gian chuyển slide tự động (3000ms = 3s)
+        autoplaySpeed: 3000,     // Thời gian chuyển slide tự động (3000ms = 3s)
+        pauseOnHover: false,   // Dựng khi chuyển slide khi hover
         beforeChange: (_: number, next: number) => setCurrentSlide(next),
     }
 
@@ -26,11 +27,15 @@ const CarouselLanding = () => {
         <div className="carousel-container">
             <Slider {...settings}>
                 {images.map((img, index) => (
-                    <div key={index}>
-                        <img src={img} alt={`Slide ${index}`} />
+                    <div key={index} className="carousel-item">
+                        <img src={img.src} alt={`Slide ${index}`}/>
+                        <div className="carousel-caption">
+                            {img.caption}
+                        </div>
                     </div>
                 ))}
             </Slider>
+
 
             {/* Pagination nếu muốn */}
             <div className="pagination-lists">

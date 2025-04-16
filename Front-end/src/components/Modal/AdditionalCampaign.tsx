@@ -59,7 +59,7 @@ const AdditionalCampaignModal: FC<AdditionalCampaignModalProps> = ({ isOpen, set
                                 onChange={(e) => setContent(e.target.value)}
                             />
                         </div>
-                        <button type="submit" className="sc-btn">Xác nhận</button>
+                        <button type="submit" className="sc-btn">Gửi</button>
                     </form>
                 </div>
             </section>

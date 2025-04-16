@@ -32,6 +32,34 @@
     p {
         font-size: 14px;
         font-weight: 500;
+        margin: 5px 0 0 16px;
         color: var(--main-gray);
     }
+
+    .cc-status {
+        font-weight: bold;
+        margin-top: 8px;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 16px;
+        width: fit-content;
+    
+        &.ended {
+            color: #FF6692;
+            background-color: #f2dede;
+            border: 1px solid #ebccd1;
+        }
+    
+        &.ongoing {
+            color: #36C76C;
+            background-color: #dff0d8;
+            border: 1px solid #d6e9c6;
+        }
+    
+        &.upcoming {
+            color: #f2ba05;
+            background-color: #fcf8e3;
+            border: 1px solid #faebcc;
+        }
+    }    
 }

@@ -1,18 +1,48 @@
+import { selectGetProfileUser, selectIsAuthenticated, selectUserLogin } from "@/app/selector";
+import { useAppDispatch, useAppSelector } from "@/app/store";
 import { routes } from "@/routes/routeName"
+import { getProfileApiThunk } from "@/services/user/userThunk";
+import { useEffect } from "react";
 import { Link } from "react-router-dom"
 
 const FooterLanding = () => {
+    const dispatch = useAppDispatch();
+    const isAuthenticated = useAppSelector(selectIsAuthenticated);
+    const userLogin = useAppSelector(selectUserLogin);
+    const userProfile = useAppSelector(selectGetProfileUser);
+
+    useEffect(() => {
+        if (isAuthenticated) {
+            dispatch(getProfileApiThunk(String(userLogin?.accountId)))
+                .unwrap();
+        }
+    }, [isAuthenticated]);
+
     const footers = [
         {
-            title: "Ủng hộ", links: [
-                { to: routes.user.campaign.list, label: "Chiến dịch" },
-                { to: routes.user.supporter.list, label: "Tổ chức, cá nhân ủng hộ" }
+            title: "Chiến dịch", links: [
+                {
+                    label: "Tất cả",
+                    to: routes.user.campaign.list
+                },
+                {
+                    label: "Tổ chức",
+                    to: `${routes.user.campaign.list}?tab=2`
+                },
+                {
+                    label: "Cá nhân",
+                    to: `${routes.user.campaign.list}?tab=1`
+                }
             ]
         },
         {
-            title: "Khám phá", links: [
-                { to: "", label: "Bản tin" },
-                { to: routes.user.news.list, label: "Tin tức" }
+            title: "Tin tức", links: [
+                { to: routes.user.news.list, label: "Tất cả" }
+            ]
+        },
+        {
+            title: "Bảng tin", links: [
+                { to: routes.user.post.forum, label: "Tất cả" }
             ]
         },
         {
@@ -41,6 +71,11 @@ const FooterLanding = () => {
                                 </ul>
                             </div>
                         ))}
+                    </div>
+                    <div className="flscc3">
+                        {userProfile && (
+                            <button className="pr-btn">Tạo chiến dịch</button>
+                        )}
                     </div>
                 </div>
             </section>

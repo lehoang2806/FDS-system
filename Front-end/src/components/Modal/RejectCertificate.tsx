@@ -68,7 +68,7 @@ const RejectCertificateModal: FC<RejectCertificateModalProps> = ({ isOpen, setIs
                                 onChange={(e) => setReason(e.target.value)}
                             />
                         </div>
-                        <button type="submit" className="sc-btn">Xác nhận</button>
+                        <button type="submit" className="sc-btn">Hoàn thành</button>
                     </form>
                 </div>
             </section>

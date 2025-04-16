@@ -166,11 +166,11 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
                 },
                 {
                     title: "Tổ chức",
-                    to: routes.user.campaign.list
+                    to: `${routes.user.campaign.list}?tab=2`
                 },
                 {
                     title: "Cá nhân",
-                    to: routes.user.campaign.list
+                    to: `${routes.user.campaign.list}?tab=1`
                 }
             ]
         },
