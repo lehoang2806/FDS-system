@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using FDSSYSTEM.DTOs.Statistic;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FDSSYSTEM.Controllers
@@ -15,7 +16,7 @@ namespace FDSSYSTEM.Controllers
             try
             {
                 /*var statist = await _campaignService.GetAll();*/
-                return Ok();
+                return Ok(new StatisticDonorDto());
             }
             catch (Exception ex)
             {
@@ -30,7 +31,7 @@ namespace FDSSYSTEM.Controllers
             try
             {
                 /*var statist = await _campaignService.GetAll();*/
-                return Ok();
+                return Ok(new StatisticAdminItemDto());
             }
             catch (Exception ex)
             {
