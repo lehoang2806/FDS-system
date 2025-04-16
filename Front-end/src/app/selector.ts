@@ -75,3 +75,8 @@ export const selectGetAllNews: Selector<NewsInfo[]> = (state: RootState) => {
 export const selectGetNewsById: Selector<NewsInfo | null> = (state: RootState) => {
     return state.news.currentNews;
 }
+
+//Post
+export const selectGetAllPosts: Selector<Post[]> = (state: RootState) => {
+    return state.post.listPosts;
+}
