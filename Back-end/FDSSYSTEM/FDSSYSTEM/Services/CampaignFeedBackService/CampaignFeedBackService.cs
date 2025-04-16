@@ -57,7 +57,6 @@ namespace FDSSYSTEM.Services.FeedBackCommentService
                     CampaignId = feedback.CampaignId,
                     AccountId = _userContextService.UserId ?? "",
                     Content = feedback.FeedBackContent,
-                    FileComment = feedback.FileComment,
                     Images = feedback.Images,
                     DateCreated = DateTime.Now,
                   
@@ -95,7 +94,6 @@ namespace FDSSYSTEM.Services.FeedBackCommentService
                         ReplyFeedBackCommentId = Guid.NewGuid().ToString(),
                         AccountId = _userContextService.UserId ?? "",
                         Content = feedback.FeedBackContent,
-                        FileComment = feedback.FileComment,
                         Images = feedback.Images,
                         DateCreated = DateTime.Now,
                     });
@@ -143,7 +141,6 @@ namespace FDSSYSTEM.Services.FeedBackCommentService
                 {
                     //cập nhật bình luận
                     existingFeedBack.Content = feedback.FeedBackContent;
-                    existingFeedBack.FileComment = feedback.FileComment;
                     existingFeedBack.DateUpdated = DateTime.Now;
                     existingFeedBack.Images = feedback.Images;
 
@@ -158,7 +155,6 @@ namespace FDSSYSTEM.Services.FeedBackCommentService
                             if (rp.ReplyFeedBackCommentId.Equals(feedback.ReplyCampaignFeedbackId, StringComparison.OrdinalIgnoreCase))
                             {
                                 rp.Content = feedback.FeedBackContent;
-                                rp.FileComment = feedback.FileComment;
                                 rp.DateUpdated = DateTime.Now;
                                 rp.Images = feedback.Images;
                                 break;

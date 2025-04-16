@@ -55,7 +55,6 @@ namespace FDSSYSTEM.Services.PostCommentService
                     AccountId = _userContextService.UserId ?? "",
                     Content = comment.Content,
                     DateCreated = DateTime.Now,
-                    FileComment = comment.FileComment
                 });
 
                 // Lấy thông tin người tạo bài viết
@@ -92,7 +91,6 @@ namespace FDSSYSTEM.Services.PostCommentService
                         AccountId = _userContextService.UserId ?? "",
                         Content = comment.Content,
                         DateCreated = DateTime.Now,
-                        FileComment = comment.FileComment
                     });
                     await _postCommentRepository.UpdateAsync(postComment.Id, postComment);
 
@@ -140,7 +138,6 @@ namespace FDSSYSTEM.Services.PostCommentService
                 {
                     //cập nhật bình luận
                     existingComment.Content = comment.Content;
-                    existingComment.FileComment = comment.FileComment;
                     existingComment.DateUpdated = DateTime.Now;
 
                 }
@@ -154,7 +151,6 @@ namespace FDSSYSTEM.Services.PostCommentService
                             if (rp.ReplyPostCommentId.Equals(comment.ReplyPostCommentId, StringComparison.OrdinalIgnoreCase))
                             {
                                 rp.Content = comment.Content;
-                                rp.FileComment = comment.FileComment;
                                 rp.DateUpdated = DateTime.Now;
                                 break;
                             }

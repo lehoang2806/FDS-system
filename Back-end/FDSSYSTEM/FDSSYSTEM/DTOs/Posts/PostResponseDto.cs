@@ -11,5 +11,6 @@
         public string RejectComment { get; set; }  // Lý do từ chối (nếu có)
         public string PosterApproverId { get; set; }
         public string PosterApproverName { get; set; }
+        public string PostId { get; set; }
     }
 }
