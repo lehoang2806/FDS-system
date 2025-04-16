@@ -58,7 +58,6 @@ const AdditionalCertificateModal: FC<AdditionalCertificateModalProps> = ({ isOpe
                 <div className="acm-container">
                     <form className="form" onSubmit={handleSubmit}>
                         <div className="form-field">
-                            <label className="form-label">Yêu cầu bổ sung</label>
                             <textarea
                                 className="form-input"
                                 placeholder="Vui lòng nhập điều cần bổ sung"
@@ -67,7 +66,7 @@ const AdditionalCertificateModal: FC<AdditionalCertificateModalProps> = ({ isOpe
                                 onChange={(e) => setContent(e.target.value)}
                             />
                         </div>
-                        <button type="submit" className="sc-btn">Xác nhận</button>
+                        <button type="submit" className="sc-btn">Gửi</button>
                     </form>
                 </div>
             </section>

@@ -1,5 +1,5 @@
 #footer-landing {
-    background: #fafafa;
+    background: var(--main-color);
     padding: 80px 20px;
 
     #fl-section {
@@ -21,7 +21,7 @@
                     h4 {
                         font-size: 16px;
                         font-weight: 700;
-                        color: #353535;
+                        color: #1A1A1A;
                     }
 
                     ul {
@@ -35,10 +35,23 @@
                             a {
                                 font-size: 14px;
                                 font-weight: 400;
-                                color: #6f6f6f;
+                                color: #F5F5F5;
                                 text-decoration: none;
                             }
                         }
+                    }
+                }
+            }
+
+            .flscc3 {
+                .pr-btn {
+                    background: #F5F5F5;
+                    color: var(--main-color);
+                    padding: 10px 20px;
+                    border-radius: var(--border-radius-12);
+
+                    &:hover {
+                        background: #fff !important;
                     }
                 }
             }

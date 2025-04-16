@@ -1,6 +1,6 @@
 import { selectGetAllCampaign } from '@/app/selector';
 import { useAppDispatch, useAppSelector } from '@/app/store';
-import { SearchIcon } from '@/assets/icons';
+import { RightIcon, SearchIcon } from '@/assets/icons';
 import { CampaignCard } from '@/components/Card/index';
 import { Loading } from '@/components/Elements';
 import { navigateHook } from '@/routes/RouteApp';
@@ -9,6 +9,7 @@ import { setLoading } from '@/services/app/appSlice';
 import { getAllCampaignApiThunk } from '@/services/campaign/campaignThunk';
 import { FC, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import classNames from "classnames";
 
 const ListCampaignPage: FC = () => {
     const dispatch = useAppDispatch();
@@ -26,6 +27,8 @@ const ListCampaignPage: FC = () => {
     const personalCampaigns = approvedCampaigns.filter((campaign) => campaign.typeAccount === "Personal Donor");
 
     const organizationCampaigns = approvedCampaigns.filter((campaign) => campaign.typeAccount === "Organization Donor");
+
+    const [isSelectTypeOpen, setIsSelectTypeOpen] = useState(false);
 
     useEffect(() => {
         dispatch(setLoading(true));
@@ -217,53 +220,67 @@ const ListCampaignPage: FC = () => {
                     {isFiltering && <Loading loading={true} isFullPage />}
                     <div className="cscr2">
                         <div className="cscr2r1">
-                            <select className='pr-input' value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
-                                <option value="">Tất cả</option>
-                                <option value="ongoing">Đang thực hiện</option>
-                                <option value="ended">Đã kết thúc</option>
-                            </select>
-                            {activeTab === 0 && (
-                                <div className="date-filter-container">
-                                    <input
-                                        type="date"
-                                        className="pr-input"
-                                        placeholder="Chọn ngày thực hiện"
-                                        value={implementDateAllCampaignFilter}
-                                        onChange={handleImplementDateAllCampaignChange}
-                                    />
+                            <div className="cscr2r1r1">
+                                <div className="form">
+                                    <label className='form-label'>Trạng thái:</label>
+                                    <div className="form-input-select-container">
+                                        <select className='form-input-select form-input' value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} onClick={() => setIsSelectTypeOpen(!isSelectTypeOpen)}>
+                                            <option value="" onClick={() => setIsSelectTypeOpen(isSelectTypeOpen === false)}>Tất cả</option>
+                                            <option value="ongoing" onClick={() => setIsSelectTypeOpen(isSelectTypeOpen === false)}>Đang thực hiện</option>
+                                            <option value="ended" onClick={() => setIsSelectTypeOpen(isSelectTypeOpen === false)}>Đã kết thúc</option>
+                                        </select>
+                                        <RightIcon className={classNames("form-icon-select", { "rotate-45": isSelectTypeOpen === true })} />
+                                    </div>
                                 </div>
-                            )}
-                            {activeTab === 1 && (
-                                <div className="date-filter-container">
+                                {activeTab === 0 && (
+                                    <div className="form date-filter-container">
+                                        <label className='form-label'>Ngày diễn ra:</label>
+                                        <input
+                                            type="date"
+                                            className="form-input"
+                                            placeholder="Chọn ngày thực hiện"
+                                            value={implementDateAllCampaignFilter}
+                                            onChange={handleImplementDateAllCampaignChange}
+                                        />
+                                    </div>
+                                )}
+                                {activeTab === 1 && (
+                                    <div className="form date-filter-container">
+                                        <label className='form-label'>Ngày diễn ra:</label>
+                                        <input
+                                            type="date"
+                                            className="form-input"
+                                            placeholder="Chọn ngày thực hiện"
+                                            value={implementDatePersonalCampaignFilter}
+                                            onChange={handleImplementDatePersonalCampaignChange}
+                                        />
+                                    </div>
+                                )}
+                                {activeTab === 2 && (
+                                    <div className="form date-filter-container">
+                                        <label className='form-label'>Ngày diễn ra:</label>
+                                        <input
+                                            type="date"
+                                            className="form-input"
+                                            placeholder="Chọn ngày thực hiện"
+                                            value={implementDateOrganizationCampaignFilter}
+                                            onChange={handleImplementDateOrganizationCampaignChange}
+                                        />
+                                    </div>
+                                )}
+                            </div>
+                            <div className="cscr2r1r2">
+                                <div className='form campaign-search-container'>
+                                    <label className='form-label'>Tìm kiếm:</label>
                                     <input
-                                        type="date"
-                                        className="pr-input"
-                                        placeholder="Chọn ngày thực hiện"
-                                        value={implementDatePersonalCampaignFilter}
-                                        onChange={handleImplementDatePersonalCampaignChange}
+                                        type="text"
+                                        className="form-input campaign-search-input"
+                                        placeholder='Tìm kiếm tên chiến dịch'
+                                        value={searchTerm}
+                                        onChange={handleSearch}
                                     />
+                                    <SearchIcon className='campaign-search-icon' />
                                 </div>
-                            )}
-                            {activeTab === 2 && (
-                                <div className="date-filter-container">
-                                    <input
-                                        type="date"
-                                        className="pr-input"
-                                        placeholder="Chọn ngày thực hiện"
-                                        value={implementDateOrganizationCampaignFilter}
-                                        onChange={handleImplementDateOrganizationCampaignChange}
-                                    />
-                                </div>
-                            )}
-                            <div className='campaign-search-container'>
-                                <input
-                                    type="text"
-                                    className="pr-input campaign-search-input"
-                                    placeholder='Tìm kiếm tên chiến dịch'
-                                    value={searchTerm}
-                                    onChange={handleSearch}
-                                />
-                                <SearchIcon className='campaign-search-icon' />
                             </div>
                         </div>
                         <div className="cscr2r2">

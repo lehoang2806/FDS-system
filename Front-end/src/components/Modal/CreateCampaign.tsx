@@ -73,7 +73,7 @@ const CreateCampaignModal: FC<CreateCampaignModalProps> = ({ isOpen, setIsOpen }
                 then: (schema) => schema.min(1, "Số lượng phải lớn hơn 0").required("Số lượng giới hạn là bắt buộc"),
                 otherwise: (schema) => schema.notRequired().nullable(),
             }),
-            
+
         startRegisterDate: Yup.date()
             .nullable()
             .when("campaignType", {
@@ -247,9 +247,11 @@ const CreateCampaignModal: FC<CreateCampaignModalProps> = ({ isOpen, setIsOpen }
                                             name="imple"
                                             type="datetime-local"
                                             value={values.implementationTime ? format(new Date(values.implementationTime), "yyyy-MM-dd'T'HH:mm") : ""}
+                                            min={format(new Date(Date.now() + 24 * 60 * 60 * 1000), "yyyy-MM-dd'T'HH:mm")}
                                             onChange={(e: ChangeEvent<HTMLInputElement>) => setFieldValue("implementationTime", e.target.value)}
                                             className={classNames("form-input", { "is-error": errors.implementationTime && touched.implementationTime })}
                                         />
+                                        <p className="note" style={{ marginTop: "5px", marginBottom: "5px" }}>Thời gian nhận cần cách ngày hiện tại khoảng 2 ngày.</p>
                                         {errors.implementationTime && touched.implementationTime && <span className="text-error">{errors.implementationTime}</span>}
                                     </div>
                                     <div className="form-50 form-field">
@@ -281,13 +283,23 @@ const CreateCampaignModal: FC<CreateCampaignModalProps> = ({ isOpen, setIsOpen }
                                         <>
                                             <div className="form-50 form-field">
                                                 <label className="form-label">Ngày mở đăng ký<span>*</span></label>
-                                                <Field name="startRegisterDate" type="datetime-local" className="form-input" />
+                                                <Field
+                                                    name="startRegisterDate"
+                                                    type="datetime-local"
+                                                    className="form-input"
+                                                    min={format(new Date(Date.now() + 24 * 60 * 60 * 1000), "yyyy-MM-dd'T'HH:mm")}
+                                                />
                                                 {errors.startRegisterDate && touched.startRegisterDate && <span className="text-error">{errors.startRegisterDate}</span>}
                                             </div>
 
                                             <div className="form-50 form-field">
                                                 <label className="form-label">Ngày đóng đăng ký<span>*</span></label>
-                                                <Field name="endRegisterDate" type="datetime-local" className="form-input" />
+                                                <Field
+                                                    name="endRegisterDate"
+                                                    type="datetime-local"
+                                                    className="form-input"
+                                                    min={format(new Date(Date.now() + 24 * 60 * 60 * 1000), "yyyy-MM-dd'T'HH:mm")}
+                                                />
                                                 {errors.endRegisterDate && touched.endRegisterDate && <span className="text-error">{errors.endRegisterDate}</span>}
                                             </div>
                                         </>
@@ -370,10 +382,12 @@ const CreateCampaignModal: FC<CreateCampaignModalProps> = ({ isOpen, setIsOpen }
                                         onClose={() => setLightboxIndex(null)}
                                     />
                                 )}
-                                <div className="pr-btn" onClick={() => handleResetForm(resetForm)}>
-                                    Làm mới
+                                <div className="group-btn">
+                                    <div className="pr-btn" onClick={() => handleResetForm(resetForm)}>
+                                        Làm mới
+                                    </div>
+                                    <Button type="submit" title="Tạo chiến dịch" loading={isSubmitting} />
                                 </div>
-                                <Button type="submit" title="Tạo chiến dịch" loading={isSubmitting} />
                             </Form>
                         )}
                     </Formik>

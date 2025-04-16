@@ -260,14 +260,16 @@ const PersonalDonorModal: FC<PersonalDonorModalProps> = ({ isOpen, setIsOpen }) 
                                         onClose={() => setLightboxIndex(null)}
                                     />
                                 )}
-                                <div className="pr-btn" onClick={() => handleResetForm(resetForm)}>
-                                    Làm mới
+                                <div className="group-btn">
+                                    <div className="pr-btn" onClick={() => handleResetForm(resetForm)}>
+                                        Làm mới
+                                    </div>
+                                    <Button
+                                        loading={isSubmitting}
+                                        type="submit"
+                                        title="Hoàn thành"
+                                    />
                                 </div>
-                                <Button
-                                    loading={isSubmitting}
-                                    type="submit"
-                                    title="Hoàn thành"
-                                />
                             </Form>
                         )}
                     </Formik>
