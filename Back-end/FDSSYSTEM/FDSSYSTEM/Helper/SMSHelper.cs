@@ -30,11 +30,18 @@ namespace FDSSYSTEM.Helper
 
                 Task.Run(() =>
                 {
-                    var message = MessageResource.Create(
-                     to: new PhoneNumber(ToNumber),
-                     from: new PhoneNumber(_smsSetting.FromNumber),
-                     body: body
+                    try
+                    {
+                        var message = MessageResource.Create(
+                         to: new PhoneNumber(ToNumber),
+                         from: new PhoneNumber(_smsSetting.FromNumber),
+                         body: body
                     );
+                    }
+                    catch
+                    {
+
+                    }
                 });
             }
         }

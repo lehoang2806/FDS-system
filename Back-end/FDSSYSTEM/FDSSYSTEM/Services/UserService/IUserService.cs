@@ -33,9 +33,9 @@ public interface IUserService
 
     Task<List<string>> GetAllAdminAndStaffId();
     Task<List<string>> GetAllAdminId();
-    Task<List<string>> GetAllAdminAndRecipientId();
+    Task<List<Account>> GetAllAdminAndRecipientId();
     Task<List<string>> GetAllDonorAndStaffId();
-    Task<List<string>> GetAllAdminAndStaffAndRecipientId();
+    Task<List<Account>> GetAllAdminAndStaffAndRecipientId();
     Task<List<string>> GetAllDonorAndRecipientConfirmedId();
     Task AddCertificateReviewComment(ReviewCommentCertificateDto reviewCommentCertificateDto);
     Task UpdatePersonalDonorCertificate(string id, CreatePersonalDonorCertificateDto personalDonorCertificate);
@@ -48,4 +48,5 @@ public interface IUserService
     Task ChangePassword (ChangePasswordDto changePassword);
     Task ResetPassword (ResetPasswordDto resetPassword);
     Task<List<Account>> GetAllDonorConfirmed();
+    Task<List<Account>> GetAllRecipientConfirmed();
 }
