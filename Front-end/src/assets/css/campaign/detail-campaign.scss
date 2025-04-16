@@ -66,6 +66,65 @@
                             color: #0a0a0a;
                         }
                     }
+
+                    .dcscr1c1r5 {
+                        h3 {
+                            font-size: 20px;
+                            font-weight: 700;
+                            color: #393939;
+                            margin-bottom: 20px;
+                        }
+
+                        .input-feedback-container {
+                            position: relative;
+                            width: 400px;
+                            display: flex;
+                            align-items: center;
+                            
+                            .camera-icon {
+                                width: 30px;
+                                padding: 7px;
+                                border: 1px solid #e0e0e0;
+                                border-radius: 12px;
+                                background-color: #f4f4f4;
+                                margin-right: 10px;
+                                cursor: pointer;
+                            }
+
+                            .input-feedback {
+                                box-sizing: border-box;
+                                resize: none;
+                                width: 100%;
+                                border: 1px solid #e0e0e0;
+                                border-radius: 12px;
+                                background-color: #f4f4f4;
+                                font-size: 14px;
+                                padding: 8px 30px 8px 12px;
+                                color: #393939;
+
+                                &:focus {
+                                    border: 1px solid #e0e0e0;
+                                    outline: none;
+                                }
+                            }
+
+                            .btn-send-feedback {
+                                position: absolute;
+                                padding: 0;
+                                width: 20px;
+                                height: 20px;
+                                border: none;
+                                right: 10px;
+                                background: transparent;
+
+                                .send-icon {
+                                    width: 100%;
+                                    height: 100%;
+                                    cursor: pointer;
+                                }
+                            }
+                        }
+                    }
                 }
 
                 .dcscr1c2 {

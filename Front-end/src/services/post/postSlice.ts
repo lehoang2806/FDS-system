@@ -1,8 +1,9 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { getAllPostsApiThunk } from "./postThunk";
+import { getAllPostsApiThunk, getPostByIdApiThunk } from "./postThunk";
 
 const initialState: PostState = {
-    listPosts: []
+    listPosts: [],
+    post: null
 };
 
 export const postSlice = createSlice({
@@ -14,6 +15,9 @@ export const postSlice = createSlice({
         builder
         .addCase(getAllPostsApiThunk.fulfilled, (state, action: PayloadAction<Post[]>) => {
             state.listPosts = action.payload;
+        })
+        .addCase(getPostByIdApiThunk.fulfilled, (state, action: PayloadAction<PostInfo>) => {
+            state.post = action.payload;
         })
     },
 });

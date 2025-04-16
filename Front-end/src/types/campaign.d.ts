@@ -119,3 +119,9 @@ interface ReviewComment {
     createDate: string;
     content: string;
 }
+
+interface CreateFeedbackCampaign {
+    campaignId: string;
+    feedbackContent: string;
+    images: string[];
+}

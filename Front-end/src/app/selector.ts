@@ -80,3 +80,7 @@ export const selectGetNewsById: Selector<NewsInfo | null> = (state: RootState) =
 export const selectGetAllPosts: Selector<Post[]> = (state: RootState) => {
     return state.post.listPosts;
 }
+
+export const selectGetPostById: Selector<PostInfo | null> = (state: RootState) => {
+    return state.post.post;
+}

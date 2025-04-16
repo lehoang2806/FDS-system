@@ -1,5 +1,6 @@
 import { selectCurrentCampaign, selectGetAllCampaign, selectGetAllRegisterReceivers, selectUserLogin } from '@/app/selector';
 import { useAppDispatch, useAppSelector } from '@/app/store';
+import { CameraIcon, SendIcon } from '@/assets/icons';
 import { CampaignCard } from '@/components/Card/index';
 import { Subscriber } from '@/components/Elements/index'
 import { RegisterReceiverModal, RemindCertificateModal } from '@/components/Modal';
@@ -8,8 +9,12 @@ import { routes } from '@/routes/routeName';
 import { setLoading } from '@/services/app/appSlice';
 import { getAllCampaignApiThunk, getCampaignByIdApiThunk } from '@/services/campaign/campaignThunk';
 import { getAllRegisterReceiversApiThunk } from '@/services/registerReceive/registerReceiveThunk';
-import React, { useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router-dom';
+import { Field, Formik } from 'formik';
+import React, { useEffect, useRef, useState } from 'react'
+import { Form, Link, useParams } from 'react-router-dom';
+import * as Yup from "yup";
+import { createFeedbackCampaignApiThunk } from '@/services/campaign/feedback/feedbackCampaignThunk';
+import { toast } from 'react-toastify';
 
 const DetailCampaignPage: React.FC = () => {
     const userLogin = useAppSelector(selectUserLogin);
@@ -109,26 +114,62 @@ const DetailCampaignPage: React.FC = () => {
 
     const totalRegisteredQuantity = currentRegisterReceivers.reduce((sum, receiver) => sum + (receiver.quantity || 0), 0);
 
+    const fileInputRef = useRef<HTMLInputElement>(null);
+
+    const handleCameraClick = () => {
+        fileInputRef.current?.click();
+    };
+
+    const initialValues: CreateFeedbackCampaign = {
+        campaignId: id || "",
+        feedbackContent: "",
+        images: [],
+    };
+
+    const schema = Yup.object({
+        feedbackContent: Yup.string().required("Vui lồng nhập nội dung"),
+    });
+
+    const hanldeSendFeedback = (values: CreateFeedbackCampaign) => {
+        dispatch(setLoading(true));
+        dispatch(createFeedbackCampaignApiThunk(values))
+            .unwrap()
+            .then(() => {
+                toast.success("Gửi nhận xét thành công");
+                dispatch(getCampaignByIdApiThunk(String(id)));
+            })
+            .catch(() => {
+            }).finally(() => {
+                setTimeout(() => {
+                    dispatch(setLoading(false));
+                }, 1000)
+            });
+    }
+
+    const [previewImage, setPreviewImage] = useState<string | null>(null);
+
+    const handleFileChange = (
+        event: React.ChangeEvent<HTMLInputElement>,
+        setFieldValue: (field: string, value: any) => void
+    ) => {
+        const file = event.target.files?.[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                const base64String = reader.result as string;
+                setPreviewImage(base64String);
+                setFieldValue("images", [base64String]); // Lưu vào formik field
+            };
+            reader.readAsDataURL(file); // Convert sang base64
+        }
+    };
+
     return (
         <main id="detail-campaign">
             <section id="dc-section">
                 <div className="dcs-container">
                     <div className="dcscr1">
                         <div className="dcscr1c1">
-                            <div className="dcscr1c1r1">
-                                <h1>{currentCampaign?.campaignName}</h1>
-                            </div>
-                            <div className="dcscr1c1r3">
-                                <div
-                                    className={`dcscr1c1r3-tags-item ${activeTab === "mota" ? "dcscr1c1r3-tags-item-actived" : ""}`}
-                                    onClick={() => setActiveTab("mota")}
-                                >
-                                    Mô tả
-                                </div>
-                            </div>
-                            <div className="dcscr1c1r4">
-                                <div className="dcscr1c1r4-content">{currentCampaign?.campaignDescription}</div>
-                            </div>
                             <div className="dcscr1c1r4">
                                 {selectedImage && (
                                     <img
@@ -163,6 +204,113 @@ const DetailCampaignPage: React.FC = () => {
                                         }}
                                     />
                                 ))}
+                            </div>
+                            <div className="dcscr1c1r1">
+                                <h1>{currentCampaign?.campaignName}</h1>
+                            </div>
+                            <div className="dcscr1c1r3">
+                                <div
+                                    className={`dcscr1c1r3-tags-item ${activeTab === "mota" ? "dcscr1c1r3-tags-item-actived" : ""}`}
+                                    onClick={() => setActiveTab("mota")}
+                                >
+                                    Mô tả
+                                </div>
+                            </div>
+                            <div className="dcscr1c1r4">
+                                <div className="dcscr1c1r4-content">{currentCampaign?.campaignDescription}</div>
+                            </div>
+                            <div className="dcscr1c1r5">
+                                <h3>Nhận xét</h3>
+                                <Formik
+                                    initialValues={initialValues}
+                                    onSubmit={hanldeSendFeedback}
+                                    validationSchema={schema}
+                                >
+                                    {({
+                                        handleSubmit,
+                                        setFieldValue,
+                                    }) => (
+                                        <Form onSubmit={handleSubmit}>
+                                            <div className="input-feedback-container">
+                                                {/* Hidden file input */}
+                                                <input
+                                                    type="file"
+                                                    accept="image/*"
+                                                    ref={fileInputRef}
+                                                    style={{ display: 'none' }}
+                                                    onChange={(e) => handleFileChange(e, setFieldValue)}
+                                                />
+
+                                                {/* Camera Icon */}
+                                                <CameraIcon className='camera-icon' onClick={handleCameraClick} />
+
+                                                {/* Feedback text input */}
+                                                <Field
+                                                    name="feedbackContent"
+                                                    type="text"
+                                                    placeholder="Thêm nhận xét"
+                                                    className={"input-feedback"}
+                                                />
+
+                                                {/* Submit */}
+                                                <button className='btn-send-feedback' type='submit'>
+                                                    <SendIcon className='send-icon' />
+                                                </button>
+                                            </div>
+
+                                            {/* Preview base64 image */}
+                                            {previewImage && (
+                                                <div
+                                                    className="preview-container"
+                                                    style={{
+                                                        position: "relative",
+                                                        display: "inline-block",
+                                                        marginTop: "20px",
+                                                    }}
+                                                >
+                                                    {/* Nút X để xóa ảnh */}
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => {
+                                                            setPreviewImage(null); // Xóa preview
+                                                            setFieldValue("images", []); // Xóa trong Formik
+                                                        }}
+                                                        style={{
+                                                            position: "absolute",
+                                                            top: "-10px",
+                                                            right: "-10px",
+                                                            background: "red",
+                                                            color: "white",
+                                                            border: "none",
+                                                            borderRadius: "50%",
+                                                            width: "24px",
+                                                            height: "24px",
+                                                            cursor: "pointer",
+                                                            fontSize: "14px",
+                                                            padding: "4px",
+                                                        }}
+                                                    >
+                                                        X
+                                                    </button>
+
+                                                    {/* Ảnh preview */}
+                                                    <img
+                                                        src={previewImage}
+                                                        alt="Ảnh phản hồi"
+                                                        className="preview-image"
+                                                        style={{
+                                                            width: "80px",
+                                                            height: "80px",
+                                                            borderRadius: "8px",
+                                                            objectFit: "cover",
+                                                        }}
+                                                    />
+                                                </div>
+                                            )}
+                                        </Form>
+                                    )}
+                                </Formik>
+
                             </div>
                         </div>
                         <div className="dcscr1c2">
