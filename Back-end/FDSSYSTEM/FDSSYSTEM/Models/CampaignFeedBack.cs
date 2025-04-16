@@ -18,7 +18,6 @@ public partial class CampaignFeedBack
 
     public string? Content { get; set; }
 
-    public string? FileComment { get; set; }
 
     public List<string> Images { get; set; }
     
@@ -36,8 +35,6 @@ public class ReplyFeedBackComment
     public string AccountId { get; set; }
 
     public string? Content { get; set; }
-
-    public string? FileComment { get; set; }
     public List<string> Images { get; set; }
 
     public DateTime? DateCreated { get; set; }

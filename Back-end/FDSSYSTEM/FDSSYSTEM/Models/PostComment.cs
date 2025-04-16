@@ -19,7 +19,6 @@ public partial class PostComment
 
     public string? Content { get; set; }
 
-    public string? FileComment { get; set; }
 
     public DateTime? DateCreated { get; set; }
 
@@ -37,7 +36,6 @@ public class ReplyPostComment
 
     public string? Content { get; set; }
 
-    public string? FileComment { get; set; }
 
     public DateTime? DateCreated { get; set; }
 

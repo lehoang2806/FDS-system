@@ -5,7 +5,6 @@
         public string FeedBackId { get; set; }
         public string CampaignId { get; set; }
         public string FeedBackContent { get; set; }
-        public string FileComment { get; set; }
         public List<string> Images { get; set; }
     }
 
@@ -15,6 +14,5 @@
         public string CampaignId { get; set; }
         public string FeedBackContent { get; set; }
         public List<string> Images { get; set; }
-        public string FileComment { get; set; }
     }
 }

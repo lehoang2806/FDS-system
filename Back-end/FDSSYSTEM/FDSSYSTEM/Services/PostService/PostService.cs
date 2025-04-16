@@ -210,7 +210,8 @@ namespace FDSSYSTEM.Services.PostService
                 Status = p.Status,
                 RejectComment = p.RejectComment,
                 PosterApproverId = p.PosterApproverId,
-                PosterApproverName = p.PosterApproverName
+                PosterApproverName = p.PosterApproverName,
+                PostId = p.PostId,
             }).ToList();
 
             return result;
@@ -248,7 +249,6 @@ namespace FDSSYSTEM.Services.PostService
                                            FullName = account.FullName,
                                            CreatedDate = comment.DateCreated.ToString(),
                                            Content = comment.Content,
-                                           FileComment = comment.FileComment
                                        }
                         };
 
