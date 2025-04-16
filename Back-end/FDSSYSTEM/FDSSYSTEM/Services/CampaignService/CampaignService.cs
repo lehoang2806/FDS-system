@@ -80,13 +80,13 @@ namespace FDSSYSTEM.Services.CampaignService
             };
 
             await _campaignRepository.AddAsync(newCampain);
-
+          
             //Send notifiction all staff and admin
             var userReceiveNotifications = isDonorCreate? 
-                await _userService.GetAllAdminAndStaffAndRecipientId() //donor tạo gửi cho admin, staff, recipient
-                : await _userService.GetAllAdminAndRecipientId(); //staff tạo gửi cho admin, recipient
+                await _userService.GetAllAdminAndStaffId() //donor tạo gửi cho admin, staff
+                : await _userService.GetAllAdminId(); //staff tạo gửi cho admin
             
-            foreach (var user in userReceiveNotifications)
+            foreach (var userid in userReceiveNotifications)
             {
                 //Gửi thông báo trong hệ thống
                 var notificationDto = new NotificationDto
@@ -96,24 +96,13 @@ namespace FDSSYSTEM.Services.CampaignService
                     NotificationType = "Pending",
                     ObjectType = "Campain",
                     OjectId = newCampain.CampaignId,
-                    AccountId = user.AccountId
+                    AccountId = userid
                 };
                 //save notifiation to db
                 await _notificationService.AddNotificationAsync(notificationDto);
                 //send notification via signalR
                 await _hubNotificationContext.Clients.User(notificationDto.AccountId).SendAsync("ReceiveNotification", notificationDto);
 
-            }
-
-            //Send SMS recipient
-            var userRecieveSsms = await _userService.GetAllRecipientConfirmed();
-            foreach(var rp in userRecieveSsms)
-            {
-                if (!string.IsNullOrEmpty(rp.Phone))
-                {
-                    _smsHeper.SendSMS(rp.Phone, "Có chiến dịch vừa được tạo ra trên Website. Bạn có thể vào đăng ký ngay");
-                }
-               
             }
 
         }
@@ -250,6 +239,34 @@ namespace FDSSYSTEM.Services.CampaignService
             await _notificationService.AddNotificationAsync(notificationDto);
             //send notification via signalR
             await _hubNotificationContext.Clients.User(notificationDto.AccountId).SendAsync("ReceiveNotification", notificationDto);
+
+
+            //Gửi thông 
+            var userRecieveSsms = await _userService.GetAllRecipientConfirmed();
+            foreach (var rp in userRecieveSsms)
+            {
+                if (!string.IsNullOrEmpty(rp.Phone))
+                {
+                    _smsHeper.SendSMS(rp.Phone, "Có chiến dịch vừa được tạo ra trên Website. Bạn có thể vào đăng ký ngay");
+                }
+
+                //Send notifiction
+                var notificationToRecipient = new NotificationDto
+                {
+                    Title = "Có một chiến dịch vừa được tạo",
+                    Content = "Bạn có thể tham gia đăng ký tại hệ thống",
+                    NotificationType = "Notification",
+                    ObjectType = "Campain",
+                    OjectId = campain.CampaignId,
+                    AccountId = rp.AccountId
+                };
+                //save notifiation to db
+                await _notificationService.AddNotificationAsync(notificationDto);
+                //send notification via signalR
+                await _hubNotificationContext.Clients.User(notificationDto.AccountId).SendAsync("ReceiveNotification", notificationDto);
+
+            }
+
         }
 
         public async Task Reject(RejectCampaignDto rejectCampaignDto)

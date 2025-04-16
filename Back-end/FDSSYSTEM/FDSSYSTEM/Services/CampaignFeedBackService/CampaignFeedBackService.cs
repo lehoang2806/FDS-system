@@ -10,6 +10,7 @@ using FDSSYSTEM.Services.NotificationService;
 using FDSSYSTEM.Services.UserContextService;
 using FDSSYSTEM.Services.UserService;
 using FDSSYSTEM.SignalR;
+using Mapster;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Hosting;
 using MongoDB.Driver;
@@ -35,7 +36,8 @@ namespace FDSSYSTEM.Services.FeedBackCommentService
                 , IUserContextService userContextService, IUserService userService
                 , INotificationService notificationService
                 , IHubContext<NotificationHub> hubContext
-                , ICampaignService campaignService)
+                , ICampaignService campaignService
+                , IUserRepository userRepository)
         {
             _feedBackRepository = feedBackRepository;
             _userContextService = userContextService;
@@ -43,6 +45,7 @@ namespace FDSSYSTEM.Services.FeedBackCommentService
             _notificationService = notificationService;
             _userService = userService;
             _campaignService = campaignService;
+            _userRepository = userRepository;
         }
 
         // Tạo bình luận mới
@@ -59,7 +62,7 @@ namespace FDSSYSTEM.Services.FeedBackCommentService
                     Content = feedback.FeedBackContent,
                     Images = feedback.Images,
                     DateCreated = DateTime.Now,
-                  
+
                 });
 
                 // Lấy thông tin người tạo campaign => gửi thông báo tới người tạo chiến dịch
@@ -120,9 +123,31 @@ namespace FDSSYSTEM.Services.FeedBackCommentService
         }
 
         // Lấy tất cả bình luận theo postId
-        public async Task<List<CampaignFeedBack>> GetByFeedBackByCampaignId(string campaignId)
+        public async Task<List<CampaignFeedBackDetailDto>> GetByFeedBackByCampaignId(string campaignId)
         {
-            return await _feedBackRepository.GetByFeedBackCampaignIdAsync(campaignId);
+            var feedbacks = await _feedBackRepository.GetByFeedBackCampaignIdAsync(campaignId);
+            var feedbackDetails = feedbacks.Adapt<List<CampaignFeedBackDetailDto>>();
+            var users = await _userRepository.GetAllAsync();
+            feedbackDetails.ForEach(f =>
+            {
+                var user = users.FirstOrDefault(x => x.AccountId == f.AccountId);
+                if(user!= null)
+                {
+                    f.FullName = user.FullName??"";
+                }
+                if (f.Replies != null)
+                {
+                    foreach (var item in f.Replies)
+                    {
+                        var ur = users.FirstOrDefault(x => x.AccountId == item.AccountId);
+                        if (ur != null)
+                        {
+                            item.FullName = user.FullName ?? "";
+                        }
+                    }
+                }
+            });
+            return feedbackDetails;
         }
 
         // Lấy bình luận theo Id
@@ -172,6 +197,6 @@ namespace FDSSYSTEM.Services.FeedBackCommentService
             await _feedBackRepository.DeleteAsync(id);
         }
 
-        
+
     }
 }

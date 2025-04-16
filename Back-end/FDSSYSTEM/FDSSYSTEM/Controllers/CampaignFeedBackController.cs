@@ -3,6 +3,7 @@ using FDSSYSTEM.DTOs.CampaignFeedBack;
 using FDSSYSTEM.DTOs.Posts;
 using FDSSYSTEM.Models;
 using FDSSYSTEM.Services.FeedBackCommentService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -23,6 +24,7 @@ namespace FDSSYSTEM.Controllers
 
         // Tạo bình luận mới cho bài viết
         [HttpPost("CreateFeedBack")]
+        [Authorize]
         public async Task<ActionResult> CreateFeedBack(CampaignFeedBackDto feedback)
         {
             try
@@ -53,6 +55,7 @@ namespace FDSSYSTEM.Controllers
 
         // Cập nhật bình luận
         [HttpPut("UpdateFeedBack/{feedbackId}")]
+        [Authorize]
         public async Task<ActionResult> UpdateFeedBack(string feedbackId, UpdateCampaignFeedBackDto feedback)
         {
             try
@@ -74,6 +77,7 @@ namespace FDSSYSTEM.Controllers
 
         // Xóa bình luận
         [HttpDelete("DeleteComment/{id}")]
+        [Authorize]
         public async Task<ActionResult> DeleteComment(string id)
         {
             try

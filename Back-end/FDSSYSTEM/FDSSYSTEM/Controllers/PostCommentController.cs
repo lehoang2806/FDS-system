@@ -1,6 +1,7 @@
 ﻿using FDSSYSTEM.DTOs.Posts;
 using FDSSYSTEM.Models;
 using FDSSYSTEM.Services.PostCommentService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -21,6 +22,7 @@ namespace FDSSYSTEM.Controllers
 
         // Tạo bình luận mới cho bài viết
         [HttpPost("CreateComment")]
+        [Authorize]
         public async Task<ActionResult> CreateComment(PostCommentDto comment)
         {
             try
@@ -51,6 +53,7 @@ namespace FDSSYSTEM.Controllers
 
         // Cập nhật bình luận
         [HttpPut("UpdateComment/{postCommentid}")]
+        [Authorize]
         public async Task<ActionResult> UpdateComment(string postCommentid, UpdatePostCommentDto comment)
         {
             try
@@ -72,6 +75,7 @@ namespace FDSSYSTEM.Controllers
 
         // Xóa bình luận
         [HttpDelete("DeleteComment/{id}")]
+        [Authorize]
         public async Task<ActionResult> DeleteComment(string id)
         {
             try
