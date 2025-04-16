@@ -9,12 +9,13 @@ import { routes } from '@/routes/routeName';
 import { setLoading } from '@/services/app/appSlice';
 import { getAllCampaignApiThunk, getCampaignByIdApiThunk } from '@/services/campaign/campaignThunk';
 import { getAllRegisterReceiversApiThunk } from '@/services/registerReceive/registerReceiveThunk';
-import { Field, Formik } from 'formik';
+import { Field, Formik, FormikHelpers } from 'formik';
 import React, { useEffect, useRef, useState } from 'react'
 import { Form, Link, useParams } from 'react-router-dom';
 import * as Yup from "yup";
 import { createFeedbackCampaignApiThunk } from '@/services/campaign/feedback/feedbackCampaignThunk';
 import { toast } from 'react-toastify';
+import Lightbox from 'react-awesome-lightbox';
 
 const DetailCampaignPage: React.FC = () => {
     const userLogin = useAppSelector(selectUserLogin);
@@ -26,6 +27,7 @@ const DetailCampaignPage: React.FC = () => {
     const dispatch = useAppDispatch();
 
     const currentCampaign = useAppSelector(selectCurrentCampaign);
+    console.log(currentCampaign)
 
     const campaigns = useAppSelector(selectGetAllCampaign)
     const sortedCampaigns = [...campaigns].reverse();
@@ -130,13 +132,15 @@ const DetailCampaignPage: React.FC = () => {
         feedbackContent: Yup.string().required("Vui lồng nhập nội dung"),
     });
 
-    const hanldeSendFeedback = (values: CreateFeedbackCampaign) => {
+    const hanldeSendFeedback = (values: CreateFeedbackCampaign, helpers: FormikHelpers<CreateFeedbackCampaign>) => {
         dispatch(setLoading(true));
         dispatch(createFeedbackCampaignApiThunk(values))
             .unwrap()
             .then(() => {
                 toast.success("Gửi nhận xét thành công");
                 dispatch(getCampaignByIdApiThunk(String(id)));
+                helpers.resetForm();
+                setPreviewImages([]);
             })
             .catch(() => {
             }).finally(() => {
@@ -146,22 +150,37 @@ const DetailCampaignPage: React.FC = () => {
             });
     }
 
-    const [previewImage, setPreviewImage] = useState<string | null>(null);
+    const [previewImages, setPreviewImages] = useState<string[]>([]);
 
     const handleFileChange = (
         event: React.ChangeEvent<HTMLInputElement>,
         setFieldValue: (field: string, value: any) => void
     ) => {
-        const file = event.target.files?.[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                const base64String = reader.result as string;
-                setPreviewImage(base64String);
-                setFieldValue("images", [base64String]); // Lưu vào formik field
-            };
-            reader.readAsDataURL(file); // Convert sang base64
+        const files = event.target.files;
+        if (files && files.length > 0) {
+            const readers = Array.from(files).map((file) => {
+                return new Promise<string>((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onloadend = () => resolve(reader.result as string);
+                    reader.onerror = reject;
+                    reader.readAsDataURL(file);
+                });
+            });
+
+            Promise.all(readers).then((base64Images) => {
+                setPreviewImages(base64Images);
+                setFieldValue("images", base64Images);
+            });
         }
+
+    };
+
+    const [isLightboxOpen, setIsLightboxOpen] = useState(false);
+    const [photoIndex, setPhotoIndex] = useState<number | null>(null);
+
+    const openLightbox = (index: number) => {
+        setPhotoIndex(index);
+        setIsLightboxOpen(true);
     };
 
     return (
@@ -237,9 +256,11 @@ const DetailCampaignPage: React.FC = () => {
                                                     type="file"
                                                     accept="image/*"
                                                     ref={fileInputRef}
+                                                    multiple
                                                     style={{ display: 'none' }}
                                                     onChange={(e) => handleFileChange(e, setFieldValue)}
                                                 />
+
 
                                                 {/* Camera Icon */}
                                                 <CameraIcon className='camera-icon' onClick={handleCameraClick} />
@@ -259,53 +280,56 @@ const DetailCampaignPage: React.FC = () => {
                                             </div>
 
                                             {/* Preview base64 image */}
-                                            {previewImage && (
-                                                <div
-                                                    className="preview-container"
-                                                    style={{
-                                                        position: "relative",
-                                                        display: "inline-block",
-                                                        marginTop: "20px",
+                                            <div className="preview-images-container" style={{ marginTop: "20px", display: "flex", gap: "10px", flexWrap: "wrap" }}>
+                                                {previewImages.map((img, idx) => (
+                                                    <div key={idx} style={{ position: "relative" }}>
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => {
+                                                                const newImages = previewImages.filter((_, i) => i !== idx);
+                                                                setPreviewImages(newImages);
+                                                                setFieldValue("images", newImages);
+                                                            }}
+                                                            style={{
+                                                                position: "absolute",
+                                                                top: "-8px",
+                                                                right: "-8px",
+                                                                background: "red",
+                                                                color: "white",
+                                                                border: "none",
+                                                                borderRadius: "50%",
+                                                                width: "20px",
+                                                                height: "20px",
+                                                                cursor: "pointer",
+                                                                fontSize: "12px",
+                                                            }}
+                                                        >
+                                                            X
+                                                        </button>
+                                                        <img
+                                                            src={img}
+                                                            alt={`Preview ${idx}`}
+                                                            onClick={() => openLightbox(idx)}
+                                                            style={{
+                                                                width: "80px",
+                                                                height: "80px",
+                                                                objectFit: "cover",
+                                                                borderRadius: "6px",
+                                                                cursor: "pointer"
+                                                            }}
+                                                        />
+                                                    </div>
+                                                ))}
+                                            </div>
+                                            {isLightboxOpen && photoIndex !== null && (
+                                                <Lightbox
+                                                    images={previewImages.map((src) => ({ url: src }))}
+                                                    startIndex={photoIndex}
+                                                    onClose={() => {
+                                                        setIsLightboxOpen(false);
+                                                        setPhotoIndex(null);
                                                     }}
-                                                >
-                                                    {/* Nút X để xóa ảnh */}
-                                                    <button
-                                                        type="button"
-                                                        onClick={() => {
-                                                            setPreviewImage(null); // Xóa preview
-                                                            setFieldValue("images", []); // Xóa trong Formik
-                                                        }}
-                                                        style={{
-                                                            position: "absolute",
-                                                            top: "-10px",
-                                                            right: "-10px",
-                                                            background: "red",
-                                                            color: "white",
-                                                            border: "none",
-                                                            borderRadius: "50%",
-                                                            width: "24px",
-                                                            height: "24px",
-                                                            cursor: "pointer",
-                                                            fontSize: "14px",
-                                                            padding: "4px",
-                                                        }}
-                                                    >
-                                                        X
-                                                    </button>
-
-                                                    {/* Ảnh preview */}
-                                                    <img
-                                                        src={previewImage}
-                                                        alt="Ảnh phản hồi"
-                                                        className="preview-image"
-                                                        style={{
-                                                            width: "80px",
-                                                            height: "80px",
-                                                            borderRadius: "8px",
-                                                            objectFit: "cover",
-                                                        }}
-                                                    />
-                                                </div>
+                                                />
                                             )}
                                         </Form>
                                     )}

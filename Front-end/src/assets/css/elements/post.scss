@@ -46,10 +46,18 @@
             color: #393939;
         }
 
+        .image-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 10px;
+            padding: 0 20px;
+        }
+
         .pcr2-img {
             width: 100%;
-            height: 400px;
-            background: #c4c4c4;
+            height: 200px;
+            object-fit: cover; /* Đảm bảo ảnh không bị biến dạng */
+            border-radius: 8px; /* Optional, để ảnh mềm mại hơn */
         }
     }
 

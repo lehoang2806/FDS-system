@@ -1,19 +1,20 @@
-import { selectGetPostById } from "@/app/selector"
-import { useAppDispatch, useAppSelector } from "@/app/store"
-import { CommentIcon, FarvoriteIcon } from "@/assets/icons"
-import { getPostByIdApiThunk } from "@/services/post/postThunk"
-import { FC, useEffect } from "react"
-import { PostProps } from "./type"
+import { selectGetPostById } from "@/app/selector";
+import { useAppDispatch, useAppSelector } from "@/app/store";
+import { CommentIcon, FarvoriteIcon } from "@/assets/icons";
+import { getPostByIdApiThunk } from "@/services/post/postThunk";
+import { FC, useEffect } from "react";
+import { PostProps } from "./type";
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import 'dayjs/locale/vi';
+import PostImageGallery from "./PostImageGallery";
 
 dayjs.locale('vi');
 dayjs.extend(relativeTime);
 
 const Post: FC<PostProps> = ({ post, user }) => {
     const dispatch = useAppDispatch();
-    const postDetail = useAppSelector(selectGetPostById)
+    const postDetail = useAppSelector(selectGetPostById);
 
     useEffect(() => {
         if (post) {
@@ -31,17 +32,16 @@ const Post: FC<PostProps> = ({ post, user }) => {
                     </p>
                 </div>
             </div>
+
             <div className="pcr2">
                 <div className="pcr2-content">{post.postContent}</div>
+
                 {post.images.length > 0 && (
-                    <>
-                        {post.images.map((image, index) => (
-                            <img key={index} src={image} className="pcr2-img" />
-                        ))}
-                    </>
+                    <PostImageGallery images={post.images} />
                 )}
             </div>
-            {user.roleId === 3 || user.roleId === 4 && (
+
+            {(user.roleId === 3 || user.roleId === 4) && (
                 <>
                     {post.status === "Approved" && (
                         <div className="pcr3">
@@ -58,9 +58,8 @@ const Post: FC<PostProps> = ({ post, user }) => {
                     )}
                 </>
             )}
-
         </div>
-    )
-}
+    );
+};
 
-export default Post
+export default Post;
