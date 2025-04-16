@@ -1,17 +1,49 @@
-import { selectIsAuthenticated } from '@/app/selector';
-import { useAppSelector } from '@/app/store';
+import { selectGetAllPosts, selectIsAuthenticated, selectUserLogin } from '@/app/selector';
+import { useAppDispatch, useAppSelector } from '@/app/store';
 import { Post } from '@/components/Elements';
 import { CreatePostModal } from '@/components/Modal';
 import { routes } from '@/routes/routeName'
-import { useState } from 'react'
+import { setLoading } from '@/services/app/appSlice';
+import { getAllPostsApiThunk } from '@/services/post/postThunk';
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 const PostForumPage = () => {
-    const [activeTab, setActiveTab] = useState<"noibat" | "theodoi">("noibat");
+    const dispatch = useAppDispatch();
+
+    const [activeTab, setActiveTab] = useState<"noibat" | "cuatoi">("noibat");
 
     const isAuthentication = useAppSelector(selectIsAuthenticated)
+    const userLogin = useAppSelector(selectUserLogin)
 
     const [isCreatePostModalOpen, setIsCreatePostModalOpen] = useState(false)
+
+    const posts = useAppSelector(selectGetAllPosts)
+    const sortedPosts = [...posts].reverse();
+
+    const personalPost = sortedPosts.filter(post => post.posterId === userLogin?.accountId)
+
+    useEffect(() => {
+        dispatch(setLoading(true))
+        dispatch(getAllPostsApiThunk())
+            .unwrap()
+            .catch((error) => {
+                console.error("Error fetching data:", error);
+            })
+            .finally(() => {
+                setTimeout(() => {
+                    dispatch(setLoading(false));
+                }, 1000)
+            });
+    }, [dispatch])
+
+    const handleCreatePostModalOpen = () => {
+        if (isAuthentication) {
+            setIsCreatePostModalOpen(true)
+        } else {
+            alert('Vui lòng đăng nhập')
+        }
+    }
 
     return (
         <main id="post-forum">
@@ -90,29 +122,29 @@ const PostForumPage = () => {
                                     Nổi bật
                                 </div>
                                 <div
-                                    className={`pf-tabs-item ${activeTab === "theodoi" ? "pf-tabs-item-actived" : ""}`}
-                                    onClick={() => setActiveTab("theodoi")}
+                                    className={`pf-tabs-item ${activeTab === "cuatoi" ? "pf-tabs-item-actived" : ""}`}
+                                    onClick={() => setActiveTab("cuatoi")}
                                 >
-                                    Theo dõi
+                                    Cá nhân
                                 </div>
                             </div>
 
-                            <button className="pr-btn" onClick={() => setIsCreatePostModalOpen(true)}>Tạo bài viết</button>
+                            <button className="pr-btn" onClick={() => handleCreatePostModalOpen()}>Tạo bài viết</button>
                         </div>
                         <div className="pfscc2r2">
                             {activeTab === "noibat" ? (
                                 <>
+                                    {/* <Post />
                                     <Post />
                                     <Post />
                                     <Post />
-                                    <Post />
-                                    <Post />
+                                    <Post /> */}
                                 </>
                             ) : (
                                 <>
-                                    <Post />
-                                    <Post />
-                                    <Post />
+                                    {personalPost.map((post, index) => (
+                                        <Post key={index} post={post}/>
+                                    ))}
                                 </>
                             )}
                         </div>

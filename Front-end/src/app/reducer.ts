@@ -4,6 +4,7 @@ import { authSlice } from '@/services/auth/authSlice';
 import { campaignSlice } from '@/services/campaign/campaignSlice';
 import { newsSlice } from '@/services/news/newsSlice';
 import { notificationSlice } from '@/services/notification/notificationSlice';
+import { postSlice } from '@/services/post/postSlice';
 import { registerReceiverSlice } from '@/services/registerReceive/registerReceiverSlice';
 import { userSlice } from '@/services/user/userSlide';
 import { combineReducers } from '@reduxjs/toolkit';
@@ -16,7 +17,8 @@ const reducer = combineReducers({
     campaign: campaignSlice.reducer,
     registerReceiver: registerReceiverSlice.reducer,
     notificate: notificationSlice.reducer,
-    news: newsSlice.reducer
+    news: newsSlice.reducer,
+    post: postSlice.reducer
 });
 
 export type RootState = ReturnType<typeof reducer>;
