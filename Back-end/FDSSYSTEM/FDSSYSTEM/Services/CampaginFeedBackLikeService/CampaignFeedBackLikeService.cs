@@ -1,4 +1,5 @@
 ﻿using FDSSYSTEM.DTOs;
+using FDSSYSTEM.DTOs.CampaignFeedBackLike;
 using FDSSYSTEM.Models;
 using FDSSYSTEM.Repositories.FeedBackLikeRepository;
 using FDSSYSTEM.Repositories.UserRepository;
@@ -33,12 +34,14 @@ namespace FDSSYSTEM.Services.FeedBackLikeService
             _userService = userService;
         }
 
-        public async Task LikeFeedBack(string feedBackId)
+        public async Task LikeFeedBack(CampaignFeedBackLikeDto campaignFeedBackLike)
         {
             var userId = _userContextService.UserId ?? "";
             var feedBackLike = new CampaignFeedBackLike
             {
-                FeedBackId = feedBackId,
+                FeedBackLikeId = Guid.NewGuid().ToString(),
+                ReplyFeedBackId = campaignFeedBackLike.ReplyCampaignFeedBackId,
+                FeedBackId = campaignFeedBackLike.CampaignFeedBackId,
                 AccountId = userId,
                 CreatedDate = DateTime.UtcNow
             };
@@ -64,10 +67,10 @@ namespace FDSSYSTEM.Services.FeedBackLikeService
         }
 
 
-        public async Task UnlikeFeedBack(string feedBackId)
+        public async Task UnlikeFeedBack(string campaignFeedBackLikeId)
         {
             var userId = _userContextService.UserId ?? "";
-            var existingLike = await _feedBackLikeRepository.GetByFeedBackIdAndUserIdAsync(feedBackId, userId);
+            var existingLike = await _feedBackLikeRepository.GetByFeedBackIdAndUserIdAsync(campaignFeedBackLikeId, userId);
             if (existingLike != null)
             {
                 await _feedBackLikeRepository.DeleteAsync(existingLike.Id);

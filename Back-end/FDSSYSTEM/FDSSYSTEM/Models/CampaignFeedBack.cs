@@ -25,12 +25,12 @@ public partial class CampaignFeedBack
 
     public DateTime? DateUpdated { get; set; }
 
-    public List<ReplyFeedBackComment> Replies { get; set; }
+    public List<ReplyFeedBack> Replies { get; set; }
 }
 
-public class ReplyFeedBackComment
+public class ReplyFeedBack
 {
-    public string ReplyFeedBackCommentId { get; set; }
+    public string ReplyFeedBackId { get; set; }
 
     public string AccountId { get; set; }
 

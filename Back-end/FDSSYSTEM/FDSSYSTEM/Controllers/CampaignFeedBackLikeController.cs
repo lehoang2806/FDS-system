@@ -1,4 +1,5 @@
 ﻿using FDSSYSTEM.DTOs;
+using FDSSYSTEM.DTOs.CampaignFeedBackLike;
 using FDSSYSTEM.Services.FeedBackLikeService;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -16,17 +17,25 @@ namespace FDSSYSTEM.Controllers
             _feedBackLikeService = feedBackLikeService;
         }
 
-        [HttpPost("like/{feedBackId}")]
-        public async Task<IActionResult> LikeFeedBack(string feedBackId)
+        [HttpPost("like")]
+        public async Task<IActionResult> LikeFeedBack(CampaignFeedBackLikeDto campaignFeedBackLike)
         {
-            await _feedBackLikeService.LikeFeedBack(feedBackId);
-            return Ok(new { message = "FeedBack liked successfully" });
+            try
+            {
+                await _feedBackLikeService.LikeFeedBack(campaignFeedBackLike);
+                return Ok(new { message = "FeedBack liked successfully" });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
+           
 
-        [HttpDelete("unlike/{feedBackId}")]
-        public async Task<IActionResult> UnlikeFeedBack(string feedBackId)
+        [HttpDelete("unlike/{feedBackLikeId}")]
+        public async Task<IActionResult> UnlikeFeedBack(string feedBackLikeId)
         {
-            await _feedBackLikeService.UnlikeFeedBack(feedBackId);
+            await _feedBackLikeService.UnlikeFeedBack(feedBackLikeId);
             return Ok(new { message = "FeedBack unliked successfully" });
         }
 

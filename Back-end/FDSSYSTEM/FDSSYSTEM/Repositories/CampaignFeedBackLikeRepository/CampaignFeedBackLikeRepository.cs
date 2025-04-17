@@ -9,15 +9,15 @@ namespace FDSSYSTEM.Repositories.FeedBackLikeRepository
     {
         MongoDbContext _dbContext;
 
-        public CampaignFeedBackLikeRepository(MongoDbContext dbContext) : base(dbContext.Database, "FeedBackLike")
+        public CampaignFeedBackLikeRepository(MongoDbContext dbContext) : base(dbContext.Database, "CampaignFeedBackLike")
         {
             _dbContext = dbContext;
         }
 
-        public async Task<CampaignFeedBackLike> GetByFeedBackIdAndUserIdAsync(string feedBackId, string userId)
+        public async Task<CampaignFeedBackLike> GetByFeedBackIdAndUserIdAsync(string campaignFeedBackLikeId, string userId)
         {
             var filter = Builders<CampaignFeedBackLike>.Filter.And(
-                Builders<CampaignFeedBackLike>.Filter.Eq(p => p.FeedBackId, feedBackId),
+                Builders<CampaignFeedBackLike>.Filter.Eq(p => p.FeedBackLikeId, campaignFeedBackLikeId),
                 Builders<CampaignFeedBackLike>.Filter.Eq(p => p.AccountId, userId)
             );
 

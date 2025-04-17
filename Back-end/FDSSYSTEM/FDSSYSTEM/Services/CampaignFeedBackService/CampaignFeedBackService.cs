@@ -95,11 +95,11 @@ namespace FDSSYSTEM.Services.FeedBackCommentService
                 {
                     if (feedBack.Replies == null)
                     {
-                        feedBack.Replies = new List<ReplyFeedBackComment>();
+                        feedBack.Replies = new List<ReplyFeedBack>();
                     }
-                    feedBack.Replies.Add(new ReplyFeedBackComment
+                    feedBack.Replies.Add(new ReplyFeedBack
                     {
-                        ReplyFeedBackCommentId = Guid.NewGuid().ToString(),
+                        ReplyFeedBackId = Guid.NewGuid().ToString(),
                         AccountId = _userContextService.UserId ?? "",
                         Content = feedback.FeedBackContent,
                         Images = feedback.Images,
@@ -133,13 +133,34 @@ namespace FDSSYSTEM.Services.FeedBackCommentService
             var feedbacks = await _feedBackRepository.GetByFeedBackCampaignIdAsync(campaignId);
             var feedbackDetails = feedbacks.Adapt<List<CampaignFeedBackDetailDto>>();
             var users = await _userRepository.GetAllAsync();
+            var feedbackLikes = await _feedBackLikeRepository.GetAllAsync();
             feedbackDetails.ForEach(f =>
             {
+                //lấy thông tin user feedback
                 var user = users.FirstOrDefault(x => x.AccountId == f.AccountId);
-                if(user!= null)
+                if (user != null)
                 {
-                    f.FullName = user.FullName??"";
+                    f.FullName = user.FullName ?? "";
                 }
+                //lấy thông tin user like feedback
+                f.Likes = new List<CampaignFeedBackLikeDetailDto>();
+                var fblikes = feedbackLikes.Where(x => x.FeedBackId == f.FeedBackId && string.IsNullOrEmpty(x.ReplyFeedBackId));
+                foreach (var item in fblikes)
+                {
+                    var like = new CampaignFeedBackLikeDetailDto
+                    {
+                        AccountId = item.AccountId,
+                        CreatedDate = item.CreatedDate
+                    };
+                    var u = users.FirstOrDefault(x => x.AccountId == f.AccountId);
+                    if (u != null)
+                    {
+                        like.FullName = u.FullName ?? "";
+                    }
+                    f.Likes.Add(like);
+                }
+
+                //trả lời feedback
                 if (f.Replies != null)
                 {
                     foreach (var item in f.Replies)
@@ -149,6 +170,25 @@ namespace FDSSYSTEM.Services.FeedBackCommentService
                         {
                             item.FullName = user.FullName ?? "";
                         }
+
+                        //user like trả lời feedback
+                        item.Likes = new List<CampaignFeedBackLikeDetailDto>();
+                        var fbReplylikes = feedbackLikes.Where(x => x.FeedBackId == f.FeedBackId && x.ReplyFeedBackId == item.ReplyFeedBackId);
+                        foreach (var rfb in fbReplylikes)
+                        {
+                            var like = new CampaignFeedBackLikeDetailDto
+                            {
+                                AccountId = rfb.AccountId,
+                                CreatedDate = rfb.CreatedDate
+                            };
+                            var u = users.FirstOrDefault(x => x.AccountId == rfb.AccountId);
+                            if (u != null)
+                            {
+                                like.FullName = u.FullName ?? "";
+                            }
+                            item.Likes.Add(like);
+                        }
+
                     }
                 }
             });
@@ -182,7 +222,7 @@ namespace FDSSYSTEM.Services.FeedBackCommentService
                     {
                         foreach (var rp in existingFeedBack.Replies)
                         {
-                            if (rp.ReplyFeedBackCommentId.Equals(feedback.ReplyCampaignFeedbackId, StringComparison.OrdinalIgnoreCase))
+                            if (rp.ReplyFeedBackId.Equals(feedback.ReplyCampaignFeedbackId, StringComparison.OrdinalIgnoreCase))
                             {
                                 rp.Content = feedback.FeedBackContent;
                                 rp.DateUpdated = DateTime.Now;
@@ -204,53 +244,67 @@ namespace FDSSYSTEM.Services.FeedBackCommentService
 
         public async Task<CampaignFeedBackDetailDto> GetCampaignFeedBackDetail(string feedbackId)
         {
-            var feedbacks = await _feedBackRepository.GetAllAsync();
-            var accounts = await _userRepository.GetAllAsync();
+
+            var feedback = await _feedBackRepository.GetByFeedBackByIdAsync(feedbackId);
+            var feedbackDetail = feedback.Adapt<CampaignFeedBackDetailDto>();
+            var users = await _userRepository.GetAllAsync();
             var feedbackLikes = await _feedBackLikeRepository.GetAllAsync();
 
-            var feedbackComments = await _feedBackRepository.GetAllAsync();
-            var feedbackReplies = await _feedBackRepository.GetAllAsync();
+            var user = users.FirstOrDefault(x => x.AccountId == feedbackDetail.AccountId);
+            if (user != null)
+            {
+                feedbackDetail.FullName = user.FullName ?? "";
+            }
+            //lấy thông tin user like feedback
+            feedbackDetail.Likes = new List<CampaignFeedBackLikeDetailDto>();
+            var fblikes = feedbackLikes.Where(x => x.FeedBackId == feedbackDetail.FeedBackId && string.IsNullOrEmpty(x.ReplyFeedBackId));
+            foreach (var item in fblikes)
+            {
+                var like = new CampaignFeedBackLikeDetailDto
+                {
+                    AccountId = item.AccountId,
+                    CreatedDate = item.CreatedDate
+                };
+                var u = users.FirstOrDefault(x => x.AccountId == feedbackDetail.AccountId);
+                if (u != null)
+                {
+                    like.FullName = u.FullName ?? "";
+                }
+                feedbackDetail.Likes.Add(like);
+            }
 
-            var query = from feedback in feedbacks
-                        join like in feedbackLikes on feedback.FeedBackId equals like.FeedBackId into likesGroup
-                        join comment in feedbackComments on feedback.FeedBackId equals comment.FeedBackId into commentsGroup
-                        join replies in feedbackReplies on feedback.FeedBackId equals replies.FeedBackId into repliesGroup
-                        select new CampaignFeedBackDetailDto
+            //trả lời feedback
+            if (feedbackDetail.Replies != null)
+            {
+                foreach (var item in feedbackDetail.Replies)
+                {
+                    var ur = users.FirstOrDefault(x => x.AccountId == item.AccountId);
+                    if (ur != null)
+                    {
+                        item.FullName = user.FullName ?? "";
+                    }
+
+                    //user like trả lời feedback
+                    item.Likes = new List<CampaignFeedBackLikeDetailDto>();
+                    var fbReplylikes = feedbackLikes.Where(x => x.FeedBackId == feedbackDetail.FeedBackId && x.ReplyFeedBackId == item.ReplyFeedBackId);
+                    foreach (var rfb in fbReplylikes)
+                    {
+                        var like = new CampaignFeedBackLikeDetailDto
                         {
-                            FeedBackId = feedback.FeedBackId,
-                            Content = feedback.Content,
-                            Images = feedback.Images,
-                            Likes = from like in likesGroup
-                                    join account in accounts on like.AccountId equals account.AccountId
-                                    select new CampaignFeedBackLikeDetailDto
-                                    {
-                                        AccountId = account.AccountId,
-                                        FullName = account.FullName,
-                                        CreatedDate = like.CreatedDate.ToString()
-                                    },
-                            Comments = from comment in commentsGroup
-                                       join account in accounts on comment.AccountId equals account.AccountId
-                                       select new CampaignFeedBackCommentDetailDto
-                                       {
-                                           FullName = account.FullName,
-                                           CreatedDate = comment.DateCreated.ToString(),
-                                           Content = comment.Content,
-                                       },
-                          /*  Replies = from replies in repliesGroup
-                                      join account in accounts on replies.AccountId equals account.AccountId
-                                      select new ReplyFeedBackCommentDetail
-                                      {
-                                          FullName=account.FullName,
-                                          AccountId = account.AccountId,
-                                          Content=replies.Content,
-                                          Images=replies.Images,
-                                          DateCreated =replies.DateCreated,
-                                          DateUpdated =replies.DateUpdated,
-                                      },*/
+                            AccountId = rfb.AccountId,
+                            CreatedDate = rfb.CreatedDate
                         };
+                        var u = users.FirstOrDefault(x => x.AccountId == rfb.AccountId);
+                        if (u != null)
+                        {
+                            like.FullName = u.FullName ?? "";
+                        }
+                        item.Likes.Add(like);
+                    }
+                }
+            }
 
-            return query.FirstOrDefault(x => x.FeedBackId == feedbackId);
-
+            return feedbackDetail;
         }
     }
 }
