@@ -1,3 +1,4 @@
+import { UserProfile } from "@/types/auth";
 import { UserInfo } from "@/types/user";
 
 type PostProps = {
@@ -5,6 +6,11 @@ type PostProps = {
     post: Post,
     user: UserInfo,
     isStatus?: boolean | null
+}
+
+interface FeedbackCampaignProps {
+    feedback: FeedbackCampaign,
+    user: UserProfile
 }
 
 interface SubcriberProps {

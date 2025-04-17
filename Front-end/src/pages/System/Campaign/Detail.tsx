@@ -1,8 +1,8 @@
 import { selectCurrentCampaign, selectGetAllCampaign, selectGetAllFeedbackCampaign, selectGetAllRegisterReceivers, selectUserLogin } from '@/app/selector';
 import { useAppDispatch, useAppSelector } from '@/app/store';
-import { CameraIcon, FavoriteIcon, SendIcon } from '@/assets/icons';
+import { CameraIcon, SendIcon } from '@/assets/icons';
 import { CampaignCard } from '@/components/Card/index';
-import { Subscriber } from '@/components/Elements/index'
+import { FeedbackCampaign, Subscriber } from '@/components/Elements/index'
 import { RegisterReceiverModal, RemindCertificateModal } from '@/components/Modal';
 import { navigateHook } from '@/routes/RouteApp';
 import { routes } from '@/routes/routeName';
@@ -19,124 +19,120 @@ import Lightbox from 'react-awesome-lightbox';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import 'dayjs/locale/vi';
+import { UserProfile } from '@/types/auth';
 
 dayjs.locale('vi');
 dayjs.extend(relativeTime);
 
 const DetailCampaignPage: React.FC = () => {
-    const userLogin = useAppSelector(selectUserLogin);
-
-    const [activeTab, setActiveTab] = useState<"mota" | "dangky">("mota");
-
-    const { id } = useParams<{ id: string }>();
-
+    // Redux
     const dispatch = useAppDispatch();
 
+    // Router
+    const { id } = useParams<{ id: string }>();
+
+    // Selectors
+    const userLogin = useAppSelector(selectUserLogin);
+    const campaigns = useAppSelector(selectGetAllCampaign);
     const currentCampaign = useAppSelector(selectCurrentCampaign);
-
-    const campaigns = useAppSelector(selectGetAllCampaign)
-    const sortedCampaigns = [...campaigns].reverse();
-
-    const approvedCampaigns = sortedCampaigns.filter((campaign) => campaign.status === "Approved");
-
-    const otherCampaigns = approvedCampaigns.filter((campaign) => campaign.campaignId !== id).slice(0, 3) as Array<CampaignInfo>;
-
-    const [isRemindCertificateModalOpend, setIsRemindCertificateModalOpend] = useState(false);
-
-    const [isRegisterReceiverModalOpend, setIsRegisterReceiverModalOpend] = useState(false);
-
     const registerReceivers = useAppSelector(selectGetAllRegisterReceivers);
+    const currentFeedbackCampaign = useAppSelector(selectGetAllFeedbackCampaign);
 
-    const currentRegisterReceivers = registerReceivers.filter((registerReceiver) => registerReceiver.campaignId === id);
+    // States
+    const [activeTab, setActiveTab] = useState<"mota" | "dangky">("mota");
+    const [selectedImage, setSelectedImage] = useState(currentCampaign?.images?.[0] || "");
+    const [isRemindCertificateModalOpend, setIsRemindCertificateModalOpend] = useState(false);
+    const [isRegisterReceiverModalOpend, setIsRegisterReceiverModalOpend] = useState(false);
+    const [previewImages, setPreviewImages] = useState<string[]>([]);
+    const [isLightboxOpen, setIsLightboxOpen] = useState(false);
+    const [photoIndex, setPhotoIndex] = useState<number | null>(null);
 
-    const registeredReceiver = currentRegisterReceivers.find((registerReceiver) => registerReceiver.accountId === userLogin?.accountId);
+    // Refs
+    const fileInputRef = useRef<HTMLInputElement>(null);
 
-    const [selectedImage, setSelectedImage] = useState(currentCampaign?.images?.[0] || "")
+    // Campaign logic
+    const sortedCampaigns = [...campaigns].reverse();
+    const approvedCampaigns = sortedCampaigns.filter(c => c.status === "Approved");
+    const otherCampaigns = approvedCampaigns.filter(c => c.campaignId !== id).slice(0, 3) as CampaignInfo[];
 
-    const currentFeedbackCampaign = useAppSelector(selectGetAllFeedbackCampaign)
+    const currentRegisterReceivers = registerReceivers.filter(r => r.campaignId === id);
+    const registeredReceiver = currentRegisterReceivers.find(r => r.accountId === userLogin?.accountId);
 
-    const handleToDetail = (campaignId: string) => {
-        const url = routes.user.campaign.detail.replace(":id", campaignId);
-        return navigateHook(url)
-    }
+    const totalRegisteredQuantity = currentRegisterReceivers.reduce((sum, r) => sum + (r.quantity || 0), 0);
 
-    useEffect(() => {
-        dispatch(setLoading(true));
-        dispatch(getAllCampaignApiThunk())
-            .unwrap()
-            .catch(() => {
-            }).finally(() => {
-                setTimeout(() => {
-                    dispatch(setLoading(false));
-                }, 1000)
-            });
-    }, [dispatch])
-
-    // Formated Date
+    // Formatted date/time
     const formattedDate = currentCampaign?.implementationTime
         ? (() => {
-            const dateStr = currentCampaign.implementationTime.split("T")[0];
-            const [year, month, day] = dateStr.split("-");
+            const [year, month, day] = currentCampaign.implementationTime.split("T")[0].split("-");
             return `${day}-${month}-${year}`;
         })()
         : "";
 
-    // Formated Time
     const formattedTime = currentCampaign?.implementationTime
-        .split("T")[1]
+        ?.split("T")[1]
         .replace("Z", "")
         .split(":")
         .slice(0, 2)
         .join(":");
 
+    const currentDate = new Date();
+    const today = currentDate.toLocaleDateString("vi-VN");
+
+    // Effects
+    useEffect(() => {
+        dispatch(setLoading(true));
+        dispatch(getAllCampaignApiThunk())
+            .unwrap()
+            .catch(() => { })
+            .finally(() => {
+                setTimeout(() => dispatch(setLoading(false)), 1000);
+            });
+    }, [dispatch]);
+
     useEffect(() => {
         if (!id) return;
 
         dispatch(setLoading(true));
-
-        const allPromises = [
+        Promise.all([
             dispatch(getAllRegisterReceiversApiThunk()).unwrap(),
             dispatch(getCampaignByIdApiThunk(id)).unwrap(),
             dispatch(getFeedbackCampaignApiThunk(id)).unwrap(),
-        ];
-
-        Promise.all(allPromises)
-            .catch((error) => {
-                console.error("Error loading campaign data:", error);
-            })
+        ])
+            .catch((error) => console.error("Error loading campaign data:", error))
             .finally(() => {
-                setTimeout(() => {
-                    dispatch(setLoading(false));
-                }, 1000);
+                setTimeout(() => dispatch(setLoading(false)), 1000);
             });
     }, [id, dispatch]);
 
-
     useEffect(() => {
-        if (currentCampaign?.images && currentCampaign.images.length > 0) {
+        if (currentCampaign?.images?.length) {
             setSelectedImage(currentCampaign.images[0]);
         }
     }, [JSON.stringify(currentCampaign?.images)]);
 
+    // Handlers
+    const handleToDetail = (campaignId: string) => {
+        navigateHook(routes.user.campaign.detail.replace(":id", campaignId));
+    };
+
     const handleRegisterReceiver = () => {
         if (registeredReceiver) {
-            alert("Bạn đã đăng ký rồi")
-        }
-        else {
+            alert("Bạn đã đăng ký rồi");
+        } else {
             setIsRegisterReceiverModalOpend(true);
         }
-    }
-
-    const currentDate = new Date();
-
-    const totalRegisteredQuantity = currentRegisterReceivers.reduce((sum, receiver) => sum + (receiver.quantity || 0), 0);
-
-    const fileInputRef = useRef<HTMLInputElement>(null);
+    };
 
     const handleCameraClick = () => {
         fileInputRef.current?.click();
     };
 
+    const openLightbox = (index: number) => {
+        setPhotoIndex(index);
+        setIsLightboxOpen(true);
+    };
+
+    // Formik & Feedback
     const initialValues: CreateFeedbackCampaign = {
         campaignId: id || "",
         feedbackContent: "",
@@ -144,10 +140,13 @@ const DetailCampaignPage: React.FC = () => {
     };
 
     const schema = Yup.object({
-        feedbackContent: Yup.string().required("Vui lồng nhập nội dung"),
+        feedbackContent: Yup.string().required("Vui lòng nhập nội dung"),
     });
 
-    const hanldeSendFeedback = (values: CreateFeedbackCampaign, helpers: FormikHelpers<CreateFeedbackCampaign>) => {
+    const hanldeSendFeedback = (
+        values: CreateFeedbackCampaign,
+        helpers: FormikHelpers<CreateFeedbackCampaign>
+    ) => {
         dispatch(setLoading(true));
         dispatch(createFeedbackCampaignApiThunk(values))
             .unwrap()
@@ -157,46 +156,34 @@ const DetailCampaignPage: React.FC = () => {
                 helpers.resetForm();
                 setPreviewImages([]);
             })
-            .catch(() => {
-            }).finally(() => {
-                setTimeout(() => {
-                    dispatch(setLoading(false));
-                }, 1000)
+            .catch(() => { })
+            .finally(() => {
+                setTimeout(() => dispatch(setLoading(false)), 1000);
             });
-    }
-
-    const [previewImages, setPreviewImages] = useState<string[]>([]);
+    };
 
     const handleFileChange = (
         event: React.ChangeEvent<HTMLInputElement>,
         setFieldValue: (field: string, value: any) => void
     ) => {
         const files = event.target.files;
-        if (files && files.length > 0) {
-            const readers = Array.from(files).map((file) => {
-                return new Promise<string>((resolve, reject) => {
+        if (files?.length) {
+            const readers = Array.from(files).map(file =>
+                new Promise<string>((resolve, reject) => {
                     const reader = new FileReader();
                     reader.onloadend = () => resolve(reader.result as string);
                     reader.onerror = reject;
                     reader.readAsDataURL(file);
-                });
-            });
+                })
+            );
 
             Promise.all(readers).then((base64Images) => {
                 setPreviewImages(base64Images);
                 setFieldValue("images", base64Images);
             });
         }
-
     };
 
-    const [isLightboxOpen, setIsLightboxOpen] = useState(false);
-    const [photoIndex, setPhotoIndex] = useState<number | null>(null);
-
-    const openLightbox = (index: number) => {
-        setPhotoIndex(index);
-        setIsLightboxOpen(true);
-    };
 
     return (
         <main id="detail-campaign">
@@ -352,14 +339,7 @@ const DetailCampaignPage: React.FC = () => {
                                 {currentFeedbackCampaign?.length > 0 && (
                                     <>
                                         {currentFeedbackCampaign.map((item, index) => (
-                                            <div key={index} className="feedback-item">
-                                                <h4 className='ft-name'>{item.fullName}</h4>
-                                                <p className='ft-content'>{item.content}</p>
-                                                <div className="ft-info">
-                                                    <p className="ft-time">{item?.dateCreated ? dayjs(item.dateCreated).fromNow() : ''}</p>
-                                                    <FavoriteIcon className='ft-favorite-icon' />
-                                                </div>
-                                            </div>
+                                            <FeedbackCampaign key={index} feedback={item} user={userLogin as UserProfile} />
                                         ))}
                                     </>
                                 )}
@@ -382,7 +362,7 @@ const DetailCampaignPage: React.FC = () => {
                                         {/* Campaign dạng Limited */}
                                         {currentCampaign.campaignType === "Limited" &&
                                             currentCampaign.implementationTime &&
-                                            currentCampaign.implementationTime > currentDate.toISOString() && (
+                                            currentCampaign.implementationTime > today && (
                                                 totalRegisteredQuantity >= (Number(currentCampaign.limitedQuantity) || 0) ? (
                                                     <p className="sc-text">Đã đăng ký đủ số lượng</p>
                                                 ) : (
@@ -395,12 +375,12 @@ const DetailCampaignPage: React.FC = () => {
                                         {/* Campaign dạng Voluntary */}
                                         {currentCampaign.campaignType === "Voluntary" &&
                                             currentCampaign.implementationTime &&
-                                            currentDate.toISOString() <= currentCampaign.implementationTime && (
+                                            today <= currentCampaign.implementationTime && (
                                                 currentCampaign.startRegisterDate &&
                                                 currentCampaign.endRegisterDate && (
-                                                    currentDate.toISOString() < currentCampaign.startRegisterDate ? (
+                                                    today < currentCampaign.startRegisterDate ? (
                                                         <p className="sc-text">Chưa mở đăng ký</p>
-                                                    ) : currentDate.toISOString() > currentCampaign.endRegisterDate ? (
+                                                    ) : today > currentCampaign.endRegisterDate ? (
                                                         <p className="sc-text">Đã đóng đăng ký nhận quà</p>
                                                     ) : (
                                                         <button className='sc-btn' onClick={handleRegisterReceiver}>

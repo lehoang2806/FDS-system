@@ -1,8 +1,9 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { getFeedbackCampaignApiThunk } from "./feedbackCampaignThunk";
+import { getFeedbackCampaignApiThunk, getFeedbackDetailApiThunk } from "./feedbackCampaignThunk";
 
 const initialState: FeedbackCampaignState = {
-    listFeedbacksCampaign: []
+    listFeedbacksCampaign: [],
+    feedbackDetail: null
 };
 
 export const feedbackCampaignSlice = createSlice({
@@ -14,6 +15,9 @@ export const feedbackCampaignSlice = createSlice({
         builder
         .addCase(getFeedbackCampaignApiThunk.fulfilled, (state, action: PayloadAction<FeedbackCampaign[]>) => {
             state.listFeedbacksCampaign = action.payload;
+        })
+        .addCase(getFeedbackDetailApiThunk.fulfilled, (state, action: PayloadAction<FeedbackDetail>) => {
+            state.feedbackDetail = action.payload;
         })
     },
 });

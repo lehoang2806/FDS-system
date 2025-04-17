@@ -122,6 +122,7 @@ interface ReviewComment {
 
 interface FeedbackCampaignState {
     listFeedbacksCampaign: FeedbackCampaign[];
+    feedbackDetail: FeedbackDetail | null;
 }
 
 interface CreateFeedbackCampaign {
@@ -141,3 +142,30 @@ interface FeedbackCampaign {
     dateUpdated: string | null;
     replies: [] | null;
 }
+
+interface FeedbackDetailComment {
+    fullName: string;
+    content: string;
+    createdDate: string;
+}
+
+interface FeedbackDetail {
+    feedBackId: string;
+    campaignId: string | null;
+    accountId: string | null;
+    fullName: string | null;
+    content: string;
+    images: string[];
+    dateCreated: string | null;
+    dateUpdated: string | null;
+    likes: FeedbackLike[];
+    comments: FeedbackDetailComment[];
+    replies: any[] | null;
+}
+
+interface FeedbackLike {
+    accountId: string;
+    createdDate: string;
+    fullName: string;
+}
+
