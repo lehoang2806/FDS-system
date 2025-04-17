@@ -12,5 +12,6 @@
         public string PosterApproverId { get; set; }
         public string PosterApproverName { get; set; }
         public string PostId { get; set; }
+        public string PublicDate { get; set; }
     }
 }

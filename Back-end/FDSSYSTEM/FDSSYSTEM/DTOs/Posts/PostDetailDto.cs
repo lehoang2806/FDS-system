@@ -30,6 +30,5 @@ public  class PostCommentDetailDto
 {
     public string FullName { get; set; }
     public string Content { get; set; }
-    public string FileComment { get; set; }
     public string CreatedDate { get; set; }
 }

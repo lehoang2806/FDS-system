@@ -4,6 +4,8 @@ using FDSSYSTEM.DTOs.Posts;
 using FDSSYSTEM.Models;
 using FDSSYSTEM.Repositories.CampaignRepository;
 using FDSSYSTEM.Repositories.FeedBackCommentRepository;
+using FDSSYSTEM.Repositories.FeedBackLikeRepository;
+using FDSSYSTEM.Repositories.PostLikeRepository;
 using FDSSYSTEM.Repositories.UserRepository;
 using FDSSYSTEM.Services.CampaignService;
 using FDSSYSTEM.Services.NotificationService;
@@ -31,13 +33,15 @@ namespace FDSSYSTEM.Services.FeedBackCommentService
         private readonly IUserService _userService;
         private readonly INotificationService _notificationService;
         private readonly IHubContext<NotificationHub> _hubNotificationContext;
+        private readonly ICampaignFeedBackLikeRepository _feedBackLikeRepository;
 
         public FeedBackCommentService(ICampaignFeedBackRepository feedBackRepository
                 , IUserContextService userContextService, IUserService userService
                 , INotificationService notificationService
                 , IHubContext<NotificationHub> hubContext
                 , ICampaignService campaignService
-                , IUserRepository userRepository)
+                , IUserRepository userRepository
+                , ICampaignFeedBackLikeRepository feedBackLikeRepository)
         {
             _feedBackRepository = feedBackRepository;
             _userContextService = userContextService;
@@ -46,6 +50,7 @@ namespace FDSSYSTEM.Services.FeedBackCommentService
             _userService = userService;
             _campaignService = campaignService;
             _userRepository = userRepository;
+            _feedBackLikeRepository = feedBackLikeRepository;
         }
 
         // Tạo bình luận mới
@@ -197,6 +202,55 @@ namespace FDSSYSTEM.Services.FeedBackCommentService
             await _feedBackRepository.DeleteAsync(id);
         }
 
+        public async Task<CampaignFeedBackDetailDto> GetCampaignFeedBackDetail(string feedbackId)
+        {
+            var feedbacks = await _feedBackRepository.GetAllAsync();
+            var accounts = await _userRepository.GetAllAsync();
+            var feedbackLikes = await _feedBackLikeRepository.GetAllAsync();
 
+            var feedbackComments = await _feedBackRepository.GetAllAsync();
+            var feedbackReplies = await _feedBackRepository.GetAllAsync();
+
+            var query = from feedback in feedbacks
+                        join like in feedbackLikes on feedback.FeedBackId equals like.FeedBackId into likesGroup
+                        join comment in feedbackComments on feedback.FeedBackId equals comment.FeedBackId into commentsGroup
+                        join replies in feedbackReplies on feedback.FeedBackId equals replies.FeedBackId into repliesGroup
+                        select new CampaignFeedBackDetailDto
+                        {
+                            FeedBackId = feedback.FeedBackId,
+                            Content = feedback.Content,
+                            Images = feedback.Images,
+                            Likes = from like in likesGroup
+                                    join account in accounts on like.AccountId equals account.AccountId
+                                    select new CampaignFeedBackLikeDetailDto
+                                    {
+                                        AccountId = account.AccountId,
+                                        FullName = account.FullName,
+                                        CreatedDate = like.CreatedDate.ToString()
+                                    },
+                            Comments = from comment in commentsGroup
+                                       join account in accounts on comment.AccountId equals account.AccountId
+                                       select new CampaignFeedBackCommentDetailDto
+                                       {
+                                           FullName = account.FullName,
+                                           CreatedDate = comment.DateCreated.ToString(),
+                                           Content = comment.Content,
+                                       },
+                          /*  Replies = from replies in repliesGroup
+                                      join account in accounts on replies.AccountId equals account.AccountId
+                                      select new ReplyFeedBackCommentDetail
+                                      {
+                                          FullName=account.FullName,
+                                          AccountId = account.AccountId,
+                                          Content=replies.Content,
+                                          Images=replies.Images,
+                                          DateCreated =replies.DateCreated,
+                                          DateUpdated =replies.DateUpdated,
+                                      },*/
+                        };
+
+            return query.FirstOrDefault(x => x.FeedBackId == feedbackId);
+
+        }
     }
 }
