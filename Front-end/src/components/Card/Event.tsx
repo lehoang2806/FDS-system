@@ -3,8 +3,6 @@ import { FC } from "react"
 const EventCard: FC<EventCardProps> = ({ type, news, onClickDetail }) => {
     const createdDate = news?.createdDate && news?.createdDate.split('T')[0]
 
-    console.log(news)
-
     if (type === 1) return (
         <div className="event-card-1">
             <img src={news?.images[0]} className="ec1-img" />

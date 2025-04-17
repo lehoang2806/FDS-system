@@ -1,10 +1,12 @@
-import { selectGetAllPosts, selectIsAuthenticated, selectUserLogin } from '@/app/selector';
+import { selectGetAllPosts, selectGetProfileUser, selectIsAuthenticated, selectUserLogin } from '@/app/selector';
 import { useAppDispatch, useAppSelector } from '@/app/store';
 import { Post } from '@/components/Elements';
 import { CreatePostModal } from '@/components/Modal';
 import { routes } from '@/routes/routeName'
 import { setLoading } from '@/services/app/appSlice';
 import { getAllPostsApiThunk } from '@/services/post/postThunk';
+import { getProfileApiThunk } from '@/services/user/userThunk';
+import { UserInfo } from '@/types/user';
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 
@@ -15,6 +17,7 @@ const PostForumPage = () => {
 
     const isAuthentication = useAppSelector(selectIsAuthenticated)
     const userLogin = useAppSelector(selectUserLogin)
+    const userProfile = useAppSelector(selectGetProfileUser)
 
     const [isCreatePostModalOpen, setIsCreatePostModalOpen] = useState(false)
 
@@ -26,6 +29,7 @@ const PostForumPage = () => {
     useEffect(() => {
         dispatch(setLoading(true))
         dispatch(getAllPostsApiThunk())
+        dispatch(getProfileApiThunk(String(userProfile?.accountId)))
             .unwrap()
             .catch((error) => {
                 console.error("Error fetching data:", error);
@@ -143,7 +147,7 @@ const PostForumPage = () => {
                             ) : (
                                 <>
                                     {personalPost.map((post, index) => (
-                                        <Post key={index} post={post}/>
+                                        <Post key={index} post={post} user={userProfile as UserInfo} />
                                     ))}
                                 </>
                             )}

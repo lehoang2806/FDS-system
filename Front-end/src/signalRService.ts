@@ -12,7 +12,7 @@ const getToken = () => {
 };
 
 const connection = new signalR.HubConnectionBuilder()
-  .withUrl("http://localhost:5213/notificationhub", {
+  .withUrl("https://localhost:7246/notificationhub", {
     accessTokenFactory: () => getToken() || "", // Tránh lỗi nếu token null
   })
   .withAutomaticReconnect()
