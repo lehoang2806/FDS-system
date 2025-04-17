@@ -69,3 +69,7 @@ interface UpdateRecipientCertificateModalProps extends ModalCommonProps {
 }
 
 interface CreatePostModalProps extends ModalCommonProps {}
+
+interface RejectPostModalProps extends ModalCommonProps {
+    selectedRejectPost?: RejectPost | null;
+}

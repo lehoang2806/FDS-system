@@ -59,7 +59,7 @@ const RejectCampaignModal: FC<RejectCampaignModalProps> = ({ isOpen, setIsOpen, 
                                 onChange={(e) => setReason(e.target.value)}
                             />
                         </div>
-                        <button type="submit" className="sc-btn">Hoàn thành</button>
+                        <button type="submit" className="sc-btn">Gửi</button>
                     </form>
                 </div>
             </section>

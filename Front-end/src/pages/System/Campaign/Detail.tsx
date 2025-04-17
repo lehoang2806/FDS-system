@@ -90,20 +90,27 @@ const DetailCampaignPage: React.FC = () => {
         .join(":");
 
     useEffect(() => {
-        if (id) {
-            dispatch(setLoading(true));
-            dispatch(getAllRegisterReceiversApiThunk())
-            dispatch(getCampaignByIdApiThunk(id))
-            dispatch(getFeedbackCampaignApiThunk(id))
-                .unwrap()
-                .catch(() => {
-                }).finally(() => {
-                    setTimeout(() => {
-                        dispatch(setLoading(false));
-                    }, 1000)
-                });
-        }
-    }, [id, dispatch])
+        if (!id) return;
+
+        dispatch(setLoading(true));
+
+        const allPromises = [
+            dispatch(getAllRegisterReceiversApiThunk()).unwrap(),
+            dispatch(getCampaignByIdApiThunk(id)).unwrap(),
+            dispatch(getFeedbackCampaignApiThunk(id)).unwrap(),
+        ];
+
+        Promise.all(allPromises)
+            .catch((error) => {
+                console.error("Error loading campaign data:", error);
+            })
+            .finally(() => {
+                setTimeout(() => {
+                    dispatch(setLoading(false));
+                }, 1000);
+            });
+    }, [id, dispatch]);
+
 
     useEffect(() => {
         if (currentCampaign?.images && currentCampaign.images.length > 0) {

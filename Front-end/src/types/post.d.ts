@@ -37,6 +37,32 @@ interface PostInfo {
     posterRole: string | null;
     posterApproverId: string | null;
     posterApproverName: string | null;
-    likes: string[]; // assuming array of user IDs or names
-    comments: string[]; // assuming array of comment IDs or texts (tùy theo hệ thống)
+    likes: PostLike[]; // assuming array of user IDs or names
+    comments: PostComment[]; // assuming array of comment IDs or texts (tùy theo hệ thống)
+}
+
+interface PostLike {
+    accountId: string;
+    createdDate: string;
+    fullName: string;
+}
+
+interface PostComment {
+    createdDate: string;
+    fullName: string;
+    content: string;
+}
+
+interface ApprovePost {
+    postId: string;
+}
+
+interface RejectPost {
+    postId: string;
+    comment: string;
+}
+
+interface CommentPost {
+    postId: string;
+    content: string;
 }
