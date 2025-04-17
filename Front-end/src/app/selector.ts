@@ -57,6 +57,10 @@ export const selectCurrentCampaign: Selector<CurrentCampaign | null> = (state: R
     return state.campaign.currentCampaign;
 }
 
+export const selectGetAllFeedbackCampaign: Selector<FeedbackCampaign[]> = (state: RootState) => {
+    return state.feedbackCampaign.listFeedbacksCampaign
+}
+
 //RegisterReciver
 export const selectGetAllRegisterReceivers: Selector<RegisterReceiver[]> = (state: RootState) => {
     return state.registerReceiver.listRegisterReceivers;
@@ -79,4 +83,8 @@ export const selectGetNewsById: Selector<NewsInfo | null> = (state: RootState) =
 //Post
 export const selectGetAllPosts: Selector<Post[]> = (state: RootState) => {
     return state.post.listPosts;
+}
+
+export const selectGetPostById: Selector<PostInfo | null> = (state: RootState) => {
+    return state.post.post;
 }

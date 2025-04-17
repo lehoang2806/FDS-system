@@ -8,7 +8,7 @@ import { CreatePostModalProps } from './type';
 import Modal from './Modal';
 import Button from '../Elements/Button';
 import { setLoading } from '@/services/app/appSlice';
-import { createPostApiThunk } from '@/services/post/postThunk';
+import { createPostApiThunk, getAllPostsApiThunk } from '@/services/post/postThunk';
 import { toast } from 'react-toastify';
 import { get } from 'lodash';
 
@@ -62,6 +62,7 @@ const CreatePostModal: FC<CreatePostModalProps> = ({ isOpen, setIsOpen }) => {
                 helpers.resetForm()
                 setImagePreview([])
                 toast.info("Bài viết của bạn đang chờ được phê duyệt")
+                dispatch(getAllPostsApiThunk())
             })
             .catch((error) => {
                 const errorData = get(error, "data.message", "An error occurred");
