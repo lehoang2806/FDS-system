@@ -57,6 +57,10 @@ export const selectCurrentCampaign: Selector<CurrentCampaign | null> = (state: R
     return state.campaign.currentCampaign;
 }
 
+export const selectGetAllFeedbackCampaign: Selector<FeedbackCampaign[]> = (state: RootState) => {
+    return state.feedbackCampaign.listFeedbacksCampaign
+}
+
 //RegisterReciver
 export const selectGetAllRegisterReceivers: Selector<RegisterReceiver[]> = (state: RootState) => {
     return state.registerReceiver.listRegisterReceivers;

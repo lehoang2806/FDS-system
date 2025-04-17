@@ -1,6 +1,6 @@
-import { selectCurrentCampaign, selectGetAllCampaign, selectGetAllRegisterReceivers, selectUserLogin } from '@/app/selector';
+import { selectCurrentCampaign, selectGetAllCampaign, selectGetAllFeedbackCampaign, selectGetAllRegisterReceivers, selectUserLogin } from '@/app/selector';
 import { useAppDispatch, useAppSelector } from '@/app/store';
-import { CameraIcon, SendIcon } from '@/assets/icons';
+import { CameraIcon, FavoriteIcon, SendIcon } from '@/assets/icons';
 import { CampaignCard } from '@/components/Card/index';
 import { Subscriber } from '@/components/Elements/index'
 import { RegisterReceiverModal, RemindCertificateModal } from '@/components/Modal';
@@ -13,9 +13,15 @@ import { Field, Formik, FormikHelpers } from 'formik';
 import React, { useEffect, useRef, useState } from 'react'
 import { Form, Link, useParams } from 'react-router-dom';
 import * as Yup from "yup";
-import { createFeedbackCampaignApiThunk } from '@/services/campaign/feedback/feedbackCampaignThunk';
+import { createFeedbackCampaignApiThunk, getFeedbackCampaignApiThunk } from '@/services/campaign/feedback/feedbackCampaignThunk';
 import { toast } from 'react-toastify';
 import Lightbox from 'react-awesome-lightbox';
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+import 'dayjs/locale/vi';
+
+dayjs.locale('vi');
+dayjs.extend(relativeTime);
 
 const DetailCampaignPage: React.FC = () => {
     const userLogin = useAppSelector(selectUserLogin);
@@ -27,7 +33,6 @@ const DetailCampaignPage: React.FC = () => {
     const dispatch = useAppDispatch();
 
     const currentCampaign = useAppSelector(selectCurrentCampaign);
-    console.log(currentCampaign)
 
     const campaigns = useAppSelector(selectGetAllCampaign)
     const sortedCampaigns = [...campaigns].reverse();
@@ -47,6 +52,8 @@ const DetailCampaignPage: React.FC = () => {
     const registeredReceiver = currentRegisterReceivers.find((registerReceiver) => registerReceiver.accountId === userLogin?.accountId);
 
     const [selectedImage, setSelectedImage] = useState(currentCampaign?.images?.[0] || "")
+
+    const currentFeedbackCampaign = useAppSelector(selectGetAllFeedbackCampaign)
 
     const handleToDetail = (campaignId: string) => {
         const url = routes.user.campaign.detail.replace(":id", campaignId);
@@ -87,6 +94,7 @@ const DetailCampaignPage: React.FC = () => {
             dispatch(setLoading(true));
             dispatch(getAllRegisterReceiversApiThunk())
             dispatch(getCampaignByIdApiThunk(id))
+            dispatch(getFeedbackCampaignApiThunk(id))
                 .unwrap()
                 .catch(() => {
                 }).finally(() => {
@@ -334,7 +342,20 @@ const DetailCampaignPage: React.FC = () => {
                                         </Form>
                                     )}
                                 </Formik>
-
+                                {currentFeedbackCampaign?.length > 0 && (
+                                    <>
+                                        {currentFeedbackCampaign.map((item, index) => (
+                                            <div key={index} className="feedback-item">
+                                                <h4 className='ft-name'>{item.fullName}</h4>
+                                                <p className='ft-content'>{item.content}</p>
+                                                <div className="ft-info">
+                                                    <p className="ft-time">{item?.dateCreated ? dayjs(item.dateCreated).fromNow() : ''}</p>
+                                                    <FavoriteIcon className='ft-favorite-icon' />
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </>
+                                )}
                             </div>
                         </div>
                         <div className="dcscr1c2">
