@@ -61,6 +61,10 @@ export const selectGetAllFeedbackCampaign: Selector<FeedbackCampaign[]> = (state
     return state.feedbackCampaign.listFeedbacksCampaign
 }
 
+export const selectGetFeedbackDetail: Selector<FeedbackDetail | null> = (state: RootState) => {
+    return state.feedbackCampaign.feedbackDetail
+}
+
 //RegisterReciver
 export const selectGetAllRegisterReceivers: Selector<RegisterReceiver[]> = (state: RootState) => {
     return state.registerReceiver.listRegisterReceivers;

@@ -7,5 +7,6 @@ import Loading from "./Loading";
 import CarouselLanding from "./CarouselLanding";
 import CampaignCarousel from "./CarouselCampaign";
 import PostImageGallery from "./PostImageGallery";
+import FeedbackCampaign from "./FeedbackCampaign";
 
-export { OTPInput, Subscriber, Post, SlideToggle, RenderIf, Loading, CarouselLanding, CampaignCarousel, PostImageGallery };
+export { OTPInput, Subscriber, Post, SlideToggle, RenderIf, Loading, CarouselLanding, CampaignCarousel, PostImageGallery, FeedbackCampaign };

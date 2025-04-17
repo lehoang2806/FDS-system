@@ -23,7 +23,6 @@ dayjs.extend(relativeTime);
 const Post: FC<PostProps> = ({ post, user, isStatus = false }) => {
     const dispatch = useAppDispatch();
     const postDetail = useAppSelector(selectGetPostById);
-    console.log(postDetail)
 
     const [isRejectPostModalOpen, setIsRejectPostModalOpen] = useState(false);
     const [selectedRejectPost, setSelectedRejectPost] = useState<RejectPost | null>(null);
