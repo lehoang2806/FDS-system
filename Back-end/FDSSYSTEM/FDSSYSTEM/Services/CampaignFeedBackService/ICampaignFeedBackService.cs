@@ -11,4 +11,5 @@ public interface ICampaignFeedBackService
     Task<CampaignFeedBack> GetById(string id); // Lấy bình luận theo ID
     Task Update(string id, UpdateCampaignFeedBackDto feedback); // Cập nhật bình luận
     Task Delete(string id); // Xóa bình luận
+    Task<CampaignFeedBackDetailDto> GetCampaignFeedBackDetail(string feedbackId);
 }

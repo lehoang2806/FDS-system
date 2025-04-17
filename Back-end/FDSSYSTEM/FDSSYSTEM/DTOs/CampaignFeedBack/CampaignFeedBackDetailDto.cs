@@ -1,4 +1,5 @@
-﻿using FDSSYSTEM.Models;
+﻿using FDSSYSTEM.DTOs.Posts;
+using FDSSYSTEM.Models;
 
 namespace FDSSYSTEM.DTOs.CampaignFeedBack
 {
@@ -19,6 +20,8 @@ namespace FDSSYSTEM.DTOs.CampaignFeedBack
         public DateTime? DateCreated { get; set; }
 
         public DateTime? DateUpdated { get; set; }
+        public IEnumerable<CampaignFeedBackLikeDetailDto> Likes { get; set; }
+        public IEnumerable<CampaignFeedBackCommentDetailDto> Comments { get; set; }
 
         public List<ReplyFeedBackCommentDetail> Replies { get; set; }
     }
@@ -38,4 +41,19 @@ namespace FDSSYSTEM.DTOs.CampaignFeedBack
         public DateTime? DateUpdated { get; set; }
 
     }
+
+    public class CampaignFeedBackLikeDetailDto
+    {
+        public string AccountId { get; set; }
+        public string FullName { get; set; }
+        public string CreatedDate { get; set; }
+    }
+
+    public class CampaignFeedBackCommentDetailDto
+    {
+        public string FullName { get; set; }
+        public string Content { get; set; }
+        public string CreatedDate { get; set; }
+    }
+
 }

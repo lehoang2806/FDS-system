@@ -96,5 +96,13 @@ namespace FDSSYSTEM.Controllers
                 return BadRequest();
             }
         }
+
+        [HttpGet("Detail/{feedbackId}")]
+        public async Task<IActionResult> Detail(string feedbackId)
+        {
+            var feedback = await _feedBackService.GetCampaignFeedBackDetail(feedbackId);
+            return Ok(feedback);
+        }
+
     }
 }

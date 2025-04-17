@@ -212,6 +212,7 @@ namespace FDSSYSTEM.Services.PostService
                 PosterApproverId = p.PosterApproverId,
                 PosterApproverName = p.PosterApproverName,
                 PostId = p.PostId,
+                PublicDate = p.PublicDate,
             }).ToList();
 
             return result;
