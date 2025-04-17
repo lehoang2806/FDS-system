@@ -24,6 +24,8 @@ const PostForumPage = () => {
     const posts = useAppSelector(selectGetAllPosts)
     const sortedPosts = [...posts].reverse();
 
+    const approvedPost = sortedPosts.filter(post => post.status === "Approved")
+
     const personalPost = sortedPosts.filter(post => post.posterId === userLogin?.accountId)
 
     useEffect(() => {
@@ -138,16 +140,14 @@ const PostForumPage = () => {
                         <div className="pfscc2r2">
                             {activeTab === "noibat" ? (
                                 <>
-                                    {/* <Post />
-                                    <Post />
-                                    <Post />
-                                    <Post />
-                                    <Post /> */}
+                                    {approvedPost.map((post, index) => (
+                                        <Post key={index} post={post} user={userProfile as UserInfo}/>
+                                    ))}
                                 </>
                             ) : (
                                 <>
                                     {personalPost.map((post, index) => (
-                                        <Post key={index} post={post} user={userProfile as UserInfo} />
+                                        <Post key={index} post={post} isStatus={true} user={userProfile as UserInfo}/>
                                     ))}
                                 </>
                             )}

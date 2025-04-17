@@ -1,4 +1,4 @@
-import { CampaignIcon, CertificateIcon, MenuIcon, NewsIcon, NotificationIcon } from "@/assets/icons"
+import { CampaignIcon, CertificateIcon, MenuIcon, NewsIcon, NotificationIcon, PostIcon } from "@/assets/icons"
 import { navigateHook } from "@/routes/RouteApp"
 import { routes } from "@/routes/routeName"
 import { FC, useEffect, useState } from "react"
@@ -41,8 +41,6 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
 
     const [isNotifOpen, setIsNotifOpen] = useState(false);
     const notifications = useAppSelector(selectNotifications)
-
-    console.log(notifications)
 
     const handleNewNotification = (notification: any) => {
         console.log("Received notification:", notification);
@@ -118,6 +116,8 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
 
     const unReadNewsCount = notifications.filter((notif) => notif.objectType === "New").length;
 
+    const unReadPostCount = notifications.filter((notif) => notif.objectType === "Post").length;
+
     const toggleNotifications = () => {
         setIsNotifOpen((prev) => !prev);
     };
@@ -148,6 +148,7 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
                         )
                     )
                 );
+                setIsNotifOpen(false);
             })
             .catch((error) => {
                 console.error("Error marking notification as read:", error);
@@ -219,6 +220,11 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
 
     const handleToDetailNews = (NewsId: string) => {
         const url = routes.user.news.detail.replace(":id", NewsId);
+        return navigateHook(url)
+    }
+
+    const handleToPost = () => {
+        const url = routes.user.post.forum;
         return navigateHook(url)
     }
 
@@ -306,6 +312,13 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
                                                 Tin tức
                                                 {unReadNewsCount > 0 && <span className="notification-badge">{unReadNewsCount > 9 ? "9+" : unReadNewsCount}</span>}
                                             </div>
+                                            <div
+                                                className={`nd-tabs-item ${notificationTab === "baiviet" ? "nd-tabs-item-actived" : ""}`}
+                                                onClick={() => { setNotificationTab("baiviet") }}
+                                            >
+                                                Bài viết
+                                                {unReadPostCount > 0 && <span className="notification-badge">{unReadPostCount > 9 ? "9+" : unReadPostCount}</span>}
+                                            </div>
                                         </div>
                                         {notifications.length > 0 ? (
                                             notifications.map((notif) => {
@@ -364,6 +377,32 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
                                                     <div className="notification-empty">Không có thông báo</div>
                                                 }
 
+                                                if (notificationTab === "chiendich" && notif.objectType === "FeedBack") {
+                                                    let actionText = "";
+                                                    if (notif.notificationType === "Comment") actionText = "Có người nhận xét chiến dịch của bạn.";
+
+                                                    if (actionText) {
+                                                        return (
+                                                            <div
+                                                                key={notif.ojectId || notif.createdDate}
+                                                                className={`notification-item ${notif.isRead ? "read" : "unread"}`}
+                                                                onClick={() => {
+                                                                    markAsRead(notif.notificationId);
+                                                                    handleGoToCampaign(notif.ojectId);
+                                                                }}
+                                                            >
+                                                                <CampaignIcon className="notification-icon" />
+                                                                <div>
+                                                                    <strong>{notif.content}</strong>
+                                                                    <p>Đi đến chiến dịch</p>
+                                                                </div>
+                                                            </div>
+                                                        );
+                                                    }
+                                                } else {
+                                                    <div className="notification-empty">Không có thông báo</div>
+                                                }
+
                                                 if (notificationTab === "tintuc" && notif.objectType === "New") {
                                                     let actionText = "";
                                                     if (notif.notificationType === "pending") actionText = "Có một bài báo mới được tạo.";
@@ -381,7 +420,35 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
                                                                 <NewsIcon className="notification-icon" />
                                                                 <div>
                                                                     <strong>{notif.content}</strong>
-                                                                    <p>{actionText}</p>
+                                                                    <p>Đi đến bài đăng</p>
+                                                                </div>
+                                                            </div>
+                                                        );
+                                                    }
+                                                } else {
+                                                    <div className="notification-empty">Không có thông báo</div>
+                                                }
+
+                                                if (notificationTab === "baiviet" && notif.objectType === "Post") {
+                                                    let actionText = "";
+                                                    if (notif.notificationType === "Approve") actionText = "Bài viết của bạn được phê duyệt.";
+                                                    if (notif.notificationType === "Like") actionText = "Có người thích bài viết của bạn.";
+                                                    if (notif.notificationType === "Comment") actionText = "Có người thích bình luận bài viết của bạn.";
+
+                                                    if (actionText) {
+                                                        return (
+                                                            <div
+                                                                key={notif.ojectId || notif.createdDate}
+                                                                className={`notification-item ${notif.isRead ? "read" : "unread"}`}
+                                                                onClick={() => {
+                                                                    markAsRead(notif.notificationId);
+                                                                    handleToPost();
+                                                                }}
+                                                            >
+                                                                <PostIcon className="notification-icon" />
+                                                                <div>
+                                                                    <strong>{notif.content}</strong>
+                                                                    <p>Đi đến bài viết</p>
                                                                 </div>
                                                             </div>
                                                         );

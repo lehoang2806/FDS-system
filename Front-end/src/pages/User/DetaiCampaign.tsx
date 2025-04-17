@@ -187,7 +187,7 @@ const UserDetailCampaignPage: React.FC = () => {
                 </div>
             </section>
             <RemindCertificateModal isOpen={isRemindCertificateModalOpend} setIsOpen={setIsRemindCertificateModalOpend} />
-            <RegisterReceiverModal isOpen={isRegisterReceiverModalOpend} setIsOpen={setIsRegisterReceiverModalOpend} campaignId={id} />
+            <RegisterReceiverModal isOpen={isRegisterReceiverModalOpend} setIsOpen={setIsRegisterReceiverModalOpend} campaign={currentCampaign} />
             <UpdateCampaignModal isOpen={isUpdateCampaignModalOpend} setIsOpen={setIsUpdateCampaignModalOpend} selectedCampaign={currentCampaign} />
         </main>
     )

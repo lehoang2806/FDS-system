@@ -2,11 +2,11 @@ import { FC, useState } from 'react'
 import Modal from './Modal'
 import { toast } from 'react-toastify';
 import { useAppDispatch } from '@/app/store';
-import { RejectCertificateModalProps } from './type';
-import { getOrganizationDonorCertificateByIdApiThunk, getPersonalDonorCertificateByIdApiThunk, getRecipientCertificateByIdApiThunk, rejectCertificateApiThunk } from '@/services/user/userThunk';
 import { setLoading } from '@/services/app/appSlice';
+import { RejectPostModalProps } from './type';
+import { getAllPostsApiThunk, rejectPostApiThunk } from '@/services/post/postThunk';
 
-const RejectCertificateModal: FC<RejectCertificateModalProps> = ({ isOpen, setIsOpen, selectedCertificate }) => {
+const RejectPostModal: FC<RejectPostModalProps> = ({ isOpen, setIsOpen, selectedRejectPost }) => {
     const dispatch = useAppDispatch();
     const [reason, setReason] = useState("");
 
@@ -17,35 +17,25 @@ const RejectCertificateModal: FC<RejectCertificateModalProps> = ({ isOpen, setIs
             return;
         }
 
-        if (!selectedCertificate) return;
+        if (!selectedRejectPost) return;
 
         try {
             dispatch(setLoading(true));
-            await dispatch(rejectCertificateApiThunk({
-                certificateId: selectedCertificate.certificateId,
-                type: selectedCertificate.type,
+            await dispatch(rejectPostApiThunk({
+                postId: selectedRejectPost.postId,
                 comment: reason
             })).unwrap()
                 .then(() => {
-                    toast.success("Đã từ chối đơn xác nhận này");
+                    toast.success("Đã từ chối bài viết này.");
                     setIsOpen(false);
-                    if (selectedCertificate.type === 1) {
-                        dispatch(getPersonalDonorCertificateByIdApiThunk(selectedCertificate.certificateId));
-                    }
-                    else if (selectedCertificate.type === 2) {
-                        dispatch(getOrganizationDonorCertificateByIdApiThunk(selectedCertificate.certificateId));
-                    }
-                    else if (selectedCertificate.type === 3) {
-                        dispatch(getRecipientCertificateByIdApiThunk(selectedCertificate.certificateId));
-                    }
-                })
-                .catch(() => {
-                })
-                .finally(() => {
+                    dispatch(getAllPostsApiThunk());
+                }).catch(() => {
+                }).finally(() => {
                     setTimeout(() => {
                         dispatch(setLoading(false));
                     }, 1000);
                 });
+
         } catch (error) {
             toast.error("An error occurred while rejecting the certificate.");
             console.error(error);
@@ -54,16 +44,15 @@ const RejectCertificateModal: FC<RejectCertificateModalProps> = ({ isOpen, setIs
 
     return (
         <Modal isOpen={isOpen} setIsOpen={setIsOpen}>
-            <section id="reject-certificate-modal">
+            <section id="reject-campaign-modal">
                 <div className="rcm-container">
-                    <h1>Từ chối đơn xác nhân</h1>
+                    <h1>Từ chối Bài viết</h1>
                     <form className="form" onSubmit={handleSubmit}>
                         <div className="form-field">
-                            <label className="form-label">Lý do từ chối</label>
                             <input
                                 type="text"
                                 className="form-input"
-                                placeholder="Vui lòng nhập lý do từ chối"
+                                placeholder="Vui lòng nhập lý do từ chối bài viết này"
                                 value={reason}
                                 onChange={(e) => setReason(e.target.value)}
                             />
@@ -77,4 +66,4 @@ const RejectCertificateModal: FC<RejectCertificateModalProps> = ({ isOpen, setIs
 };
 
 
-export default RejectCertificateModal
+export default RejectPostModal
