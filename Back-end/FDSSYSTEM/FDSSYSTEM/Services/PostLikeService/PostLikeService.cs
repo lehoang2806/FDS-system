@@ -41,9 +41,11 @@ namespace FDSSYSTEM.Services.PostLikeService
             var userId = _userContextService.UserId ?? "";
             var postLike = new PostLike
             {
+                PostLikeId = Guid.NewGuid().ToString(),
                 PostId = postId,
                 AccountId = userId,
-                CreatedDate = DateTime.UtcNow
+                CreatedDate = DateTime.UtcNow,
+                
             };
 
             await _postLikeRepository.AddAsync(postLike);
@@ -67,10 +69,10 @@ namespace FDSSYSTEM.Services.PostLikeService
         }
 
 
-        public async Task UnlikePost(string postId)
+        public async Task UnlikePost(string postlikeId)
         {
             var userId = _userContextService.UserId ?? "";
-            var existingLike = await _postLikeRepository.GetByPostIdAndUserIdAsync(postId, userId);
+            var existingLike = await _postLikeRepository.GetByPostLikeIdAndUserIdAsync(postlikeId, userId);
             if (existingLike != null)
             {
                 await _postLikeRepository.DeleteAsync(existingLike.Id);

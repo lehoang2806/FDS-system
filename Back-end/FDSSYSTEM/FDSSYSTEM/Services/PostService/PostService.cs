@@ -15,6 +15,8 @@ using FDSSYSTEM.DTOs.Posts;
 using FDSSYSTEM.Repositories.PostLikeRepository;
 using FDSSYSTEM.Repositories.PostCommentRepository;
 using MongoDB.Driver.Linq;
+using FDSSYSTEM.DTOs.CampaignFeedBack;
+using FDSSYSTEM.Repositories.PostCommentLikeRepository;
 namespace FDSSYSTEM.Services.PostService
 
 {
@@ -29,6 +31,7 @@ namespace FDSSYSTEM.Services.PostService
         private readonly IUserRepository _userRepository;
         private readonly IPostLikeRepository _postLikeRepository;
         private readonly IPostCommentRepository _postCommentRepository;
+        private readonly IPostCommentLikeRepository _postCommentLikeRepository;
 
         public PostService(IPostRepository postRepository
             , IUserContextService userContextService, IUserService userService
@@ -37,6 +40,7 @@ namespace FDSSYSTEM.Services.PostService
             , IUserRepository userRepository
             , IPostLikeRepository postLikeRepository
             , IPostCommentRepository postCommentRepository
+            , IPostCommentLikeRepository postCommentLikeRepository
             )
         {
             _postRepository = postRepository;
@@ -47,6 +51,7 @@ namespace FDSSYSTEM.Services.PostService
             _postLikeRepository = postLikeRepository;
             _postCommentRepository = postCommentRepository;
             _userRepository = userRepository;
+            _postCommentLikeRepository = postCommentLikeRepository;
         }
 
         public async Task Create(PostDto post)
@@ -90,7 +95,7 @@ namespace FDSSYSTEM.Services.PostService
             throw new NotImplementedException();
         }
 
-   
+
 
         public async Task<Post> GetById(string id)
         {
@@ -198,22 +203,108 @@ namespace FDSSYSTEM.Services.PostService
 
         public async Task<List<PostResponseDto>> GetAllPosts()
         {
+            var result = new List<PostResponseDto>();
             var posts = await _postRepository.GetAllAsync();
-
-            var result = posts.Select(p => new PostResponseDto
+            var users = await _userRepository.GetAllAsync();
+            var postLikes = await _postLikeRepository.GetAllAsync();
+            var postComments = await _postCommentRepository.GetAllAsync();
+            var postCommentLikes = await _postCommentLikeRepository.GetAllAsync();
+            foreach (var p in posts)
             {
-                PostContent = p.PostContent,
-                Images = p.Images,
-                PosterId = p.AccountId,
-                PosterRole = p.PosterRole,
-                PosterName = p.PosterName,
-                Status = p.Status,
-                RejectComment = p.RejectComment,
-                PosterApproverId = p.PosterApproverId,
-                PosterApproverName = p.PosterApproverName,
-                PostId = p.PostId,
-                PublicDate = p.PublicDate,
-            }).ToList();
+                var postResponse = new PostResponseDto
+                {
+                    PostContent = p.PostContent,
+                    Images = p.Images,
+                    PosterId = p.AccountId,
+                    PosterRole = p.PosterRole,
+                    PosterName = p.PosterName,
+                    Status = p.Status,
+                    RejectComment = p.RejectComment,
+                    PosterApproverId = p.PosterApproverId,
+                    PosterApproverName = p.PosterApproverName,
+                    PostId = p.PostId,
+                    PublicDate = p.PublicDate,
+                };
+
+                //Lấy thông tin Like của bài post
+                postResponse.Likes = new List<PostLikeResponseDto>();
+                var plikes = postLikes.Where(x => x.PostId == postResponse.PostId);
+                foreach (var item in plikes)
+                {
+                    var like = new PostLikeResponseDto
+                    {
+                        PostLikeId = item.PostLikeId,
+                        AccountId = item.AccountId,
+                        CreatedDate = item.CreatedDate
+                    };
+
+                    like.FullName = GetFullNameByAccountId(users, item.AccountId);
+                    postResponse.Likes.Add(like);
+                }
+
+                //-------------------- phần comment -------
+                postResponse.Comments = new List<PostCommentResponseDto>();
+                var pComments = postComments.Where(x => x.PostId == postResponse.PostId);
+                foreach (var pComentItem in pComments)
+                {
+                    var comment = new PostCommentResponseDto
+                    {
+                        PostCommentId = pComentItem.PostCommentId,
+                        FullName = GetFullNameByAccountId(users, pComentItem.AccountId),
+                        Content = pComentItem.Content,
+                        CreatedDate = pComentItem.DateCreated,
+                    };
+                    //Lấy Like của comment
+                    comment.Likes = new List<PostCommentLikeResponseDto>();
+                    var cLikes = postCommentLikes.Where(x => x.PostCommentId == pComentItem.PostCommentId && string.IsNullOrEmpty(x.ReplyPostCommentId));
+                    foreach (var item in cLikes)
+                    {
+                        var like = new PostCommentLikeResponseDto
+                        {
+                            PostCommentLikeId = item.PostCommentLikeId,
+                            FullName = GetFullNameByAccountId(users, item.AccountId),
+                            AccountId = item.AccountId,
+                            CreatedDate = item.CreatedDate
+                        };
+                        comment.Likes.Add(like);
+                    }
+
+                    //trả lời comment
+                    if (pComentItem.Replies != null)
+                    {
+                        comment.Replies = new List<ReplyPostCommentResponseDto>();
+                        foreach (var item in pComentItem.Replies)
+                        {
+                            var reply = new ReplyPostCommentResponseDto
+                            {
+                                ReplyPostCommentId = item.ReplyPostCommentId,
+                                Content = item.Content,
+                                CreatedDate = item.DateCreated,
+                                FullName = GetFullNameByAccountId(users, item.AccountId)
+                            };
+
+                            //user like trả lời comment
+                            reply.Likes = new List<PostCommentLikeResponseDto>();
+                            var commentReplylikes = postCommentLikes.Where(x => x.PostCommentId == item.PostCommentId && x.ReplyPostCommentId == item.ReplyPostCommentId);
+                            foreach (var rcm in commentReplylikes)
+                            {
+                                var like = new PostCommentLikeResponseDto
+                                {
+                                    PostCommentLikeId = rcm.PostCommentLikeId,
+                                    AccountId = rcm.AccountId,
+                                    CreatedDate = rcm.CreatedDate,
+                                    FullName = GetFullNameByAccountId(users, item.AccountId)
+                                };
+                                reply.Likes.Add(like);
+                            }
+                            comment.Replies.Add(reply);
+                        }
+                    }
+                    postResponse.Comments.Add(comment);
+                }
+
+                result.Add(postResponse);
+            }
 
             return result;
         }
@@ -257,6 +348,16 @@ namespace FDSSYSTEM.Services.PostService
 
             return query.FirstOrDefault(x => x.PostId == postId);
 
+        }
+
+        private string GetFullNameByAccountId(IEnumerable<Account> users, string accountId)
+        {
+            var u = users.FirstOrDefault(x => x.AccountId == accountId);
+            if (u != null)
+            {
+                return u.FullName ?? "";
+            }
+            return "";
         }
     }
 }

@@ -15,10 +15,10 @@ namespace FDSSYSTEM.Repositories.PostLikeRepository
             _dbContext = dbContext;
         }
 
-        public async Task<PostLike> GetByPostIdAndUserIdAsync(string postId, string userId)
+        public async Task<PostLike> GetByPostLikeIdAndUserIdAsync(string postLikeId, string userId)
         {
             var filter = Builders<PostLike>.Filter.And(
-                Builders<PostLike>.Filter.Eq(p => p.PostId, postId),
+                Builders<PostLike>.Filter.Eq(p => p.PostLikeId, postLikeId),
                 Builders<PostLike>.Filter.Eq(p => p.AccountId, userId)
             );
 
