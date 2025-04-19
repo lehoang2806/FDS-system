@@ -2,6 +2,7 @@ import { Selector } from "@/types/app";
 import { UserProfile } from "@/types/auth";
 import { RootState } from "./reducer";
 import { currentOrganizationDonorCertificate, currentPersonalDonorCertificate, currentRecipientCertificate, DonorCertificate, RecipientCertificate, UserInfo } from "@/types/user";
+import { CampaignInfo, CurrentCampaign, FeedbackCampaign, FeedbackDetail } from "@/types/campaign";
 
 export const selectLoading: Selector<boolean> = (state: RootState) => {
     return state.app.loading;

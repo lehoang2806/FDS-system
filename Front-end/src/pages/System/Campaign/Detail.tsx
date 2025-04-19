@@ -20,6 +20,7 @@ import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import 'dayjs/locale/vi';
 import { UserProfile } from '@/types/auth';
+import { CampaignInfo, CreateFeedbackCampaign } from '@/types/campaign';
 
 dayjs.locale('vi');
 dayjs.extend(relativeTime);
