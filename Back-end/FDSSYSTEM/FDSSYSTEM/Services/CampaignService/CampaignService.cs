@@ -3,6 +3,7 @@ using FDSSYSTEM.Helper;
 using FDSSYSTEM.Models;
 using FDSSYSTEM.Repositories.CampaignRepository;
 using FDSSYSTEM.Repositories.UserRepository;
+using FDSSYSTEM.Services.CampaignDonorSupportService;
 using FDSSYSTEM.Services.NotificationService;
 using FDSSYSTEM.Services.UserContextService;
 using FDSSYSTEM.Services.UserService;
@@ -23,6 +24,7 @@ namespace FDSSYSTEM.Services.CampaignService
         private readonly IUserService _userService;
         private readonly IUserContextService _userContextService;
         private readonly INotificationService _notificationService;
+        private readonly ICampaignDonorSupportService _campaignDonorSupportService;
 
         private readonly IHubContext<NotificationHub> _hubNotificationContext;
         private readonly SMSHelper _smsHeper;
@@ -31,7 +33,8 @@ namespace FDSSYSTEM.Services.CampaignService
             , IUserContextService userContextService, IUserService userService
             , INotificationService notificationService
             , IHubContext<NotificationHub> hubContext
-            , SMSHelper smsHeper)
+            , SMSHelper smsHeper
+            , ICampaignDonorSupportService campaignDonorSupportService)
         {
             _campaignRepository = campaignRepository;
             _userRepository = userRepository;
@@ -40,12 +43,13 @@ namespace FDSSYSTEM.Services.CampaignService
             _notificationService = notificationService;
             _hubNotificationContext = hubContext;
             _smsHeper = smsHeper;
+            _campaignDonorSupportService = campaignDonorSupportService;
         }
 
         public async Task Create(CampaignDto campaign)
         {
             var donorType = _userContextService.Role ?? "";
-            bool isDonorCreate = false;   
+            bool isDonorCreate = false;
             if (!string.IsNullOrEmpty(donorType) && donorType.Equals("Donor"))
             {
                 var user = await _userService.GetAccountById(_userContextService.UserId ?? "");
@@ -80,12 +84,12 @@ namespace FDSSYSTEM.Services.CampaignService
             };
 
             await _campaignRepository.AddAsync(newCampain);
-          
+
             //Send notifiction all staff and admin
-            var userReceiveNotifications = isDonorCreate? 
+            var userReceiveNotifications = isDonorCreate ?
                 await _userService.GetAllAdminAndStaffId() //donor tạo gửi cho admin, staff
-                : await _userService.GetAllAdminId(); //staff tạo gửi cho admin
-            
+                : await _userService.GetAllAdminAndDnonorId(); //staff tạo gửi cho admin, và donor
+
             foreach (var userid in userReceiveNotifications)
             {
                 //Gửi thông báo trong hệ thống
@@ -103,6 +107,12 @@ namespace FDSSYSTEM.Services.CampaignService
                 //send notification via signalR
                 await _hubNotificationContext.Clients.User(notificationDto.AccountId).SendAsync("ReceiveNotification", notificationDto);
 
+            }
+
+            if (!isDonorCreate)
+            {
+                //Tạo yêu cầu tham gia và gửi mail cho donor
+                await _campaignDonorSupportService.RequestDonorSupportAsync(newCampain.CampaignId);
             }
 
         }

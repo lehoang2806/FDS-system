@@ -32,6 +32,7 @@ public interface IUserService
     Task<Account> GetAccountById(string accountId);
 
     Task<List<string>> GetAllAdminAndStaffId();
+    Task<List<string>> GetAllAdminAndDnonorId();
     Task<List<string>> GetAllAdminId();
     Task<List<Account>> GetAllAdminAndRecipientId();
     Task<List<string>> GetAllDonorAndStaffId();

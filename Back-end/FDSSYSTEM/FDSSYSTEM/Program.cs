@@ -2,6 +2,7 @@
 using FDSSYSTEM.Helper;
 using FDSSYSTEM.Helpers;
 using FDSSYSTEM.Options;
+using FDSSYSTEM.Repositories.CampaignDonorSupportRepository;
 using FDSSYSTEM.Repositories.CampaignRepository;
 using FDSSYSTEM.Repositories.FeedBackCommentRepository;
 using FDSSYSTEM.Repositories.FeedBackLikeRepository;
@@ -26,6 +27,7 @@ using FDSSYSTEM.Repositories.UserRepository;
 
 
 using FDSSYSTEM.SeedData;
+using FDSSYSTEM.Services.CampaignDonorSupportService;
 using FDSSYSTEM.Services.CampaignService;
 using FDSSYSTEM.Services.FeedBackCommentService;
 using FDSSYSTEM.Services.FeedBackLikeService;
@@ -115,6 +117,8 @@ builder.Services.AddScoped<ICampaignFeedBackService, FeedBackCommentService>();
 builder.Services.AddScoped<IRequestSupportRepository, RequestSupportRepository>();
 builder.Services.AddScoped<IRequestSupportService, RequestSupportService>();
 
+builder.Services.AddScoped<ICampaignDonorSupportRepository, CampaignDonorSupportRepository>();
+builder.Services.AddScoped<ICampaignDonorSupportService, CampaignDonorSupportService>();
 
 
 builder.Services.AddScoped<IOtpRepository, OtpRepository>();

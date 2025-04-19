@@ -3,7 +3,7 @@
     public class RequestSupportWithCreatorDto
     {
         public string RequestSupportId { get; set; }
-        public string? CampaignId { get; set; }
+        public string CampaignId { get; set; }
         public string AccountId { get; set; }
         public string FullName { get; set; }
         public DateTime DateOfBirth { get; set; }

@@ -23,10 +23,10 @@ namespace FDSSYSTEM.Controllers
             return Ok(new { message = "Post liked successfully" });
         }
 
-        [HttpDelete("unlike/{postId}")]
-        public async Task<IActionResult> UnlikePost(string postId)
+        [HttpDelete("unlike/{postLikeId}")]
+        public async Task<IActionResult> UnlikePost(string postLikeId)
         {
-            await _postLikeService.UnlikePost(postId);
+            await _postLikeService.UnlikePost(postLikeId);
             return Ok(new { message = "Post unliked successfully" });
         }
 

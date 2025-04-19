@@ -732,6 +732,19 @@ public class UserService : IUserService
         return (await _userRepository.GetAllAsync(filter)).Select(x => x.AccountId).ToList();
     }
 
+    public async Task<List<string>> GetAllAdminAndDnonorId()
+    {
+
+        List<int> roleIds = new List<int>
+        {
+            1,//admin
+            3//donor
+        };
+        var filter = Builders<Account>.Filter.In(c => c.RoleId, roleIds);
+        return (await _userRepository.GetAllAsync(filter)).Select(x => x.AccountId).ToList();
+    }
+
+
     public async Task<List<string>> GetAllAdminId()
     {
 
