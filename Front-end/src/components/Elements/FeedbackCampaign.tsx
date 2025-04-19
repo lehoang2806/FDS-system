@@ -4,9 +4,8 @@ import { FeedbackCampaignProps } from './type';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import 'dayjs/locale/vi';
-import { useAppDispatch, useAppSelector } from '@/app/store';
-import { selectGetFeedbackDetail } from '@/app/selector';
-import { getFeedbackDetailApiThunk, likeFeedbackApiThunk, unlikeFeedbackApiThunk } from '@/services/campaign/feedback/feedbackCampaignThunk';
+import { useAppDispatch } from '@/app/store';
+import { likeFeedbackApiThunk, unlikeFeedbackApiThunk } from '@/services/campaign/feedback/feedbackCampaignThunk';
 import { toast } from 'react-toastify';
 import classNames from 'classnames';
 import { FeedbackLike } from '@/types/campaign';
@@ -27,23 +26,27 @@ const FeedbackCampaign: FC<FeedbackCampaignProps> = ({ feedback, user }) => {
     const handleFavoriteCampaign = async () => {
         try {
             if (isLiked) {
-                // Unlike
-                await dispatch(unlikeFeedbackApiThunk(String(feedback.feedBackId))).unwrap();
+                const like = feedback.likes?.find((like: FeedbackLike) => like.feedBackLikeId);
+                console.log(like)
+                if (like?.feedBackLikeId) {
+                    await dispatch(unlikeFeedbackApiThunk(String(like.feedBackLikeId))).unwrap();
+                } else {
+                    toast.error("Không tìm thấy lượt thích để huỷ.");
+                    return;
+                }
             } else {
-                // Like
                 const likePayload = {
                     campaignFeedbackId: String(feedback.feedBackId),
-                    replyCampaignFeedbackId: null, // hoặc giá trị thực nếu là feedback reply
+                    replyCampaignFeedbackId: null,
                 };
                 await dispatch(likeFeedbackApiThunk(likePayload)).unwrap();
             }
 
-            setIsLiked(!isLiked); // Toggle state
+            setIsLiked(!isLiked);
         } catch {
             toast.error("Có lỗi xảy ra.");
         }
     };
-
 
     return (
         <div className="feedback-item">

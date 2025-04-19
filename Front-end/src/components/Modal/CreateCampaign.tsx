@@ -13,6 +13,7 @@ import classNames from "classnames";
 import { format } from "date-fns";
 import { setLoading } from '@/services/app/appSlice';
 import Lightbox from 'react-awesome-lightbox';
+import { AddCampaign } from '@/types/campaign';
 
 const CreateCampaignModal: FC<CreateCampaignModalProps> = ({ isOpen, setIsOpen }) => {
     const dispatch = useAppDispatch();

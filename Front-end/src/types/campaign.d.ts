@@ -171,6 +171,7 @@ interface FeedbackDetail {
 }
 
 interface FeedbackLike {
+    feedBackLikeId: string;
     accountId: string;
     createdDate: string;
     fullName: string;

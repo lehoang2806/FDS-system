@@ -1,9 +1,11 @@
-import { selectGetAllPosts, selectGetProfileUser, selectIsAuthenticated, selectUserLogin } from '@/app/selector';
+import { selectGetAllCampaign, selectGetAllNews, selectGetAllPosts, selectGetProfileUser, selectIsAuthenticated, selectUserLogin } from '@/app/selector';
 import { useAppDispatch, useAppSelector } from '@/app/store';
 import { Post } from '@/components/Elements';
 import { CreatePostModal } from '@/components/Modal';
 import { routes } from '@/routes/routeName'
 import { setLoading } from '@/services/app/appSlice';
+import { getAllCampaignApiThunk } from '@/services/campaign/campaignThunk';
+import { getAllNewsApiThunk } from '@/services/news/newsThunk';
 import { getAllPostsApiThunk } from '@/services/post/postThunk';
 import { getProfileApiThunk } from '@/services/user/userThunk';
 import { UserInfo } from '@/types/user';
@@ -23,6 +25,12 @@ const PostForumPage = () => {
 
     const posts = useAppSelector(selectGetAllPosts)
     const sortedPosts = [...posts].reverse();
+    const campaigns = useAppSelector(selectGetAllCampaign)
+    const sortedCampaigns = [...campaigns].reverse();
+    const threeCampaigns = sortedCampaigns.slice(0, 3);
+    const news = useAppSelector(selectGetAllNews)
+    const sortedNews = [...news].reverse();
+    const threeNews = sortedNews.slice(0, 3);
 
     const approvedPost = sortedPosts.filter(post => post.status === "Approved")
 
@@ -30,9 +38,13 @@ const PostForumPage = () => {
 
     useEffect(() => {
         dispatch(setLoading(true))
-        dispatch(getAllPostsApiThunk())
-        dispatch(getProfileApiThunk(String(userProfile?.accountId)))
-            .unwrap()
+
+        Promise.all([
+            dispatch(getAllPostsApiThunk()).unwrap(),
+            dispatch(getProfileApiThunk(String(userProfile?.accountId))).unwrap(),
+            dispatch(getAllCampaignApiThunk()).unwrap(),
+            dispatch(getAllNewsApiThunk()).unwrap(),
+        ])
             .catch((error) => {
                 console.error("Error fetching data:", error);
             })
@@ -51,6 +63,14 @@ const PostForumPage = () => {
         }
     }
 
+    const handletoPersonalPost = () => {
+        if (isAuthentication) {
+            setActiveTab("cuatoi")
+        } else {
+            alert('Vui lòng đăng nhập')
+        }
+    }
+
     return (
         <main id="post-forum">
             <section id="pf-section">
@@ -62,27 +82,14 @@ const PostForumPage = () => {
                                 <Link to={routes.user.campaign.list}>Tất cả</Link>
                             </div>
                             <div className="pfscc1r1r2">
-                                <div className="pf-card-item">
-                                    <div className="pf-card-img"></div>
-                                    <div className="pf-card-info">
-                                        <h5 className="pf-card-name">Tên chiến dịch</h5>
-                                        <p className='pf-card-time'>Còn lại 2 ngày</p>
+                                {threeCampaigns.map((campaign, index) => (
+                                    <div className="pf-card-item" key={index}>
+                                        <img className="pf-card-img" src={campaign.images[0]} />
+                                        <div className="pf-card-info">
+                                            <h5 className="pf-card-name">{campaign.campaignName}</h5>
+                                        </div>
                                     </div>
-                                </div>
-                                <div className="pf-card-item">
-                                    <div className="pf-card-img"></div>
-                                    <div className="pf-card-info">
-                                        <h5 className="pf-card-name">Tên chiến dịch</h5>
-                                        <p className='pf-card-time'>Còn lại 2 ngày</p>
-                                    </div>
-                                </div>
-                                <div className="pf-card-item">
-                                    <div className="pf-card-img"></div>
-                                    <div className="pf-card-info">
-                                        <h5 className="pf-card-name">Tên chiến dịch</h5>
-                                        <p className='pf-card-time'>Còn lại 2 ngày</p>
-                                    </div>
-                                </div>
+                                ))}
                             </div>
                         </div>
                         <div className="pfscc1r2">
@@ -91,30 +98,15 @@ const PostForumPage = () => {
                                 <Link to={routes.user.news.list}>Tất cả</Link>
                             </div>
                             <div className="pfscc1r2r2">
-                                <div className="pf-card-item">
-                                    <div className="pf-card-img"></div>
-                                    <div className="pf-card-info">
-                                        <p className="pf-card-status">Trạng thái</p>
-                                        <h5 className="pf-card-name">Tên tin tức</h5>
-                                        <p className='pf-card-time'>Ngày đăng</p>
+                                {threeNews.map((news, index) => (
+                                    <div className="pf-card-item" key={index}>
+                                        <img className="pf-card-img" src={news.images[0]} />
+                                        <div className="pf-card-info">
+                                            <h5 className="pf-card-name">{news.newsTitle}</h5>
+                                            <p className='pf-card-time'>{news.createdDate}</p>
+                                        </div>
                                     </div>
-                                </div>
-                                <div className="pf-card-item">
-                                    <div className="pf-card-img"></div>
-                                    <div className="pf-card-info">
-                                        <p className="pf-card-status">Trạng thái</p>
-                                        <h5 className="pf-card-name">Tên tin tức</h5>
-                                        <p className='pf-card-time'>Ngày đăng</p>
-                                    </div>
-                                </div>
-                                <div className="pf-card-item">
-                                    <div className="pf-card-img"></div>
-                                    <div className="pf-card-info">
-                                        <p className="pf-card-status">Trạng thái</p>
-                                        <h5 className="pf-card-name">Tên tin tức</h5>
-                                        <p className='pf-card-time'>Ngày đăng</p>
-                                    </div>
-                                </div>
+                                ))}
                             </div>
                         </div>
                     </div>
@@ -129,7 +121,7 @@ const PostForumPage = () => {
                                 </div>
                                 <div
                                     className={`pf-tabs-item ${activeTab === "cuatoi" ? "pf-tabs-item-actived" : ""}`}
-                                    onClick={() => setActiveTab("cuatoi")}
+                                    onClick={() => handletoPersonalPost()}
                                 >
                                     Cá nhân
                                 </div>
@@ -141,13 +133,13 @@ const PostForumPage = () => {
                             {activeTab === "noibat" ? (
                                 <>
                                     {approvedPost.map((post, index) => (
-                                        <Post key={index} post={post} user={userProfile as UserInfo}/>
+                                        <Post key={index} post={post} user={userProfile as UserInfo} />
                                     ))}
                                 </>
                             ) : (
                                 <>
                                     {personalPost.map((post, index) => (
-                                        <Post key={index} post={post} isStatus={true} user={userProfile as UserInfo}/>
+                                        <Post key={index} post={post} isStatus={true} user={userProfile as UserInfo} />
                                     ))}
                                 </>
                             )}

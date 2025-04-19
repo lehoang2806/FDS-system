@@ -93,3 +93,12 @@ export const selectGetAllPosts: Selector<Post[]> = (state: RootState) => {
 export const selectGetPostById: Selector<PostInfo | null> = (state: RootState) => {
     return state.post.post;
 }
+
+//RequestSupport
+export const selectGetAllRequestSupport: Selector<RequestSupportInfo[]> = (state: RootState) => {
+    return state.requestSupport.listRequestSupport;
+}
+
+export const selectGetRequestSupportById: Selector<RequestSupportInfo | null> = (state: RootState) => {
+    return state.requestSupport.requestSupport;
+}
