@@ -140,7 +140,7 @@ namespace FDSSYSTEM.Services.FeedBackCommentService
                 {
                     var like = new CampaignFeedBackLikeDetailDto
                     {
-                        FeedBackLikeId = item.FeedBackId,
+                        FeedBackLikeId = item.FeedBackLikeId,
                         AccountId = item.AccountId,
                         CreatedDate = item.CreatedDate
                     };
@@ -255,7 +255,7 @@ namespace FDSSYSTEM.Services.FeedBackCommentService
             {
                 var like = new CampaignFeedBackLikeDetailDto
                 {
-                    FeedBackLikeId = item.FeedBackId,
+                    FeedBackLikeId = item.FeedBackLikeId,
                     AccountId = item.AccountId,
                     CreatedDate = item.CreatedDate
                 };
@@ -285,7 +285,7 @@ namespace FDSSYSTEM.Services.FeedBackCommentService
                     {
                         var like = new CampaignFeedBackLikeDetailDto
                         {
-                            FeedBackLikeId = rfb.FeedBackId,
+                            FeedBackLikeId = rfb.FeedBackLikeId,
                             AccountId = rfb.AccountId,
                             CreatedDate = rfb.CreatedDate
                         };
