@@ -1,11 +1,8 @@
 ﻿using FDSSYSTEM.DTOs;
 using FDSSYSTEM.DTOs.CampaignFeedBack;
-using FDSSYSTEM.DTOs.Posts;
 using FDSSYSTEM.Models;
-using FDSSYSTEM.Repositories.CampaignRepository;
 using FDSSYSTEM.Repositories.FeedBackCommentRepository;
 using FDSSYSTEM.Repositories.FeedBackLikeRepository;
-using FDSSYSTEM.Repositories.PostLikeRepository;
 using FDSSYSTEM.Repositories.UserRepository;
 using FDSSYSTEM.Services.CampaignService;
 using FDSSYSTEM.Services.NotificationService;
@@ -14,13 +11,7 @@ using FDSSYSTEM.Services.UserService;
 using FDSSYSTEM.SignalR;
 using Mapster;
 using Microsoft.AspNetCore.SignalR;
-using Microsoft.Extensions.Hosting;
 using MongoDB.Driver;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Threading.Tasks;
 
 namespace FDSSYSTEM.Services.FeedBackCommentService
 {
@@ -149,10 +140,11 @@ namespace FDSSYSTEM.Services.FeedBackCommentService
                 {
                     var like = new CampaignFeedBackLikeDetailDto
                     {
+                        FeedBackLikeId = item.FeedBackId,
                         AccountId = item.AccountId,
                         CreatedDate = item.CreatedDate
                     };
-                    var u = users.FirstOrDefault(x => x.AccountId == f.AccountId);
+                    var u = users.FirstOrDefault(x => x.AccountId == item.AccountId);
                     if (u != null)
                     {
                         like.FullName = u.FullName ?? "";
@@ -178,6 +170,7 @@ namespace FDSSYSTEM.Services.FeedBackCommentService
                         {
                             var like = new CampaignFeedBackLikeDetailDto
                             {
+                                FeedBackLikeId = rfb.FeedBackLikeId,
                                 AccountId = rfb.AccountId,
                                 CreatedDate = rfb.CreatedDate
                             };
@@ -262,10 +255,11 @@ namespace FDSSYSTEM.Services.FeedBackCommentService
             {
                 var like = new CampaignFeedBackLikeDetailDto
                 {
+                    FeedBackLikeId = item.FeedBackId,
                     AccountId = item.AccountId,
                     CreatedDate = item.CreatedDate
                 };
-                var u = users.FirstOrDefault(x => x.AccountId == feedbackDetail.AccountId);
+                var u = users.FirstOrDefault(x => x.AccountId == item.AccountId);
                 if (u != null)
                 {
                     like.FullName = u.FullName ?? "";
@@ -291,6 +285,7 @@ namespace FDSSYSTEM.Services.FeedBackCommentService
                     {
                         var like = new CampaignFeedBackLikeDetailDto
                         {
+                            FeedBackLikeId = rfb.FeedBackId,
                             AccountId = rfb.AccountId,
                             CreatedDate = rfb.CreatedDate
                         };

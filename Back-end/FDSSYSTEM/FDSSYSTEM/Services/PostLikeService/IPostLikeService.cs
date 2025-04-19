@@ -6,7 +6,7 @@ namespace FDSSYSTEM.Services.PostLikeService
     public interface IPostLikeService
     {
         Task LikePost(string postId);
-        Task UnlikePost(string postId);
+        Task UnlikePost(string postlikeId);
         Task<int> GetLikeCount(string postId);
     }
 }

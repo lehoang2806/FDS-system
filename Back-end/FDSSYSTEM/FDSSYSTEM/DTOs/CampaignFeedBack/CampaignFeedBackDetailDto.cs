@@ -46,6 +46,7 @@ namespace FDSSYSTEM.DTOs.CampaignFeedBack
 
     public class CampaignFeedBackLikeDetailDto
     {
+        public string FeedBackLikeId { get; set; }
         public string AccountId { get; set; }
         public string FullName { get; set; }
         public DateTime CreatedDate { get; set; }

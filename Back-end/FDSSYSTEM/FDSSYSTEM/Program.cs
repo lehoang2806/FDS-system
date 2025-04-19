@@ -12,12 +12,14 @@ using FDSSYSTEM.Repositories.NotificationCampaignRepository;
 using FDSSYSTEM.Repositories.NotificationRepository;
 using FDSSYSTEM.Repositories.OrganizationDonorCertificateRepository;
 using FDSSYSTEM.Repositories.OtpRepository;
+using FDSSYSTEM.Repositories.PostCommentLikeRepository;
 using FDSSYSTEM.Repositories.PostCommentRepository;
 using FDSSYSTEM.Repositories.PostLikeRepository;
 using FDSSYSTEM.Repositories.PostRepository;
 using FDSSYSTEM.Repositories.PostSaveRepository;
 using FDSSYSTEM.Repositories.RecipientCertificateRepository;
 using FDSSYSTEM.Repositories.RegisterReceiverRepository;
+using FDSSYSTEM.Repositories.RequestSupportRepository;
 using FDSSYSTEM.Repositories.RoleRepository;
 using FDSSYSTEM.Repositories.UserRepository;
 
@@ -33,11 +35,13 @@ using FDSSYSTEM.Services.NewOfInterest;
 using FDSSYSTEM.Services.NewService;
 using FDSSYSTEM.Services.NotificationCampaignService;
 using FDSSYSTEM.Services.NotificationService;
+using FDSSYSTEM.Services.PostCommentLikeService;
 using FDSSYSTEM.Services.PostCommentService;
 using FDSSYSTEM.Services.PostLikeService;
 using FDSSYSTEM.Services.PostSaveService;
 using FDSSYSTEM.Services.PostService;
 using FDSSYSTEM.Services.RegisterReceiverService;
+using FDSSYSTEM.Services.RequestSupportService;
 using FDSSYSTEM.Services.RoleService;
 using FDSSYSTEM.Services.UserContextService;
 using FDSSYSTEM.Services.UserService;
@@ -57,6 +61,9 @@ builder.Services.AddScoped<IUserService, UserService>();
 
 builder.Services.AddScoped<IPostRepository, PostRepository>();
 builder.Services.AddScoped<IPostService, PostService>();
+
+builder.Services.AddScoped<IPostCommentLikeRepository, PostCommentLikeRepository>();
+builder.Services.AddScoped<IPostCommentLikeService, PostCommentLikeService>();
 
 builder.Services.AddScoped<IPostLikeRepository, PostLikeRepository>();
 builder.Services.AddScoped<IPostLikeService, PostLikeService>();
@@ -104,6 +111,9 @@ builder.Services.AddScoped<ICampaignFeedBackLikeService, CampaignFeedBackLikeSer
 
 builder.Services.AddScoped<ICampaignFeedBackRepository, CampaignFeedBackRepository>();
 builder.Services.AddScoped<ICampaignFeedBackService, FeedBackCommentService>();
+
+builder.Services.AddScoped<IRequestSupportRepository, RequestSupportRepository>();
+builder.Services.AddScoped<IRequestSupportService, RequestSupportService>();
 
 
 

@@ -6,6 +6,6 @@ namespace FDSSYSTEM.Repositories.PostLikeRepository
 {
     public interface IPostLikeRepository : IMongoRepository<PostLike>
     {
-        Task<PostLike> GetByPostIdAndUserIdAsync(string postId, string userId);
+        Task<PostLike> GetByPostLikeIdAndUserIdAsync(string postlikeId, string userId);
     }
 }
