@@ -15,14 +15,14 @@ using System.Security.Claims;
 namespace FDSSYSTEM.Controllers
 {
     [Route("api/user")]
-  
+
     public class UserController : BaseController
     {
         private readonly IUserService _userService;
         private readonly IConfiguration _configuration;
-       
+
         public UserController(IConfiguration configuration, IUserService userService)
-        {          
+        {
             _configuration = configuration;
             _userService = userService;
         }
@@ -34,9 +34,9 @@ namespace FDSSYSTEM.Controllers
         {
             try
             {
-             
+
                 var users = await _userService.GetAllUser();
-               
+
                 return Ok(users.Adapt<List<UserProfileDto>>());
             }
             catch (Exception ex)
@@ -314,7 +314,7 @@ namespace FDSSYSTEM.Controllers
 
 
         [HttpGet("GetAllDonorCertificate")]
-       /* [Authorize(Roles = "Admin,Staff,Donor")]*/
+        /* [Authorize(Roles = "Admin,Staff,Donor")]*/
         public async Task<ActionResult> GetAllDonorCertificate()
         {
             try
@@ -329,7 +329,7 @@ namespace FDSSYSTEM.Controllers
         }
 
         [HttpGet("GetAllRecipientCertificate")]
-       /* [Authorize(Roles = "Admin,Staff,Recipient")]*/
+        /* [Authorize(Roles = "Admin,Staff,Recipient")]*/
         public async Task<ActionResult> GetAllRecipientCertificate()
         {
             try
@@ -390,14 +390,14 @@ namespace FDSSYSTEM.Controllers
             }
         }
 
-        [HttpGet("GetAllConfirmedDonorEmail")]
+        [HttpGet("GetAllConfirmedDonorForSupport")]
         [Authorize(Roles = "Staff")]
-        public async Task<ActionResult> GetAllConfirmedDonorEmail()
+        public async Task<ActionResult> GetAllConfirmedDonorForSupport()
         {
             try
             {
-                var result = (await _userService.GetAllDonorConfirmed()).Select(x=>x.Email).ToList();
-                return Ok(result);
+                var donors = await _userService.GetAllDonorConfirmed();
+                return Ok(donors.Adapt<List<DonorForSupportDto>>());
             }
             catch (Exception ex)
             {
