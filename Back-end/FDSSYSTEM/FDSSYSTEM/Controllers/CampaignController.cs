@@ -205,7 +205,7 @@ namespace FDSSYSTEM.Controllers
                 string htmlBody = await System.IO.File.ReadAllTextAsync(filePath);
                 string body = string.Format(htmlBody, _emailConfig.DonorSupportLink);
                 string subject = "Lời mời trao gởi yêu thương";
-                await _emailHeper.SendEmailAsync(subject, htmlBody, requestDonorSupportDto.Emails, true);
+                await _emailHeper.SendEmailAsync(subject, body, requestDonorSupportDto.Emails, true);
 
                 return Ok();
             }
