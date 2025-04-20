@@ -19,14 +19,18 @@ const CampaignCard: FC<CampaignCardProps> = ({ onClickDetail, campaign }) => {
     const currentDate = new Date();
 
     let status = "";
-    if (campaignDate < currentDate) {
+    if (campaignDate.getTime() < currentDate.getTime()) {
         status = "Đã kết thúc";
     } else if (
         campaignDate.getFullYear() === currentDate.getFullYear() &&
         campaignDate.getMonth() === currentDate.getMonth() &&
         campaignDate.getDate() === currentDate.getDate()
     ) {
-        status = "Đang diễn ra";
+        if (campaignDate.getTime() > currentDate.getTime()) {
+            status = "Sắp diễn ra";
+        } else {
+            status = "Đang diễn ra";
+        }
     } else {
         status = "Sắp diễn ra";
     }

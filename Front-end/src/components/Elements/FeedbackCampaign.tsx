@@ -1,35 +1,48 @@
-import { FarvoriteIcon } from '@/assets/icons'
-import { FC, useEffect } from 'react'
-import { FeedbackCampaignProps } from './type'
+import { FarvoriteIcon } from '@/assets/icons';
+import { FC, useEffect, useState } from 'react';
+import { FeedbackCampaignProps } from './type';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import 'dayjs/locale/vi';
-import { useAppDispatch, useAppSelector } from '@/app/store';
-import { selectGetFeedbackDetail } from '@/app/selector';
-import { getFeedbackDetailApiThunk, likeFeedbackApiThunk, unlikeFeedbackApiThunk } from '@/services/campaign/feedback/feedbackCampaignThunk';
+import { useAppDispatch } from '@/app/store';
+import { likeFeedbackApiThunk, unlikeFeedbackApiThunk } from '@/services/campaign/feedback/feedbackCampaignThunk';
 import { toast } from 'react-toastify';
 import classNames from 'classnames';
+import { FeedbackLike } from '@/types/campaign';
 
 dayjs.locale('vi');
 dayjs.extend(relativeTime);
 
 const FeedbackCampaign: FC<FeedbackCampaignProps> = ({ feedback, user }) => {
     const dispatch = useAppDispatch();
-    const feedbackDetail = useAppSelector(selectGetFeedbackDetail)
+    const [isLiked, setIsLiked] = useState<boolean>(false); // Local state for like
 
     useEffect(() => {
-        if (!feedbackDetail) {
-            dispatch(getFeedbackDetailApiThunk(String(feedback.feedBackId)));
-        }
-    }, [dispatch, feedback.feedBackId, feedbackDetail]);
+        // Check if the current feedback is liked by the user
+        const liked = feedback.likes?.some((like: FeedbackLike) => like.accountId === user?.accountId);
+        setIsLiked(liked);
+    }, [feedback, user]);
 
-    const isFavoriteFeedback = feedbackDetail?.likes?.some((like) => like.accountId === user?.accountId);
-
-    const handleFavoriteCampaign = async (postId: string) => {
-        const action = isFavoriteFeedback ? unlikeFeedbackApiThunk : likeFeedbackApiThunk;
+    const handleFavoriteCampaign = async () => {
         try {
-            await dispatch(action(postId)).unwrap();
-            dispatch(getFeedbackDetailApiThunk(String(postId)));
+            if (isLiked) {
+                const like = feedback.likes?.find((like: FeedbackLike) => like.feedBackLikeId);
+                console.log(like)
+                if (like?.feedBackLikeId) {
+                    await dispatch(unlikeFeedbackApiThunk(String(like.feedBackLikeId))).unwrap();
+                } else {
+                    toast.error("Không tìm thấy lượt thích để huỷ.");
+                    return;
+                }
+            } else {
+                const likePayload = {
+                    campaignFeedbackId: String(feedback.feedBackId),
+                    replyCampaignFeedbackId: null,
+                };
+                await dispatch(likeFeedbackApiThunk(likePayload)).unwrap();
+            }
+
+            setIsLiked(!isLiked);
         } catch {
             toast.error("Có lỗi xảy ra.");
         }
@@ -41,10 +54,13 @@ const FeedbackCampaign: FC<FeedbackCampaignProps> = ({ feedback, user }) => {
             <p className='ft-content'>{feedback.content}</p>
             <div className="ft-info">
                 <p className="ft-time">{feedback?.dateCreated ? dayjs(feedback.dateCreated).fromNow() : ''}</p>
-                <FarvoriteIcon className={classNames('ft-favorite-icon', { 'ft-favorite-icon-active': isFavoriteFeedback })} onClick={() => handleFavoriteCampaign(String(feedback?.feedBackId))} />
+                <FarvoriteIcon
+                    className={classNames('ft-favorite-icon', { 'ft-favorite-icon-active': isLiked })}
+                    onClick={handleFavoriteCampaign}
+                />
             </div>
         </div>
-    )
-}
+    );
+};
 
-export default FeedbackCampaign
+export default FeedbackCampaign;

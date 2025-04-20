@@ -153,6 +153,17 @@ const StaffSidebar: FC = () => {
                         </Link>
                     </div>
                     <Link
+                        to={routes.staff.request_support.list}
+                        className={classNames('sscr2-nav-item', {
+                            'nav-active': location.pathname.startsWith(routes.staff.request_support.list),
+                        })}
+                    >
+                        <div className="sscr2-nav-link">
+                            <PostIcon className="sscr2-nav-icon" />
+                            <span>Đơn yêu cầu hỗ trợ</span>
+                        </div>
+                    </Link>
+                    <Link
                         to={""}
                         onClick={logoutManager}
                         className='sscr2-nav-item'

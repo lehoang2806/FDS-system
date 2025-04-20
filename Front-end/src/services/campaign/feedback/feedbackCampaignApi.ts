@@ -1,4 +1,5 @@
 import request from "@/services/request";
+import { CreateFeedbackCampaign, LikeFeedback } from "@/types/campaign";
 
 export const CreateFeedbackCampaignApi = async (params: CreateFeedbackCampaign) => {
     const data = await request.post('api/campaignfeedback/CreateFeedback', params);
@@ -15,12 +16,12 @@ export const getFeedbackDetailApi = async (feedbackId: string) => {
     return data.data;
 }
 
-export const likeFeedbackApi = async (feedbackId: string) => {
-    const data = await request.post(`api/feedbacklike/like/${feedbackId}`);
+export const likeFeedbackApi = async (params: LikeFeedback) => {
+    const data = await request.post(`api/feedbacklike/like`, params);
     return data.data;
 }
 
-export const unlikeFeedbackApi = async (feedbackId: string) => {
-    const data = await request.delete(`api/feedbacklike/unlike/${feedbackId}`);
+export const unlikeFeedbackApi = async (feedbackLikeId: string) => {
+    const data = await request.delete(`api/feedbacklike/unlike/${feedbackLikeId}`);
     return data.data;
 }

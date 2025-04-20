@@ -73,3 +73,5 @@ interface CreatePostModalProps extends ModalCommonProps {}
 interface RejectPostModalProps extends ModalCommonProps {
     selectedRejectPost?: RejectPost | null;
 }
+
+interface CreateRequestSupportModalProps extends ModalCommonProps {}

@@ -131,7 +131,13 @@ interface CreateFeedbackCampaign {
     images: string[];
 }
 
-interface FeedbackCampaign {
+interface LikeFeedback {
+    campaignFeedbackId: string | null;
+    replyCampaignFeedbackId: string | null;
+}
+
+
+export interface FeedbackCampaign {
     feedBackId: string;
     campaignId: string;
     accountId: string;
@@ -140,7 +146,8 @@ interface FeedbackCampaign {
     images: string[];
     dateCreated: string;
     dateUpdated: string | null;
-    replies: [] | null;
+    likes: FeedbackLike[];
+    replies: any[] | null;
 }
 
 interface FeedbackDetailComment {
@@ -164,6 +171,7 @@ interface FeedbackDetail {
 }
 
 interface FeedbackLike {
+    feedBackLikeId: string;
     accountId: string;
     createdDate: string;
     fullName: string;

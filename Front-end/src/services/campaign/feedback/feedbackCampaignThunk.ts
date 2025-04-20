@@ -2,6 +2,7 @@ import { ResponseFromServer } from "@/types/app";
 import { TextResponse } from "@/types/auth";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { CreateFeedbackCampaignApi, getFeedbackCampaignApi, getFeedbackDetailApi, likeFeedbackApi, unlikeFeedbackApi } from "./feedbackCampaignApi";
+import { CreateFeedbackCampaign, FeedbackCampaign, FeedbackDetail, LikeFeedback } from "@/types/campaign";
 
 const CREAT_FEEDBACK_CAMPAIGN = "CREATE_FEEDBACK_CAMPAIGN";
 const GET_FEEDBACK_CAMPAIGN = "GET_FEEDBACK_CAMPAIGN";
@@ -57,7 +58,7 @@ export const getFeedbackDetailApiThunk = createAsyncThunk<
 
 export const likeFeedbackApiThunk = createAsyncThunk<
     ResponseFromServer<TextResponse>,
-    string
+    LikeFeedback
 >(LIKE_FEEDBACK, async (payload, { rejectWithValue }) => {
     try {
         const response = await likeFeedbackApi(payload);

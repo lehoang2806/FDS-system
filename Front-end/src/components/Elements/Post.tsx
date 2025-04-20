@@ -1,4 +1,4 @@
-import { selectGetPostById } from "@/app/selector";
+import { selectGetPostById, selectIsAuthenticated } from "@/app/selector";
 import { useAppDispatch, useAppSelector } from "@/app/store";
 import { CameraIcon, CommentIcon, FarvoriteIcon, FavoriteIcon, SendIcon } from "@/assets/icons";
 import { approvePostApiThunk, getAllPostsApiThunk, getPostByIdApiThunk, likePostApiThunk, unlikePostApiThunk } from "@/services/post/postThunk";
@@ -23,6 +23,7 @@ dayjs.extend(relativeTime);
 const Post: FC<PostProps> = ({ post, user, isStatus = false }) => {
     const dispatch = useAppDispatch();
     const postDetail = useAppSelector(selectGetPostById);
+    const isAuthentication = useAppSelector(selectIsAuthenticated);
 
     const [isRejectPostModalOpen, setIsRejectPostModalOpen] = useState(false);
     const [selectedRejectPost, setSelectedRejectPost] = useState<RejectPost | null>(null);
@@ -149,6 +150,12 @@ const Post: FC<PostProps> = ({ post, user, isStatus = false }) => {
             });
     }
 
+    const handleIsAuthencation = () => {
+        if (isAuthentication === false) {
+            alert('Vui lòng đăng nhập')
+        }
+    }
+
     return (
         <div className="post-container">
             <div className="pcr1">
@@ -176,138 +183,133 @@ const Post: FC<PostProps> = ({ post, user, isStatus = false }) => {
                 )}
             </div>
             <hr />
-            {(user.roleId === 3 || user.roleId === 4) && (
+            {post.status === "Approved" && (
                 <>
-                    {post.status === "Approved" && (
-                        <>
-                            <div className="pcr3">
-                                <div className="pcr3c1">
-                                    <FarvoriteIcon
-                                        onClick={() => handleFavoritePost(post.postId)}
-                                        className={classNames("pcr3-icon", isFavoritePost ? "pcr3-icon-active" : "")}
-                                    />
-                                    <CommentIcon className="pcr3-icon" />
-                                </div>
-                                <div className="pcr3c2">
-                                    <p>{postDetail?.likes.length} lượt thích</p>
-                                    <div className="dot"></div>
-                                    <p>{postDetail?.comments.length} bình luận</p>
-                                </div>
-                            </div>
-                            <hr />
-                            <div className="pcr4">
-                                <Formik
-                                    initialValues={initialValues}
-                                    onSubmit={hanldeSendFeedback}
-                                    validationSchema={schema}
-                                >
-                                    {({
-                                        handleSubmit,
-                                        setFieldValue,
-                                    }) => (
-                                        <Form onSubmit={handleSubmit}>
-                                            <div className="input-comment-container">
-                                                <Field
-                                                    as="textarea"
-                                                    name="content"
-                                                    rows={1}
-                                                    className="input-comment"
-                                                    placeholder="Thêm bình luận"
-                                                />
-                                                <div className="iccr2">
-                                                    <input
-                                                        type="file"
-                                                        accept="image/*"
-                                                        // ref={fileInputRef}
-                                                        multiple
-                                                        style={{ display: 'none' }}
-                                                        onChange={(e) => handleFileChange(e, setFieldValue)}
-                                                    />
+                    <div className="pcr3">
+                        <div className="pcr3c1">
+                            <FarvoriteIcon
+                                onClick={() => { handleFavoritePost(post.postId); handleIsAuthencation() }}
+                                className={classNames("pcr3-icon", isFavoritePost ? "pcr3-icon-active" : "")}
+                            />
+                            <CommentIcon className="pcr3-icon" />
+                        </div>
+                        <div className="pcr3c2">
+                            <p>{postDetail?.likes.length} lượt thích</p>
+                            <div className="dot"></div>
+                            <p>{postDetail?.comments.length} bình luận</p>
+                        </div>
+                    </div>
+                    <hr />
+                    <div className="pcr4">
+                        <Formik
+                            initialValues={initialValues}
+                            onSubmit={hanldeSendFeedback}
+                            validationSchema={schema}
+                        >
+                            {({
+                                handleSubmit,
+                                setFieldValue,
+                            }) => (
+                                <Form onSubmit={handleSubmit}>
+                                    <div className="input-comment-container">
+                                        <Field
+                                            as="textarea"
+                                            name="content"
+                                            rows={1}
+                                            className="input-comment"
+                                            placeholder="Thêm bình luận"
+                                        />
+                                        <div className="iccr2">
+                                            <input
+                                                type="file"
+                                                accept="image/*"
+                                                // ref={fileInputRef}
+                                                multiple
+                                                style={{ display: 'none' }}
+                                                onChange={(e) => handleFileChange(e, setFieldValue)}
+                                            />
 
 
-                                                    {/* Camera Icon */}
-                                                    <CameraIcon className='camera-icon' onClick={handleCameraClick} />
-                                                    <button className="btn-comment" type="submit"><SendIcon className="btn-icon" /></button>
-                                                </div>
-                                            </div>
-                                            <div className="preview-images-container" style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
-                                                {previewImages.map((img, idx) => (
-                                                    <div key={idx} style={{ position: "relative" }}>
-                                                        <button
-                                                            type="button"
-                                                            onClick={() => {
-                                                                const newImages = previewImages.filter((_, i) => i !== idx);
-                                                                setPreviewImages(newImages);
-                                                                setFieldValue("images", newImages);
-                                                            }}
-                                                            style={{
-                                                                position: "absolute",
-                                                                top: "-8px",
-                                                                right: "-8px",
-                                                                background: "red",
-                                                                color: "white",
-                                                                border: "none",
-                                                                borderRadius: "50%",
-                                                                width: "20px",
-                                                                height: "20px",
-                                                                cursor: "pointer",
-                                                                fontSize: "12px",
-                                                            }}
-                                                        >
-                                                            X
-                                                        </button>
-                                                        <img
-                                                            src={img}
-                                                            alt={`Preview ${idx}`}
-                                                            onClick={() => openLightbox(idx)}
-                                                            style={{
-                                                                width: "80px",
-                                                                height: "80px",
-                                                                objectFit: "cover",
-                                                                borderRadius: "6px",
-                                                                cursor: "pointer"
-                                                            }}
-                                                        />
-                                                    </div>
-                                                ))}
-                                            </div>
-                                            {isLightboxOpen && photoIndex !== null && (
-                                                <Lightbox
-                                                    images={previewImages.map((src) => ({ url: src }))}
-                                                    startIndex={photoIndex}
-                                                    onClose={() => {
-                                                        setIsLightboxOpen(false);
-                                                        setPhotoIndex(null);
+                                            {/* Camera Icon */}
+                                            <CameraIcon className='camera-icon' onClick={handleCameraClick} />
+                                            <button className="btn-comment" onClick={handleIsAuthencation} type="submit"><SendIcon className="btn-icon" /></button>
+                                        </div>
+                                    </div>
+                                    <div className="preview-images-container" style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
+                                        {previewImages.map((img, idx) => (
+                                            <div key={idx} style={{ position: "relative" }}>
+                                                <button
+                                                    type="button"
+                                                    onClick={() => {
+                                                        const newImages = previewImages.filter((_, i) => i !== idx);
+                                                        setPreviewImages(newImages);
+                                                        setFieldValue("images", newImages);
+                                                    }}
+                                                    style={{
+                                                        position: "absolute",
+                                                        top: "-8px",
+                                                        right: "-8px",
+                                                        background: "red",
+                                                        color: "white",
+                                                        border: "none",
+                                                        borderRadius: "50%",
+                                                        width: "20px",
+                                                        height: "20px",
+                                                        cursor: "pointer",
+                                                        fontSize: "12px",
+                                                    }}
+                                                >
+                                                    X
+                                                </button>
+                                                <img
+                                                    src={img}
+                                                    alt={`Preview ${idx}`}
+                                                    onClick={() => openLightbox(idx)}
+                                                    style={{
+                                                        width: "80px",
+                                                        height: "80px",
+                                                        objectFit: "cover",
+                                                        borderRadius: "6px",
+                                                        cursor: "pointer"
                                                     }}
                                                 />
-                                            )}
-                                        </Form>
-                                    )}
-                                </Formik>
-                            </div>
-                            <div className="pcr5">
-                                {postDetail?.comments && postDetail?.comments?.length > 0 && (
-                                    <>
-                                        {postDetail?.comments.map((item, index) => (
-                                            <div key={index} className="feedback-item">
-                                                <h4 className='ft-name'>{item.fullName}</h4>
-                                                <p className='ft-content'>{item.content}</p>
-                                                <div className="ft-info">
-                                                    <p className="ft-time">{item?.createdDate ? dayjs(item.createdDate).fromNow() : ''}</p>
-                                                    <FavoriteIcon className='ft-favorite-icon' />
-                                                </div>
                                             </div>
                                         ))}
-                                    </>
-                                )}
-                            </div>
-                        </>
-                    )}
+                                    </div>
+                                    {isLightboxOpen && photoIndex !== null && (
+                                        <Lightbox
+                                            images={previewImages.map((src) => ({ url: src }))}
+                                            startIndex={photoIndex}
+                                            onClose={() => {
+                                                setIsLightboxOpen(false);
+                                                setPhotoIndex(null);
+                                            }}
+                                        />
+                                    )}
+                                </Form>
+                            )}
+                        </Formik>
+                    </div>
+                    <div className="pcr5">
+                        {postDetail?.comments && postDetail?.comments?.length > 0 && (
+                            <>
+                                {postDetail?.comments.map((item, index) => (
+                                    <div key={index} className="feedback-item">
+                                        <h4 className='ft-name'>{item.fullName}</h4>
+                                        <p className='ft-content'>{item.content}</p>
+                                        <div className="ft-info">
+                                            <p className="ft-time">{item?.createdDate ? dayjs(item.createdDate).fromNow() : ''}</p>
+                                            <FavoriteIcon className='ft-favorite-icon' />
+                                        </div>
+                                    </div>
+                                ))}
+                            </>
+                        )}
+                    </div>
                 </>
             )}
 
-
-            {user.roleId === 1 || user.roleId === 2 && (
+            {user && (user.roleId === 1 || user.roleId === 2) && (
                 <>
                     {post.status === "Approved" && (
                         <>
