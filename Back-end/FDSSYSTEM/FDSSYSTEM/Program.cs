@@ -129,6 +129,7 @@ builder.Services.Configure<SmtpSetting>(builder.Configuration.GetSection("SmtpSe
 builder.Services.AddSingleton<EmailHelper>();
 builder.Services.Configure<SmsTwilioSetting>(builder.Configuration.GetSection("SMSTwilio"));
 builder.Services.AddSingleton<SMSHelper>();
+builder.Services.Configure<EmailConfig>(builder.Configuration.GetSection("EmailConfig"));
 
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

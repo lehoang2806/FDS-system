@@ -2,11 +2,13 @@
 using FDSSYSTEM.DTOs.Campaigns;
 using FDSSYSTEM.Helper;
 using FDSSYSTEM.Models;
+using FDSSYSTEM.Options;
 using FDSSYSTEM.Services.CampaignService;
 using FDSSYSTEM.Services.UserContextService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using System.Collections.Generic;
 using System.Net.Mail;
@@ -21,13 +23,15 @@ namespace FDSSYSTEM.Controllers
         private readonly ICampaignService _campaignService;
         private readonly IWebHostEnvironment _env;
         private readonly EmailHelper _emailHeper;
+        private readonly EmailConfig _emailConfig;
 
 
-        public CampaignController(IWebHostEnvironment env, ICampaignService campaignService, EmailHelper emailHeper)
+        public CampaignController(IWebHostEnvironment env, ICampaignService campaignService, EmailHelper emailHeper, IOptions<EmailConfig> options)
         {
             _env = env;
             _campaignService = campaignService;
             _emailHeper = emailHeper;
+            _emailConfig = options.Value;
         }
 
         [HttpPost("CreateCampaign")]
@@ -187,28 +191,29 @@ namespace FDSSYSTEM.Controllers
             }
         }
 
-        //[HttpPost("RequestDonorSupport")]
-        //[Authorize(Roles = "Staff")]
-        //public async Task<ActionResult> RequestDonorSupport(CampaignRequestDonorSupportDto requestDonorSupportDto)
-        //{
-        //    try
-        //    {
-        //        string filePath = Path.Combine(_env.ContentRootPath, "EmailTemplates", "CampaignRequestSupport.html");
-        //        if (!System.IO.File.Exists(filePath))
-        //        {
-        //            throw new FileNotFoundException("Không tìm thấy file template email.", filePath);
-        //        }
-        //        string htmlBody = await System.IO.File.ReadAllTextAsync(filePath);
-        //        string subject = "Lời mời trao gởi yêu thương";
-        //        await _emailHeper.SendEmailAsync(subject,htmlBody, requestDonorSupportDto.Emails, true);
+        [HttpPost("RequestDonorSupport")]
+        [Authorize(Roles = "Staff")]
+        public async Task<ActionResult> RequestDonorSupport(CampaignRequestDonorSupportDto requestDonorSupportDto)
+        {
+            try
+            {
+                string filePath = Path.Combine(_env.ContentRootPath, "EmailTemplates", "CampaignRequestSupport.html");
+                if (!System.IO.File.Exists(filePath))
+                {
+                    throw new FileNotFoundException("Không tìm thấy file template email.", filePath);
+                }
+                string htmlBody = await System.IO.File.ReadAllTextAsync(filePath);
+                string body = string.Format(htmlBody, _emailConfig.DonorSupportLink);
+                string subject = "Lời mời trao gởi yêu thương";
+                await _emailHeper.SendEmailAsync(subject, htmlBody, requestDonorSupportDto.Emails, true);
 
-        //        return Ok();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return BadRequest();
-        //    }
-        //}
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
+        }
 
     }
 }

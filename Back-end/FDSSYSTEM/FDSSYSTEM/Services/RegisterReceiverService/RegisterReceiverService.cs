@@ -85,8 +85,8 @@ namespace FDSSYSTEM.Services.RegisterReceiverService
                 RegisterReceiverName = registerReceiver.RegisterReceiverName,
                 Quantity = registerReceiver.Quantity,
                 CreatAt = registerReceiver.CreatAt,
-                CampaignId = Guid.NewGuid().ToString(),
-/*                CampaignId = registerReceiver.CampaignId,*/
+                RegisterReceiverId = Guid.NewGuid().ToString(),
+                CampaignId = registerReceiver.CampaignId,
             };
             await _registerReceiverRepository.AddAsync(newRegisterReceiver);
 
@@ -100,7 +100,7 @@ namespace FDSSYSTEM.Services.RegisterReceiverService
                     Content = "Có người đăng ký chiến dịch",
                     NotificationType = "Pending",
                     ObjectType = "RegisterReceiver",
-                    OjectId = newRegisterReceiver.RegisterReceiverId,
+                    OjectId = newRegisterReceiver.CampaignId,
                     AccountId = userId
                 };
                 //save notifiation to db
