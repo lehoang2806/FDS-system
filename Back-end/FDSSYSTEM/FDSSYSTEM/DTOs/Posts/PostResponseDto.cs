@@ -31,6 +31,8 @@
         public string PostCommentId { get; set; }
         public string FullName { get; set; }
         public string Content { get; set; }
+
+        public List<string>? Images { get; set; }
         public DateTime? CreatedDate { get; set; }
 
         public List<PostCommentLikeResponseDto> Likes { get; set; }
@@ -42,6 +44,7 @@
         public string ReplyPostCommentId { get; set; }
         public string FullName { get; set; }
         public string Content { get; set; }
+        public List<string>? Images { get; set; }
         public DateTime? CreatedDate { get; set; }
         public List<PostCommentLikeResponseDto> Likes { get; set; }
     }

@@ -16,5 +16,6 @@ namespace FDSSYSTEM.Models
         public string CreatAt { get; set; }
         public DateTime? DateUpdated { get; set; }
         public string CampaignId { get; set; }
+        public bool IsReceived { get; set; } = false; // false là user chưa nhận, true là nhận rồi
     }
 }

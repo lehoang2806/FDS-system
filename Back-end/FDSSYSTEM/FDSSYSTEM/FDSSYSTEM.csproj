@@ -24,7 +24,6 @@
     <Folder Include="Repositories\AdminRepository\" />
     <Folder Include="Repositories\StatictisRepository\" />
     <Folder Include="Repositories\StaffRepository\" />
-    <Folder Include="Services\StatictisService\" />
     <Folder Include="Services\StaffService\" />
     <Folder Include="Views\Account\" />
   </ItemGroup>

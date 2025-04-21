@@ -1,4 +1,5 @@
 ﻿using FDSSYSTEM.DTOs.Statistic;
+using FDSSYSTEM.Services.StatisticService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,7 +8,11 @@ namespace FDSSYSTEM.Controllers
     [Route("api/Statistic")]
     public class StatisticController : BaseController
     {
-
+        private readonly IStatisticService _statisticService;
+        public StatisticController(IStatisticService statisticService)
+        {
+            _statisticService = statisticService;
+        }
 
         [HttpGet("GetStatisticDonor")]
         [Authorize(Roles = "Donor")]
@@ -30,8 +35,7 @@ namespace FDSSYSTEM.Controllers
         {
             try
             {
-                /*var statist = await _campaignService.GetAll();*/
-                return Ok(new StatisticAdminItemDto());
+                return Ok(await _statisticService.GetStatisticAdmin());
             }
             catch (Exception ex)
             {

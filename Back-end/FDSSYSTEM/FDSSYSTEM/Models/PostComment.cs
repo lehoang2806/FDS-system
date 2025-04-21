@@ -25,7 +25,7 @@ public partial class PostComment
     public DateTime? DateUpdated { get; set; }
 
     public List<ReplyPostComment> Replies { get; set; }
-    public List<string?> Images { get; set; }
+    public List<string>? Images { get; set; }
 }
 
 public class ReplyPostComment
@@ -41,6 +41,6 @@ public class ReplyPostComment
     public DateTime? DateCreated { get; set; }
 
     public DateTime? DateUpdated { get; set; }
-    public List<string?> Images { get; set; }
+    public List<string>? Images { get; set; }
 
 }
