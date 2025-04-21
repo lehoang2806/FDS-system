@@ -3,7 +3,7 @@ import { navigateHook } from "@/routes/RouteApp"
 import { routes } from "@/routes/routeName"
 import { FC, useEffect, useState } from "react"
 import { Link } from "react-router-dom"
-import { CreateCampaignModal, SubmitCertificateModal } from "../Modal"
+import { CreateCampaignModal, CreateRequestSupportModal, SubmitCertificateModal } from "../Modal"
 import { useAppDispatch, useAppSelector } from "@/app/store"
 import { selectGetProfileUser, selectIsAuthenticated, selectNotifications, selectUserLogin } from "@/app/selector"
 import { logout } from "@/utils/helper"
@@ -30,6 +30,8 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
 
     const [isCreateCampaignModalOpen, setIsCreateCampaignModalOpen] = useState(false);
 
+    const [isRequestSupportModalOpen, setIsRequestSupportModalOpen] = useState(false);
+
     const handleCreateCampaign = () => {
         if (profileUser?.isConfirm === false) {
             setIsSubmitCertificateModalOpen(true)
@@ -37,6 +39,10 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
         if (profileUser?.isConfirm === true) {
             setIsCreateCampaignModalOpen(true)
         }
+    }
+
+    const handleRequestSupport = () => {
+        setIsRequestSupportModalOpen(true)
     }
 
     const [isNotifOpen, setIsNotifOpen] = useState(false);
@@ -281,7 +287,9 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
                                 )
                             }
                             {userLogin?.roleId === 4 &&
-                                (profileUser?.isConfirm === false && <p className="note">Tài khoản chưa được xác thực</p>)
+                                (profileUser?.isConfirm === false ? <p className="note">Tài khoản chưa được xác thực</p> : (
+                                    <button onClick={handleRequestSupport} className="sc-btn">Yêu cầu hỗ trợ</button>
+                                ))
                             }
                             <div className="notification-wrapper">
                                 <div className="notification-icon-wrapper">
@@ -566,6 +574,7 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
             </div>
             <SubmitCertificateModal isOpen={isSubmitCertificateModalOpen} setIsOpen={setIsSubmitCertificateModalOpen} />
             <CreateCampaignModal isOpen={isCreateCampaignModalOpen} setIsOpen={setIsCreateCampaignModalOpen} />
+            <CreateRequestSupportModal isOpen={isRequestSupportModalOpen} setIsOpen={setIsRequestSupportModalOpen} />
         </header>
     )
 }

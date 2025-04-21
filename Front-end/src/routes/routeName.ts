@@ -91,6 +91,10 @@ export const routes = {
                 list: "/staff/certificate/recipient",
                 detail: "/staff/certificate/recipient/:id/detail",
             }
+        },
+        request_support: {
+            list: "/staff/requestSupport",
+            detail: "/staff/requestSupport/:id/detail",
         }
     }
 }

@@ -2,6 +2,7 @@ import { Selector } from "@/types/app";
 import { UserProfile } from "@/types/auth";
 import { RootState } from "./reducer";
 import { currentOrganizationDonorCertificate, currentPersonalDonorCertificate, currentRecipientCertificate, DonorCertificate, RecipientCertificate, UserInfo } from "@/types/user";
+import { CampaignInfo, CurrentCampaign, FeedbackCampaign, FeedbackDetail } from "@/types/campaign";
 
 export const selectLoading: Selector<boolean> = (state: RootState) => {
     return state.app.loading;
@@ -91,4 +92,13 @@ export const selectGetAllPosts: Selector<Post[]> = (state: RootState) => {
 
 export const selectGetPostById: Selector<PostInfo | null> = (state: RootState) => {
     return state.post.post;
+}
+
+//RequestSupport
+export const selectGetAllRequestSupport: Selector<RequestSupportInfo[]> = (state: RootState) => {
+    return state.requestSupport.listRequestSupport;
+}
+
+export const selectGetRequestSupportById: Selector<RequestSupportInfo | null> = (state: RootState) => {
+    return state.requestSupport.requestSupport;
 }

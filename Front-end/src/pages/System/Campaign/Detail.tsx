@@ -20,6 +20,7 @@ import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import 'dayjs/locale/vi';
 import { UserProfile } from '@/types/auth';
+import { CampaignInfo, CreateFeedbackCampaign } from '@/types/campaign';
 
 dayjs.locale('vi');
 dayjs.extend(relativeTime);
@@ -37,6 +38,8 @@ const DetailCampaignPage: React.FC = () => {
     const currentCampaign = useAppSelector(selectCurrentCampaign);
     const registerReceivers = useAppSelector(selectGetAllRegisterReceivers);
     const currentFeedbackCampaign = useAppSelector(selectGetAllFeedbackCampaign);
+
+    console.log(currentCampaign)
 
     // States
     const [activeTab, setActiveTab] = useState<"mota" | "dangky">("mota");
@@ -76,7 +79,11 @@ const DetailCampaignPage: React.FC = () => {
         .join(":");
 
     const currentDate = new Date();
-    const today = currentDate.toLocaleDateString("vi-VN");
+    const today = currentDate;
+
+    const startDate = currentCampaign?.startRegisterDate ? new Date(currentCampaign.startRegisterDate) : null;
+    const endDate = currentCampaign?.endRegisterDate ? new Date(currentCampaign.endRegisterDate) : null;
+    const implementationDate = currentCampaign?.implementationTime ? new Date(currentCampaign.implementationTime) : null;
 
     // Effects
     useEffect(() => {
@@ -360,13 +367,13 @@ const DetailCampaignPage: React.FC = () => {
                                 {userLogin?.roleId === 4 && currentCampaign && (
                                     <>
                                         {/* Campaign dạng Limited */}
-                                        {currentCampaign.campaignType === "Limited" &&
-                                            currentCampaign.implementationTime &&
-                                            currentCampaign.implementationTime > today && (
-                                                totalRegisteredQuantity >= (Number(currentCampaign.limitedQuantity) || 0) ? (
+                                        {currentCampaign?.campaignType === "Limited" &&
+                                            implementationDate &&
+                                            implementationDate > today && (
+                                                totalRegisteredQuantity >= Number(currentCampaign?.limitedQuantity) ? (
                                                     <p className="sc-text">Đã đăng ký đủ số lượng</p>
                                                 ) : (
-                                                    <button className='sc-btn' onClick={handleRegisterReceiver}>
+                                                    <button className="sc-btn" onClick={handleRegisterReceiver}>
                                                         Đăng ký nhận hỗ trợ
                                                     </button>
                                                 )
@@ -374,19 +381,18 @@ const DetailCampaignPage: React.FC = () => {
 
                                         {/* Campaign dạng Voluntary */}
                                         {currentCampaign.campaignType === "Voluntary" &&
-                                            currentCampaign.implementationTime &&
-                                            today <= currentCampaign.implementationTime && (
-                                                currentCampaign.startRegisterDate &&
-                                                currentCampaign.endRegisterDate && (
-                                                    today < currentCampaign.startRegisterDate ? (
-                                                        <p className="sc-text">Chưa mở đăng ký</p>
-                                                    ) : today > currentCampaign.endRegisterDate ? (
-                                                        <p className="sc-text">Đã đóng đăng ký nhận quà</p>
-                                                    ) : (
-                                                        <button className='sc-btn' onClick={handleRegisterReceiver}>
-                                                            Đăng ký nhận quà
-                                                        </button>
-                                                    )
+                                            implementationDate &&
+                                            today <= implementationDate &&
+                                            startDate &&
+                                            endDate && (
+                                                today < startDate ? (
+                                                    <p className="sc-text">Chưa mở đăng ký</p>
+                                                ) : today > endDate ? (
+                                                    <p className="sc-text">Đã đóng đăng ký nhận quà</p>
+                                                ) : (
+                                                    <button className="sc-btn" onClick={handleRegisterReceiver}>
+                                                        Đăng ký nhận quà
+                                                    </button>
                                                 )
                                             )}
                                     </>

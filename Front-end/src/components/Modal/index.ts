@@ -18,6 +18,7 @@ import UpdateRecipientCertificateModal from "./UpdateRecipientCertificate";
 import CreatePostModal from "./CreatePost";
 import CancelCampaignModal from "./CancelCampaign";
 import RejectPostModal from "./RejectPost";
+import CreateRequestSupportModal from "./RequestSupport";
 
 export {
     Modal,
@@ -39,5 +40,6 @@ export {
     UpdateRecipientCertificateModal,
     CreatePostModal,
     CancelCampaignModal,
-    RejectPostModal
+    RejectPostModal,
+    CreateRequestSupportModal
 };

@@ -7,6 +7,7 @@ import { newsSlice } from '@/services/news/newsSlice';
 import { notificationSlice } from '@/services/notification/notificationSlice';
 import { postSlice } from '@/services/post/postSlice';
 import { registerReceiverSlice } from '@/services/registerReceive/registerReceiverSlice';
+import { requestSupportSlice } from '@/services/requestSupport/requestSupportSlice';
 import { userSlice } from '@/services/user/userSlide';
 import { combineReducers } from '@reduxjs/toolkit';
 
@@ -20,7 +21,8 @@ const reducer = combineReducers({
     notificate: notificationSlice.reducer,
     news: newsSlice.reducer,
     post: postSlice.reducer,
-    feedbackCampaign: feedbackCampaignSlice.reducer
+    feedbackCampaign: feedbackCampaignSlice.reducer,
+    requestSupport: requestSupportSlice.reducer
 });
 
 export type RootState = ReturnType<typeof reducer>;
