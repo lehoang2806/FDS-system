@@ -60,29 +60,34 @@ const Post: FC<PostProps> = ({ post, user, isStatus = false }) => {
         setIsRejectPostModalOpen(true);
     };
 
-    const isFavoritePost = postDetail?.likes.some((like) => like.accountId === user?.accountId);
+    const isFavoritePost = post.likes.some((like) => like.accountId === user?.accountId);
 
-    const handleFavoritePost = async (postId: string) => {
-        if (isFavoritePost) {
-            dispatch(unlikePostApiThunk(postId))
+    const handleFavoritePost = async (postId: string, postLikeId?: string) => {
+        console.log(postId, postLikeId)
+        if (postLikeId) {
+            // If the post is already liked by the user, perform unlike action
+            dispatch(unlikePostApiThunk(postLikeId))  // Pass the postLikeId to unlike
                 .unwrap()
                 .then(() => {
                     dispatch(getPostByIdApiThunk(postId));
+                    dispatch(getAllPostsApiThunk());
                 })
                 .catch(() => {
                     toast.error("Có lỗi xảy ra.");
                 });
         } else {
+            // If the post is not liked, perform like action
             dispatch(likePostApiThunk(postId))
                 .unwrap()
                 .then(() => {
                     dispatch(getPostByIdApiThunk(postId));
+                    dispatch(getAllPostsApiThunk());
                 })
                 .catch(() => {
-                    toast.error("Có lỗi xãy ra.");
+                    toast.error("Có lỗi xảy ra.");
                 });
         }
-    }
+    };
 
     const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -124,8 +129,10 @@ const Post: FC<PostProps> = ({ post, user, isStatus = false }) => {
     };
 
     const initialValues: CommentPost = {
+        postCommentId: null,
         postId: String(post?.postId),
         content: "",
+        images: [],
     };
 
     const schema = Yup.object({
@@ -164,7 +171,7 @@ const Post: FC<PostProps> = ({ post, user, isStatus = false }) => {
                     <p className="p-time">
                         {post.status === "Approved" ? (
                             <>
-                                {postDetail?.publicDate ? dayjs(postDetail.publicDate).format('DD/MM/YYYY') : ''}
+                                {post?.publicDate ? dayjs(post.publicDate).fromNow() : ''}
                             </>
                         ) : (
                             <>
@@ -188,7 +195,10 @@ const Post: FC<PostProps> = ({ post, user, isStatus = false }) => {
                     <div className="pcr3">
                         <div className="pcr3c1">
                             <FarvoriteIcon
-                                onClick={() => { handleFavoritePost(post.postId); handleIsAuthencation() }}
+                                onClick={() => {
+                                    const likedPost = post.likes.find(like => like.accountId === user?.accountId);
+                                    handleFavoritePost(post.postId, likedPost?.postLikeId);
+                                }}
                                 className={classNames("pcr3-icon", isFavoritePost ? "pcr3-icon-active" : "")}
                             />
                             <CommentIcon className="pcr3-icon" />
@@ -223,7 +233,7 @@ const Post: FC<PostProps> = ({ post, user, isStatus = false }) => {
                                             <input
                                                 type="file"
                                                 accept="image/*"
-                                                // ref={fileInputRef}
+                                                ref={fileInputRef}
                                                 multiple
                                                 style={{ display: 'none' }}
                                                 onChange={(e) => handleFileChange(e, setFieldValue)}
@@ -235,7 +245,7 @@ const Post: FC<PostProps> = ({ post, user, isStatus = false }) => {
                                             <button className="btn-comment" onClick={handleIsAuthencation} type="submit"><SendIcon className="btn-icon" /></button>
                                         </div>
                                     </div>
-                                    <div className="preview-images-container" style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
+                                    <div className="preview-images-container" style={{ display: "flex", marginTop: "20px", gap: "10px", flexWrap: "wrap" }}>
                                         {previewImages.map((img, idx) => (
                                             <div key={idx} style={{ position: "relative" }}>
                                                 <button

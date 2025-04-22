@@ -177,6 +177,7 @@ const CreateCampaignModal: FC<CreateCampaignModalProps> = ({ isOpen, setIsOpen }
             setIsOpen(false);
             setTimeout(() => {
                 dispatch(setLoading(false));
+                setImagePreview([]);
             }, 1000);
         }
     };
