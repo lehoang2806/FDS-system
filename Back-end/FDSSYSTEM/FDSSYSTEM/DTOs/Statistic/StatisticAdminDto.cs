@@ -11,11 +11,22 @@
 
     public class StatisticAdminItemDto
     {
-        public int NumberOfCampaignDonorCreated { get; set; }
-        public int NumberOfRegisterReceiver { get; set; }
-        public int NumberOfCertificate { get; set; }
-        public int NumberOfGift { get; set; }
+        public int NumberOfCampaignStaffCreated { get; set; } //số lượng chiến dịch  staff đã tạo
+        public int NumberOfCampaignPersonalDonorCreated { get; set; } //số lượng chiến dịch  person donor đã tạo 
+        public int NumberOfCampaignOrganizaionDonorCreated { get; set; } //số lượng chiến dịch  OrganizaionDonor đã tạo 
+        public int NumberOfRegisterReceiver { get; set; }// sô lượng người đăng ký nhận
+        public int NumberOfPersonalPersonalDonorCertificate { get; set; } // số lượng chứng nhận personaldonor
+        public int NumberOfPersonalOrganizaionDonorCertificate { get; set; } // số lượng chứng nhận organization
+        public int NumberOfPersonalRecipientCertificate { get; set; } // số lượng chứng nhận recipient
+        public int NumberOfGiftOfPersonalDonor { get; set; } // số lượng quà trong campaign
+        public int NumberOfGiftOrganizaionDonor { get; set; }
+        public int NumberOfGiftStaff { get; set; }
         public long AmountOfSupportForTheSystem { get; set; }
-        public int NumberOfAllMember { get; set; }
+        public int NumberOfAllPersonalDonorMember { get; set; }
+        public int NumberOfAllOrganizaionDonorMember { get; set; }
+        public int NumberOfAllRecipientMember { get; set; }
+        public int NumberOfAllStaffMember { get; set; }
+        public int NumberOfGiftRegisterReceiver { get; set; }// số lượng quà đăng ký nhận
+        public int NumberGiftRegisterReceiver { get; set; } // số lượng người đăng ký nhận
     }
 }

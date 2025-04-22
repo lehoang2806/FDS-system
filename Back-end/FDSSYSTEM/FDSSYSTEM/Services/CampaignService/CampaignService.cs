@@ -109,12 +109,6 @@ namespace FDSSYSTEM.Services.CampaignService
 
             }
 
-            if (!isDonorCreate)
-            {
-                //Tạo yêu cầu tham gia và gửi mail cho donor
-                await _campaignDonorSupportService.RequestDonorSupportAsync(newCampain.CampaignId);
-            }
-
         }
 
         //public async Task<List<CampaignDto>> GetAllCampaignAccount()

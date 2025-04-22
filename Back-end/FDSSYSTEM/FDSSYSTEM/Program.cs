@@ -47,10 +47,12 @@ using FDSSYSTEM.Services.PostService;
 using FDSSYSTEM.Services.RegisterReceiverService;
 using FDSSYSTEM.Services.RequestSupportService;
 using FDSSYSTEM.Services.RoleService;
+using FDSSYSTEM.Services.StatisticService;
 using FDSSYSTEM.Services.UserContextService;
 using FDSSYSTEM.Services.UserService;
 using FDSSYSTEM.SignalR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.CodeAnalysis.Elfie.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -124,6 +126,8 @@ builder.Services.AddScoped<ICampaignDonorSupportService, CampaignDonorSupportSer
 
 builder.Services.AddScoped<IDonorQuestionRepository, DonorQuestionRepository>();
 builder.Services.AddScoped<IDonorQuestionService, DonorQuestionService>();
+
+builder.Services.AddScoped<IStatisticService, StatisticService>();
 
 
 builder.Services.AddScoped<IOtpRepository, OtpRepository>();

@@ -22,6 +22,9 @@ using FDSSYSTEM.Repositories.OtpRepository;
 using ZstdSharp.Unsafe;
 using FDSSYSTEM.DTOs.Users;
 using Microsoft.AspNetCore.Identity.Data;
+using FDSSYSTEM.Options;
+using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Mvc;
 
 
 namespace FDSSYSTEM.Services.UserService;
@@ -40,6 +43,8 @@ public class UserService : IUserService
     private readonly IHubContext<NotificationHub> _hubNotificationContext;
     private readonly EmailHelper _emailHeper;
     private readonly SMSHelper _smsHeper;
+    private readonly IWebHostEnvironment _env;
+    private readonly EmailConfig _emailConfig;
 
     public UserService(IUserRepository userRepository
         , IUserContextService userContextService
@@ -51,6 +56,8 @@ public class UserService : IUserService
         , EmailHelper emailHeper
         , IOtpRepository otpRepository
         , SMSHelper smsHelper
+        , IWebHostEnvironment env
+        , IOptions<EmailConfig> options
         )
     {
         _userRepository = userRepository;
@@ -63,6 +70,8 @@ public class UserService : IUserService
         _emailHeper = emailHeper;
         _otpRepository = otpRepository;
         _smsHeper = smsHelper;
+        _env = env;
+        _emailConfig = options.Value;
     }
 
     public async Task AddUser(Account account)
@@ -492,94 +501,6 @@ public class UserService : IUserService
         return rs;
     }
 
-    //public async Task ApproveDonorCertificate(DonorCertificateDto donorCertificateDto)
-    //{
-    //    // Kiểm tra nếu là Organization Donor Certificate
-    //    if (!string.IsNullOrEmpty(donorCertificateDto.OrganizationName))
-    //    {
-    //        var orgFilter = Builders<OrganizationDonorCertificate>.Filter.Eq(c => c.OrganizationDonorCertificateId, donorCertificateDto.DonorCertificateId);
-    //        var organizationDonorCertificate = (await _organizationDonorCertificateRepository.GetAllAsync(orgFilter)).FirstOrDefault();
-
-    //        if (organizationDonorCertificate != null)
-    //        {
-    //            organizationDonorCertificate.Status = "Approved";
-    //            await _organizationDonorCertificateRepository.UpdateAsync(organizationDonorCertificate.Id, organizationDonorCertificate);
-    //        }
-    //    }
-
-    //    // Kiểm tra nếu là Personal Donor Certificate
-    //    if (!string.IsNullOrEmpty(donorCertificateDto.CitizenId))
-    //    {
-    //        var personalFilter = Builders<PersonalDonorCertificate>.Filter.Eq(c => c.PersonalDonorCertificateId, donorCertificateDto.DonorCertificateId);
-    //        var personalDonorCertificate = (await _personalDonorCertificateRepository.GetAllAsync(personalFilter)).FirstOrDefault();
-
-    //        if (personalDonorCertificate != null)
-    //        {
-    //            personalDonorCertificate.Status = "Approved";
-    //            await _personalDonorCertificateRepository.UpdateAsync(personalDonorCertificate.Id, personalDonorCertificate);
-    //        }
-    //    }
-    //}
-
-    //public async Task RejectDonorCertificate(DonorCertificateDto donorCertificateDto)
-    //{
-    //    // Reject Organization Donor Certificate
-    //    if (!string.IsNullOrEmpty(donorCertificateDto.OrganizationName))
-    //    {
-    //        var orgFilter = Builders<OrganizationDonorCertificate>.Filter.Eq(c => c.OrganizationDonorCertificateId, donorCertificateDto.DonorCertificateId);
-    //        var organizationDonorCertificate = (await _organizationDonorCertificateRepository.GetAllAsync(orgFilter)).FirstOrDefault();
-
-    //        if (organizationDonorCertificate != null)
-    //        {
-    //            organizationDonorCertificate.Status = "Rejected";
-    //            organizationDonorCertificate.RejectComment = donorCertificateDto.RejectComment;
-    //            await _organizationDonorCertificateRepository.UpdateAsync(organizationDonorCertificate.Id, organizationDonorCertificate);
-    //        }
-    //    }
-
-    //    // Reject Personal Donor Certificate
-    //    if (!string.IsNullOrEmpty(donorCertificateDto.CitizenId))
-    //    {
-    //        var personalFilter = Builders<PersonalDonorCertificate>.Filter.Eq(c => c.PersonalDonorCertificateId, donorCertificateDto.DonorCertificateId);
-    //        var personalDonorCertificate = (await _personalDonorCertificateRepository.GetAllAsync(personalFilter)).FirstOrDefault();
-
-    //        if (personalDonorCertificate != null)
-    //        {
-    //            personalDonorCertificate.Status = "Rejected";
-    //            personalDonorCertificate.RejectComment = donorCertificateDto.RejectComment;
-    //            await _personalDonorCertificateRepository.UpdateAsync(personalDonorCertificate.Id, personalDonorCertificate);
-    //        }
-    //    }
-    //}
-
-
-    //public async Task Approve(ApproveRecipientCertificateDto approveRecipientCertificateDto)
-    //{
-    //    // Sử dụng IRecipientCertificateRepository thay vì _userRepository
-    //    var filter = Builders<RecipientCertificate>.Filter.Eq(c => c.RecipientCertificateId, approveRecipientCertificateDto.RecipientCertificateId);
-    //    var recipientCertificate = (await _recipientCertificateRepository.GetAllAsync(filter)).FirstOrDefault();
-
-    //    if (recipientCertificate != null)
-    //    {
-    //        recipientCertificate.Status = "Approved";
-    //        await _recipientCertificateRepository.UpdateAsync(recipientCertificate.Id, recipientCertificate);
-    //    }
-    //}
-
-    //public async Task Reject(RejectRecipientCertificateDto rejectRecipientCertificateDto)
-    //{
-    //    // Sử dụng IRecipientCertificateRepository thay vì _userRepository
-    //    var filter = Builders<RecipientCertificate>.Filter.Eq(c => c.RecipientCertificateId, rejectRecipientCertificateDto.RecipientCertificateId);
-    //    var recipientCertificate = (await _recipientCertificateRepository.GetAllAsync(filter)).FirstOrDefault();
-
-    //    if (recipientCertificate != null)
-    //    {
-    //        recipientCertificate.Status = "Rejected";
-    //        recipientCertificate.RejectComment = rejectRecipientCertificateDto.Comment;
-    //        await _recipientCertificateRepository.UpdateAsync(recipientCertificate.Id, recipientCertificate);
-    //    }
-    //}
-
 
     public async Task<IEnumerable<Account>> GetAllUser()
     {
@@ -648,6 +569,26 @@ public class UserService : IUserService
         //send notification via signalR
         await _hubNotificationContext.Clients.User(notificationDto.AccountId).SendAsync("ReceiveNotification", notificationDto);
 
+        if (string.IsNullOrEmpty(donorType))
+        {
+            //donorType ="" => là recipient => gửi SMS
+            _smsHeper.SendSMS(account.Phone, "FDS-System: Chứng nhận của bạn đã được phê duyệt");
+        }
+        else
+        {
+            //Gửi mail cho donor
+            string filePath = Path.Combine(_env.ContentRootPath, "EmailTemplates", "ApproveCertificate.html");
+            if (!System.IO.File.Exists(filePath))
+            {
+                throw new FileNotFoundException("Không tìm thấy file template email.", filePath);
+            }
+            string htmlBody = await System.IO.File.ReadAllTextAsync(filePath);
+            string body = htmlBody.Replace("{{UserName}}", account.FullName).Replace("{{Hompage}}", _emailConfig.HomePage);
+            string subject = "Chứng nhận của bạn đã được phê duyệt";
+            await _emailHeper.SendEmailAsync(subject, body, new List<string> { account.Email }, true);
+        }
+
+
     }
 
     public async Task RejectCertificate(RejectCertificateDto rejectCertificateDto)
@@ -655,6 +596,7 @@ public class UserService : IUserService
         string objectId = "";
         string accountId = "";
         string objectType = "";
+        string donorType = "";
         switch (rejectCertificateDto.Type)
         {
             case ApproveCertificateType.PersonalDonor:
@@ -666,6 +608,7 @@ public class UserService : IUserService
                 objectId = pcert.PersonalDonorCertificateId;
                 accountId = pcert.DonorId;
                 objectType = "Personal Donor Certificate";
+                donorType = "Personal Donor";
                 break;
             case ApproveCertificateType.OrganizationDonor:
                 var ogcert = await _organizationDonorCertificateRepository.GetOrganizationDonorCertificateByIdAsync(rejectCertificateDto.CertificateId);
@@ -676,6 +619,7 @@ public class UserService : IUserService
                 objectId = ogcert.OrganizationDonorCertificateId;
                 accountId = ogcert.DonorId;
                 objectType = "Organization Donor Certificate";
+                donorType = "Organization Donor";
                 break;
             case ApproveCertificateType.Recipient:
                 var rcert = await _recipientCertificateRepository.GetRecipientCertificateByIdAsync(rejectCertificateDto.CertificateId);
@@ -691,10 +635,15 @@ public class UserService : IUserService
                 throw new Exception("Type not found");
         }
 
+        var account = await GetAccountById(accountId);
+        account.IsConfirm = true;
+        account.DonorType = donorType;
+        await _userRepository.UpdateAsync(account.Id, account);
+
         var notificationDto = new NotificationDto
         {
             Title = "Phê duyệt chứng nhận thất bại",
-            Content = "Rất tiếc chứng nhận của bạn không phù hợp.Bạn có thể xem lý do ",
+            Content = "Chứng nhận của bạn đã được phê duyệt thất bại",
             NotificationType = "Reject",
             ObjectType = objectType,
             OjectId = objectId,
@@ -704,6 +653,26 @@ public class UserService : IUserService
         await _notificationService.AddNotificationAsync(notificationDto);
         //send notification via signalR
         await _hubNotificationContext.Clients.User(notificationDto.AccountId).SendAsync("ReceiveNotification", notificationDto);
+
+        if (string.IsNullOrEmpty(donorType))
+        {
+            //donorType ="" => là recipient => gửi SMS
+            _smsHeper.SendSMS(account.Phone, "FDS-System: Chứng nhận của bạn đã không được phê duyệt");
+        }
+        else
+        {
+            //Gửi mail cho donor
+            string filePath = Path.Combine(_env.ContentRootPath, "EmailTemplates", "RejectCertificate.html");
+            if (!System.IO.File.Exists(filePath))
+            {
+                throw new FileNotFoundException("Không tìm thấy file template email.", filePath);
+            }
+            string htmlBody = await System.IO.File.ReadAllTextAsync(filePath);
+            string body = htmlBody.Replace("{{UserName}}", account.FullName).Replace("{{Hompage}}", _emailConfig.HomePage);
+            string subject = "Chứng nhận của bạn đã không được phê duyệt";
+            await _emailHeper.SendEmailAsync(subject, body, new List<string> { account.Email }, true);
+        }
+
 
     }
 
@@ -765,7 +734,7 @@ public class UserService : IUserService
             3,//donor
             2//staff
         };
-        var filter = Builders<Account>.Filter.In(c => c.RoleId, roleIds);       
+        var filter = Builders<Account>.Filter.In(c => c.RoleId, roleIds);
         return (await _userRepository.GetAllAsync(filter)).Select(x => x.AccountId).ToList();
     }
 
@@ -826,6 +795,7 @@ public class UserService : IUserService
         string objectId = "";
         string accountId = "";
         string objectType = "";
+        string donorType = "";
         switch (reviewCommentCertificateDto.Type)
         {
             case CertificateType.PersonalDonor:
@@ -846,6 +816,7 @@ public class UserService : IUserService
                 objectId = pcert.PersonalDonorCertificateId;
                 accountId = pcert.DonorId;
                 objectType = "Personal Donor Certificate";
+                donorType = "Personal Donor";
                 break;
             case CertificateType.OrganizationDonor:
                 var ogcert = await _organizationDonorCertificateRepository.GetOrganizationDonorCertificateByIdAsync(reviewCommentCertificateDto.CertificateId);
@@ -864,7 +835,7 @@ public class UserService : IUserService
                 objectId = ogcert.OrganizationDonorCertificateId;
                 accountId = ogcert.DonorId;
                 objectType = "Organization Donor Certificate";
-
+                donorType = "Organization Donor";
                 break;
             case CertificateType.Recipient:
                 var rcert = await _recipientCertificateRepository.GetRecipientCertificateByIdAsync(reviewCommentCertificateDto.CertificateId);
@@ -889,21 +860,43 @@ public class UserService : IUserService
         }
 
 
-        //TODO: Send Email / SMS
+        var account = await GetAccountById(accountId);
+        account.IsConfirm = true;
+        account.DonorType = donorType;
+        await _userRepository.UpdateAsync(account.Id, account);
 
         var notificationDto = new NotificationDto
         {
-            Title = "Cần bổ sung chứng nhận",
-            Content = "Chứng nhận của bạn cần bổ sung thêm.Bạn có thể xem lý do",
-            NotificationType = "Review",
+            Title = "Phê duyệt chứng nhận thiếu sót",
+            Content = "Chứng nhận của bạn đã thiếu sót, vui lòng bổ sung thêm",
+            NotificationType = "Pending",
             ObjectType = objectType,
             OjectId = objectId,
-            AccountId = accountId,
+            AccountId = accountId
         };
         //save notifiation to db
         await _notificationService.AddNotificationAsync(notificationDto);
         //send notification via signalR
         await _hubNotificationContext.Clients.User(notificationDto.AccountId).SendAsync("ReceiveNotification", notificationDto);
+
+        if (string.IsNullOrEmpty(donorType))
+        {
+            //donorType ="" => là recipient => gửi SMS
+            _smsHeper.SendSMS(account.Phone, "FDS-System: Chứng nhận của bạn đã thiếu sót.Vui lòng vào kiểm tra lại ở trang Web");
+        }
+        else
+        {
+            //Gửi mail cho donor
+            string filePath = Path.Combine(_env.ContentRootPath, "EmailTemplates", "AddCertificateReviewComment.html");
+            if (!System.IO.File.Exists(filePath))
+            {
+                throw new FileNotFoundException("Không tìm thấy file template email.", filePath);
+            }
+            string htmlBody = await System.IO.File.ReadAllTextAsync(filePath);
+            string body = htmlBody.Replace("{{UserName}}", account.FullName).Replace("{{Hompage}}", _emailConfig.HomePage);
+            string subject = "Chứng nhận của bạn đã thiếu sót";
+            await _emailHeper.SendEmailAsync(subject, body, new List<string> { account.Email }, true);
+        }
     }
 
     public async Task<bool> VerifyOtp(VerifyOtpDto verifyOtpDto)

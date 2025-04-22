@@ -253,6 +253,7 @@ namespace FDSSYSTEM.Services.PostService
                         FullName = GetFullNameByAccountId(users, pComentItem.AccountId),
                         Content = pComentItem.Content,
                         CreatedDate = pComentItem.DateCreated,
+                        Images = pComentItem.Images,
                     };
                     //Lấy Like của comment
                     comment.Likes = new List<PostCommentLikeResponseDto>();
@@ -280,7 +281,8 @@ namespace FDSSYSTEM.Services.PostService
                                 ReplyPostCommentId = item.ReplyPostCommentId,
                                 Content = item.Content,
                                 CreatedDate = item.DateCreated,
-                                FullName = GetFullNameByAccountId(users, item.AccountId)
+                                FullName = GetFullNameByAccountId(users, item.AccountId),
+                                Images = item.Images,
                             };
 
                             //user like trả lời comment
@@ -328,6 +330,12 @@ namespace FDSSYSTEM.Services.PostService
                             Images = post.Images,
                             Status = post.Status,
                             PosterName = post.PosterName,
+                            RejectComment = post.RejectComment,
+                            PublicDate = post.PublicDate,
+                            PosterId = post.AccountId,
+                            PosterRole = post.PosterRole,
+                            PosterApproverId = post.PosterApproverId,
+                            PosterApproverName = post.PosterApproverName,
                             Likes = from like in likesGroup
                                     join account in accounts on like.AccountId equals account.AccountId
                                     select new PostLikeDetailDto
@@ -343,6 +351,7 @@ namespace FDSSYSTEM.Services.PostService
                                            FullName = account.FullName,
                                            CreatedDate = comment.DateCreated.ToString(),
                                            Content = comment.Content,
+                                           Images = comment.Images
                                        }
                         };
 

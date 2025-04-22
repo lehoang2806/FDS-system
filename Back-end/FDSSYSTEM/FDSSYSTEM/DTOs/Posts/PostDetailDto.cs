@@ -31,4 +31,5 @@ public  class PostCommentDetailDto
     public string FullName { get; set; }
     public string Content { get; set; }
     public string CreatedDate { get; set; }
+    public List<string>? Images { get; set; }
 }
