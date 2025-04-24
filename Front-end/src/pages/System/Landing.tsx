@@ -112,7 +112,7 @@ export default function () {
                                 <div style={{ display: "flex", alignItems: "center" }}>
                                     <div className="ls3r1c2-item-dot ls3r1c2-item-dot-1"></div><p className="ls3r1c2-item-title">Chiến dịch</p>
                                 </div>
-                                <p className="ls3r1c2-item-quantity">{campaigns.length}</p>
+                                <p className="ls3r1c2-item-quantity">{approvedCampaigns.length}</p>
                             </div>
                         </div>
                     </div>

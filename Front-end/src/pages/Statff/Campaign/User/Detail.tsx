@@ -6,10 +6,12 @@ import { routes } from '@/routes/routeName'
 import { setLoading } from '@/services/app/appSlice';
 import { approveCampaignApiThunk, getCampaignByIdApiThunk } from '@/services/campaign/campaignThunk';
 import { getAllRegisterReceiversApiThunk } from '@/services/registerReceive/registerReceiveThunk';
+import { AdditionalCampaign, ApproveCampaign, RejectCampaign } from '@/types/campaign';
 import { FC, useEffect, useState } from 'react'
 import Lightbox from 'react-awesome-lightbox';
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import dayjs from "dayjs";
 
 const StaffDetailCampaignUserPage: FC = () => {
     const { id } = useParams<{ id: string }>();
@@ -30,9 +32,9 @@ const StaffDetailCampaignUserPage: FC = () => {
 
     const [isAdditionalCampaignModalOpen, setIsAdditionalCampaignModalOpen] = useState(false);
 
-    const date = currentCampaign?.implementationTime.split("T")[0];
+    const date = dayjs(currentCampaign?.implementationTime).format("DD/MM/YYYY");
     const time = currentCampaign?.implementationTime.split("T")[1].replace("Z", "");
-    const dateCreate = currentCampaign?.createdDate.split("T")[0];
+    const dateCreate = dayjs(currentCampaign?.createdDate).format("DD/MM/YYYY");
 
     const [imagePreview, setImagePreview] = useState<string[]>([]);
     const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
@@ -123,7 +125,7 @@ const StaffDetailCampaignUserPage: FC = () => {
                             <h3>Tên chiến dịch:</h3>
                             <p>{currentCampaign?.campaignName}</p>
                             <h3>Mô tả:</h3>
-                            <p>{currentCampaign?.campaignDescription}</p>
+                            <p style={{ whiteSpace: "pre-line" }}>{currentCampaign?.campaignDescription}</p>
                             <h3>Loại quà tặng:</h3>
                             <p>{currentCampaign?.typeGift}</p>
                             <h3>Đại điểm:</h3>

@@ -25,6 +25,8 @@ const ListCampaignPage: FC = () => {
 
     const approvedCampaigns = sortedCampaigns.filter((campaign) => campaign.status === "Approved");
 
+    console.log(approvedCampaigns)
+
     const personalCampaigns = approvedCampaigns.filter((campaign) => campaign.typeAccount === "Personal Donor");
 
     const organizationCampaigns = approvedCampaigns.filter((campaign) => campaign.typeAccount === "Organization Donor");
@@ -157,31 +159,33 @@ const ListCampaignPage: FC = () => {
         });
     };
 
-    //Filter All Campaigns
+    const matchSearchTerm = (campaign: CampaignInfo, term: string) => {
+        const keyword = term.toLowerCase();
+        return (
+            campaign.campaignName.toLowerCase().includes(keyword) ||
+            campaign.location?.toLowerCase().includes(keyword) ||
+            campaign.district?.toLowerCase().includes(keyword)
+        );
+    };
+
+    // Filter All Campaigns
     const filteredAllCampaigns = filterByStatus(
         filterCampaignsByDateRange(approvedCampaigns, dateRangeAllCampaigns.from, dateRangeAllCampaigns.to)
-    ).filter((campaign) =>
-        campaign.campaignName.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    ).filter((campaign) => matchSearchTerm(campaign, searchTerm));
 
     const visibleFilteredAllCampaigns = filteredAllCampaigns.slice(0, visibleAllCampaignsCount);
 
-    //Filter Personal Campaigns
+    // Filter Personal Campaigns
     const filteredPersonalCampaigns = filterByStatus(
         filterCampaignsByDateRange(personalCampaigns, dateRangeAllCampaigns.from, dateRangeAllCampaigns.to)
-    ).filter((campaign) =>
-        campaign.campaignName.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-
+    ).filter((campaign) => matchSearchTerm(campaign, searchTerm));
 
     const visibleFilteredPersonalCampaigns = filteredPersonalCampaigns.slice(0, visiblePersonalCampaignsCount);
 
-    //Filter Organization Campaigns
+    // Filter Organization Campaigns
     const filteredOrganizationCampaigns = filterByStatus(
         filterCampaignsByDateRange(organizationCampaigns, dateRangeAllCampaigns.from, dateRangeAllCampaigns.to)
-    ).filter((campaign) =>
-        campaign.campaignName.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    ).filter((campaign) => matchSearchTerm(campaign, searchTerm));
 
     const visibleFilteredOrganizationCampaigns = filteredOrganizationCampaigns.slice(0, visibleOrganizationCampaignsCount);
 
@@ -301,7 +305,7 @@ const ListCampaignPage: FC = () => {
                                     <input
                                         type="text"
                                         className="form-input campaign-search-input"
-                                        placeholder='Tìm kiếm tên chiến dịch'
+                                        placeholder='Tìm kiếm tên chiến dịch, địa điểm nhận quà'
                                         value={searchTerm}
                                         onChange={handleSearch}
                                     />

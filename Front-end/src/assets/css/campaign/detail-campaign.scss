@@ -171,6 +171,72 @@
                 .dcscr1c2 {
                     flex: 3;
 
+                    .dcscr1c2r3 {
+                        padding: 24px;
+                        border-radius: var(--border-radius-16);
+                        box-shadow: 0px 1px 16px 0px rgba(0, 0, 0, 0.15);
+
+                        h3 {
+                            font-size: 20px;
+                            color: #393939;
+                            padding-bottom: 20px;
+                            border-bottom: 3px solid #393939;
+                        }
+
+                        .dcscr1c2r3-email {
+                            display: flex;
+                            align-items: center;
+                            justify-content: start;
+                            margin-top: 20px;
+                            gap: 10px;
+
+                            .dcscr1c2r3-icon {
+                                width: 30px;
+                                height: 30px;
+                                fill: var(--main-color);
+                            }
+
+                            .email {
+                                font-size: 16px;
+                                font-weight: 500;
+                                color: #393939;
+                            }
+                        }
+
+                        .dcscr1c2r3-info {
+                            display: flex;
+                            justify-content: start;
+                            align-items: center;
+                            margin-top: 20px;
+
+                            .dcscr1c2r3-info-c1 {
+                                .dcscr1c2r3-info-avatar {
+                                    width:60px;
+                                    height:60px;
+                                    margin-right: 20px;
+                                }
+                            }
+
+                            .dcscr1c2r3-info-c2 {
+                                .name {
+                                    font-size: 17px;
+                                    font-weight: 600;
+                                    color: var(--main-color);
+                                    margin-bottom: 10px;
+                                }
+
+                                .tag {
+                                    padding: 5px 10px;
+                                    border-radius: var(--border-radius-16);
+                                    background-color: var(--main-color);
+                                    font-size: 14px;
+                                    font-weight: 500;
+                                    color: #fff;
+                                }
+                            }
+                        }
+                    }
+
                     .dcscr1c2r1 {
                         display: grid;
                         grid-template-columns: 49% 49%;

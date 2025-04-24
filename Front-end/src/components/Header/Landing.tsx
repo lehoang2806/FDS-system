@@ -12,6 +12,14 @@ import { toast } from "react-toastify"
 import { getProfileApiThunk } from "@/services/user/userThunk"
 import { addNotification, setNotifications } from "@/services/notification/notificationSlice"
 import { readNotificationApiThunk } from "@/services/notification/notificationThunk"
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+import 'dayjs/locale/vi';
+import utc from "dayjs/plugin/utc";
+
+dayjs.extend(utc);
+dayjs.locale('vi');
+dayjs.extend(relativeTime);
 
 const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
     const dispatch = useAppDispatch();
@@ -353,6 +361,9 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
                                                                 <div>
                                                                     <strong>{notif.content}</strong>
                                                                     <p>{actionText}</p>
+                                                                    {notif?.createdDate
+                                                                        ? dayjs.utc(notif.createdDate).add(7, 'hour').fromNow()
+                                                                        : ''}
                                                                 </div>
                                                             </div>
                                                         );
@@ -379,6 +390,9 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
                                                                 <div>
                                                                     <strong>{notif.content}</strong>
                                                                     <p>{actionText}</p>
+                                                                    {notif?.createdDate
+                                                                        ? dayjs.utc(notif.createdDate).add(7, 'hour').fromNow()
+                                                                        : ''}
                                                                 </div>
                                                             </div>
                                                         );
@@ -405,6 +419,9 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
                                                                 <div>
                                                                     <strong>{notif.content}</strong>
                                                                     <p>Đi đến chiến dịch</p>
+                                                                    {notif?.createdDate
+                                                                        ? dayjs.utc(notif.createdDate).add(7, 'hour').fromNow()
+                                                                        : ''}
                                                                 </div>
                                                             </div>
                                                         );
@@ -431,6 +448,9 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
                                                                 <div>
                                                                     <strong>{notif.content}</strong>
                                                                     <p>Đi đến bài đăng</p>
+                                                                    {notif?.createdDate
+                                                                        ? dayjs.utc(notif.createdDate).add(7, 'hour').fromNow()
+                                                                        : ''}
                                                                 </div>
                                                             </div>
                                                         );
@@ -459,6 +479,9 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
                                                                 <div>
                                                                     <strong>{notif.content}</strong>
                                                                     <p>Đi đến bài viết</p>
+                                                                    {notif?.createdDate
+                                                                        ? dayjs.utc(notif.createdDate).add(7, 'hour').fromNow()
+                                                                        : ''}
                                                                 </div>
                                                             </div>
                                                         );
@@ -488,6 +511,9 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
                                                                     <div>
                                                                         <strong>{notif.content}</strong>
                                                                         <p>{actionText}</p>
+                                                                        {notif?.createdDate
+                                                                            ? dayjs(dayjs(notif.createdDate).add(7, 'hour')).fromNow()
+                                                                            : ''}
                                                                     </div>
                                                                 </div>
                                                             );
@@ -514,6 +540,9 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
                                                                     <div>
                                                                         <strong>{notif.content}</strong>
                                                                         <p>{actionText}</p>
+                                                                        {notif?.createdDate
+                                                                            ? dayjs(dayjs(notif.createdDate).add(7, 'hour')).fromNow()
+                                                                            : ''}
                                                                     </div>
                                                                 </div>
                                                             );
@@ -540,6 +569,9 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
                                                                     <div>
                                                                         <strong>{notif.content}</strong>
                                                                         <p>{actionText}</p>
+                                                                        {notif?.createdDate
+                                                                            ? dayjs(dayjs(notif.createdDate).add(7, 'hour')).fromNow()
+                                                                            : ''}
                                                                     </div>
                                                                 </div>
                                                             );
