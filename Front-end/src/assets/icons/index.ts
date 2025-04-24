@@ -24,6 +24,8 @@ import CameraIcon from "./camera-icon.svg?react";
 import FavoriteIcon from "./favorite-icon.svg?react";
 import PersonalIcon from "./personal-icon.svg?react";
 import OrganizationIcon from "./organization-icon.svg?react";
+import AvatarIcon from "./avatar-icon.png";
+import MailIcon from "./mail-icon.svg?react";
 
 export {
     MenuIcon,
@@ -51,5 +53,7 @@ export {
     CameraIcon,
     FavoriteIcon,
     PersonalIcon,
-    OrganizationIcon
+    OrganizationIcon,
+    AvatarIcon,
+    MailIcon
 };

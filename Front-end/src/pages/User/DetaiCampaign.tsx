@@ -35,8 +35,20 @@ const UserDetailCampaignPage: React.FC = () => {
 
     const [selectedImage, setSelectedImage] = useState(currentCampaign?.images?.[0] || "")
 
-    const date = currentCampaign?.implementationTime.split("T")[0];
-    const time = currentCampaign?.implementationTime.split("T")[1].replace("Z", "");
+    // Formatted date/time
+    const formattedDate = currentCampaign?.implementationTime
+        ? (() => {
+            const [year, month, day] = currentCampaign.implementationTime.split("T")[0].split("-");
+            return `${day}-${month}-${year}`;
+        })()
+        : "";
+
+    const formattedTime = currentCampaign?.implementationTime
+        ?.split("T")[1]
+        .replace("Z", "")
+        .split(":")
+        .slice(0, 2)
+        .join(":");
 
     useEffect(() => {
         if (id) {
@@ -131,7 +143,7 @@ const UserDetailCampaignPage: React.FC = () => {
                                 </div>
                             </div>
                             <div className="udcscr1c1r4">
-                                <div className="udcscr1c1r4-content">{currentCampaign?.campaignDescription}</div>
+                                <div className="udcscr1c1r4-content" style={{ whiteSpace: "pre-line" }}>{currentCampaign?.campaignDescription}</div>
                             </div>
                         </div>
                         <div className="udcscr1c2">
@@ -154,10 +166,12 @@ const UserDetailCampaignPage: React.FC = () => {
                                     )}
                                 </div>
                                 <div>
-                                    <h4>Thời gian & Địa điểm</h4>
-                                    <p>{currentCampaign?.location}</p>
-                                    <p>{date}</p>
-                                    <p>{time}</p>
+                                    <div>
+                                        <h4>Địa điểm</h4>
+                                        <p>{currentCampaign?.location}, {currentCampaign?.district}</p>
+                                        <h4>Thời gian</h4>
+                                        <p>{formattedDate} - {formattedTime}</p>
+                                    </div>
                                 </div>
                                 {userLogin?.roleId === 4 && (
                                     <button className='sc-btn' onClick={handleRegisterReceiver}>Đăng ký nhận hỗ trợ</button>

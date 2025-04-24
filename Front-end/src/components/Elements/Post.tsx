@@ -301,18 +301,25 @@ const Post: FC<PostProps> = ({ post, user, isStatus = false }) => {
                         </Formik>
                     </div>
                     <div className="pcr5">
-                        {postDetail?.comments && postDetail?.comments?.length > 0 && (
+                        {postDetail?.comments && postDetail.comments.length > 0 && (
                             <>
-                                {postDetail?.comments.map((item, index) => (
-                                    <div key={index} className="feedback-item">
-                                        <h4 className='ft-name'>{item.fullName}</h4>
-                                        <p className='ft-content'>{item.content}</p>
-                                        <div className="ft-info">
-                                            <p className="ft-time">{item?.createdDate ? dayjs(item.createdDate).fromNow() : ''}</p>
-                                            <FavoriteIcon className='ft-favorite-icon' />
+                                {postDetail.comments.map((item, index) => {
+                                    // Không cần kiểm tra postId của bình luận vì không có
+                                    return (
+                                        <div key={index} className="feedback-item">
+                                            <h4 className='ft-name'>{item.fullName}</h4>
+                                            <p className='ft-content'>{item.content}</p>
+                                            <div className="ft-info">
+                                                <p className="ft-time">
+                                                    {item?.createdDate
+                                                        ? dayjs(dayjs(item.createdDate).add(7, 'hour')).fromNow()
+                                                        : ''}
+                                                </p>
+                                                <FavoriteIcon className='ft-favorite-icon' />
+                                            </div>
                                         </div>
-                                    </div>
-                                ))}
+                                    );
+                                })}
                             </>
                         )}
                     </div>

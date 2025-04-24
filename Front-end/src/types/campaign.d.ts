@@ -14,6 +14,7 @@ interface AddCampaign {
     campaignType: string;
     startRegisterDate: string;
     endRegisterDate: string;
+    district: string;
     images: string[];
 }
 
@@ -32,6 +33,7 @@ interface UpdateCampaign {
     campaignType: string;
     startRegisterDate: string;
     endRegisterDate: string;
+    district: string;
     images: string[];
 }
 
@@ -61,6 +63,8 @@ interface CampaignInfo {
     cancelComment: string | null;
     typeAccount: string;
     status: string;
+    district: string;
+    createdDate: string;
     reviewComments: ReviewComment[] | null;
 }
 
@@ -89,6 +93,7 @@ interface CurrentCampaign {
     endRegisterDate: string;
     images: string[];
     createdDate: string;
+    district: string;
 }
 
 interface CampaignState {

@@ -1,6 +1,6 @@
 import { selectCurrentCampaign, selectGetAllCampaign, selectGetAllFeedbackCampaign, selectGetAllRegisterReceivers, selectUserLogin } from '@/app/selector';
 import { useAppDispatch, useAppSelector } from '@/app/store';
-import { CameraIcon, SendIcon } from '@/assets/icons';
+import { AvatarIcon, CameraIcon, MailIcon, SendIcon } from '@/assets/icons';
 import { CampaignCard } from '@/components/Card/index';
 import { FeedbackCampaign, Subscriber } from '@/components/Elements/index'
 import { RegisterReceiverModal, RemindCertificateModal } from '@/components/Modal';
@@ -245,7 +245,7 @@ const DetailCampaignPage: React.FC = () => {
                                 </div>
                             </div>
                             <div className="dcscr1c1r4">
-                                <div className="dcscr1c1r4-content">{currentCampaign?.campaignDescription}</div>
+                                <div className="dcscr1c1r4-content" style={{ whiteSpace: "pre-line" }}>{currentCampaign?.campaignDescription}</div>
                             </div>
                             <div className="dcscr1c1r5">
                                 <h3>Nhận xét</h3>
@@ -353,6 +353,21 @@ const DetailCampaignPage: React.FC = () => {
                             </div>
                         </div>
                         <div className="dcscr1c2">
+                            <div className="dcscr1c2r3">
+                                <h3>Thông tin người vận động</h3>
+                                <div className="dcscr1c2r3-info">
+                                    <div className="dcscr1c2r3-info-c1">
+                                        <img src={AvatarIcon} className='dcscr1c2r3-info-avatar'/>
+                                    </div>
+                                    <div className="dcscr1c2r3-info-c2">
+                                        <p className="name">Tuấn</p>
+                                        <p className="tag">{currentCampaign?.typeAccount === "Organization Donor" ? "Tổ chức" : "Cá nhân"}</p>
+                                    </div>
+                                </div>
+                                <div className="dcscr1c2r3-email">
+                                    <MailIcon className='dcscr1c2r3-icon'/><p className="email">tuanpcl@gmail.com</p>
+                                </div>
+                            </div>
                             <div className="dcscr1c2r1">
                                 <div>
                                     <h4>Phần quà</h4>
@@ -360,7 +375,7 @@ const DetailCampaignPage: React.FC = () => {
                                 </div>
                                 <div>
                                     <h4>Địa điểm</h4>
-                                    <p>{currentCampaign?.location}</p>
+                                    <p>{currentCampaign?.location}, {currentCampaign?.district}</p>
                                     <h4>Thời gian</h4>
                                     <p>{formattedDate} - {formattedTime}</p>
                                 </div>

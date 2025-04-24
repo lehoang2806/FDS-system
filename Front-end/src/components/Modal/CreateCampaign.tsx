@@ -35,6 +35,7 @@ const CreateCampaignModal: FC<CreateCampaignModalProps> = ({ isOpen, setIsOpen }
         campaignType: "",
         startRegisterDate: "",
         endRegisterDate: "",
+        district: "",
         images: [],
     };
 
@@ -74,6 +75,9 @@ const CreateCampaignModal: FC<CreateCampaignModalProps> = ({ isOpen, setIsOpen }
                 then: (schema) => schema.min(1, "Số lượng phải lớn hơn 0").required("Số lượng giới hạn là bắt buộc"),
                 otherwise: (schema) => schema.notRequired().nullable(),
             }),
+
+        district: Yup.string()
+            .required("Quận là bắt buộc"),
 
         startRegisterDate: Yup.date()
             .nullable()
@@ -143,29 +147,9 @@ const CreateCampaignModal: FC<CreateCampaignModalProps> = ({ isOpen, setIsOpen }
     };
 
     const onSubmit = async (values: AddCampaign, helpers: FormikHelpers<AddCampaign>) => {
-        const toUTC = (dateStr: string) => {
-            const localDate = new Date(dateStr);
-            const offset = localDate.getTimezoneOffset();
-            return new Date(localDate.getTime() - offset * 6000).toISOString();
-        };
-
-        const formattedValues: AddCampaign = {
-            ...values,
-            implementationTime: toUTC(values.implementationTime),
-            ...(values.campaignType === "Voluntary"
-                ? {
-                    startRegisterDate: toUTC(values.startRegisterDate),
-                    endRegisterDate: toUTC(values.endRegisterDate),
-                    limitedQuantity: "",
-                }
-                : {
-                    startRegisterDate: "",
-                    endRegisterDate: "",
-                }),
-        };
 
         try {
-            await dispatch(addCampaignApiThunk(formattedValues)).unwrap();
+            await dispatch(addCampaignApiThunk(values)).unwrap();
             toast.success("Tạo chiến dịch thành công");
             dispatch(setLoading(true));
             dispatch(getAllCampaignApiThunk());
@@ -229,19 +213,19 @@ const CreateCampaignModal: FC<CreateCampaignModalProps> = ({ isOpen, setIsOpen }
                                         {errors.campaignName && touched.campaignName && <span className="text-error">{errors.campaignName}</span>}
                                     </div>
                                     <div className="form-50 form-field">
-                                        <label className="form-label">Mô tả<span>*</span></label>
-                                        <Field name="campaignDescription" type="text" placeholder="Hãy nhập mô tả về chiến dịch" className={classNames("form-input", { "is-error": errors.campaignDescription && touched.campaignDescription })} />
-                                        {errors.campaignDescription && touched.campaignDescription && <span className="text-error">{errors.campaignDescription}</span>}
-                                    </div>
-                                    <div className="form-50 form-field">
                                         <label className="form-label">Loại quà tặng<span>*</span></label>
                                         <Field name="typeGift" type="text" placeholder="Hãy nhập loại quà tặng" className={classNames("form-input", { "is-error": errors.typeGift && touched.typeGift })} />
                                         {errors.typeGift && touched.typeGift && <span className="text-error">{errors.typeGift}</span>}
                                     </div>
                                     <div className="form-50 form-field">
                                         <label className="form-label">Địa điểm<span>*</span></label>
-                                        <Field name="location" type="text" placeholder="Hãy nhập địa điểm nhận quà tặng" className={classNames("form-input", { "is-error": errors.location && touched.location })} />
+                                        <Field name="location" type="text" placeholder="Hãy nhập địa điẻm giao quà" className={classNames("form-input", { "is-error": errors.location && touched.location })} />
                                         {errors.location && touched.location && <span className="text-error">{errors.location}</span>}
+                                    </div>
+                                    <div className="form-50 form-field">
+                                        <label className="form-label">Quận/ Huyện<span>*</span></label>
+                                        <Field name="district" type="text" placeholder="Hãy nhập Quận/ Huyện" className={classNames("form-input", { "is-error": errors.district && touched.district })} />
+                                        {errors.district && touched.district && <span className="text-error">{errors.district}</span>}
                                     </div>
                                     <div className="form-50 form-field">
                                         <label className="form-label">Thời gian và ngày nhận quà<span>*</span></label>
@@ -260,6 +244,11 @@ const CreateCampaignModal: FC<CreateCampaignModalProps> = ({ isOpen, setIsOpen }
                                         <label className="form-label">Phương thức thực hiện<span>*</span></label>
                                         <Field name="implementationMethod" type="text" placeholder="Hãy nhập phương thức thực hiện" className={classNames("form-input", { "is-error": errors.implementationMethod && touched.implementationMethod })} />
                                         {errors.implementationMethod && touched.implementationMethod && <span className="text-error">{errors.implementationMethod}</span>}
+                                    </div>
+                                    <div className="form-100 form-field">
+                                        <label className="form-label">Mô tả<span>*</span></label>
+                                        <Field name="campaignDescription" as="textarea" rows={8} placeholder="Hãy nhập mô tả về chiến dịch" className={classNames("form-input", { "is-error": errors.campaignDescription && touched.campaignDescription })} />
+                                        {errors.campaignDescription && touched.campaignDescription && <span className="text-error">{errors.campaignDescription}</span>}
                                     </div>
                                     <div className="form-100 form-field">
                                         <label className="form-label">Loại chiến dịch</label>
