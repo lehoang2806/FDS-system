@@ -226,10 +226,22 @@ const UserPersonalPage = () => {
 
     const isWithin24Hours = (createdDate: string) => {
         const campaignCreatedTime = new Date(createdDate);
+
+        // Cộng thêm 7 giờ để đổi từ UTC sang giờ Việt Nam (UTC+7)
+        campaignCreatedTime.setHours(campaignCreatedTime.getHours() + 7);
+
         const currentTime = new Date();
         const timeDifference = currentTime.getTime() - campaignCreatedTime.getTime();
         const hoursDifference = timeDifference / (1000 * 3600);
         return hoursDifference <= 24;
+    };
+
+    const handleCancelClick = (campaignId: string, createdDate: string) => {
+        if (isWithin24Hours(createdDate)) {
+            handelCancelCampain(campaignId);
+        } else {
+            alert("Đã quá 24h kể từ khi bạn tạo chiến dịch, bạn không thể huỷ chiến dịch này.");
+        }
     };
 
     return (
@@ -314,13 +326,14 @@ const UserPersonalPage = () => {
                                                                 </td>
                                                                 <td className="table-body-cell">
                                                                     <button className='view-btn' onClick={() => handleToDetailCampaign(campaign.campaignId)}>Xem chi tiết</button>
-                                                                    {(campaign.status === "Pending" || campaign.status === "Approved" || campaign.status === "Rejected") &&
-                                                                        isWithin24Hours(campaign.da) && (
-                                                                            <button className='reject-btn' onClick={() => handelCancelCampain(campaign.campaignId)}>
-                                                                                Hủy chiến dịch
-                                                                            </button>
-                                                                        )
-                                                                    }
+                                                                    {(campaign.status === "Pending" || campaign.status === "Approved" || campaign.status === "Rejected") && (
+                                                                        <button
+                                                                            className='reject-btn'
+                                                                            onClick={() => handleCancelClick(campaign.campaignId, campaign.createdDate)}
+                                                                        >
+                                                                            Hủy chiến dịch
+                                                                        </button>
+                                                                    )}
                                                                 </td>
                                                             </tr>
                                                         ))}

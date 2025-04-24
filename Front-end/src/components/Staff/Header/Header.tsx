@@ -9,12 +9,20 @@ import connection, { startConnection } from "@/signalRService";
 import { FC, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+import 'dayjs/locale/vi';
+
+dayjs.locale('vi');
+dayjs.extend(relativeTime);
 
 const StaffHeader: FC = () => {
     const [isNotifOpen, setIsNotifOpen] = useState(false);
     const dispatch = useAppDispatch();
     const notifications = useAppSelector(selectNotifications)
     const isAuthenticated = useAppSelector(selectIsAuthenticated);
+
+    console.log(notifications)
 
     const handleNewNotification = (notification: any) => {
         console.log("Received notification:", notification);
@@ -218,7 +226,7 @@ const StaffHeader: FC = () => {
                                                 if (notif.notificationType === "Update") actionText = "Có chiến dịch được cập nhật";
                                                 return (
                                                     <div
-                                                        key={notif.ojectId || notif.createdDate}
+                                                        key={notif.notificationId}
                                                         className={`notification-item ${notif.isRead ? "read" : "unread"}`}
                                                         onClick={() => {
                                                             markAsRead(notif.notificationId);
@@ -229,6 +237,9 @@ const StaffHeader: FC = () => {
                                                         <div>
                                                             <strong>{notif.content}</strong>
                                                             <p>{actionText}</p>
+                                                            {notif?.createdDate
+                                                                ? dayjs(dayjs(notif.createdDate).add(7, 'hour')).fromNow()
+                                                                : ''}
                                                         </div>
                                                     </div>
                                                 );
@@ -239,7 +250,7 @@ const StaffHeader: FC = () => {
                                                 if (notif.notificationType === "Update") actionText = "Có chứng nhận mới được cập nhật";
                                                 return (
                                                     <div
-                                                        key={notif.ojectId || notif.createdDate}
+                                                        key={notif.notificationId}
                                                         className={`notification-item ${notif.isRead ? "read" : "unread"}`}
                                                         onClick={() => {
                                                             markAsRead(notif.notificationId);
@@ -250,6 +261,9 @@ const StaffHeader: FC = () => {
                                                         <div>
                                                             <strong>{notif.content}</strong>
                                                             <p>{actionText}</p>
+                                                            {notif?.createdDate
+                                                                ? dayjs(dayjs(notif.createdDate).add(7, 'hour')).fromNow()
+                                                                : ''}
                                                         </div>
                                                     </div>
                                                 );
@@ -260,7 +274,7 @@ const StaffHeader: FC = () => {
                                                 if (notif.notificationType === "Update") actionText = "Có chứng nhận mới được cập nhật";
                                                 return (
                                                     <div
-                                                        key={notif.ojectId || notif.createdDate}
+                                                        key={notif.notificationId}
                                                         className={`notification-item ${notif.isRead ? "read" : "unread"}`}
                                                         onClick={() => {
                                                             markAsRead(notif.notificationId);
@@ -271,6 +285,9 @@ const StaffHeader: FC = () => {
                                                         <div>
                                                             <strong>{notif.content}</strong>
                                                             <p>{actionText}</p>
+                                                            {notif?.createdDate
+                                                                ? dayjs(dayjs(notif.createdDate).add(7, 'hour')).fromNow()
+                                                                : ''}
                                                         </div>
                                                     </div>
                                                 );
@@ -281,17 +298,20 @@ const StaffHeader: FC = () => {
                                                 if (notif.notificationType === "Update") actionText = "Có chứng nhận mới được cập nhật";
                                                 return (
                                                     <div
-                                                        key={notif.ojectId || notif.createdDate}
+                                                        key={notif.notificationId}
                                                         className={`notification-item ${notif.isRead ? "read" : "unread"}`}
                                                         onClick={() => {
                                                             markAsRead(notif.notificationId);
                                                             handleToDetailDonorCertificate(notif.ojectId, "Organization");
                                                         }}
                                                     >
-                                                        <CertificateIcon className="notification-icon" />
+                                                        <CertificateIcon className="notification-icons" />
                                                         <div>
                                                             <strong>{notif.content}</strong>
                                                             <p>{actionText}</p>
+                                                            {notif?.createdDate
+                                                                ? dayjs(dayjs(notif.createdDate).add(7, 'hour')).fromNow()
+                                                                : ''}
                                                         </div>
                                                     </div>
                                                 );
