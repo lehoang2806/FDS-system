@@ -10,6 +10,7 @@ import { setLoading } from "@/services/app/appSlice";
 import { getAllCampaignApiThunk } from "@/services/campaign/campaignThunk";
 import { getAllRegisterReceiversApiThunk } from "@/services/registerReceive/registerReceiveThunk";
 import { getAllDonorCertificateApiThunk, getAllRecipientCertificateApiThunk, getProfileApiThunk } from "@/services/user/userThunk";
+import { CancelCampaign } from "@/types/campaign";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -45,7 +46,7 @@ const UserPersonalPage = () => {
     const currentRecipientCertificates = sortedRecipientCertificates.filter(
         (recipientCertificate) => recipientCertificate.recipientId === userLogin?.accountId
     );
-    
+
     const currentRegisterReceivers = sortedRegisterReceivers.filter(
         (registerReceiver) => registerReceiver.accountId === userLogin?.accountId
     );
@@ -223,6 +224,14 @@ const UserPersonalPage = () => {
         if (currentRecipientCertificatePage < totalRecipientCertificatePages) setCurrentRecipientCertificatePage(currentRecipientCertificatePage + 1);
     };
 
+    const isWithin24Hours = (createdDate: string) => {
+        const campaignCreatedTime = new Date(createdDate);
+        const currentTime = new Date();
+        const timeDifference = currentTime.getTime() - campaignCreatedTime.getTime();
+        const hoursDifference = timeDifference / (1000 * 3600);
+        return hoursDifference <= 24;
+    };
+
     return (
         <main id="user-personal-page">
             <section id="upp-s1"></section>
@@ -297,13 +306,21 @@ const UserPersonalPage = () => {
                                                                         <span className='status-pending'>Đang chờ phê duyệt</span>
                                                                     ) : campaign.status === "Approved" ? (
                                                                         <span className='status-approve'>Đã được phê duyệt</span>
-                                                                    ) : (
+                                                                    ) : campaign.status === "Rejected" ? (
                                                                         <span className='status-reject'>Đã bị từ chối</span>
-                                                                    )}
+                                                                    ) : campaign.status === "Canceled" ? (
+                                                                        <span className='status-reject'>Đã huỷ</span>
+                                                                    ) : null}
                                                                 </td>
                                                                 <td className="table-body-cell">
                                                                     <button className='view-btn' onClick={() => handleToDetailCampaign(campaign.campaignId)}>Xem chi tiết</button>
-                                                                    <button className='reject-btn' onClick={() => handelCancelCampain(campaign.campaignId)}>Hủy chiến dịch</button>
+                                                                    {(campaign.status === "Pending" || campaign.status === "Approved" || campaign.status === "Rejected") &&
+                                                                        isWithin24Hours(campaign.da) && (
+                                                                            <button className='reject-btn' onClick={() => handelCancelCampain(campaign.campaignId)}>
+                                                                                Hủy chiến dịch
+                                                                            </button>
+                                                                        )
+                                                                    }
                                                                 </td>
                                                             </tr>
                                                         ))}

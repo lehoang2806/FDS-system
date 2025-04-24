@@ -93,7 +93,7 @@ const DetailNewsPage = () => {
                         </div> */}
                         <div className="dnscr3r2">
                             <h4>Chi tiết tin tức</h4>
-                            <p>{currentNews?.newsDescripttion}</p>
+                            <p style={{ whiteSpace: "pre-line" }}>{currentNews?.newsDescripttion}</p>
                             <h4>Đối tượng hỗ trợ</h4>
                             <p>{currentNews?.supportBeneficiaries}</p>
                         </div>

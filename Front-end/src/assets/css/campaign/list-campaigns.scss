@@ -56,11 +56,20 @@
 
                 .cscr2r1 {
                     .cscr2r1r1 {
-                        display: flex;
-                        align-items: center;
-                        justify-content: start;
-                        gap: 20px;
                         margin-bottom: 20px;
+
+                        .form-input {
+                            width: 250px;
+                        }
+                    }
+
+                    .cscr2r1r3 {
+                        .date-filter-container {
+                            display: flex;
+                            align-items: center;
+                            justify-content: start;
+                            gap: 20px;
+                        }
 
                         .form-input {
                             width: 250px;

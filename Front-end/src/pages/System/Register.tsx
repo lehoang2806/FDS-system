@@ -93,27 +93,27 @@ const RegisterPage = () => {
                                 }) => (
                                     <Form onSubmit={handleSubmit} className="form">
                                         <div className="form-field">
-                                            <label className="form-label">Email</label>
+                                            <label className="form-label">Email<span>*</span></label>
                                             <Field name="userEmail" type="email" placeholder="Hãy nhập email của bạn" className={classNames("form-input", { "is-error": errors.userEmail && touched.userEmail })} />
                                             {errors.userEmail && touched.userEmail && <span className="text-error">{errors.userEmail}</span>}
                                         </div>
                                         <div className="form-field">
-                                            <label className="form-label">Họ Và Tên</label>
+                                            <label className="form-label">Họ Và Tên<span>*</span></label>
                                             <Field name="fullName" type="text" placeholder="Hãy nhập tên của bạn" className={classNames("form-input", { "is-error": errors.fullName && touched.fullName })} />
                                             {errors.fullName && touched.fullName && <span className="text-error">{errors.fullName}</span>}
                                         </div>
                                         <div className="form-field">
-                                            <label className="form-label">Mật Khẩu</label>
+                                            <label className="form-label">Mật Khẩu<span>*</span></label>
                                             <Field name="password" type="password" placeholder="Hãy nhập mật khẩu của bạn" className={classNames("form-input", { "is-error": errors.password && touched.password })} />
                                             {errors.password && touched.password && <span className="text-error">{errors.password}</span>}
                                         </div>
                                         <div className="form-field">
-                                            <label className="form-label">Số điện thoại</label>
+                                            <label className="form-label">Số điện thoại<span>*</span></label>
                                             <Field name="phone" type="text" placeholder="Hãy nhập số điện thoại của bạn" className={classNames("form-input", { "is-error": errors.phone && touched.phone })} />
                                             {errors.phone && touched.phone && <span className="text-error">{errors.phone}</span>}
                                         </div>
                                         <div className="form-field">
-                                            <label className="form-label">Lựa chọn vai trò</label>
+                                            <label className="form-label">Lựa chọn vai trò<span>*</span></label>
                                             <div className="form-input-select-container">
                                                 <Field
                                                     as="select"

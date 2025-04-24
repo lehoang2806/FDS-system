@@ -22,6 +22,8 @@ import ArrowLeft from "./arrow-left.svg?react";
 import PendingIcon from "./pending-icon.svg?react";
 import CameraIcon from "./camera-icon.svg?react";
 import FavoriteIcon from "./favorite-icon.svg?react";
+import PersonalIcon from "./personal-icon.svg?react";
+import OrganizationIcon from "./organization-icon.svg?react";
 
 export {
     MenuIcon,
@@ -47,5 +49,7 @@ export {
     ArrowRight,
     PendingIcon,
     CameraIcon,
-    FavoriteIcon
+    FavoriteIcon,
+    PersonalIcon,
+    OrganizationIcon
 };

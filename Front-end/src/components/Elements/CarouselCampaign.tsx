@@ -1,5 +1,6 @@
 import { FC, useState } from 'react';
 import { CampaignCard } from '../Card';
+import { CampaignCarouselProps } from './type';
 
 const ITEMS_PER_PAGE = 3;
 

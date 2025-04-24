@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { getAllCampaignApiThunk, getCampaignByIdApiThunk } from "./campaignThunk";
+import { CampaignInfo, CampaignState, CurrentCampaign } from "@/types/campaign";
 
 const initialState: CampaignState = {
     listCampaigns: [],

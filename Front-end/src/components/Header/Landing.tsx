@@ -48,6 +48,8 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
     const [isNotifOpen, setIsNotifOpen] = useState(false);
     const notifications = useAppSelector(selectNotifications)
 
+    console.log(notifications)
+
     const handleNewNotification = (notification: any) => {
         console.log("Received notification:", notification);
 
@@ -340,7 +342,7 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
                                                     if (actionText) {
                                                         return (
                                                             <div
-                                                                key={notif.ojectId || notif.createdDate}
+                                                                key={notif.notificationId}
                                                                 className={`notification-item ${notif.isRead ? "read" : "unread"}`}
                                                                 onClick={() => {
                                                                     markAsRead(notif.notificationId);
@@ -366,7 +368,7 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
                                                     if (actionText) {
                                                         return (
                                                             <div
-                                                                key={notif.ojectId || notif.createdDate}
+                                                                key={notif.notificationId}
                                                                 className={`notification-item ${notif.isRead ? "read" : "unread"}`}
                                                                 onClick={() => {
                                                                     markAsRead(notif.notificationId);
@@ -392,7 +394,7 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
                                                     if (actionText) {
                                                         return (
                                                             <div
-                                                                key={notif.ojectId || notif.createdDate}
+                                                                key={notif.notificationId}
                                                                 className={`notification-item ${notif.isRead ? "read" : "unread"}`}
                                                                 onClick={() => {
                                                                     markAsRead(notif.notificationId);
@@ -418,7 +420,7 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
                                                     if (actionText) {
                                                         return (
                                                             <div
-                                                                key={notif.ojectId || notif.createdDate}
+                                                                key={notif.notificationId}
                                                                 className={`notification-item ${notif.isRead ? "read" : "unread"}`}
                                                                 onClick={() => {
                                                                     markAsRead(notif.notificationId);
@@ -446,7 +448,7 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
                                                     if (actionText) {
                                                         return (
                                                             <div
-                                                                key={notif.ojectId || notif.createdDate}
+                                                                key={notif.notificationId}
                                                                 className={`notification-item ${notif.isRead ? "read" : "unread"}`}
                                                                 onClick={() => {
                                                                     markAsRead(notif.notificationId);
@@ -475,7 +477,7 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
                                                         if (actionText) {
                                                             return (
                                                                 <div
-                                                                    key={notif.ojectId || notif.createdDate}
+                                                                    key={notif.notificationId}
                                                                     className={`notification-item ${notif.isRead ? "read" : "unread"}`}
                                                                     onClick={() => {
                                                                         markAsRead(notif.notificationId);
@@ -501,7 +503,7 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
                                                         if (actionText) {
                                                             return (
                                                                 <div
-                                                                    key={notif.ojectId || notif.createdDate}
+                                                                    key={notif.notificationId}
                                                                     className={`notification-item ${notif.isRead ? "read" : "unread"}`}
                                                                     onClick={() => {
                                                                         markAsRead(notif.notificationId);
@@ -527,7 +529,7 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
                                                         if (actionText) {
                                                             return (
                                                                 <div
-                                                                    key={notif.ojectId || notif.createdDate}
+                                                                    key={notif.notificationId}
                                                                     className={`notification-item ${notif.isRead ? "read" : "unread"}`}
                                                                     onClick={() => {
                                                                         markAsRead(notif.notificationId);

@@ -14,7 +14,7 @@ import Lightbox from "react-awesome-lightbox";
 const StaffAddNewsPage: FC = () => {
     const dispatch = useAppDispatch();
 
-    const [imagePreview, setImagePreview] = useState<string[]>([]);
+    const [imagePreview, setImagePreview] = useState<string[]>([]); //state
     const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
     const initialValues: ActionParamNews = {
@@ -32,7 +32,6 @@ const StaffAddNewsPage: FC = () => {
 
         images: Yup.array().of(Yup.string().required('Mỗi ảnh phải là một chuỗi hợp lệ')).min(1, 'Cần ít nhất một ảnh').required('Danh sách ảnh là bắt buộc'),
 
-
         newsDescripttion: Yup.string()
             .required("Nội dung không được để trống")
             .min(10, "Nội dung phải có ít nhất 10 ký tự"),
@@ -40,6 +39,15 @@ const StaffAddNewsPage: FC = () => {
         supportBeneficiaries: Yup.string()
             .required("Đối tượng hỗ trợ không được để trống")
     });
+
+    const convertToBase64 = (file: File): Promise<string> => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result as string);
+            reader.onerror = (error) => reject(error);
+        });
+    };
 
     const handleFileChange = async (event: ChangeEvent<HTMLInputElement>, setFieldValue: Function) => {
         if (event.target.files) {
@@ -54,15 +62,6 @@ const StaffAddNewsPage: FC = () => {
                 console.error("Error converting images:", error);
             }
         }
-    };
-
-    const convertToBase64 = (file: File): Promise<string> => {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = () => resolve(reader.result as string);
-            reader.onerror = (error) => reject(error);
-        });
     };
 
     const dateCurrent = new Date().toISOString().split("T")[0];
@@ -126,16 +125,16 @@ const StaffAddNewsPage: FC = () => {
                                             {errors.newsTitle && touched.newsTitle && <span className="text-error">{errors.newsTitle}</span>}
                                         </div>
                                         <div className="form-50 form-field">
-                                            <label className="form-label">Mô tả<span>*</span></label>
-                                            <Field name="newsDescripttion" type="text" placeholder="Hãy nhập nội dung" className={classNames("form-input", { "is-error": errors.newsDescripttion && touched.newsDescripttion })} />
-                                            {errors.newsDescripttion && touched.newsDescripttion && <span className="text-error">{errors.newsDescripttion}</span>}
-                                        </div>
-                                        <div className="form-50 form-field">
                                             <label className="form-label">Đối tượng hỗ trợ<span>*</span></label>
                                             <Field name="supportBeneficiaries" type="text" placeholder="Hãy nhập đối tượng hỗ trợ" className={classNames("form-input", { "is-error": errors.supportBeneficiaries && touched.supportBeneficiaries })} />
                                             {errors.supportBeneficiaries && touched.supportBeneficiaries && <span className="text-error">{errors.supportBeneficiaries}</span>}
                                         </div>
-                                        <div className="form-50 form-field">
+                                        <div className="form-100 form-field">
+                                            <label className="form-label">Mô tả<span>*</span></label>
+                                            <Field name="newsDescripttion" as="textarea" rows={10} placeholder="Hãy nhập nội dung" className={classNames("form-input", { "is-error": errors.newsDescripttion && touched.newsDescripttion })} />
+                                            {errors.newsDescripttion && touched.newsDescripttion && <span className="text-error">{errors.newsDescripttion}</span>}
+                                        </div>
+                                        <div className="form-100 form-field">
                                             <label className="form-label">Hình Ảnh<span>*</span></label>
                                             <input type="file" accept="image/*" multiple onChange={(e) => handleFileChange(e, setFieldValue)} className={classNames("form-input", { "is-error": errors.images && touched.images })} />
                                             {errors.images && touched.images && <span className="text-error">{errors.images}</span>}

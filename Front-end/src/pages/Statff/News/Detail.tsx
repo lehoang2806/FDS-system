@@ -56,7 +56,7 @@ const StaffDetailNewsPage: FC = () => {
                             <h3>Tiểu đề:</h3>
                             <p>{currentNews?.newsTitle}</p>
                             <h3>Mô tả:</h3>
-                            <p>{currentNews?.newsDescripttion}</p>
+                            <p style={{ whiteSpace: "pre-line" }}>{currentNews?.newsDescripttion}</p>
                             <h3>Đối tượng hỗ trợ:</h3>
                             <p>{currentNews?.supportBeneficiaries}</p>
                         </div>

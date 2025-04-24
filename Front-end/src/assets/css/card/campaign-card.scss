@@ -1,10 +1,46 @@
 .campaign-card {
     cursor: pointer;
 
-    .campaign-img,
-    h4 {
-        margin-bottom: 16px;
-    }
+    .img-container {
+        position: relative;
+        width: 384px;
+        height: 384px;
+        overflow: hidden; /* Đảm bảo mọi thứ nằm trong khung ảnh */
+        border-radius: var(--border-radius-16);
+    
+        .campaign-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: var(--border-radius-16);
+        }
+    
+        .overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 20%;
+            background: rgba(0, 0, 0, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform: translateY(100%);
+            transition: transform 0.4s ease;
+            border-radius: var(--border-radius-16);
+        }
+    
+        &:hover .overlay {
+            transform: translateY(0);
+        }
+    
+        .overlay span {
+            color: var(--main-color);
+            font-size: 30px;
+            font-weight: 700;
+            opacity: 1;
+        }
+    }      
 
     h4,
     p {
@@ -12,20 +48,13 @@
         margin-left: 16px;
     }
 
-    .campaign-img {
-        width: 384px;
-        height: 384px;
-        border-radius: var(--border-radius-16);
-        background: red;
-    }
-
     h4 {
         width: 360px;
         font-size: 20px;
         font-weight: 800;
         color: var(--main-black);
-        white-space: nowrap; /* Không xuống dòng */
-        overflow: hidden; /* Ẩn phần văn bản bị tràn */
+        white-space: nowrap;
+        overflow: hidden;
         text-overflow: ellipsis;
     }
 
@@ -43,23 +72,23 @@
         border-radius: 4px;
         font-size: 16px;
         width: fit-content;
-    
+
         &.ended {
             color: #FF6692;
             background-color: #f2dede;
             border: 1px solid #ebccd1;
         }
-    
+
         &.ongoing {
             color: #36C76C;
             background-color: #dff0d8;
             border: 1px solid #d6e9c6;
         }
-    
+
         &.upcoming {
             color: #f2ba05;
             background-color: #fcf8e3;
             border: 1px solid #faebcc;
         }
-    }    
+    }
 }

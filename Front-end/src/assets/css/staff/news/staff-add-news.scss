@@ -101,14 +101,10 @@
             .sancr2r3 {
                 .form {
                     display: flex;
-                    align-items: center;
+                    align-items: start;
                     justify-content: center;
                     flex-wrap: wrap;
-                    gap: 24px;
-
-                    .form-field {
-                        width: calc(50% - 12px);
-                    }
+                    gap: 20px;
                 }
             }
         }

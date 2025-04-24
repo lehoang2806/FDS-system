@@ -55,14 +55,14 @@ const ListNewsPage = () => {
                 <div className="lns-container">
                     <div className="lnscr1">
                         <div className="line"></div>
-                        <h1>Sự kiện thiện nguyện</h1>
+                        <h1>Tin tức thiện nguyện</h1>
                         <div className="line"></div>
                     </div>
                     <div className="lnscr2">
                         <input
                             type="text"
                             className="ln-search-input"
-                            placeholder="Tìm kiếm tên sự kiện"
+                            placeholder="Tìm kiếm tên tên tin tức"
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                         />

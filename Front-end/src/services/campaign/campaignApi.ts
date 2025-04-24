@@ -1,3 +1,4 @@
+import { AddCampaign, AdditionalCampaign, ApproveCampaign, CancelCampaign, RejectCampaign, UpdateCampaign } from "@/types/campaign";
 import request from "../request";
 
 export const addCampaignApi = async (params: AddCampaign) => {

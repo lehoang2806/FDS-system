@@ -1,4 +1,4 @@
-import { selectGetProfileUser, selectIsAuthenticated, selectUserLogin } from "@/app/selector";
+import { selectIsAuthenticated, selectUserLogin } from "@/app/selector";
 import { useAppDispatch, useAppSelector } from "@/app/store";
 import { routes } from "@/routes/routeName"
 import { getProfileApiThunk } from "@/services/user/userThunk";
@@ -9,7 +9,6 @@ const FooterLanding = () => {
     const dispatch = useAppDispatch();
     const isAuthenticated = useAppSelector(selectIsAuthenticated);
     const userLogin = useAppSelector(selectUserLogin);
-    const userProfile = useAppSelector(selectGetProfileUser);
 
     useEffect(() => {
         if (isAuthenticated) {
@@ -71,11 +70,6 @@ const FooterLanding = () => {
                                 </ul>
                             </div>
                         ))}
-                    </div>
-                    <div className="flscc3">
-                        {userProfile && (
-                            <button className="pr-btn">Tạo chiến dịch</button>
-                        )}
                     </div>
                 </div>
             </section>
