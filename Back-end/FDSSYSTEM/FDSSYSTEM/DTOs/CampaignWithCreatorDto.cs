@@ -34,6 +34,7 @@
         public string CancelComment { get; set; }
         public string TypeAccount { get; set; }
         public string Status { get; set; }
+        public DateTime CreatedDate { get; set; }
         public List<CampaignReViewComment> ReviewComments { get; set; }
     }
     public class CampaignReViewComment

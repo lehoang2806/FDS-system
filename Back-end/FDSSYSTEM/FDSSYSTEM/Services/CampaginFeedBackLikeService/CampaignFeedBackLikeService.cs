@@ -43,7 +43,7 @@ namespace FDSSYSTEM.Services.FeedBackLikeService
                 ReplyFeedBackId = campaignFeedBackLike.ReplyCampaignFeedBackId,
                 FeedBackId = campaignFeedBackLike.CampaignFeedBackId,
                 AccountId = userId,
-                CreatedDate = DateTime.UtcNow
+                CreatedDate = DateTime.Now
             };
 
             await _feedBackLikeRepository.AddAsync(feedBackLike);

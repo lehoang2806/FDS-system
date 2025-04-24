@@ -81,6 +81,8 @@ namespace FDSSYSTEM.Services.CampaignService
                 Communication = campaign.Communication,
                 LimitedQuantity = campaign.LimitedQuantity,
                 CampaignType = campaign.CampaignType,
+                District = campaign.District,
+                CreatedDate= DateTime.Now,
             };
 
             await _campaignRepository.AddAsync(newCampain);
@@ -158,6 +160,7 @@ namespace FDSSYSTEM.Services.CampaignService
                 existingCampaign.Communication = campaign.Communication;
                 existingCampaign.LimitedQuantity = campaign.LimitedQuantity;
                 existingCampaign.CampaignType = campaign.CampaignType;
+                existingCampaign.District = campaign.District;
                 await _campaignRepository.UpdateAsync(existingCampaign.Id, existingCampaign);
 
             }

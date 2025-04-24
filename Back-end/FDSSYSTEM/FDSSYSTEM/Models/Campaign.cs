@@ -28,7 +28,7 @@ namespace FDSSYSTEM.Models
         public string Sponsors { get; set; }
         public string ImplementationMethod { get; set; }
         public string Communication {  get; set; }
-        public string LimitedQuantity { get; set; }
+        public int LimitedQuantity { get; set; }
         public string Status { get; set; } = "Pending";  // Mặc định là chờ duyệt
         public string RejectComment { get; set; }
         public string TypeAccount { get; set; } //staff, personal, organization
@@ -38,6 +38,7 @@ namespace FDSSYSTEM.Models
         public string StartRegisterDate { get; set; }
         public string EndRegisterDate { get; set; }
         public List <string> Images {  get; set; }
+        public string District { get; set; }
         public  DateTime CreatedDate { get; set; } = DateTime.Now;
 
     }

@@ -15,9 +15,9 @@
         public int NumberOfCampaignPersonalDonorCreated { get; set; } //số lượng chiến dịch  person donor đã tạo 
         public int NumberOfCampaignOrganizaionDonorCreated { get; set; } //số lượng chiến dịch  OrganizaionDonor đã tạo 
         public int NumberOfRegisterReceiver { get; set; }// sô lượng người đăng ký nhận
-        public int NumberOfPersonalPersonalDonorCertificate { get; set; } // số lượng chứng nhận personaldonor
-        public int NumberOfPersonalOrganizaionDonorCertificate { get; set; } // số lượng chứng nhận organization
-        public int NumberOfPersonalRecipientCertificate { get; set; } // số lượng chứng nhận recipient
+        public int NumberOfPersonalDonorCertificate { get; set; } // số lượng chứng nhận personaldonor
+        public int NumberOfOrganizaionDonorCertificate { get; set; } // số lượng chứng nhận organization
+        public int NumberOfRecipientCertificate { get; set; } // số lượng chứng nhận recipient
         public int NumberOfGiftOfPersonalDonor { get; set; } // số lượng quà trong campaign
         public int NumberOfGiftOrganizaionDonor { get; set; }
         public int NumberOfGiftStaff { get; set; }
