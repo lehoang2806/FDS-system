@@ -61,6 +61,7 @@ namespace FDSSYSTEM.Services.RequestSupportService
                 RequestedItems= requestSupport.RequestedItems,
                 AccountId= accountId,
                 CreatedDate=DateTime.Now,
+                Images= requestSupport.Images,
 
             };
             await _requestSupportRepository.AddAsync(newRequestSupport);
@@ -99,6 +100,7 @@ namespace FDSSYSTEM.Services.RequestSupportService
             request.SpecialMembers = requestSupport.SpecialMembers;
             request.IncomeSource = requestSupport.IncomeSource;
             request.RequestedItems = requestSupport.RequestedItems;
+            request.Images = requestSupport.Images;
 
             await _requestSupportRepository.UpdateAsync(request.Id, request);
 

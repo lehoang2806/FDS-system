@@ -14,6 +14,7 @@ namespace FDSSYSTEM.DTOs
         public string IncomeSource { get; set; }
         public List<string> RequestedItems { get; set; }
         public DateTime CreatedDate { get; set; } = DateTime.Now;
+        public List<string> Images { get; set; }
 
     }
 }

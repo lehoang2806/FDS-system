@@ -43,7 +43,7 @@ namespace FDSSYSTEM.Services.PostCommentLikeService
                 ReplyPostCommentId = postCommentLikeDto.ReplyPostCommentId,
                 PostCommentId = postCommentLikeDto.PostCommentId,
                 AccountId = userId,
-                CreatedDate = DateTime.UtcNow
+                CreatedDate = DateTime.Now
             };
 
             await _postCommentLikeRepository.AddAsync(postCommentLike);

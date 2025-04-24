@@ -23,7 +23,8 @@ public class NotificationService : INotificationService
             Content = notificationDto.Content,
             NotificationType = notificationDto.NotificationType,
             ObjectType = notificationDto.ObjectType,
-            OjectId = notificationDto.OjectId
+            OjectId = notificationDto.OjectId,
+            CreatedDate = DateTime.Now,
         });
     }
 

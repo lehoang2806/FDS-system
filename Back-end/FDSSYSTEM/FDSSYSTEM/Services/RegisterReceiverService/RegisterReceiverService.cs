@@ -87,6 +87,7 @@ namespace FDSSYSTEM.Services.RegisterReceiverService
                 CreatAt = registerReceiver.CreatAt,
                 RegisterReceiverId = Guid.NewGuid().ToString(),
                 CampaignId = registerReceiver.CampaignId,
+                CreatedDate = DateTime.Now,
             };
             await _registerReceiverRepository.AddAsync(newRegisterReceiver);
 

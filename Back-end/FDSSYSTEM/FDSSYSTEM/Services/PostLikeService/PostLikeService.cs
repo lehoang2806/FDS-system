@@ -44,7 +44,7 @@ namespace FDSSYSTEM.Services.PostLikeService
                 PostLikeId = Guid.NewGuid().ToString(),
                 PostId = postId,
                 AccountId = userId,
-                CreatedDate = DateTime.UtcNow,
+                CreatedDate = DateTime.Now,
                 
             };
 
