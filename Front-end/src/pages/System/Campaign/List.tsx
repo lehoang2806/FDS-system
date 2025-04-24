@@ -10,6 +10,7 @@ import { getAllCampaignApiThunk } from '@/services/campaign/campaignThunk';
 import { FC, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import classNames from "classnames";
+import { CampaignInfo } from '@/types/campaign';
 
 const ListCampaignPage: FC = () => {
     const dispatch = useAppDispatch();
@@ -29,6 +30,17 @@ const ListCampaignPage: FC = () => {
     const organizationCampaigns = approvedCampaigns.filter((campaign) => campaign.typeAccount === "Organization Donor");
 
     const [isSelectTypeOpen, setIsSelectTypeOpen] = useState(false);
+
+    // All Campaigns
+    const [dateRangeAllCampaigns, setDateRangeAllCampaigns] = useState({ from: '', to: '' });
+
+    // Personal Campaigns
+    const [dateRangePersonalCampaigns, setDateRangePersonalCampaigns] = useState({ from: '', to: '' });
+
+    // Organization Campaigns
+    const [dateRangeOrganizationCampaigns, setDateRangeOrganizationCampaigns] = useState({ from: '', to: '' });
+
+
 
     useEffect(() => {
         dispatch(setLoading(true));
@@ -99,59 +111,26 @@ const ListCampaignPage: FC = () => {
         setSearchTerm(e.target.value);
     };
 
-    //Filter By Date All Campaigns
-    const [implementDateAllCampaignFilter, setImplementDateAllCampaignFilter] = useState<string>('');
+    const filterCampaignsByDateRange = (campaigns: CampaignInfo[], from: string, to: string) => {
+        if (!from && !to) return campaigns;
 
-    const handleImplementDateAllCampaignChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setImplementDateAllCampaignFilter(e.target.value);
-    };
-
-    const filterAllCampaignsByDate = (campaigns: CampaignInfo[]) => {
-        if (!implementDateAllCampaignFilter) return campaigns;
-
-        const filterDate = new Date(implementDateAllCampaignFilter);
+        const fromDate = from ? new Date(from) : null;
+        const toDate = to ? new Date(to) : null;
 
         return campaigns.filter((campaign) => {
-            const allCampaignImplementDate = new Date(campaign.implementationTime.split('T')[0]);
-            return allCampaignImplementDate.toDateString() === filterDate.toDateString();
-        });
-    };
+            const campaignDate = new Date(campaign.implementationTime.split('T')[0]);
 
+            if (fromDate && toDate) {
+                return campaignDate >= fromDate && campaignDate <= toDate;
+            }
+            if (fromDate) {
+                return campaignDate >= fromDate;
+            }
+            if (toDate) {
+                return campaignDate <= toDate;
+            }
 
-
-    //Filter By Date Personal Campaigns
-    const [implementDatePersonalCampaignFilter, setImplementDatePersonalCampaignFilter] = useState<string>('');
-
-    const handleImplementDatePersonalCampaignChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setImplementDatePersonalCampaignFilter(e.target.value);
-    };
-
-    const filterPersonalCampaignsByDate = (campaigns: CampaignInfo[]) => {
-        if (!implementDatePersonalCampaignFilter) return campaigns;
-
-        const filterDate = new Date(implementDatePersonalCampaignFilter);
-
-        return campaigns.filter((campaign) => {
-            const personalCampaignImplementDate = new Date(campaign.implementationTime.split('T')[0]);
-            return personalCampaignImplementDate.toDateString() === filterDate.toDateString();
-        });
-    };
-
-    //Filter By Date Organization Campaigns
-    const [implementDateOrganizationCampaignFilter, setImplementDateOrganizationCampaignFilter] = useState<string>('');
-
-    const handleImplementDateOrganizationCampaignChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setImplementDateOrganizationCampaignFilter(e.target.value);
-    };
-
-    const filterOrganizationCampaignsByDate = (campaigns: CampaignInfo[]) => {
-        if (!implementDateOrganizationCampaignFilter) return campaigns;
-
-        const filterDate = new Date(implementDateOrganizationCampaignFilter);
-
-        return campaigns.filter((campaign) => {
-            const organizationCampaignImplementDate = new Date(campaign.implementationTime.split('T')[0]);
-            return organizationCampaignImplementDate.toDateString() === filterDate.toDateString();
+            return true;
         });
     };
 
@@ -180,7 +159,7 @@ const ListCampaignPage: FC = () => {
 
     //Filter All Campaigns
     const filteredAllCampaigns = filterByStatus(
-        filterAllCampaignsByDate(approvedCampaigns)
+        filterCampaignsByDateRange(approvedCampaigns, dateRangeAllCampaigns.from, dateRangeAllCampaigns.to)
     ).filter((campaign) =>
         campaign.campaignName.toLowerCase().includes(searchTerm.toLowerCase())
     );
@@ -189,16 +168,17 @@ const ListCampaignPage: FC = () => {
 
     //Filter Personal Campaigns
     const filteredPersonalCampaigns = filterByStatus(
-        filterPersonalCampaignsByDate(personalCampaigns)
+        filterCampaignsByDateRange(personalCampaigns, dateRangeAllCampaigns.from, dateRangeAllCampaigns.to)
     ).filter((campaign) =>
         campaign.campaignName.toLowerCase().includes(searchTerm.toLowerCase())
     );
+
 
     const visibleFilteredPersonalCampaigns = filteredPersonalCampaigns.slice(0, visiblePersonalCampaignsCount);
 
     //Filter Organization Campaigns
     const filteredOrganizationCampaigns = filterByStatus(
-        filterOrganizationCampaignsByDate(organizationCampaigns)
+        filterCampaignsByDateRange(organizationCampaigns, dateRangeAllCampaigns.from, dateRangeAllCampaigns.to)
     ).filter((campaign) =>
         campaign.campaignName.toLowerCase().includes(searchTerm.toLowerCase())
     );
@@ -232,40 +212,86 @@ const ListCampaignPage: FC = () => {
                                         <RightIcon className={classNames("form-icon-select", { "rotate-45": isSelectTypeOpen === true })} />
                                     </div>
                                 </div>
+                            </div>
+                            <div className="cscr2r1r3">
                                 {activeTab === 0 && (
                                     <div className="form date-filter-container">
-                                        <label className='form-label'>Ngày diễn ra:</label>
-                                        <input
-                                            type="date"
-                                            className="form-input"
-                                            placeholder="Chọn ngày thực hiện"
-                                            value={implementDateAllCampaignFilter}
-                                            onChange={handleImplementDateAllCampaignChange}
-                                        />
+                                        <div className="form-field">
+                                            <label className='form-label'>Từ ngày:</label>
+                                            <input
+                                                type="date"
+                                                className="form-input"
+                                                value={dateRangeAllCampaigns.from}
+                                                onChange={(e) =>
+                                                    setDateRangeAllCampaigns((prev) => ({ ...prev, from: e.target.value }))
+                                                }
+                                            />
+                                        </div>
+                                        <div className="form-field">
+                                            <label className='form-label'>Đến ngày:</label>
+                                            <input
+                                                type="date"
+                                                className="form-input"
+                                                value={dateRangeAllCampaigns.to}
+                                                onChange={(e) =>
+                                                    setDateRangeAllCampaigns((prev) => ({ ...prev, to: e.target.value }))
+                                                }
+                                            />
+                                        </div>
                                     </div>
                                 )}
+
                                 {activeTab === 1 && (
                                     <div className="form date-filter-container">
-                                        <label className='form-label'>Ngày diễn ra:</label>
-                                        <input
-                                            type="date"
-                                            className="form-input"
-                                            placeholder="Chọn ngày thực hiện"
-                                            value={implementDatePersonalCampaignFilter}
-                                            onChange={handleImplementDatePersonalCampaignChange}
-                                        />
+                                        <div className="form-field">
+                                            <label className='form-label'>Từ ngày:</label>
+                                            <input
+                                                type="date"
+                                                className="form-input"
+                                                value={dateRangePersonalCampaigns.from}
+                                                onChange={(e) =>
+                                                    setDateRangePersonalCampaigns((prev) => ({ ...prev, from: e.target.value }))
+                                                }
+                                            />
+                                        </div>
+                                        <div className="form-field">
+                                            <label className='form-label'>Đến ngày:</label>
+                                            <input
+                                                type="date"
+                                                className="form-input"
+                                                value={dateRangePersonalCampaigns.to}
+                                                onChange={(e) =>
+                                                    setDateRangePersonalCampaigns((prev) => ({ ...prev, to: e.target.value }))
+                                                }
+                                            />
+                                        </div>
                                     </div>
                                 )}
+
                                 {activeTab === 2 && (
                                     <div className="form date-filter-container">
-                                        <label className='form-label'>Ngày diễn ra:</label>
-                                        <input
-                                            type="date"
-                                            className="form-input"
-                                            placeholder="Chọn ngày thực hiện"
-                                            value={implementDateOrganizationCampaignFilter}
-                                            onChange={handleImplementDateOrganizationCampaignChange}
-                                        />
+                                        <div className="form-field">
+                                            <label className='form-label'>Từ ngày:</label>
+                                            <input
+                                                type="date"
+                                                className="form-input"
+                                                value={dateRangeOrganizationCampaigns.from}
+                                                onChange={(e) =>
+                                                    setDateRangeOrganizationCampaigns((prev) => ({ ...prev, from: e.target.value }))
+                                                }
+                                            />
+                                        </div>
+                                        <div className="form-field">
+                                            <label className='form-label'>Đến ngày:</label>
+                                            <input
+                                                type="date"
+                                                className="form-input"
+                                                value={dateRangeOrganizationCampaigns.to}
+                                                onChange={(e) =>
+                                                    setDateRangeOrganizationCampaigns((prev) => ({ ...prev, to: e.target.value }))
+                                                }
+                                            />
+                                        </div>
                                     </div>
                                 )}
                             </div>

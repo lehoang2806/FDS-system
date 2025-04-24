@@ -11,17 +11,38 @@ interface PostState {
     post: PostInfo | null;
 }
 
+interface PostLike {
+    postLikeId: string;
+    accountId: string;
+    fullName: string;
+    createdDate: string;
+}
+
+// Type for the Comment object
+interface PostComment {
+    postCommentId: string;
+    fullName: string;
+    content: string;
+    createdDate: string;
+    likes: any[]; // You can define a type for likes within comments if needed
+    replies: any[] | null; // Assuming replies could be an array or null
+}
+
+// Type for the Post object
 interface Post {
+    postId: string;
     postContent: string;
-    images: string[];
+    images: string[]; // Assuming it's an array of strings for image URLs or paths
     posterId: string;
     posterRole: string;
     posterName: string;
     status: string;
     rejectComment: string | null;
-    posterApproverId: string | null;
-    posterApproverName: string | null;
-    postId: string;
+    posterApproverId: string;
+    posterApproverName: string;
+    publicDate: string;
+    likes: PostLike[];
+    comments: PostComment[];
 }
 
 interface PostInfo {
@@ -63,6 +84,20 @@ interface RejectPost {
 }
 
 interface CommentPost {
+    postId: string | null;
+    postCommentId: string | null;
+    content: string;
+    images: string[];
+}
+
+interface PostCommentDto {
+    id: string;
+    postCommentId: string;
+    accountId: string;
     postId: string;
     content: string;
+    dateCreated: string;
+    dateUpdated: string | null;
+    replies: PostCommentDto[] | null;
+    images: string[]; // base64 hoặc URL ảnh
 }

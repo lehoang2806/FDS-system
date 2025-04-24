@@ -108,7 +108,19 @@ const UserDetailCampaignPage: React.FC = () => {
                                 ))}
                             </div>
                             <div className="udcscr1c1r1">
-                                <h1>{currentCampaign?.campaignName} - <span>{currentCampaign?.status === "Pending" ? <span className='status-pending'>Đang chờ phê duyệt</span> : currentCampaign?.status === "Approved" ? <span className='status-approve'>Đã được phê duyệt</span> : <span className='status-reject'>Đã bị từ chối</span>}</span></h1>
+                                <h1>{currentCampaign?.campaignName} -
+                                    <span>
+                                        {currentCampaign?.status === "Pending" ? (
+                                            <span className='status-pending'>Đang chờ phê duyệt</span>
+                                        ) : currentCampaign?.status === "Approved" ? (
+                                            <span className='status-approve'>Đã được phê duyệt</span>
+                                        ) : currentCampaign?.status === "Rejected" ? (
+                                            <span className='status-reject'>Đã bị từ chối</span>
+                                        ) : currentCampaign?.status === "Canceled" ? (
+                                            <span className='status-reject'>Đã huỷ</span>
+                                        ) : null}
+                                    </span>
+                                </h1>
                             </div>
                             <div className="udcscr1c1r3">
                                 <div

@@ -20,10 +20,15 @@ const LoginPage = () => {
         userEmail: "",
         password: "",
     };
+    
     const schema = Yup.object().shape({
-        userEmail: Yup.string().email("Invalid email").required("Required"),
-        password: Yup.string().required("Required"),
+        userEmail: Yup.string()
+            .email("Email không hợp lệ")
+            .required("Vui lòng nhập email"),
+        password: Yup.string()
+            .required("Vui lòng nhập mật khẩu"),
     });
+
 
     useEffect(() => {
         document.title = "Đăng nhập";
@@ -64,12 +69,12 @@ const LoginPage = () => {
                                 }) => (
                                     <Form onSubmit={handleSubmit} className="form">
                                         <div className="form-field">
-                                            <label className="form-label">Email</label>
+                                            <label className="form-label">Email <span>*</span></label>
                                             <Field name="userEmail" type="email" placeholder="Hãy nhập email của bạn" className={classNames("form-input", { "is-error": errors.userEmail && touched.userEmail })} />
                                             {errors.userEmail && touched.userEmail && <span className="text-error">{errors.userEmail}</span>}
                                         </div>
                                         <div className="form-field">
-                                            <label className="form-label">Mật Khẩu</label>
+                                            <label className="form-label">Mật Khẩu<span>*</span></label>
                                             <Field name="password" type="password" placeholder="Hãy nhập mật khẩu của bạn" className={classNames("form-input", { "is-error": errors.password && touched.password })} />
                                             {errors.password && touched.password && <span className="text-error">{errors.password}</span>}
                                         </div>

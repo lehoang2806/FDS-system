@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { getFeedbackCampaignApiThunk, getFeedbackDetailApiThunk } from "./feedbackCampaignThunk";
+import { FeedbackCampaign, FeedbackCampaignState, FeedbackDetail } from "@/types/campaign";
 
 const initialState: FeedbackCampaignState = {
     listFeedbacksCampaign: [],

@@ -12,6 +12,13 @@
     .usc-container {
         display: flex;
 
+        .usc-icon {
+            width: 50px;
+            height: 50px;
+            margin-right: 10px;
+            fill: white;
+        }
+
         .usccc1, .usccc2 {
             text-align: center;
             padding: 200px 40px;
@@ -21,6 +28,16 @@
                 font-weight: 700;
                 padding: 30px;
                 border-radius: var(--border-radius-16);
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                margin: 0 auto;
+                transition: transform 0.4s ease, box-shadow 0.4s ease;
+
+                &:hover {
+                    transform: translateY(-8px);
+                    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+                }
             }
         }
         .usccc1 {

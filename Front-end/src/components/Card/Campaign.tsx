@@ -37,7 +37,12 @@ const CampaignCard: FC<CampaignCardProps> = ({ onClickDetail, campaign }) => {
 
     return (
         <div className="campaign-card" onClick={onClickDetail}>
-            <img src={campaign?.images[0]} className="campaign-img" />
+            <div className="img-container">
+                <img src={campaign?.images[0]} className="campaign-img" />
+                <div className="overlay">
+                    <span>Xem chi tiết</span>
+                </div>
+            </div>
             <h4>{campaign.campaignName}</h4>
             <p>{formattedDate} - {formattedTime}</p>
             <p>{campaign.typeGift}</p>
@@ -50,6 +55,7 @@ const CampaignCard: FC<CampaignCardProps> = ({ onClickDetail, campaign }) => {
                 {status}
             </p>
         </div>
+
     );
 }
 

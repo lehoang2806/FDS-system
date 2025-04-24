@@ -11,6 +11,7 @@ import {
 } from "./campaignApi";
 import { ResponseFromServer } from "@/types/app";
 import { TextResponse } from "@/types/auth";
+import { AddCampaign, AdditionalCampaign, ApproveCampaign, CampaignInfo, CancelCampaign, CurrentCampaign, RejectCampaign, UpdateCampaign } from "@/types/campaign";
 
 const ADD_CAMPAIGN = "ADD_CAMPAIGN";
 const UPDATE_CAMPAIGN = "UPDATE_CAMPAIGN";
