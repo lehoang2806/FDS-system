@@ -11,7 +11,7 @@ namespace FDSSYSTEM.Services.PostService
         Task<List<Post>> GetAllPostsApproved();
         Task<List<Post>> GetAllPostsPending();
         Task<Post> GetById(string id);
-        Task Create(PostDto post);
+        Task<PostDetailDto> Create(PostDto post);
         Task Update(string id, PostDto post);
         Task Delete(string id);
         Task Approve(ApprovePostDto approvePostDto);

@@ -20,8 +20,7 @@ namespace FDSSYSTEM.Controllers
         {
             try
             {
-                /*var statist = await _campaignService.GetAll();*/
-                return Ok(new StatisticDonorDto());
+                return Ok(await _statisticService.GetStatisticDonor());
             }
             catch (Exception ex)
             {

@@ -14,7 +14,7 @@ namespace FDSSYSTEM.Controllers
     [ApiController]
     public class PostController : Controller
     {
-         private readonly IPostService _postService;
+        private readonly IPostService _postService;
 
         public PostController(IPostService postService)
         {
@@ -27,8 +27,8 @@ namespace FDSSYSTEM.Controllers
         {
             try
             {
-                await _postService.Create(post);
-                return Ok();
+                var newPost = await _postService.Create(post);
+                return Ok(newPost);
             }
             catch (Exception ex)
             {
@@ -54,7 +54,7 @@ namespace FDSSYSTEM.Controllers
         }
 
         [HttpGet("GetAllPostsApproved")]
- 
+
         public async Task<ActionResult> GetAllPostsApproved()
         {
             try

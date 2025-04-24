@@ -5,8 +5,8 @@ using FDSSYSTEM.Repositories.OrganizationDonorCertificateRepository;
 using FDSSYSTEM.Repositories.RecipientCertificateRepository;
 using FDSSYSTEM.Repositories.RegisterReceiverRepository;
 using FDSSYSTEM.Repositories.UserRepository;
+using FDSSYSTEM.Services.UserContextService;
 using MongoDB.Driver;
-using Twilio.Rest.Api.V2010.Account;
 
 namespace FDSSYSTEM.Services.StatisticService
 {
@@ -18,6 +18,7 @@ namespace FDSSYSTEM.Services.StatisticService
         private readonly IPersonalDonorCertificateRepository _personalDonorCertificateRepository;
         private readonly IOrganizationDonorCertificateRepository _organizationDonorCertificateRepository;
         private readonly IRecipientCertificateRepository _recipientCertificateRepository;
+        private readonly IUserContextService _userContextService;
 
 
         public StatisticService(ICampaignRepository campainRepository
@@ -26,7 +27,7 @@ namespace FDSSYSTEM.Services.StatisticService
             , IPersonalDonorCertificateRepository personalDonorCertificateRepository
             , IOrganizationDonorCertificateRepository organizationDonorCertificateRepository
             , IRecipientCertificateRepository recipientCertificateRepository
-
+            , IUserContextService userContextService
             )
         {
             _campainRepository = campainRepository;
@@ -35,7 +36,7 @@ namespace FDSSYSTEM.Services.StatisticService
             _personalDonorCertificateRepository = personalDonorCertificateRepository;
             _organizationDonorCertificateRepository = organizationDonorCertificateRepository;
             _recipientCertificateRepository = recipientCertificateRepository;
-
+            _userContextService = userContextService;
         }
 
         public async Task<StatisticAdminDto> GetStatisticAdmin()
@@ -71,6 +72,38 @@ namespace FDSSYSTEM.Services.StatisticService
             return rs;
         }
 
+        public async Task<StatisticDonorDto> GetStatisticDonor()
+        {
+            DateTime now = DateTime.Now;
+
+            int diff = now.DayOfWeek - DayOfWeek.Sunday;
+            if (diff == 0)
+            {
+                diff = -6; //nếu hôm nay là chủ nhật thì thứ 2 đầu tuần sẽ -6
+            }
+            else
+            {
+                diff = diff - 1;
+            }
+            DateTime fromDateOfWeek = now.Date.AddDays(-1 * diff);   // Thứ 2 đầu tuần
+            DateTime toDateOfWeek = fromDateOfWeek.AddDays(6); //chu nhat
+
+            DateTime fromDateOfMonth = new DateTime(now.Year, now.Month, 1); // ngày đầu tháng
+            DateTime toDateOfMonth = fromDateOfMonth.AddMonths(1).AddDays(-1); // ngày cuối tháng
+
+            DateTime fromDateOfYear = new DateTime(now.Year, 1, 1);          // 01/01 năm nay
+            DateTime toDateOfYear = fromDateOfYear.AddYears(1).AddDays(-1);
+
+
+            var rs = new StatisticDonorDto();
+            rs.Day = await GetStatisticDonor(now, now);
+            rs.Week = await GetStatisticDonor(fromDateOfWeek, toDateOfWeek);
+            rs.Month = await GetStatisticDonor(fromDateOfMonth, toDateOfMonth);
+            rs.Year = await GetStatisticDonor(fromDateOfYear, toDateOfYear);
+
+            return rs;
+        }
+
         private async Task<StatisticAdminItemDto> GetStatisticAdmin(DateTime fromDate, DateTime toDate)
         {
             var fromDateUTC = fromDate.ToUniversalTime().Date;
@@ -95,9 +128,7 @@ namespace FDSSYSTEM.Services.StatisticService
                                   };
 
 
-            rs.NumberOfCampaignStaffCreated = campaignDetails.Where(x => x.User.RoleId == 2).Count();
-            //rs.NumberOfGiftStaff = campaignDetails.Where(x => x.User.RoleId == 2).Sum(x=>x.Campaign.LimitedQuantity);
-
+            rs.NumberOfCampaignStaffCreated = campaignDetails.Where(x => x.User.RoleId == 2).Count();       
             rs.NumberOfCampaignPersonalDonorCreated = campaignDetails.Where(x => x.User.RoleId == 3 && x.User.DonorType == "Personal Donor").Count();
             rs.NumberOfCampaignOrganizaionDonorCreated = campaignDetails.Where(x => x.User.RoleId == 3 && x.User.DonorType == "Organization Donor").Count();
 
@@ -136,9 +167,45 @@ namespace FDSSYSTEM.Services.StatisticService
             var recipientCert = await _recipientCertificateRepository.GetAllAsync(filterRecipientCert);
             rs.NumberOfRecipientCertificate = recipientCert.Count();
 
+            rs.NumberOfGiftOfPersonalDonor = campaignDetails.Where(x => x.User.RoleId == 3 && x.User.DonorType == "Personal Donor").Sum(x => x.Campaign.LimitedQuantity);
+            rs.NumberOfGiftOrganizaionDonor = campaignDetails.Where(x => x.User.RoleId == 3 && x.User.DonorType == "Organization Donor").Sum(x => x.Campaign.LimitedQuantity);
+            rs.NumberOfGiftStaff = campaignDetails.Where(x => x.User.RoleId == 2).Sum(x => x.Campaign.LimitedQuantity);// 2 là staff
+
+            rs.NumberOfAllPersonalDonorMember = users.Where(x => x.CreateDate >= fromDateUTC && x.CreateDate < toDateUTC && x.RoleId == 3 && x.DonorType == "Personal Donor").Count();
+            rs.NumberOfAllOrganizaionDonorMember = users.Where(x => x.CreateDate >= fromDateUTC && x.CreateDate < toDateUTC && x.RoleId == 3 && x.DonorType == "Organization Donor").Count();
+            rs.NumberOfAllRecipientMember = users.Where(x => x.CreateDate >= fromDateUTC && x.CreateDate < toDateUTC && x.RoleId == 4).Count();
+            rs.NumberOfAllStaffMember = users.Where(x => x.CreateDate >= fromDateUTC && x.CreateDate < toDateUTC && x.RoleId == 2).Count();
+            rs.NumberOfGiftRegisterReceiver = registerReceivers.Sum(x => x.Quantity);
+
+            return rs;
+        }
 
 
-       
+        private async Task<StatisticDonorItemDto> GetStatisticDonor(DateTime fromDate, DateTime toDate)
+        {
+            var fromDateUTC = fromDate.ToUniversalTime().Date;
+            var toDateUTC = toDate.AddDays(1).ToUniversalTime().Date;
+
+            var rs = new StatisticDonorItemDto();
+            var filterCampaign = Builders<Campaign>.Filter.And(
+                Builders<Campaign>.Filter.Gte(p => p.CreatedDate, fromDateUTC),
+                Builders<Campaign>.Filter.Lt(p => p.CreatedDate, toDateUTC),
+                Builders<Campaign>.Filter.Eq(p => p.Status, "Approved"),
+                Builders<Campaign>.Filter.Eq(p => p.AccountId, _userContextService.UserId)
+            );
+            var campaigns = await _campainRepository.GetAllAsync(filterCampaign);
+
+            //register receiver
+            var filterRegisterReceiver = Builders<RegisterReceiver>.Filter.And(
+                Builders<RegisterReceiver>.Filter.Gte(p => p.CreatedDate, fromDateUTC),
+                Builders<RegisterReceiver>.Filter.Lt(p => p.CreatedDate, toDateUTC),
+                Builders<RegisterReceiver>.Filter.In(p => p.CampaignId, campaigns.Select(x=>x.CampaignId).ToList())
+            );
+            var registerReceivers = await _registerReceiverRepository.GetAllAsync(filterRegisterReceiver);
+
+            rs.NumberOfCampaignsCreated = campaigns.Count();
+            rs.NumberOfGift = campaigns.Sum(x=>x.LimitedQuantity);
+            rs.NumberOfRecipientsParticipating = registerReceivers.Count();
 
             return rs;
         }
