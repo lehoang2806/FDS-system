@@ -12,7 +12,11 @@ import "react-toastify/dist/ReactToastify.css";
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import 'dayjs/locale/vi';
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
 
+dayjs.extend(utc);
+dayjs.extend(timezone);
 dayjs.locale('vi');
 dayjs.extend(relativeTime);
 
@@ -237,9 +241,11 @@ const StaffHeader: FC = () => {
                                                         <div>
                                                             <strong>{notif.content}</strong>
                                                             <p>{actionText}</p>
-                                                            {notif?.createdDate
-                                                                ? dayjs(dayjs(notif.createdDate).add(7, 'hour')).fromNow()
-                                                                : ''}
+                                                            <p>
+                                                                {notif?.createdDate
+                                                                    ? dayjs.utc(notif.createdDate).tz("Asia/Ho_Chi_Minh").fromNow()
+                                                                    : ''}
+                                                            </p>
                                                         </div>
                                                     </div>
                                                 );
@@ -261,9 +267,11 @@ const StaffHeader: FC = () => {
                                                         <div>
                                                             <strong>{notif.content}</strong>
                                                             <p>{actionText}</p>
-                                                            {notif?.createdDate
-                                                                ? dayjs(dayjs(notif.createdDate).add(7, 'hour')).fromNow()
-                                                                : ''}
+                                                            <p>
+                                                                {notif?.createdDate
+                                                                    ? dayjs.utc(notif.createdDate).tz("Asia/Ho_Chi_Minh").fromNow()
+                                                                    : ''}
+                                                            </p>
                                                         </div>
                                                     </div>
                                                 );
@@ -285,9 +293,11 @@ const StaffHeader: FC = () => {
                                                         <div>
                                                             <strong>{notif.content}</strong>
                                                             <p>{actionText}</p>
-                                                            {notif?.createdDate
-                                                                ? dayjs(dayjs(notif.createdDate).add(7, 'hour')).fromNow()
-                                                                : ''}
+                                                            <p>
+                                                                {notif?.createdDate
+                                                                    ? dayjs.utc(notif.createdDate).tz("Asia/Ho_Chi_Minh").fromNow()
+                                                                    : ''}
+                                                            </p>
                                                         </div>
                                                     </div>
                                                 );
@@ -309,9 +319,11 @@ const StaffHeader: FC = () => {
                                                         <div>
                                                             <strong>{notif.content}</strong>
                                                             <p>{actionText}</p>
-                                                            {notif?.createdDate
-                                                                ? dayjs(dayjs(notif.createdDate).add(7, 'hour')).fromNow()
-                                                                : ''}
+                                                            <p>
+                                                                {notif?.createdDate
+                                                                    ? dayjs.utc(notif.createdDate).tz("Asia/Ho_Chi_Minh").fromNow()
+                                                                    : ''}
+                                                            </p>
                                                         </div>
                                                     </div>
                                                 );

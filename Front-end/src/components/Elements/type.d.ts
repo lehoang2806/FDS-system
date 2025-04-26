@@ -8,6 +8,16 @@ type PostProps = {
     isStatus?: boolean | null
 }
 
+interface ApprovedPostProps{
+    post: Post
+    userId: string
+}
+
+interface PersonalApprovedPostProps extends ApprovedPostProps {}
+interface PersonalRejectedPostProps {
+    post: Post
+}
+
 interface FeedbackCampaignProps {
     feedback: FeedbackCampaign,
     user: UserProfile

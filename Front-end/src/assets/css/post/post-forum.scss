@@ -10,6 +10,26 @@
             margin: 0 auto;
             display: flex;
 
+            .no-post {
+                padding: 60px 0;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+
+                .no-post-icon {
+                    width: 200px;
+                    height: 200px;
+                    margin-bottom: 20px;
+                    fill: var(--main-gray);
+                }
+
+                h2 {
+                    font-size: 30px;
+                    color: var(--main-color);
+                }
+            }
+
             .pfscc1 {
                 flex: 1;
                 margin-right: 20px;

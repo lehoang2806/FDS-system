@@ -1,6 +1,7 @@
 import { selectGetAllCampaign, selectGetAllNews, selectGetAllPosts, selectGetProfileUser, selectIsAuthenticated, selectUserLogin } from '@/app/selector';
 import { useAppDispatch, useAppSelector } from '@/app/store';
-import { Post } from '@/components/Elements';
+import { PostIcon } from '@/assets/icons';
+import { ApprovedPost, PersonalApprovedPost, PersonalRejectedPost } from '@/components/Elements';
 import { CreatePostModal } from '@/components/Modal';
 import { routes } from '@/routes/routeName'
 import { setLoading } from '@/services/app/appSlice';
@@ -8,14 +9,13 @@ import { getAllCampaignApiThunk } from '@/services/campaign/campaignThunk';
 import { getAllNewsApiThunk } from '@/services/news/newsThunk';
 import { getAllPostsApiThunk } from '@/services/post/postThunk';
 import { getProfileApiThunk } from '@/services/user/userThunk';
-import { UserInfo } from '@/types/user';
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 const PostForumPage = () => {
     const dispatch = useAppDispatch();
 
-    const [activeTab, setActiveTab] = useState<"noibat" | "cuatoi">("noibat");
+    const [activeTab, setActiveTab] = useState<"noibat" | "approved" | "rejected">("noibat");
 
     const isAuthentication = useAppSelector(selectIsAuthenticated)
     const userLogin = useAppSelector(selectUserLogin)
@@ -35,6 +35,8 @@ const PostForumPage = () => {
     const approvedPost = sortedPosts.filter(post => post.status === "Approved")
 
     const personalPost = sortedPosts.filter(post => post.posterId === userLogin?.accountId)
+    const personalApprovedPost = personalPost.filter(post => post.status === "Approved")
+    const personalRejectedPost = personalPost.filter(post => post.status === "Rejected")
 
     useEffect(() => {
         dispatch(setLoading(true))
@@ -63,9 +65,17 @@ const PostForumPage = () => {
         }
     }
 
-    const handletoPersonalPost = () => {
+    const handletoPersonalApprovedPost = () => {
         if (isAuthentication) {
-            setActiveTab("cuatoi")
+            setActiveTab("approved")
+        } else {
+            alert('Vui lòng đăng nhập')
+        }
+    }
+
+    const handletoPersonalRejectedPost = () => {
+        if (isAuthentication) {
+            setActiveTab("rejected")
         } else {
             alert('Vui lòng đăng nhập')
         }
@@ -120,27 +130,69 @@ const PostForumPage = () => {
                                     Nổi bật
                                 </div>
                                 <div
-                                    className={`pf-tabs-item ${activeTab === "cuatoi" ? "pf-tabs-item-actived" : ""}`}
-                                    onClick={() => handletoPersonalPost()}
+                                    className={`pf-tabs-item ${activeTab === "approved" ? "pf-tabs-item-actived" : ""}`}
+                                    onClick={() => handletoPersonalApprovedPost()}
                                 >
-                                    Cá nhân
+                                    Được phê duyệt
+                                </div>
+                                <div
+                                    className={`pf-tabs-item ${activeTab === "rejected" ? "pf-tabs-item-actived" : ""}`}
+                                    onClick={() => handletoPersonalRejectedPost()}
+                                >
+                                    Bị từ chối
                                 </div>
                             </div>
 
                             <button className="pr-btn" onClick={() => handleCreatePostModalOpen()}>Tạo bài viết</button>
                         </div>
                         <div className="pfscc2r2">
-                            {activeTab === "noibat" ? (
+                            {activeTab === "noibat" && (
                                 <>
-                                    {approvedPost.map((post, index) => (
-                                        <Post key={index} post={post} user={userProfile as UserInfo} />
-                                    ))}
+                                    {approvedPost.length > 0 ? (
+                                        <>
+                                            {approvedPost.map((post) => (
+                                                <ApprovedPost post={post} key={post.postId} userId={String(userProfile?.accountId)} />
+                                            ))}
+                                        </>
+                                    ) : (
+                                        <div className='no-post'>
+                                            <PostIcon className='no-post-icon' />
+                                            <h2>Chưa có bài viết</h2>
+                                        </div>
+                                    )}
                                 </>
-                            ) : (
+                            )}
+                            {activeTab === "approved" && (
                                 <>
-                                    {personalPost.map((post, index) => (
-                                        <Post key={index} post={post} isStatus={true} user={userProfile as UserInfo} />
-                                    ))}
+                                    {personalApprovedPost.length > 0 ? (
+                                        <>
+                                            {personalApprovedPost.map((post) => (
+                                                <PersonalApprovedPost post={post} key={post.postId} userId={String(userProfile?.accountId)} />
+                                            ))}
+                                        </>
+                                    ) : (
+                                        <div className='no-post'>
+                                            <PostIcon className='no-post-icon' />
+                                            <h2>Chưa có bài viết</h2>
+                                        </div>
+                                    )}
+                                </>
+                            )}
+                            {activeTab === "rejected" && (
+                                <>
+                                    {personalRejectedPost.length > 0 ? (
+                                        <>
+
+                                            {personalRejectedPost.map((post) => (
+                                                <PersonalRejectedPost post={post} key={post.postId} />
+                                            ))}
+                                        </>
+                                    ) : (
+                                        <div className='no-post'>
+                                            <PostIcon className='no-post-icon' />
+                                            <h2>Chưa có bài viết</h2>
+                                        </div>
+                                    )}
                                 </>
                             )}
                         </div>

@@ -8,5 +8,8 @@ import CarouselLanding from "./CarouselLanding";
 import CampaignCarousel from "./CarouselCampaign";
 import PostImageGallery from "./PostImageGallery";
 import FeedbackCampaign from "./FeedbackCampaign";
+import ApprovedPost from "./ApprovedPost";
+import PersonalApprovedPost from "./PersonalApprovedPost";
+import PersonalRejectedPost from "./PersonalRejectedPost";
 
-export { OTPInput, Subscriber, Post, SlideToggle, RenderIf, Loading, CarouselLanding, CampaignCarousel, PostImageGallery, FeedbackCampaign };
+export { OTPInput, Subscriber, Post, SlideToggle, RenderIf, Loading, CarouselLanding, CampaignCarousel, PostImageGallery, FeedbackCampaign, ApprovedPost, PersonalApprovedPost, PersonalRejectedPost };
