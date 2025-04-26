@@ -54,7 +54,7 @@ namespace FDSSYSTEM.Services.PostService
             _postCommentLikeRepository = postCommentLikeRepository;
         }
 
-        public async Task Create(PostDto post)
+        public async Task<PostDetailDto> Create(PostDto post)
         {
             string accountId = _userContextService.UserId ?? "";
             var newPost = new Post
@@ -88,6 +88,7 @@ namespace FDSSYSTEM.Services.PostService
                 await _hubNotificationContext.Clients.User(notificationDto.AccountId).SendAsync("ReceiveNotification", notificationDto);
             }
 
+            return await GetPostDetail(newPost.PostId);
         }
 
         public Task Delete(string id)

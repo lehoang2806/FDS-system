@@ -2,6 +2,7 @@
 {
     public class CampaignWithCreatorDto
     {
+
         public string CampaignId { get; set; }
 
         public string AccountId { get; set; }
@@ -25,7 +26,7 @@
         public string Sponsors { get; set; }
         public string ImplementationMethod { get; set; }
         public string Communication { get; set; }
-        public string LimitedQuantity { get; set; }
+        public int LimitedQuantity { get; set; }
         public string CampaignType { get; set; } // giới hạn quà tặng, đăng ký thoải mái
         public string StartRegisterDate { get; set; }
         public string EndRegisterDate { get; set; }
@@ -35,6 +36,7 @@
         public string TypeAccount { get; set; }
         public string Status { get; set; }
         public DateTime CreatedDate { get; set; }
+        public string District { get; set; }
         public List<CampaignReViewComment> ReviewComments { get; set; }
     }
     public class CampaignReViewComment

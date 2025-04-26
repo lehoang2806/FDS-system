@@ -4,5 +4,6 @@
     {
         public string DonorSupportLink { get; set; }
         public string HomePage { get; set; }
+        public string CampaignPage { get; set; }
     }
 }

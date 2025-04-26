@@ -50,4 +50,5 @@ public interface IUserService
     Task ResetPassword (ResetPasswordDto resetPassword);
     Task<List<Account>> GetAllDonorConfirmed();
     Task<List<Account>> GetAllRecipientConfirmed();
+    
 }
