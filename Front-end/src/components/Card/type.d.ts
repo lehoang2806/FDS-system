@@ -1,3 +1,5 @@
+import { CampaignInfo } from "@/types/campaign";
+
 type EventCardProps = {
     type: 1 | 2,
     news?: NewsInfo;

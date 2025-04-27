@@ -11,6 +11,7 @@ import { loginApiThunk } from '@/services/auth/authThunk';
 import { toast } from 'react-toastify';
 import { get } from 'lodash';
 import Button from '@/components/Elements/Button';
+import { Logo } from '@/assets/images';
 
 const ManageLogin = () => {
     const dispatch = useAppDispatch();
@@ -52,10 +53,7 @@ const ManageLogin = () => {
         <main id="manage-login">
             <section id="ml-section">
                 <div className="mls-container">
-                    <div className="mlsc1">
-                        <figure className="mlsc1-logo">
-                            Logo
-                        </figure>
+                    <div className="col-flex mlsc1">
                         <h1>Tiến hành đăng nhập</h1>
                         <Formik
                             initialValues={initialValues}
@@ -86,10 +84,8 @@ const ManageLogin = () => {
                     </div>
                     <div className="col-flex mlsc2">
                         <figure className="mlsc2-img">
+                            <img src={Logo} alt="" />
                         </figure>
-                        <h2>Feature Rich 3D Charts</h2>
-                        <p>Donec justo tortor, malesuada vitae faucibus ac, tristique sit amet massa. Aliquam dignissim nec felis quis imperdiet.</p>
-                        <button className="sc-btn">Learn More</button>
                     </div>
                 </div>
             </section>

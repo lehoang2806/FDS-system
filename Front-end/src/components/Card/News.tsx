@@ -1,4 +1,5 @@
 import { FC } from 'react'
+import { NewsCardProps } from './type'
 
 const NewsCard: FC<NewsCardProps> = ({onClickDetail, news}) => {
     return (

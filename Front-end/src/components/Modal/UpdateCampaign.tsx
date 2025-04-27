@@ -114,8 +114,7 @@ const UpdateCampaignModal: FC<UpdateCampaignModalProps> = ({ isOpen, setIsOpen, 
                 const base64Images = await Promise.all(base64Promises);
                 setFieldValue("images", base64Images);
                 setImagePreview(base64Images);
-            } catch (error) {
-                console.error("Error converting images:", error);
+            } catch (_) {
             }
         }
     };

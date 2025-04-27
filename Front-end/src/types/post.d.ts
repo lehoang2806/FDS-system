@@ -1,4 +1,5 @@
 interface ActionParamPost {
+    postId?: string;
     postContent?: string;
     images: string[];
     posterId?: string;

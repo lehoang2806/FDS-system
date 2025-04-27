@@ -13,6 +13,12 @@ import { getAllDonorCertificateApiThunk, getAllRecipientCertificateApiThunk, get
 import { CancelCampaign } from "@/types/campaign";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+import 'dayjs/locale/vi';
+
+dayjs.locale('vi');
+dayjs.extend(relativeTime);
 
 const UserPersonalPage = () => {
     const dispatch = useAppDispatch();
@@ -305,6 +311,9 @@ const UserPersonalPage = () => {
                                                                 Trạng thái
                                                             </th>
                                                             <th className="table-head-cell">
+                                                                Thời gian tạo
+                                                            </th>
+                                                            <th className="table-head-cell">
                                                                 Hành động
                                                             </th>
                                                         </tr>
@@ -323,6 +332,9 @@ const UserPersonalPage = () => {
                                                                     ) : campaign.status === "Canceled" ? (
                                                                         <span className='status-reject'>Đã huỷ</span>
                                                                     ) : null}
+                                                                </td>
+                                                                <td className='table-body-cell'>
+                                                                    {campaign?.createdDate ? dayjs(campaign.createdDate).fromNow() : ''}
                                                                 </td>
                                                                 <td className="table-body-cell">
                                                                     <button className='view-btn' onClick={() => handleToDetailCampaign(campaign.campaignId)}>Xem chi tiết</button>
@@ -382,6 +394,9 @@ const UserPersonalPage = () => {
                                                                 Trạng thái
                                                             </th>
                                                             <th className="table-head-cell">
+                                                                Thời gian tạo
+                                                            </th>
+                                                            <th className="table-head-cell">
                                                                 Hành động
                                                             </th>
                                                         </tr>
@@ -391,6 +406,9 @@ const UserPersonalPage = () => {
                                                             <tr key={index} className="table-body-row">
                                                                 <td className='table-body-cell'>{row.citizenId === null ? "Organization" : "Personal"}</td>
                                                                 <td className='table-body-cell'>{row.status === "Pending" ? <span className='status-pending'>Đang chờ phê duyệt</span> : row.status === "Approved" ? <span className='status-approve'>Đã được phê duyệt</span> : <span className='status-reject'>Đã bị từ chối</span>}</td>
+                                                                <td className='table-body-cell'>
+                                                                    {row?.createdDate ? dayjs(row.createdDate).fromNow() : ''}
+                                                                </td>
                                                                 <td className="table-body-cell">
                                                                     <button className="view-btn" onClick={() => row.citizenId === null ? handleToDetailCertificate(row.donorCertificateId, "Organization") : handleToDetailCertificate(row.donorCertificateId, "Personal")}>Xem chi tiết</button>
                                                                 </td>

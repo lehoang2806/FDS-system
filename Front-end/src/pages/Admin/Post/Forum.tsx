@@ -1,4 +1,3 @@
-import { Post } from "@/components/Elements"
 import { FC } from "react"
 
 const AdminForumPostPage: FC = () => {
@@ -10,9 +9,6 @@ const AdminForumPostPage: FC = () => {
                     <p>Dashboard<span className="admin-tag">Post</span></p>
                 </div>
                 <div className="afpcr2">
-                    <Post />
-                    <Post />
-                    <Post />
                 </div>
             </div>
         </section>

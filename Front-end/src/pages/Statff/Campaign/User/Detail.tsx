@@ -77,7 +77,6 @@ const StaffDetailCampaignUserPage: FC = () => {
                     }, 1000)
                 });
         } catch (error) {
-            console.error("Error in approval process:", error);
             toast.error("An error occurred while approving the certificate.");
         }
     };
@@ -111,7 +110,19 @@ const StaffDetailCampaignUserPage: FC = () => {
                     <div className="sdcucr2r2">
                         <div className="sdcucr2r2c1">
                             <h3>Trạng thái:</h3>
-                            <p>{currentCampaign?.status === "Pending" ? <span>Đang chờ phê duyệt</span> : currentCampaign?.status === "Approved" ? <span>Đã được phê duyệt</span> : <span>Đã bị từ chối</span>}</p>
+                            <p>
+                                {currentCampaign?.status === "Pending" ? (
+                                    <span>Đang chờ phê duyệt</span>
+                                ) : currentCampaign?.status === "Approved" ? (
+                                    <span>Đã được phê duyệt</span>
+                                ) : currentCampaign?.status === "Rejected" ? (
+                                    <span>Đã bị từ chối</span>
+                                ) : currentCampaign?.status === "Canceled" ? (
+                                    <span>Đã huỷ</span>
+                                ) : (
+                                    <span>Không xác định</span>
+                                )}
+                            </p>
                         </div>
                         <div className="sdcucr2r2c2">
                             <h3>Ngày được tạo:</h3>
@@ -197,7 +208,7 @@ const StaffDetailCampaignUserPage: FC = () => {
                                         src={img}
                                         alt={`Preview ${index}`}
                                         className="image-preview"
-                                        style={{ width: "100px", height: "100px", cursor: "pointer" }}
+                                        style={{ width: "200px", height: "200px", cursor: "pointer" }}
                                         onClick={() => setLightboxIndex(index)} // Thêm dòng này để mở Lightbox
                                     />
                                 ))}

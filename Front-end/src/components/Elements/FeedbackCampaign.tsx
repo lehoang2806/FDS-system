@@ -27,7 +27,6 @@ const FeedbackCampaign: FC<FeedbackCampaignProps> = ({ feedback, user }) => {
         try {
             if (isLiked) {
                 const like = feedback.likes?.find((like: FeedbackLike) => like.feedBackLikeId);
-                console.log(like)
                 if (like?.feedBackLikeId) {
                     await dispatch(unlikeFeedbackApiThunk(String(like.feedBackLikeId))).unwrap();
                 } else {

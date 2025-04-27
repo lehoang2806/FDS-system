@@ -56,9 +56,6 @@ const FooterLanding = () => {
         <main id="footer-landing">
             <section id="fl-section">
                 <div className="fls-container">
-                    <div className="flscc1">
-                        Logo
-                    </div>
                     <div className="flscc2">
                         {footers.map((footer, index) => (
                             <div className="flscc2c" key={index}>

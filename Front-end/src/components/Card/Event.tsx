@@ -1,4 +1,5 @@
 import { FC } from "react"
+import { EventCardProps } from "./type"
 
 const EventCard: FC<EventCardProps> = ({ type, news, onClickDetail }) => {
     const createdDate = news?.createdDate && news?.createdDate.split('T')[0]

@@ -72,6 +72,10 @@ interface CurrentCampaign {
     id?: string;
     campaignId: string;
     accountId: string;
+    fullName: string;
+    email: string;
+    phone: string;
+    roleId: number;
     campaignName: string;
     campaignDescription: string;
     location: string;

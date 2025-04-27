@@ -65,8 +65,7 @@ const PersonalDonorModal: FC<PersonalDonorModalProps> = ({ isOpen, setIsOpen }) 
                 const base64Images = await Promise.all(base64Promises);
                 setFieldValue("images", base64Images); // 🔹 Lưu danh sách ảnh vào Formik
                 setImagePreview(base64Images); // 🔹 Cập nhật ảnh xem trước
-            } catch (error) {
-                console.error("Error converting images:", error);
+            } catch (_) {
             }
         }
     };

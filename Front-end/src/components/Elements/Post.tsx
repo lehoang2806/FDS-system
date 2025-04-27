@@ -1,7 +1,7 @@
 import { selectGetPostById, selectIsAuthenticated } from "@/app/selector";
 import { useAppDispatch, useAppSelector } from "@/app/store";
 import { CameraIcon, CommentIcon, FarvoriteIcon, FavoriteIcon, SendIcon } from "@/assets/icons";
-import { approvePostApiThunk, getAllPostsApiThunk, getPostByIdApiThunk, likePostApiThunk, unlikePostApiThunk } from "@/services/post/postThunk";
+import { approvePostApiThunk, getAllPostsApiThunk, getPostByIdApiThunk, likePostApiThunk, rejectPostApiThunk, unlikePostApiThunk } from "@/services/post/postThunk";
 import { FC, useEffect, useRef, useState } from "react";
 import { PostProps } from "./type";
 import dayjs from 'dayjs';
@@ -10,7 +10,6 @@ import 'dayjs/locale/vi';
 import PostImageGallery from "./PostImageGallery";
 import { toast } from "react-toastify";
 import { setLoading } from "@/services/app/appSlice";
-import { RejectPostModal } from "../Modal";
 import classNames from "classnames";
 import Lightbox from "react-awesome-lightbox";
 import { Field, Form, Formik, FormikHelpers } from "formik";
@@ -25,75 +24,94 @@ const Post: FC<PostProps> = ({ post, user, isStatus = false }) => {
     const postDetail = useAppSelector(selectGetPostById);
     const isAuthentication = useAppSelector(selectIsAuthenticated);
 
-    const [isRejectPostModalOpen, setIsRejectPostModalOpen] = useState(false);
-    const [selectedRejectPost, setSelectedRejectPost] = useState<RejectPost | null>(null);
+    const moderateContentAI = async (content: string): Promise<{ isApproved: boolean; reason?: string }> => {
+        const bannedKeywords = ["cấm", "vi phạm", "chửi", "giết", "xxx"]; // Thêm từ cấm vào đây
+        const lowerContent = content.toLowerCase();
+
+        // Kiểm tra nếu nội dung chứa từ cấm
+        if (bannedKeywords.some(keyword => lowerContent.includes(keyword))) {
+            return { isApproved: false, reason: "Nội dung chứa từ bị cấm" };
+        }
+
+        return { isApproved: true }; // Nếu không có từ cấm, phê duyệt bài viết
+    };
 
     useEffect(() => {
         if (post) {
             dispatch(getPostByIdApiThunk(post.postId));
         }
-    }, []);
+    }, [post]);
 
     const handleApprovePost = async (values: ApprovePost) => {
         try {
             await dispatch(approvePostApiThunk(values)).unwrap();
             toast.success("Phê duyệt thành công");
-            dispatch(setLoading(true));
-            dispatch(getAllPostsApiThunk())
-                .unwrap()
-                .catch(() => {
-                })
-                .finally(() => {
-                    setTimeout(() => {
-                        dispatch(setLoading(false));
-                    }, 1000)
-                });
+            dispatch(getAllPostsApiThunk());
         } catch (error) {
-            console.error("Error in approval process:", error);
-            toast.error("An error occurred while approving the certificate.");
+            toast.error("Có lỗi xảy ra khi phê duyệt bài viết.");
         }
     };
 
-
-    const handleRejectPost = (postId: string) => {
-        setSelectedRejectPost({ postId, comment: "" });
-        setIsRejectPostModalOpen(true);
+    const handleRejectPost = async (values: RejectPost) => {
+        try {
+            await dispatch(rejectPostApiThunk(values)).unwrap();
+            toast.success("Đã từ chối");
+            dispatch(getAllPostsApiThunk());
+        } catch (error) {
+            toast.error("Có lỗi xảy ra khi từ chối bài viết.");
+        }
     };
 
-    const isFavoritePost = post.likes.some((like) => like.accountId === user?.accountId);
+    useEffect(() => {
+        const handleAutoModeratePendingPosts = async () => {
+            if (post?.status === "Pending") {
+                const result = await moderateContentAI(post.postContent);
+
+                if (result.isApproved) {
+                    // Phê duyệt bài viết nếu nội dung không vi phạm
+                    handleApprovePost({ postId: post.postId });
+                    toast.success("Bài viết đã được phê duyệt tự động.");
+                } else {
+                    // Từ chối bài viết nếu có vi phạm nội dung
+                    handleRejectPost({
+                        postId: post.postId,
+                        comment: result.reason || "Nội dung không phù hợp"
+                    });
+                }
+            }
+        };
+
+        handleAutoModeratePendingPosts();
+    }, [post]);
+
+    useEffect(() => {
+        if (post) {
+            dispatch(getPostByIdApiThunk(post.postId));
+        }
+    }, [post]);
+
+    const isFavoritePost = Array.isArray(post.likes) && post.likes.some((like) => like.accountId === user?.accountId);
 
     const handleFavoritePost = async (postId: string, postLikeId?: string) => {
-        console.log(postId, postLikeId)
         if (postLikeId) {
-            // If the post is already liked by the user, perform unlike action
-            dispatch(unlikePostApiThunk(postLikeId))  // Pass the postLikeId to unlike
-                .unwrap()
+            dispatch(unlikePostApiThunk(postLikeId)).unwrap()
                 .then(() => {
                     dispatch(getPostByIdApiThunk(postId));
                     dispatch(getAllPostsApiThunk());
                 })
-                .catch(() => {
-                    toast.error("Có lỗi xảy ra.");
-                });
+                .catch(() => toast.error("Có lỗi xảy ra."));
         } else {
-            // If the post is not liked, perform like action
-            dispatch(likePostApiThunk(postId))
-                .unwrap()
+            dispatch(likePostApiThunk(postId)).unwrap()
                 .then(() => {
                     dispatch(getPostByIdApiThunk(postId));
                     dispatch(getAllPostsApiThunk());
                 })
-                .catch(() => {
-                    toast.error("Có lỗi xảy ra.");
-                });
+                .catch(() => toast.error("Có lỗi xảy ra."));
         }
     };
 
     const fileInputRef = useRef<HTMLInputElement>(null);
-
-    const handleCameraClick = () => {
-        fileInputRef.current?.click();
-    };
+    const handleCameraClick = () => fileInputRef.current?.click();
 
     const [previewImages, setPreviewImages] = useState<string[]>([]);
 
@@ -117,7 +135,6 @@ const Post: FC<PostProps> = ({ post, user, isStatus = false }) => {
                 setFieldValue("images", base64Images);
             });
         }
-
     };
 
     const [isLightboxOpen, setIsLightboxOpen] = useState(false);
@@ -139,35 +156,45 @@ const Post: FC<PostProps> = ({ post, user, isStatus = false }) => {
         content: Yup.string().required("Vui lòng nhập nội dung"),
     });
 
-    const hanldeSendFeedback = (values: CommentPost, helpers: FormikHelpers<CommentPost>) => {
-        dispatch(setLoading(true));
-        dispatch(commentPostApiThunk(values))
-            .unwrap()
-            .then(() => {
-                toast.success("Gửi nhận xét thành công");
-                dispatch(getPostByIdApiThunk(String(post?.postId)));
-                helpers.resetForm();
-                setPreviewImages([]);
-            })
-            .catch(() => {
-            }).finally(() => {
-                setTimeout(() => {
-                    dispatch(setLoading(false));
-                }, 1000)
-            });
-    }
+    const hanldeSendFeedback = async (values: CommentPost, helpers: FormikHelpers<CommentPost>) => {
+        try {
+            dispatch(setLoading(true));
+            await dispatch(commentPostApiThunk(values)).unwrap();
+            toast.success("Gửi nhận xét thành công");
+            dispatch(getPostByIdApiThunk(String(post?.postId)));
+            helpers.resetForm();
+            setPreviewImages([]);
+        } catch (error) {
+            toast.error("Có lỗi xảy ra khi gửi nhận xét.");
+        } finally {
+            dispatch(setLoading(false));
+        }
+    };
 
     const handleIsAuthencation = () => {
         if (isAuthentication === false) {
             alert('Vui lòng đăng nhập')
         }
-    }
+    };
 
     return (
         <div className="post-container">
             <div className="pcr1">
                 <div className="pcr1c2">
-                    <h5 className="p-name">{post.posterName}{isStatus && (<span> - {post?.status === "Pending" ? <span className='status-pending'>Đang chờ phê duyệt</span> : post?.status === "Approved" ? <span className='status-approve'>Đã được phê duyệt</span> : <span className='status-reject'>Đã bị từ chối</span>}</span>)}</h5>
+                    <h5 className="p-name">
+                        {post.posterName}
+                        {isStatus && post?.status && (
+                            <span>
+                                - {post?.status === "Pending" ? (
+                                    <span className='status-pending'>Đang chờ phê duyệt</span>
+                                ) : post?.status === "Approved" ? (
+                                    <span className='status-approve'>Đã được phê duyệt</span>
+                                ) : (
+                                    <span className='status-reject'>Đã bị từ chối</span>
+                                )}
+                            </span>
+                        )}
+                    </h5>
                     <p className="p-time">
                         {post.status === "Approved" ? (
                             <>
@@ -184,10 +211,7 @@ const Post: FC<PostProps> = ({ post, user, isStatus = false }) => {
 
             <div className="pcr2">
                 <div className="pcr2-content">{post.postContent}</div>
-
-                {post.images.length > 0 && (
-                    <PostImageGallery images={post.images} />
-                )}
+                {post.images.length > 0 && <PostImageGallery images={post.images} />}
             </div>
             <hr />
             {post.status === "Approved" && (
@@ -195,10 +219,7 @@ const Post: FC<PostProps> = ({ post, user, isStatus = false }) => {
                     <div className="pcr3">
                         <div className="pcr3c1">
                             <FarvoriteIcon
-                                onClick={() => {
-                                    const likedPost = post.likes.find(like => like.accountId === user?.accountId);
-                                    handleFavoritePost(post.postId, likedPost?.postLikeId);
-                                }}
+                                onClick={() => handleFavoritePost(post.postId, post.likes.find(like => like.accountId === user?.accountId)?.postLikeId)}
                                 className={classNames("pcr3-icon", isFavoritePost ? "pcr3-icon-active" : "")}
                             />
                             <CommentIcon className="pcr3-icon" />
@@ -216,10 +237,7 @@ const Post: FC<PostProps> = ({ post, user, isStatus = false }) => {
                             onSubmit={hanldeSendFeedback}
                             validationSchema={schema}
                         >
-                            {({
-                                handleSubmit,
-                                setFieldValue,
-                            }) => (
+                            {({ handleSubmit, setFieldValue }) => (
                                 <Form onSubmit={handleSubmit}>
                                     <div className="input-comment-container">
                                         <Field
@@ -238,9 +256,6 @@ const Post: FC<PostProps> = ({ post, user, isStatus = false }) => {
                                                 style={{ display: 'none' }}
                                                 onChange={(e) => handleFileChange(e, setFieldValue)}
                                             />
-
-
-                                            {/* Camera Icon */}
                                             <CameraIcon className='camera-icon' onClick={handleCameraClick} />
                                             <button className="btn-comment" onClick={handleIsAuthencation} type="submit"><SendIcon className="btn-icon" /></button>
                                         </div>
@@ -301,59 +316,36 @@ const Post: FC<PostProps> = ({ post, user, isStatus = false }) => {
                         </Formik>
                     </div>
                     <div className="pcr5">
-                        {postDetail?.comments && postDetail.comments.length > 0 && (
-                            <>
-                                {postDetail.comments.map((item, index) => {
-                                    // Không cần kiểm tra postId của bình luận vì không có
-                                    return (
-                                        <div key={index} className="feedback-item">
-                                            <h4 className='ft-name'>{item.fullName}</h4>
-                                            <p className='ft-content'>{item.content}</p>
-                                            <div className="ft-info">
-                                                <p className="ft-time">
-                                                    {item?.createdDate
-                                                        ? dayjs(dayjs(item.createdDate).add(7, 'hour')).fromNow()
-                                                        : ''}
-                                                </p>
-                                                <FavoriteIcon className='ft-favorite-icon' />
-                                            </div>
-                                        </div>
-                                    );
-                                })}
-                            </>
+                        {postDetail?.comments && postDetail.comments.length > 0 ? (
+                            postDetail.comments.map((item, index) => (
+                                <div key={item.postCommentId || index} className="feedback-item">
+                                    <h4 className="ft-name">{item.fullName}</h4>
+                                    <p className="ft-content">{item.content}</p>
+                                    <div className="ft-info">
+                                        <p className="ft-time">
+                                            {item?.createdDate ? dayjs(item.createdDate).fromNow() : ""}
+                                        </p>
+                                        <FavoriteIcon className="ft-favorite-icon" />
+                                    </div>
+                                </div>
+                            ))
+                        ) : (
+                            <p>Không có bình luận</p>
                         )}
                     </div>
+
                 </>
             )}
-
-            {user && (user.roleId === 1 || user.roleId === 2) && (
-                <>
-                    {post.status === "Approved" && (
-                        <>
-                            <div className="pcr3">
-                                <div className="pcr3c1">
-                                    <FarvoriteIcon className="pcr3-icon" />
-                                    <CommentIcon className="pcr3-icon" />
-                                </div>
-                                <div className="pcr3c2">
-                                    <p>0 lượt thích</p>
-                                    <div className="dot"></div>
-                                    <p>0 bình luận</p>
-                                </div>
-                            </div>
-                            <div className="pcr4"></div>
-                        </>
-                    )}
-                    {post.status === "Pending" && (
-                        <div className="pcr3">
-                            <button className="approve-btn" onClick={() => handleApprovePost({ postId: post.postId })}>Xét duyệt</button>
-                            <button className="reject-btn" onClick={() => handleRejectPost(post.postId)}>Từ chối</button>
-                        </div>
-                    )}
-                </>
+            {postDetail && postDetail.status === "Rejected" && (
+                <div className="pcr5">
+                    <div className="feedback-item">
+                        <h3>Lý do bị từ chối</h3>
+                        <p className="ft-content">
+                            {postDetail.rejectComment || "Không có lý do"}
+                        </p>
+                    </div>
+                </div>
             )}
-
-            <RejectPostModal isOpen={isRejectPostModalOpen} setIsOpen={setIsRejectPostModalOpen} selectedRejectPost={selectedRejectPost} />
         </div>
     );
 };

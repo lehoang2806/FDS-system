@@ -39,8 +39,6 @@ const DetailCampaignPage: React.FC = () => {
     const registerReceivers = useAppSelector(selectGetAllRegisterReceivers);
     const currentFeedbackCampaign = useAppSelector(selectGetAllFeedbackCampaign);
 
-    console.log(currentCampaign)
-
     // States
     const [activeTab, setActiveTab] = useState<"mota" | "dangky">("mota");
     const [selectedImage, setSelectedImage] = useState(currentCampaign?.images?.[0] || "");
@@ -105,7 +103,7 @@ const DetailCampaignPage: React.FC = () => {
             dispatch(getCampaignByIdApiThunk(id)).unwrap(),
             dispatch(getFeedbackCampaignApiThunk(id)).unwrap(),
         ])
-            .catch((error) => console.error("Error loading campaign data:", error))
+            .catch((_) => {})
             .finally(() => {
                 setTimeout(() => dispatch(setLoading(false)), 1000);
             });
@@ -357,15 +355,15 @@ const DetailCampaignPage: React.FC = () => {
                                 <h3>Thông tin người vận động</h3>
                                 <div className="dcscr1c2r3-info">
                                     <div className="dcscr1c2r3-info-c1">
-                                        <img src={AvatarIcon} className='dcscr1c2r3-info-avatar'/>
+                                        <img src={AvatarIcon} className='dcscr1c2r3-info-avatar' />
                                     </div>
                                     <div className="dcscr1c2r3-info-c2">
-                                        <p className="name">Tuấn</p>
+                                        <p className="name">{currentCampaign?.fullName}</p>
                                         <p className="tag">{currentCampaign?.typeAccount === "Organization Donor" ? "Tổ chức" : "Cá nhân"}</p>
                                     </div>
                                 </div>
                                 <div className="dcscr1c2r3-email">
-                                    <MailIcon className='dcscr1c2r3-icon'/><p className="email">tuanpcl@gmail.com</p>
+                                    <MailIcon className='dcscr1c2r3-icon' /><p className="email">{currentCampaign?.email}</p>
                                 </div>
                             </div>
                             <div className="dcscr1c2r1">

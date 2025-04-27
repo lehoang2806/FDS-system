@@ -1,10 +1,9 @@
 import { selectGetAllPosts, selectGetProfileUser, selectUserLogin } from "@/app/selector";
 import { useAppDispatch, useAppSelector } from "@/app/store";
-import { Post } from "@/components/Elements"
+import { ApprovedPost } from "@/components/Elements"
 import { setLoading } from "@/services/app/appSlice";
 import { getAllPostsApiThunk } from "@/services/post/postThunk";
 import { getProfileApiThunk } from "@/services/user/userThunk";
-import { UserInfo } from "@/types/user";
 import { FC, useEffect, useState } from "react"
 
 const StaffListPostPage: FC = () => {
@@ -14,7 +13,7 @@ const StaffListPostPage: FC = () => {
     const posts = useAppSelector(selectGetAllPosts)
     const sortedPosts = [...posts].reverse();
 
-    const pendingPosts = sortedPosts.filter((post) => post.status === "Pending");
+    const approvedPosts = sortedPosts.filter((post) => post.status === "Approved");
 
     const userLogin = useAppSelector(selectUserLogin);
     const userProfile = useAppSelector(selectGetProfileUser);
@@ -50,25 +49,12 @@ const StaffListPostPage: FC = () => {
                         >
                             Tất cả
                         </div>
-                        <div
-                            className={`slp-tab ${activeTab === "pending" ? "slp-tab-actived" : ""}`}
-                            onClick={() => setActiveTab("pending")}
-                        >
-                            Chờ xét duyệt
-                        </div>
                     </div>
                     <div className="slpcr2c2">
                         {activeTab === "all" && (
                             <>
-                                {sortedPosts.map((post, index) => (
-                                    <Post key={index} post={post} isStatus user={userProfile as UserInfo}/>
-                                ))}
-                            </>
-                        )}
-                        {activeTab === "pending" && (
-                            <>
-                                {pendingPosts.map((post, index) => (
-                                    <Post key={index} post={post} isStatus user={userProfile as UserInfo}/>
+                                {approvedPosts.map((post, index) => (
+                                    <ApprovedPost key={index} post={post} userId={String(userProfile?.accountId)}/>
                                 ))}
                             </>
                         )}

@@ -4,6 +4,7 @@ import { navigateHook } from "@/routes/RouteApp"
 import { routes } from "@/routes/routeName"
 import { setLoading } from "@/services/app/appSlice"
 import { getProfileApiThunk } from "@/services/user/userThunk"
+import { formatDater } from "@/utils/helper"
 import { FC, useEffect } from "react"
 import { useParams } from "react-router-dom"
 
@@ -46,12 +47,10 @@ const AdminDetailStaffPage: FC = () => {
                     <hr />
                     <div className="adscr2r2">
                         <div className="adscr2r2c1">
-                            <h3>Trạng thái tài khoản:</h3>
-                            <p>Active</p>
                         </div>
                         <div className="adscr2r2c2">
                             <h3>Ngày tạo:</h3>
-                            <p>{createdDate}</p>
+                            <p>{formatDater(String(createdDate))}</p>
                         </div>
                     </div>
                     <hr />
