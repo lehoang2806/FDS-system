@@ -1,13 +1,6 @@
-#staff-detail-certificate-donor {
-    .sdcd-container {
-        .image-preview-container {
-            display: flex;
-            justify-content: start;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .sdcdcr1 {
+#admin-detail-news {
+    .adn-container {
+        .adncr1 {
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -27,7 +20,7 @@
                 font-weight: 400;
                 color: #29343d;
 
-                .staff-tag {
+                .admin-tag {
                     font-size: 12px;
                     font-weight: 500;
                     color: var(--main-color);
@@ -39,7 +32,7 @@
             }
         }
 
-        .sdcdcr2 {
+        .adncr2 {
             padding: 20px 30px;
             background: #fff;
             border-radius: var(--border-radius-12);
@@ -50,7 +43,7 @@
                 margin: 24px 0;
             }
 
-            .sdcdcr2r1 {
+            .adncr2r1 {
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
@@ -75,13 +68,13 @@
                 }
             }
 
-            .sdcdcr2r2 {
+            .adncr2r2 {
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
 
-                .sdcdcr2r2c1,
-                .sdcdcr2r2c2 {
+                .adncr2r2c1,
+                .adncr2r2c2 {
                     h3 {
                         font-size: 15px;
                         font-weight: 700;
@@ -97,12 +90,13 @@
                 }
             }
 
-            .sdcdcr2r3 {
+            .adncr2r3 {
                 display: flex;
                 justify-content: space-between;
                 align-items: start;
 
-                .sdcdcr2r3c1, .sdcdcr2r3c2 {
+                .adncr2r3c1,
+                .adncr2r3c2 {
                     h3 {
                         font-size: 15px;
                         font-weight: 700;
@@ -118,28 +112,17 @@
                     }
                 }
 
-                .sdcdcr2r3c2 {
+                .adncr2r3c2 {
                     text-align: end;
                 }
             }
 
-            .sdcdcr2r4 {
-                margin-bottom: 30px;
-
-                h2 {
-                    font-size: 18px;
-                    font-weight: 700;
-                    color: #29343d;
-                    margin-bottom: 20px;
-                }
-            }
-
-            .udcsc1r5 {
-                h2 {
-                    font-size: 18px;
-                    font-weight: 700;
-                    color: #29343d;
-                    margin-bottom: 20px;
+            .adncr2r4 {
+                .image-preview-container {
+                    display: flex;
+                    justify-content: start;
+                    align-items: center;
+                    gap: 20px;
                 }
             }
         }

@@ -11,7 +11,7 @@
         width: fit-content;
     }
 
-    .asrc2-nav-dropdown-content {
+    .ascr2-nav-dropdown-content {
         display: none;
 
         &.open {
@@ -19,16 +19,28 @@
         }
     }
 
+    .rotate-180 {
+        transform: rotate(90deg);
+    }
+
     &.as-expanded {
         width: 256px !important;
 
         .as-logo {
             width: 135px !important;
-            height: 70px !important;
+            height: 100px !important;
+            margin-top: 20px;
+            margin-bottom: 30px;    
         }
 
         .as-container {
             padding: 0 10px !important;
+
+            .ascr1 {
+                width: 100%;
+                display: flex;
+                justify-content: center;
+            }
 
             .ascr2 {
                 .ascr2-nav-item,
@@ -68,12 +80,12 @@
                     border-radius: 12px !important;
 
                     &:not(.nav-active):hover {
-                        background-color: rgba(99, 91, 255, 0.1) !important;
+                        background-color: rgba(255, 157, 46, 0.1) !important;
                     }
                 }
 
                 .nav-active {
-                    background-color: #635bff !important;
+                    background-color: var(--main-color) !important;
                     box-shadow: 0 17px 20px -8px #4d5bec3b !important;
 
                     .ascr2-nav-link {
@@ -93,8 +105,11 @@
             }
         }
 
-        .ascc2-arrow {
+        .ascr2-arrow {
             display: block !important;
+            width: 18px !important;
+            height: 18px !important;
+            margin-left: auto;
         }
     }
 
@@ -103,7 +118,8 @@
 
         .as-logo {
             width: 46px;
-            height: 70px;
+            height: 40px;
+            margin: 15px 0 15px;
         }
 
         .as-container {
@@ -112,7 +128,7 @@
 
         .ascr2 {
             .ascr2-nav-item,
-            .ascc2-nav-link {
+            .ascr2-nav-link {
                 display: flex;
                 justify-content: flex-start;
                 align-items: center;
@@ -129,9 +145,10 @@
                 margin-bottom: 4px;
                 border-radius: 12px;
 
-                .ascc2-nav-icon {
+                .ascr2-nav-icon {
                     width: 18px;
                     height: 18px;
+                    fill: #29343d !important;
                     margin-right: 0;
                 }
 
@@ -140,21 +157,25 @@
                 }
 
                 &:not(.nav-active):hover {
-                    background-color: rgba(99, 91, 255, 0.1);
+                    background-color: rgba(255, 157, 46, 0.1);
                 }
             }
 
             .nav-active {
-                background-color: #635bff;
+                background-color: var(--main-color);
                 box-shadow: 0 17px 20px -8px #4d5bec3b;
 
-                .ascc2-nav-link {
+                .ascr2-nav-link {
                     color: #fff;
+                }
+
+                .ascr2-nav-icon {
+                    fill: #fff !important;
                 }
             }
 
-            .ascc2-arrow {
-                display: none;
+            .ascr2-arrow {
+                display: none !important;
             }
         }
     }

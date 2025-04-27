@@ -141,7 +141,17 @@ const StaffListCampaignUserPage: FC = () => {
                             {currentCampaignsPage.map((campaign, index) => (
                                 <tr className="table-body-row" key={index}>
                                     <td className='table-body-cell'>{campaign.campaignName}</td>
-                                    <td className='table-body-cell'>{campaign.status === "Pending" ? <span className='status-pending'>Đang chờ phê duyệt</span> : campaign.status === "Approved" ? <span className='status-approve'>Đã được phê duyệt</span> : <span className='status-reject'>Đã bị từ chối</span>}</td>
+                                    <td className='table-body-cell'>
+                                        {campaign.status === "Pending" ? (
+                                            <span className='status-pending'>Đang chờ phê duyệt</span>
+                                        ) : campaign.status === "Approved" ? (
+                                            <span className='status-approve'>Đã được phê duyệt</span>
+                                        ) : campaign.status === "Rejected" ? (
+                                            <span className='status-reject'>Đã bị từ chối</span>
+                                        ) : campaign.status === "Canceled" ? (
+                                            <span className='status-reject'>Đã huỷ</span>
+                                        ) : null}
+                                    </td>
                                     <td className="table-body-cell">
                                         <button className='view-btn' onClick={() => handleToDetail(campaign.campaignId)}>Xem chi tiết</button>
                                     </td>

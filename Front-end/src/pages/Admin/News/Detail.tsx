@@ -1,51 +1,103 @@
+import { selectGetNewsById } from '@/app/selector'
+import { useAppDispatch, useAppSelector } from '@/app/store'
 import { navigateHook } from '@/routes/RouteApp'
 import { routes } from '@/routes/routeName'
-import { FC } from 'react'
+import { setLoading } from '@/services/app/appSlice'
+import { getNewsByIdApiThunk } from '@/services/news/newsThunk'
+import { formatDater } from '@/utils/helper'
+import { FC, useEffect, useState } from 'react'
+import Lightbox from 'react-awesome-lightbox'
+import { useParams } from 'react-router-dom'
 
 const AdminDetailNewsPage: FC = () => {
-    return (
-        <section id="admin-detail-staff" className="admin-section">
-            <div className="admin-container ads-container">
-                <div className="adscr1">
-                    <h1>News</h1>
-                    <p>Dashboard<span className="admin-tag">Detail News</span></p>
-                </div>
-                <div className="adscr2">
-                    <div className="adscr2r1">
-                        <h2>#1</h2>
-                        <div className="group-btn">
-                            <button onClick={() => navigateHook(routes.admin.news.list)}>Back to list</button>
-                        </div>
-                    </div>
-                    <hr />
-                    <div className="adscr2r2">
-                        <div className="adscr2r2c1">
-                            <h3>News Status:</h3>
-                            <p>Active</p>
-                        </div>
-                        <div className="adscr2r2c2">
-                            <h3>Created Date:</h3>
-                            <p>25-02-2025</p>
-                        </div>
-                    </div>
-                    <hr />
-                    <div className="adscr2r3">
-                        <div className="adscr2r3c1">
-                            <h3>Staff Name:</h3>
-                            <p>Nguyen Van A</p>
-                            <h3>Staff Email:</h3>
-                            <p>a@gmail.com</p>
-                            <h3>Staff Phone:</h3>
-                            <p>001203031</p>
-                        </div>
-                        <div className="adscr2r3c2">
-                            <h3>Staff Address:</h3>
-                            <p>Da Nang</p>
-                            <h3>Staff Birth Day:</h3>
-                            <p>21-7-2000</p>
-                        </div>
-                    </div>
+    const { id } = useParams<{ id: string }>();
 
+    const dispatch = useAppDispatch();
+    const currentNews = useAppSelector(selectGetNewsById)
+
+    const createDate = currentNews?.createdDate && currentNews?.createdDate.split("T")[0];
+
+    useEffect(() => {
+        dispatch(setLoading(true))
+        dispatch(getNewsByIdApiThunk(String(id)))
+            .unwrap()
+            .then()
+            .catch()
+            .finally(() => {
+                setTimeout(() => {
+                    dispatch(setLoading(false))
+                }, 1000)
+            })
+    }, [dispatch, id])
+
+    const [imagePreview, setImagePreview] = useState<string[]>([]);
+    const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+
+    useEffect(() => {
+        if (currentNews?.images?.length) {
+            setImagePreview(currentNews.images);
+        } else {
+            setImagePreview([]);
+        }
+    }, [currentNews]);
+
+    return (
+        <section id="admin-detail-news" className="admin-section">
+            <div className="admin-container adn-container">
+                <div className="adncr1">
+                    <h1>Tin tức</h1>
+                    <p>Trang tổng quát<span className="admin-tag">Chi tiết tin tức</span></p>
+                </div>
+                <div className="adncr2">
+                    <div className="adncr2r1">
+                        <div className="group-btn">
+                            <button onClick={() => navigateHook(routes.admin.news.list)}>Quay lại danh sách</button>
+                        </div>
+                    </div>
+                    <hr />
+                    <div className="adncr2r2">
+                        <div className="adncr2r2c1">
+                        </div>
+                        <div className="adncr2r2c2">
+                            <h3>Ngày tạo:</h3>
+                            <p>{formatDater(String(createDate))}</p>
+                        </div>
+                    </div>
+                    <hr />
+                    <div className="adncr2r3">
+                        <div className="adncr2r3c1">
+                            <h3>Tiểu đề:</h3>
+                            <p>{currentNews?.newsTitle}</p>
+                            <h3>Mô tả:</h3>
+                            <p style={{ whiteSpace: "pre-line" }}>{currentNews?.newsDescripttion}</p>
+                            <h3>Đối tượng hỗ trợ:</h3>
+                            <p>{currentNews?.supportBeneficiaries}</p>
+                        </div>
+                    </div>
+                    <div className="adncr2r4">
+                        {imagePreview.length > 0 && (
+                            <div className="image-preview-container">
+                                {imagePreview.map((img, index) => (
+                                    <img
+                                        key={index}
+                                        src={img}
+                                        alt={`Preview ${index}`}
+                                        className="image-preview"
+                                        style={{ width: "200px", height: "200px", cursor: "pointer" }}
+                                        onClick={() => setLightboxIndex(index)} // Thêm dòng này để mở Lightbox
+                                    />
+                                ))}
+                            </div>
+                        )}
+
+                        {lightboxIndex !== null && (
+                            <Lightbox
+                                images={imagePreview.map((src) => ({ url: src }))}
+                                startIndex={lightboxIndex}
+                                onClose={() => setLightboxIndex(null)}
+                            />
+                        )}
+                    </div>
                 </div>
             </div>
         </section>

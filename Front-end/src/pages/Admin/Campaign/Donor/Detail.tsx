@@ -1,12 +1,17 @@
 import { selectCurrentCampaign, selectGetAllRegisterReceivers } from '@/app/selector';
 import { useAppDispatch, useAppSelector } from '@/app/store';
+import { AdditionalCampaignModal, RejectCampaignModal } from '@/components/Modal';
 import { navigateHook } from '@/routes/RouteApp'
 import { routes } from '@/routes/routeName'
 import { setLoading } from '@/services/app/appSlice';
-import { getCampaignByIdApiThunk } from '@/services/campaign/campaignThunk';
+import { approveCampaignApiThunk, getCampaignByIdApiThunk } from '@/services/campaign/campaignThunk';
 import { getAllRegisterReceiversApiThunk } from '@/services/registerReceive/registerReceiveThunk';
-import { FC, useEffect } from 'react'
+import { AdditionalCampaign, ApproveCampaign, RejectCampaign } from '@/types/campaign';
+import { FC, useEffect, useState } from 'react'
+import Lightbox from 'react-awesome-lightbox';
 import { useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import dayjs from "dayjs";
 
 const AdminDetailCampaignDonorPage: FC = () => {
     const { id } = useParams<{ id: string }>();
@@ -19,9 +24,28 @@ const AdminDetailCampaignDonorPage: FC = () => {
 
     const currentRegisterReceivers = registerReceivers.filter((registerReceiver) => registerReceiver.campaignId === id);
 
-    const date = currentCampaign?.receiveDate.split("T")[0];
-    const dateCreate = currentCampaign?.dateCreated.split("T")[0];
-    const time = currentCampaign?.receiveDate.split("T")[1].replace("Z", "");
+    const [selectedRejectCampaign, setSelectedRejectCampaign] = useState<RejectCampaign | null>(null);
+
+    const [selectedAdditionalCampaign, setSelectedAdditionalCampaign] = useState<AdditionalCampaign | null>(null);
+
+    const [isRejectCampaignModalOpen, setIsRejectCampaignModalOpen] = useState(false);
+
+    const [isAdditionalCampaignModalOpen, setIsAdditionalCampaignModalOpen] = useState(false);
+
+    const date = dayjs(currentCampaign?.implementationTime).format("DD/MM/YYYY");
+    const time = currentCampaign?.implementationTime.split("T")[1].replace("Z", "");
+    const dateCreate = dayjs(currentCampaign?.createdDate).format("DD/MM/YYYY");
+
+    const [imagePreview, setImagePreview] = useState<string[]>([]);
+    const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+
+    useEffect(() => {
+        if (currentCampaign?.images?.length) {
+            setImagePreview(currentCampaign.images);
+        } else {
+            setImagePreview([]);
+        }
+    }, [currentCampaign]);
 
     useEffect(() => {
         if (id) {
@@ -38,62 +62,196 @@ const AdminDetailCampaignDonorPage: FC = () => {
         }
     }, [id, dispatch])
 
+    const handleApproveCampaign = async (values: ApproveCampaign) => {
+        try {
+            await dispatch(approveCampaignApiThunk(values)).unwrap();
+            toast.success("Phê duyệt thành công");
+            dispatch(setLoading(true));
+            dispatch(getCampaignByIdApiThunk(String(id)))
+                .unwrap()
+                .catch(() => {
+                })
+                .finally(() => {
+                    setTimeout(() => {
+                        dispatch(setLoading(false));
+                    }, 1000)
+                });
+        } catch (error) {
+            console.error("Error in approval process:", error);
+            toast.error("An error occurred while approving the certificate.");
+        }
+    };
+
+
+    const handleRejectCampaign = (campaignId: string) => {
+        setSelectedRejectCampaign({ campaignId, comment: "" });
+        setIsRejectCampaignModalOpen(true);
+    };
+
+    const handleAdditionalCampaign = (campaignId: string) => {
+        setSelectedAdditionalCampaign({ campaignId, content: "" });
+        setIsAdditionalCampaignModalOpen(true);
+    };
+
     return (
         <section id="admin-detail-campaign-donor" className="admin-section">
             <div className="admin-container adcd-container">
                 <div className="adcdcr1">
-                    <h1>Donor's Campain</h1>
-                    <p>Dashboard<span className="admin-tag">Detail Donor's Campain</span></p>
+                    <h1>Chiến dịch</h1>
+                    <p>Trang tổng quát<span className="admin-tag">Chi tiết chiến dịch</span></p>
                 </div>
                 <div className="adcdcr2">
                     <div className="adcdcr2r1">
+                        <h2></h2>
                         <div className="group-btn">
-                            <button onClick={() => navigateHook(routes.admin.campaign.donor.list)}>Back to list</button>
+                            <button onClick={() => navigateHook(routes.admin.campaign.donor.list)}>Quay lại trang danh sách</button>
                         </div>
                     </div>
                     <hr />
                     <div className="adcdcr2r2">
                         <div className="adcdcr2r2c1">
-                            <h3>Campaign Status:</h3>
-                            <p>{currentCampaign?.status}</p>
+                            <h3>Trạng thái:</h3>
+                            <p>
+                                {currentCampaign?.status === "Pending" ? (
+                                    <span>Đang chờ phê duyệt</span>
+                                ) : currentCampaign?.status === "Approved" ? (
+                                    <span>Đã được phê duyệt</span>
+                                ) : currentCampaign?.status === "Rejected" ? (
+                                    <span>Đã bị từ chối</span>
+                                ) : currentCampaign?.status === "Canceled" ? (
+                                    <span>Đã huỷ</span>
+                                ) : (
+                                    <span>Không xác định</span>
+                                )}
+                            </p>
                         </div>
                         <div className="adcdcr2r2c2">
-                            <h3>Created Date:</h3>
+                            <h3>Ngày được tạo:</h3>
                             <p>{dateCreate}</p>
                         </div>
                     </div>
                     <hr />
                     <div className="adcdcr2r3">
                         <div className="adcdcr2r3c1">
-                            <h3>Campaign Name:</h3>
-                            <p>{currentCampaign?.nameCampaign}</p>
-                            <h3>Campaign Description:</h3>
-                            <p>{currentCampaign?.description}</p>
-                            <h3>Gift Quantity:</h3>
-                            <p>{currentCampaign?.giftQuantity}</p>
-                            <h3>Gift Type:</h3>
-                            <p>{currentCampaign?.giftType}</p>
+                            <h2>Thông tin chiến dịch</h2>
+                            <h3>Tên chiến dịch:</h3>
+                            <p>{currentCampaign?.campaignName}</p>
+                            <h3>Mô tả:</h3>
+                            <p style={{ whiteSpace: "pre-line" }}>{currentCampaign?.campaignDescription}</p>
+                            <h3>Loại quà tặng:</h3>
+                            <p>{currentCampaign?.typeGift}</p>
+                            <h3>Đại điểm:</h3>
+                            <p>{currentCampaign?.location}, {currentCampaign?.district}</p>
+                            <h3>Thời gian diễn ra:</h3>
+                            <p>{date} & {time}</p>
+                            <h3>Cách thực hiện:</h3>
+                            <p>{currentCampaign?.implementationMethod}</p>
+                            <h3>Loại chiến dịch:</h3>
+                            <p>{currentCampaign?.campaignType === "Limited" ? "Chiến dịch có phần quà giới hạn" : "Chiến dịch đăng ký theo nguyện vọng"}</p>
+                            {currentCampaign?.campaignType === "Limited" && (
+                                <>
+                                    <h3>Số lượng giới hạng:</h3>
+                                    <p>{currentCampaign?.limitedQuantity}</p>
+                                </>
+                            )}
+                            {currentCampaign?.campaignType === "Voluntary" && (
+                                <>
+                                    <h3>Ngày mở đăng ký:</h3>
+                                    <p>{currentCampaign?.startRegisterDate}</p>
+                                    <h3>Ngày đóng đăng ký:</h3>
+                                    <p>{currentCampaign?.endRegisterDate}</p>
+                                </>
+                            )}
                         </div>
                         <div className="adcdcr2r3c2">
-                            <h3>Receive Date:</h3>
-                            <p>{date}</p>
-                            <h3>Receive Time:</h3>
-                            <p>{time}</p>
+                            {currentCampaign?.estimatedBudget || currentCampaign?.averageCostPerGift ? (
+                                <>
+                                    <h2>Thông tin tài chính</h2>
+                                    {currentCampaign?.estimatedBudget && (
+                                        <>
+                                            <h3>Ngân sách ước tính:</h3>
+                                            <p>{currentCampaign?.estimatedBudget}</p>
+                                        </>
+                                    )}
+                                    {currentCampaign?.averageCostPerGift && (
+                                        <>
+                                            <h3>Giá trung bình mỗi phần quà:</h3>
+                                            <p>{currentCampaign?.averageCostPerGift}</p>
+                                        </>
+                                    )}
+                                </>
+                            ) : null}
+                            {currentCampaign?.sponsors || currentCampaign?.communication ? (
+                                <>
+                                    <h2>Thông tin truyền thông</h2>
+                                    {currentCampaign?.sponsors && (
+                                        <>
+                                            <h3>Nhà tài trợ:</h3>
+                                            <p>{currentCampaign?.sponsors}</p>
+                                        </>
+                                    )}
+                                    {currentCampaign?.communication && (
+                                        <>
+                                            <h3>Truyền thông:</h3>
+                                            <p>{currentCampaign?.communication}</p>
+                                        </>
+                                    )}
+                                </>
+                            ) : null}
                         </div>
                     </div>
+                    <div className="adcdcr2r4">
+                        {imagePreview.length > 0 && (
+                            <div className="image-preview-container">
+                                {imagePreview.map((img, index) => (
+                                    <img
+                                        key={index}
+                                        src={img}
+                                        alt={`Preview ${index}`}
+                                        className="image-preview"
+                                        style={{ width: "200px", height: "200px", cursor: "pointer" }}
+                                        onClick={() => setLightboxIndex(index)} // Thêm dòng này để mở Lightbox
+                                    />
+                                ))}
+                            </div>
+                        )}
+
+                        {lightboxIndex !== null && (
+                            <Lightbox
+                                images={imagePreview.map((src) => ({ url: src }))}
+                                startIndex={lightboxIndex}
+                                onClose={() => setLightboxIndex(null)}
+                            />
+                        )}
+                    </div>
+                    {currentCampaign?.status === "Pending" && (
+                        <>
+                            {currentCampaign.reviewComments && currentCampaign.reviewComments?.length > 0 && (
+                                <div className="adcdcr2r5">
+                                    <h3>Yêu cầu bổ sung thêm:</h3>
+                                    {currentCampaign.reviewComments?.map((comment, index) => (
+                                        <p key={index} style={{ whiteSpace: "pre-line" }}>{comment.content}</p>
+                                    ))}
+                                </div>
+                            )}
+                            <button className='approve-btn' onClick={() => handleApproveCampaign({ campaignId: String(id) })}>Phê duyệt</button>
+                            <button className='reject-btn' onClick={() => handleRejectCampaign(String(id))}>Từ chối</button>
+                            <button className='additional-btn' onClick={() => handleAdditionalCampaign(String(id))}>Yêu cầu bổ sung</button>
+                        </>
+                    )}
                     {currentCampaign?.status === "Approved" && (
                         <div className="adcdcr2r3">
                             <table className="table">
                                 <thead className="table-head">
                                     <tr className="table-head-row">
                                         <th className="table-head-cell">
-                                            Name Receiver
+                                            Tên người đại diện
                                         </th>
                                         <th className="table-head-cell">
-                                            Quantity
+                                            Số lượng đăng ký
                                         </th>
                                         <th className="table-head-cell">
-                                            Register Date
+                                            Thời gian đăng ký
                                         </th>
                                     </tr>
                                 </thead>
@@ -109,8 +267,16 @@ const AdminDetailCampaignDonorPage: FC = () => {
                             </table>
                         </div>
                     )}
+                    {currentCampaign?.status === "Rejected" && (
+                        <>
+                            <h3>Lý do từ chối:</h3>
+                            <p>{currentCampaign?.rejectComment}</p>
+                        </>
+                    )}
                 </div>
             </div>
+            <RejectCampaignModal isOpen={isRejectCampaignModalOpen} setIsOpen={setIsRejectCampaignModalOpen} selectedCampaign={selectedRejectCampaign} />
+            <AdditionalCampaignModal isOpen={isAdditionalCampaignModalOpen} setIsOpen={setIsAdditionalCampaignModalOpen} selectedCampaign={selectedAdditionalCampaign} />
         </section>
     )
 }
