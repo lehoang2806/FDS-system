@@ -1,5 +1,12 @@
 #staff-detail-certificate-donor {
     .sdcd-container {
+        .image-preview-container {
+            display: flex;
+            justify-content: start;
+            align-items: center;
+            gap: 20px;
+        }
+
         .sdcdcr1 {
             display: flex;
             justify-content: space-between;

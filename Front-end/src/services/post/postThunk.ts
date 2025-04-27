@@ -12,7 +12,7 @@ const LIKE_POST = "LIKE_POST";
 const UNLIKE_POST = "UNLIKE_POST";
 
 export const createPostApiThunk = createAsyncThunk<
-    ResponseFromServer<TextResponse>,
+    PostInfo,
     ActionParamPost
 >(CREATE_POST, async (payload, { rejectWithValue }) => {
     try {

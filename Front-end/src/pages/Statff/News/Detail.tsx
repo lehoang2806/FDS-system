@@ -4,13 +4,15 @@ import { navigateHook } from '@/routes/RouteApp'
 import { routes } from '@/routes/routeName'
 import { setLoading } from '@/services/app/appSlice'
 import { getNewsByIdApiThunk } from '@/services/news/newsThunk'
-import { FC, useEffect } from 'react'
+import { formatDater } from '@/utils/helper'
+import { FC, useEffect, useState } from 'react'
+import Lightbox from 'react-awesome-lightbox'
 import { useParams } from 'react-router-dom'
 
 const StaffDetailNewsPage: FC = () => {
     const { id } = useParams<{ id: string }>();
 
-    const dispatch =useAppDispatch();
+    const dispatch = useAppDispatch();
     const currentNews = useAppSelector(selectGetNewsById)
 
     const createDate = currentNews?.createdDate && currentNews?.createdDate.split("T")[0];
@@ -27,6 +29,17 @@ const StaffDetailNewsPage: FC = () => {
                 }, 1000)
             })
     }, [dispatch, id])
+
+    const [imagePreview, setImagePreview] = useState<string[]>([]);
+    const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+
+    useEffect(() => {
+        if (currentNews?.images?.length) {
+            setImagePreview(currentNews.images);
+        } else {
+            setImagePreview([]);
+        }
+    }, [currentNews]);
 
     return (
         <section id="staff-detail-news" className="staff-section">
@@ -47,7 +60,7 @@ const StaffDetailNewsPage: FC = () => {
                         </div>
                         <div className="sdncr2r2c2">
                             <h3>Ngày tạo:</h3>
-                            <p>{createDate}</p>
+                            <p>{formatDater(String(createDate))}</p>
                         </div>
                     </div>
                     <hr />
@@ -60,6 +73,30 @@ const StaffDetailNewsPage: FC = () => {
                             <h3>Đối tượng hỗ trợ:</h3>
                             <p>{currentNews?.supportBeneficiaries}</p>
                         </div>
+                    </div>
+                    <div className="sdncr2r4">
+                        {imagePreview.length > 0 && (
+                            <div className="image-preview-container">
+                                {imagePreview.map((img, index) => (
+                                    <img
+                                        key={index}
+                                        src={img}
+                                        alt={`Preview ${index}`}
+                                        className="image-preview"
+                                        style={{ width: "200px", height: "200px", cursor: "pointer" }}
+                                        onClick={() => setLightboxIndex(index)} // Thêm dòng này để mở Lightbox
+                                    />
+                                ))}
+                            </div>
+                        )}
+
+                        {lightboxIndex !== null && (
+                            <Lightbox
+                                images={imagePreview.map((src) => ({ url: src }))}
+                                startIndex={lightboxIndex}
+                                onClose={() => setLightboxIndex(null)}
+                            />
+                        )}
                     </div>
                 </div>
             </div>

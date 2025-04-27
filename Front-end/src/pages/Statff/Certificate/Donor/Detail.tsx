@@ -6,7 +6,9 @@ import { routes } from "@/routes/routeName"
 import { setLoading } from "@/services/app/appSlice";
 import { approveCertificateApiThunk, confirmUserApiThunk, getOrganizationDonorCertificateByIdApiThunk, getPersonalDonorCertificateByIdApiThunk } from "@/services/user/userThunk";
 import { ApproveCertificate, ConfirmUser, RejectCertificate, ReviewCertificate } from "@/types/user";
+import { formatDater } from "@/utils/helper";
 import { useEffect, useState } from "react";
+import Lightbox from "react-awesome-lightbox";
 import { useParams, useSearchParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
@@ -55,6 +57,16 @@ const StaffDetailDonorCertificate = () => {
         }
     }, [id, dispatch])
 
+    const [imagePreview, setImagePreview] = useState<string[]>([]);
+    const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+
+    useEffect(() => {
+        if (certificateType === "Personal" && currentPersonalDonorCertificate) {
+            setImagePreview(currentPersonalDonorCertificate.images || []);
+        } else if (certificateType === "Organization" && currentOrganizationDonorCertificate) {
+            setImagePreview(currentOrganizationDonorCertificate.images || []);
+        }
+    }, [certificateType, currentPersonalDonorCertificate, currentOrganizationDonorCertificate]);
 
     const handleApproveCertificate = async (values: ApproveCertificate, confirmValues: ConfirmUser) => {
         try {
@@ -63,7 +75,7 @@ const StaffDetailDonorCertificate = () => {
                 dispatch(approveCertificateApiThunk(values)).unwrap()
             ]);
 
-            toast.success("Approve Certificate Successfully");
+            toast.success("Phê duyệt thành công");
 
             if (certificateType === "Personal") {
                 dispatch(getPersonalDonorCertificateByIdApiThunk(String(id)));
@@ -92,26 +104,26 @@ const StaffDetailDonorCertificate = () => {
         <section id="staff-detail-certificate-donor" className="staff-section">
             <div className="staff-container sdcd-container">
                 <div className="sdcdcr1">
-                    <h1>Donor's Certificate</h1>
-                    <p>Dashboard<span className="staff-tag">Detail Donor's Certificate</span></p>
+                    <h1>Đơn xác minh</h1>
+                    <p>Dashboard<span className="staff-tag">Người tặng thực phẩm</span></p>
                 </div>
                 <div className="sdcdcr2">
                     <div className="sdcdcr2r1">
                         <div className="group-btn">
-                            <button onClick={() => navigateHook(routes.staff.certificate.donor.list)}>Back to list</button>
+                            <button onClick={() => navigateHook(routes.staff.certificate.donor.list)}>Quay lại trang danh sách</button>
                         </div>
                     </div>
                     <hr />
                     <div className="sdcdcr2r2">
                         <div className="sdcdcr2r2c1">
-                            <h3>Certificate Status:</h3>
-                            {currentPersonalDonorCertificate && certificateType === "Personal" && <p>{currentPersonalDonorCertificate.status}</p>}
-                            {currentOrganizationDonorCertificate && certificateType === "Organization" && <p>{currentOrganizationDonorCertificate.status}</p>}
+                            <h3>Trang thái:</h3>
+                            {currentPersonalDonorCertificate && certificateType === "Personal" && <p>{currentPersonalDonorCertificate?.status === "Pending" ? <span>Đang chờ phê duyệt</span> : currentPersonalDonorCertificate?.status === "Approved" ? <span>Đã được phê duyệt</span> : <span>Đã bị từ chối</span>}</p>}
+                            {currentOrganizationDonorCertificate && certificateType === "Organization" && <p>{currentOrganizationDonorCertificate?.status === "Pending" ? <span>Đang chờ phê duyệt</span> : currentOrganizationDonorCertificate?.status === "Approved" ? <span>Đã được phê duyệt</span> : <span>Đã bị từ chối</span>}</p>}
                         </div>
                         <div className="sdcdcr2r2c2">
-                            <h3>Created Date:</h3>
-                            {currentPersonalDonorCertificate && certificateType === "Personal" && <p>{currentPersonalDonorCertificateCreateDate}</p>}
-                            {currentOrganizationDonorCertificate && certificateType === "Organization" && <p>{currentOrganizationDonorCertificateCreateDate}</p>}
+                            <h3>Ngày gửi:</h3>
+                            {currentPersonalDonorCertificate && certificateType === "Personal" && <p>{formatDater(String(currentPersonalDonorCertificateCreateDate))}</p>}
+                            {currentOrganizationDonorCertificate && certificateType === "Organization" && <p>{formatDater(String(currentOrganizationDonorCertificateCreateDate))}</p>}
                         </div>
                     </div>
                     <hr />
@@ -132,15 +144,27 @@ const StaffDetailDonorCertificate = () => {
                                     <p>{currentPersonalDonorCertificate?.address}</p>
                                     <h3>Số CCCD</h3>
                                     <p>{currentPersonalDonorCertificate?.citizenId}</p>
-                                    <h3>Liên kết mạng xã hội</h3>
-                                    <p>{currentPersonalDonorCertificate?.socialMediaLink}</p>
+                                    {currentPersonalDonorCertificate && currentPersonalDonorCertificate.socialMediaLink && (
+                                        <>
+                                            <h3>Liên kết mạng xã hội</h3>
+                                            <p>{currentPersonalDonorCertificate?.socialMediaLink}</p>
+                                        </>
+                                    )}
                                 </div>
                                 <div className="sdcdcr2r3c2">
                                     <h2>Thông tin tài chính</h2>
-                                    <h3>Thu nhập chính</h3>
-                                    <p>{currentPersonalDonorCertificate?.mainSourceIncome}</p>
-                                    <h3>Thu nhập hàng tháng</h3>
-                                    <p>{currentPersonalDonorCertificate?.monthlyIncome}</p>
+                                    {currentPersonalDonorCertificate && currentPersonalDonorCertificate?.mainSourceIncome && (
+                                        <>
+                                            <h3>Thu nhập chính</h3>
+                                            <p>{currentPersonalDonorCertificate?.mainSourceIncome}</p>
+                                        </>
+                                    )}
+                                    {currentPersonalDonorCertificate && currentPersonalDonorCertificate?.monthlyIncome && (
+                                        <>
+                                            <h3>Thu nhập hàng tháng</h3>
+                                            <p>{currentPersonalDonorCertificate?.monthlyIncome}</p>
+                                        </>
+                                    )}
                                 </div>
                             </>
                         )}
@@ -185,11 +209,28 @@ const StaffDetailDonorCertificate = () => {
                             <hr />
                             <div className="sdcdcr2r4">
                                 <h2>Hình ảnh xác minh</h2>
-                                {currentPersonalDonorCertificate?.images.map((image, index) => (
-                                    <div key={index}>
-                                        <img src={image} alt={`Image ${index}`} style={{ width: '200px', height: '200px' }} />
+                                {imagePreview.length > 0 && (
+                                    <div className="image-preview-container">
+                                        {imagePreview.map((img, index) => (
+                                            <img
+                                                key={index}
+                                                src={img}
+                                                alt={`Preview ${index}`}
+                                                className="image-preview"
+                                                style={{ width: "200px", height: "200px", cursor: "pointer" }}
+                                                onClick={() => setLightboxIndex(index)} // Thêm dòng này để mở Lightbox
+                                            />
+                                        ))}
                                     </div>
-                                ))}
+                                )}
+
+                                {lightboxIndex !== null && (
+                                    <Lightbox
+                                        images={imagePreview.map((src) => ({ url: src }))}
+                                        startIndex={lightboxIndex}
+                                        onClose={() => setLightboxIndex(null)}
+                                    />
+                                )}
                             </div>
                         </>
                     )}
@@ -248,11 +289,28 @@ const StaffDetailDonorCertificate = () => {
                             <hr />
                             <div className="sdcdcr2r4">
                                 <h2>Hình ảnh xác minh</h2>
-                                {currentOrganizationDonorCertificate?.images.map((image, index) => (
-                                    <div key={index}>
-                                        <img src={image} alt={`Image ${index}`} style={{ width: '200px', height: '200px' }} />
+                                {imagePreview.length > 0 && (
+                                    <div className="image-preview-container">
+                                        {imagePreview.map((img, index) => (
+                                            <img
+                                                key={index}
+                                                src={img}
+                                                alt={`Preview ${index}`}
+                                                className="image-preview"
+                                                style={{ width: "200px", height: "200px", cursor: "pointer" }}
+                                                onClick={() => setLightboxIndex(index)} // Thêm dòng này để mở Lightbox
+                                            />
+                                        ))}
                                     </div>
-                                ))}
+                                )}
+
+                                {lightboxIndex !== null && (
+                                    <Lightbox
+                                        images={imagePreview.map((src) => ({ url: src }))}
+                                        startIndex={lightboxIndex}
+                                        onClose={() => setLightboxIndex(null)}
+                                    />
+                                )}
                             </div>
                         </>
                     )}
@@ -290,14 +348,14 @@ const StaffDetailDonorCertificate = () => {
                                                     handleApproveCertificate({ certificateId: currentOrganizationDonorCertificate?.organizationDonorCertificateId, type: 2 }, { accountId: currentOrganizationDonorCertificate?.donorId, type: "2" });
                                                 }}
                                             >
-                                                Approve
+                                                Phê duyệt
                                             </button>
                                             <button className="reject-btn" onClick={() => {
                                                 handleRejectCertificate(currentOrganizationDonorCertificate.organizationDonorCertificateId, 2);
                                             }}>
-                                                Reject
+                                                Từ chối
                                             </button>
-                                            <button className='additional-btn' onClick={() => handleAdditionalCertificate(currentOrganizationDonorCertificate.organizationDonorCertificateId, 2)}>Additional</button>
+                                            <button className='additional-btn' onClick={() => handleAdditionalCertificate(currentOrganizationDonorCertificate.organizationDonorCertificateId, 2)}>Yêu cầu bổ sung</button>
                                         </div>
                                     </div>
                                 </>

@@ -1,6 +1,6 @@
 import { selectGetAllUser } from "@/app/selector"
 import { useAppDispatch, useAppSelector } from "@/app/store"
-import { ActiveIcon, TotalIcon } from "@/assets/icons"
+import { ActiveIcon, ArrowLeft, ArrowRight, TotalIcon } from "@/assets/icons"
 import { Loading } from "@/components/Elements"
 import { navigateHook } from "@/routes/RouteApp"
 import { routes } from "@/routes/routeName"
@@ -43,10 +43,29 @@ const StaffListUserPage = () => {
             });
     }, [dispatch]);
 
-    const handleToDetail = (campaignId: string) => {
-        const url = routes.staff.user.detail.replace(":id", campaignId);
+    const handleToDetail = (UserId: string) => {
+        const url = routes.staff.user.detail.replace(":id", UserId);
         return navigateHook(url)
     }
+
+    const ITEMS_PER_PAGE = 5;
+
+    const [currentUserPage, setCurrentUserPage] = useState(1);
+
+    const totalUserPages = Math.ceil(filteredUsers.length / ITEMS_PER_PAGE);
+
+    const currentUsersPage = filteredUsers.slice(
+        (currentUserPage - 1) * ITEMS_PER_PAGE,
+        currentUserPage * ITEMS_PER_PAGE
+    );
+
+    const onPreviousUserPage = () => {
+        if (currentUserPage > 1) setCurrentUserPage(currentUserPage - 1);
+    };
+
+    const onNextUserPage = () => {
+        if (currentUserPage < totalUserPages) setCurrentUserPage(currentUserPage + 1);
+    };
 
     return (
         <section id="staff-list-user" className="staff-section">
@@ -107,7 +126,7 @@ const StaffListUserPage = () => {
                             </tr>
                         </thead>
                         <tbody className="table-body">
-                            {filteredUsers.map((row, index) => (
+                            {currentUsersPage.map((row, index) => (
                                 <tr key={index} className="table-body-row">
                                     <td className='table-body-cell'>{row.email}</td>
                                     <td className='table-body-cell'>{row.fullName}</td>
@@ -120,6 +139,24 @@ const StaffListUserPage = () => {
                             ))}
                         </tbody>
                     </table>
+                    <div className='paginator'>
+                        <div className="p-container">
+                            <div className="pcc2">{currentUserPage} of {totalUserPages}</div>
+                            <div className="pcc3">
+                                <button disabled={currentUserPage === 1} onClick={onPreviousUserPage}>
+                                    <ArrowLeft className="pcc3-icon" />
+                                </button>
+                                <button
+                                    disabled={currentUserPage >= totalUserPages}
+                                    onClick={onNextUserPage}
+                                >
+                                    <ArrowRight
+                                        className={`pcc3-icon ${currentUserPage >= totalUserPages ? 'pcc3-icon-disabled' : ''}`}
+                                    />
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
