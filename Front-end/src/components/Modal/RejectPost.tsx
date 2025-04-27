@@ -38,7 +38,6 @@ const RejectPostModal: FC<RejectPostModalProps> = ({ isOpen, setIsOpen, selected
 
         } catch (error) {
             toast.error("An error occurred while rejecting the certificate.");
-            console.error(error);
         }
     };
 

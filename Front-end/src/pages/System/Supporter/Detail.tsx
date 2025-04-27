@@ -1,5 +1,4 @@
 import { SupporterAvatar, SupporterImage } from "@/assets/images";
-import { CampaignCard } from "@/components/Card";
 import { useState } from "react";
 
 const DetailSupporterPage = () => {
@@ -60,9 +59,6 @@ const DetailSupporterPage = () => {
                         )}
                         {activeTab === "chiendich" && (
                             <div className="dsscr2-campaign">
-                                <CampaignCard />
-                                <CampaignCard />
-                                <CampaignCard />
                             </div>
                         )}
                     </div>

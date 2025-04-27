@@ -46,7 +46,6 @@ export const getFeedbackDetailApiThunk = createAsyncThunk<
 >(GET_FEEDBACK_DETAIL, async (payload, { rejectWithValue }) => {
     try {
         const response = await getFeedbackDetailApi(payload);
-        console.log(response)
         return response;
     } catch (err: any) {
         return rejectWithValue({

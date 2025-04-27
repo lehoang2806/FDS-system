@@ -1,4 +1,5 @@
 import { FC } from "react"
+import { SubcriberProps } from "./type"
 
 const Subscriber: FC<SubcriberProps> = ({ registerReceiver }) => {
     return (

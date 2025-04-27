@@ -103,7 +103,7 @@ const DetailCampaignPage: React.FC = () => {
             dispatch(getCampaignByIdApiThunk(id)).unwrap(),
             dispatch(getFeedbackCampaignApiThunk(id)).unwrap(),
         ])
-            .catch((error) => console.error("Error loading campaign data:", error))
+            .catch((_) => {})
             .finally(() => {
                 setTimeout(() => dispatch(setLoading(false)), 1000);
             });

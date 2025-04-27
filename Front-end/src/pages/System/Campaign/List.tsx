@@ -25,8 +25,6 @@ const ListCampaignPage: FC = () => {
 
     const approvedCampaigns = sortedCampaigns.filter((campaign) => campaign.status === "Approved");
 
-    console.log(approvedCampaigns)
-
     const personalCampaigns = approvedCampaigns.filter((campaign) => campaign.typeAccount === "Personal Donor");
 
     const organizationCampaigns = approvedCampaigns.filter((campaign) => campaign.typeAccount === "Organization Donor");

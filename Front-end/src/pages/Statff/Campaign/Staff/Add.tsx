@@ -13,6 +13,7 @@ import { get } from "lodash";
 import { format } from "date-fns";
 import { setLoading } from "@/services/app/appSlice";
 import Lightbox from "react-awesome-lightbox";
+import { AddCampaign } from "@/types/campaign";
 
 const StaffAddCampaignStaffPage: FC = () => {
     const dispatch = useAppDispatch();
@@ -34,6 +35,7 @@ const StaffAddCampaignStaffPage: FC = () => {
         campaignType: "",
         startRegisterDate: "",
         endRegisterDate: "",
+        district: "",
         images: [],
     };
 
@@ -126,8 +128,7 @@ const StaffAddCampaignStaffPage: FC = () => {
                 const base64Images = await Promise.all(base64Promises);
                 setFieldValue("images", base64Images); // 🔹 Lưu danh sách ảnh vào Formik
                 setImagePreview(base64Images); // 🔹 Cập nhật ảnh xem trước
-            } catch (error) {
-                console.error("Error converting images:", error);
+            } catch (_) {
             }
         }
     };

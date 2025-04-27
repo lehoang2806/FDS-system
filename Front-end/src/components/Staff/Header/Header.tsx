@@ -33,12 +33,6 @@ const StaffHeader: FC = () => {
             objectId: notification.objectId || notification.ojectId,
         };
     
-        if (!correctedNotification.notificationId) {
-            console.warn("⚠️ Missing notificationId!", correctedNotification);
-        }
-    
-        console.log("Corrected notification:", correctedNotification);
-    
         dispatch(addNotification(correctedNotification));
     
         // 👉 Lưu nội dung cần hiện toast vào localStorage
@@ -85,7 +79,6 @@ const StaffHeader: FC = () => {
 
 
     const markAsRead = (notificationId: string) => {
-        console.log(notificationId)
         // Cập nhật UI ngay lập tức
         dispatch(
             setNotifications(
@@ -113,7 +106,6 @@ const StaffHeader: FC = () => {
                 );
             })
             .catch((error) => {
-                console.error("Error marking notification as read:", error);
                 // Hiển thị thông báo lỗi nếu có
                 toast.error(error?.errorMessage || "Có lỗi xảy ra khi đánh dấu thông báo là đã đọc.");
             });
@@ -146,22 +138,18 @@ const StaffHeader: FC = () => {
 
     const handleToDetailUserCampaign = (campaignId?: string) => {
         if (!campaignId) {
-            console.error("Campaign ID is undefined!");
             return;
         }
         const url = routes.staff.campaign.user.detail.replace(":id", campaignId);
-        console.log("Navigating to:", url);
         navigateHook(url);
     };
 
     const handleToDetailDonorCertificate = (certificateId?: string, type?: string) => {
         if (!certificateId) {
-            console.error("❌ Certificate ID is required!");
             return;
         }
 
         if (!type) {
-            console.error("❌ Type is required!");
             return;
         }
 
@@ -173,7 +161,6 @@ const StaffHeader: FC = () => {
 
     const handleToDetailRecipientCertificate = (certificateId?: string) => {
         if (!certificateId) {
-            console.error("❌ Certificate ID is required!");
             return;
         }
 

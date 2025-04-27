@@ -84,7 +84,6 @@ const StaffDetailDonorCertificate = () => {
                 dispatch(getOrganizationDonorCertificateByIdApiThunk(String(id)));
             }
         } catch (error) {
-            console.error("Error in approval process:", error);
             toast.error("An error occurred while approving the certificate.");
         }
     };
