@@ -45,6 +45,54 @@ namespace FDSSYSTEM.Controllers
             return Ok(new { token, UserInfo = user.Adapt<UserProfileDto>() });
         }
 
+        [HttpPost("logingoogle")]
+        public async Task<IActionResult> LoginGoogle([FromBody] LoginGoogleDto loginGoogleRequest)
+        {
+            if (string.IsNullOrEmpty(loginGoogleRequest.IdToken))
+                return Unauthorized("Invalid credentials.");
+            var payload = await _userService.VerifyGoogleTokenAsync(loginGoogleRequest.IdToken);
+            if (payload == null)
+                return Unauthorized("Invalid credentials.");
+            if (string.IsNullOrEmpty(payload.Email))
+                return Unauthorized("Invalid credentials.");
+            var user = await _userService.GetUserByUsernameAsync(payload.Email);
+            if (user == null)
+            {
+                //Lần đầu login cần yêu cầu tạo account với RoleId và Phone
+                if (loginGoogleRequest.RoleId == null || (loginGoogleRequest.RoleId != 3 && loginGoogleRequest.RoleId != 4))
+                {
+                    //trương hợp chưa có roleid hoặc role không đúng (chỉ nhận roleid 3 hoặc4)
+                    return Ok(new LoginResponseDto());
+                }
+                else
+                {
+                    //có role tạo account mới
+                    var registerUserDto = new RegisterUserDto
+                    {
+                        FullName = payload.Name ?? payload.Email,
+                        UserEmail = payload.Email,
+                        Password = Guid.NewGuid().ToString(), //Tạo mật khẩu radom, nếu muốn đặt lại mật khẩu thì chọn quên password
+                        RoleId = loginGoogleRequest.RoleId ?? 0,
+                        Phone = loginGoogleRequest.PhoneNumber ?? ""
+                    };
+                    await _userService.CreateUserAsync(registerUserDto, false, true);
+
+                    //sau khi tạo xong thì lấy lại thông tin user
+                    user = await _userService.GetUserByUsernameAsync(payload.Email);
+                }
+            }
+
+            var role = await _roleService.GetRoleById(user.RoleId);
+            var token = _jwtHelper.GenerateToken(new UserTokenDto
+            {
+                Id = user.AccountId,
+                UserEmail = user.Email,
+                Role = role.RoleName
+            });
+
+            return Ok(new LoginResponseDto { Token = token, UserInfo = user.Adapt<UserProfileDto>() });
+        }
+
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterUserDto user)
         {
@@ -58,7 +106,7 @@ namespace FDSSYSTEM.Controllers
 
             try
             {
-                await _userService.CreateUserAsync(user, true);
+                await _userService.CreateUserAsync(user, true,false);
                 return Ok("User registered successfully.");
             }
             catch (Exception ex)

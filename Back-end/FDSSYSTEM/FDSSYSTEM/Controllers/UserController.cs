@@ -397,7 +397,11 @@ namespace FDSSYSTEM.Controllers
             try
             {
                 var donors = await _userService.GetAllDonorConfirmed();
-                return Ok(donors.Adapt<List<DonorForSupportDto>>());
+                var config = new TypeAdapterConfig();
+                config.NewConfig<Account, DonorForSupportDto>()
+                     .Map(dest => dest.DonorId, src => src.AccountId);
+
+                return Ok(donors.Adapt<List<DonorForSupportDto>>(config));
             }
             catch (Exception ex)
             {

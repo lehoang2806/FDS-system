@@ -3,6 +3,7 @@ using FDSSYSTEM.DTOs;
 using FDSSYSTEM.DTOs.Certificates;
 using FDSSYSTEM.DTOs.Users;
 using FDSSYSTEM.Models;
+using Google.Apis.Auth;
 namespace FDSSYSTEM.Services.UserService;
 
 public interface IUserService
@@ -11,7 +12,7 @@ public interface IUserService
     Task AddUser(Account account);
     Task AddStaff(AddStaffDto staffDto);
     public Task<Account> GetUserByUsernameAsync(string userEmail);
-    public Task CreateUserAsync(RegisterUserDto account, bool verifyOtp);
+    public Task CreateUserAsync(RegisterUserDto account, bool verifyOtp, bool isGoogleAccount);
     public bool VerifyPassword(string enteredPassword, string storedHash);
     Task Confirm(ConfirmUserDto confirmUserDto);
 
@@ -50,5 +51,5 @@ public interface IUserService
     Task ResetPassword (ResetPasswordDto resetPassword);
     Task<List<Account>> GetAllDonorConfirmed();
     Task<List<Account>> GetAllRecipientConfirmed();
-    
+    Task<GoogleJsonWebSignature.Payload> VerifyGoogleTokenAsync(string idToken);
 }
