@@ -197,7 +197,7 @@ const StaffDetailCampaignUserPage: FC = () => {
                                         src={img}
                                         alt={`Preview ${index}`}
                                         className="image-preview"
-                                        style={{ width: "100px", height: "100px", cursor: "pointer" }}
+                                        style={{ width: "200px", height: "200px", cursor: "pointer" }}
                                         onClick={() => setLightboxIndex(index)} // Thêm dòng này để mở Lightbox
                                     />
                                 ))}

@@ -95,7 +95,8 @@
                 justify-content: space-between;
                 align-items: start;
 
-                .sdncr2r3c1, .sdncr2r3c2 {
+                .sdncr2r3c1,
+                .sdncr2r3c2 {
                     h3 {
                         font-size: 15px;
                         font-weight: 700;
@@ -113,6 +114,15 @@
 
                 .sdncr2r3c2 {
                     text-align: end;
+                }
+            }
+
+            .sdncr2r4 {
+                .image-preview-container {
+                    display: flex;
+                    justify-content: start;
+                    align-items: center;
+                    gap: 20px;
                 }
             }
         }

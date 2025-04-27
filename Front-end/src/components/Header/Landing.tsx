@@ -58,33 +58,36 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
     const [isNotifOpen, setIsNotifOpen] = useState(false);
     const notifications = useAppSelector(selectNotifications)
 
-    console.log(notifications)
-
     const handleNewNotification = (notification: any) => {
-        console.log("Received notification:", notification);
-
         const correctedNotification: NotificationDto = {
             ...notification,
             notificationId: notification.notificationId || notification.id || notification._id,
-            ojectId: notification.ojectId || notification.ojectId,
+            objectId: notification.objectId || notification.ojectId,
         };
-
+    
         if (!correctedNotification.notificationId) {
             console.warn("⚠️ Missing notificationId!", correctedNotification);
         }
-
+    
         console.log("Corrected notification:", correctedNotification);
-
+    
         dispatch(addNotification(correctedNotification));
-
-        toast.info(`🔔 ${correctedNotification.content}`);
-
-        // 👉 Reload trang sau khi nhận thông báo (ví dụ sau 1 giây)
-        setTimeout(() => {
-            window.location.reload();
-        }, 1000); // Bạn có thể điều chỉnh thời gian delay
+    
+        // 👉 Lưu nội dung cần hiện toast vào localStorage
+        localStorage.setItem("pendingToastMessage", correctedNotification.content);
+    
+        // 👉 Reload trang
+        window.location.reload();
     };
 
+    useEffect(() => {
+        const pendingToast = localStorage.getItem("pendingToastMessage");
+        if (pendingToast) {
+            toast.info(`🔔 ${pendingToast}`);
+            localStorage.removeItem("pendingToastMessage"); // Xóa để tránh toast lặp lại
+        }
+    }, []);    
+    
     useEffect(() => {
         if (!isAuthenticated) return;
 

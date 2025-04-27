@@ -6,6 +6,7 @@ import { setLoading } from "@/services/app/appSlice";
 import { getProfileApiThunk } from "@/services/user/userThunk";
 import { FC, useEffect } from "react"
 import { useParams } from "react-router-dom";
+import { format } from 'date-fns';
 
 const StaffDetailUserPage: FC = () => {
     const { id } = useParams<{ id: string }>();
@@ -20,16 +21,16 @@ const StaffDetailUserPage: FC = () => {
         if (id) {
             dispatch(setLoading(true))
             dispatch(getProfileApiThunk(id))
-            .unwrap()
-            .then(() => {
-            })
-            .catch(() => {
-            })
-            .finally(() => {
-                setTimeout(() => {
-                    dispatch(setLoading(false))
-                },1000)
-            })
+                .unwrap()
+                .then(() => {
+                })
+                .catch(() => {
+                })
+                .finally(() => {
+                    setTimeout(() => {
+                        dispatch(setLoading(false))
+                    }, 1000)
+                })
         }
     }, [id])
 
@@ -55,7 +56,9 @@ const StaffDetailUserPage: FC = () => {
                         </div>
                         <div className="sducr2r2c2">
                             <h3>Ngày đăng ký:</h3>
-                            <p>{createdDate}</p>
+                            <p>
+                                {createdDate ? format(new Date(createdDate), 'dd/MM/yyyy') : ''}
+                            </p>
                         </div>
                     </div>
                     <hr />

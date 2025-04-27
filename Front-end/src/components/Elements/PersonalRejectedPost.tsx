@@ -15,7 +15,7 @@ const PersonalRejectedPost: FC<PersonalRejectedPostProps> = ({ post }) => {
             <div className="pcr1">
                 <div className="pcr1c2">
                     <h5 className="p-name">
-                        {post.posterName} - <span className='status-approve'>Đã được phê duyệt</span>
+                        {post.posterName} - <span className='status-reject'>Đã bị từu chối</span>
                     </h5>
                     <p className="p-time">
                         {post?.publicDate ? dayjs(post.publicDate).fromNow() : ''}
