@@ -17,6 +17,7 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import 'dayjs/locale/vi';
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
+import { LogoLanding } from "@/assets/images"
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -255,7 +256,7 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
         <header id="header-landing">
             <div className="hl-container">
                 <div className="hlcc1">
-                    <h1 onClick={() => navigateHook(routes.user.home)}>FDS System</h1>
+                    <img src={LogoLanding} onClick={() => navigateHook(routes.user.home)}/>
                 </div>
                 <div className="hlcc2">
                     <ul className="nav-list">

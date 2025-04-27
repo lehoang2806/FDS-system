@@ -1,5 +1,5 @@
 #header-landing {
-    padding: 18px 20px;
+    padding: 15px 20px;
     border-bottom: 1px solid var(--main-gray);
 
     .hl-container {
@@ -10,7 +10,10 @@
         align-items: center;
 
         .hlcc1 {
-            font-size: 14px;
+            img {
+                width: 230px;
+                height: 70px;
+            }
         }
 
         .hlcc2 {

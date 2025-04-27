@@ -1,28 +1,46 @@
 import { selectGetAllCampaign } from '@/app/selector'
 import { useAppDispatch, useAppSelector } from '@/app/store'
-import { ActiveIcon, BlockIcon, TotalIcon } from '@/assets/icons'
-import { RejectCampaignModal, RejectReasonModal } from '@/components/Modal'
+import { ActiveIcon, ArrowLeft, ArrowRight, BlockIcon, TotalIcon } from '@/assets/icons'
 import { navigateHook } from '@/routes/RouteApp'
 import { routes } from '@/routes/routeName'
 import { setLoading } from '@/services/app/appSlice'
-import { approveCampaignApiThunk, getAllCampaignApiThunk } from '@/services/campaign/campaignThunk'
+import { getAllCampaignApiThunk } from '@/services/campaign/campaignThunk'
 import { FC, useEffect, useState } from 'react'
-import { toast } from 'react-toastify'
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+import 'dayjs/locale/vi';
+import { Loading } from '@/components/Elements'
+
+dayjs.locale('vi');
+dayjs.extend(relativeTime);
 
 const AdminListCampaignStaffPage: FC = () => {
     const dispatch = useAppDispatch()
 
     const campaigns = useAppSelector(selectGetAllCampaign)
+    const sortedCampaigns = [...campaigns].reverse();
+    const staffCampaigns = sortedCampaigns.filter((campaign) => campaign.typeAccount === "Staff");
 
-    const staffCampaigns = campaigns.filter((campaign) => campaign.typeAccount === "Staff");
+    const rejectedCampaigns = staffCampaigns.filter(campaign => campaign.status === "Rejected")
 
-    const [selectedCampaign, setSelectedCampaign] = useState<RejectCampaign | null>(null);
+    const approvedCampaigns = staffCampaigns.filter(campaign => campaign.status === "Approved")
 
-    const [selectedReason, setSelectReason] = useState<string | null>('');
+    const pendingCampaigns = staffCampaigns.filter(campaign => campaign.status === "Pending")
 
-    const [isRejectCampaignModalOpen, setIsRejectCampaignModalOpen] = useState(false);
+    const [filterStatus, setFilterStatus] = useState<string | null>(null);
+    const [isFiltering, setIsFiltering] = useState(false);
 
-    const [isRejectReasonModalOpen, setIsRejectReasonModalOpen] = useState(false);
+    const handleFilter = (status: string | null) => {
+        setIsFiltering(true);
+        setTimeout(() => {
+            setFilterStatus(status);
+            setIsFiltering(false);
+        }, 500);
+    };
+
+    const filteredCampaigns = filterStatus
+        ? staffCampaigns.filter((c) => c.status === filterStatus)
+        : staffCampaigns;
 
     useEffect(() => {
         dispatch(setLoading(true));
@@ -36,66 +54,73 @@ const AdminListCampaignStaffPage: FC = () => {
             });
     }, [dispatch]);
 
-    const handleApproveCampaign = async (values: ApproveCampaign) => {
-        try {
-            await dispatch(approveCampaignApiThunk(values)).unwrap();
-            toast.success("Approve Campaign Successfully");
-            dispatch(getAllCampaignApiThunk());
-        } catch (error) {
-            console.error("Error in approval process:", error);
-            toast.error("An error occurred while approving the certificate.");
-        }
-    };
-
-
-    const handleRejectCampaign = (campaignId: string) => {
-        setSelectedCampaign({ campaignId, comment: "" });
-        setIsRejectCampaignModalOpen(true);
-    };
-
-    const handleViewReason = (comment: string | null) => {
-        setSelectReason(comment);
-        setIsRejectReasonModalOpen(true);
-    };
-
     const handleToDetail = (campaignId: string) => {
         const url = routes.admin.campaign.staff.detail.replace(":id", campaignId);
         return navigateHook(url)
     }
 
+    const ITEMS_PER_PAGE = 5;
+
+    const [currentCampaignPage, setCurrentCampaignPage] = useState(1);
+
+    const totalCampaignPages = Math.ceil(filteredCampaigns.length / ITEMS_PER_PAGE);
+
+    const currentCampaignsPage = filteredCampaigns.slice(
+        (currentCampaignPage - 1) * ITEMS_PER_PAGE,
+        currentCampaignPage * ITEMS_PER_PAGE
+    );
+
+    const onPreviousCampaignPage = () => {
+        if (currentCampaignPage > 1) setCurrentCampaignPage(currentCampaignPage - 1);
+    };
+
+    const onNextCampaignPage = () => {
+        if (currentCampaignPage < totalCampaignPages) setCurrentCampaignPage(currentCampaignPage + 1);
+    };
+
     return (
         <section id="admin-list-campaign-staff" className="admin-section">
+            {isFiltering && <Loading loading={true} isFullPage />}
             <div className="admin-container alcs-container">
                 <div className="alcscr1">
-                    <h1>Staff's Campain</h1>
-                    <p>Dashboard<span className="admin-tag">Staff's Campaign</span></p>
+                    <h1>Chiến dịch</h1>
+                    <p>Trang tổng quan<span className="admin-tag">Nhân viên</span></p>
                 </div>
                 <div className="alcscr2">
-                    <div className="admin-tab admin-tab-1">
+                    <div className="admin-tab admin-tab-1" onClick={() => handleFilter(null)}>
                         <div className="at-figure at-figure-1">
                             <TotalIcon className="at-icon" />
                         </div>
                         <div className="at-info">
-                            <h3>Total</h3>
-                            <p>7 Campaigns</p>
+                            <h3>Tất cả</h3>
+                            <p>{staffCampaigns.length} Chiến dịch</p>
                         </div>
                     </div>
-                    <div className="admin-tab admin-tab-2">
+                    <div className="admin-tab admin-tab-2" onClick={() => handleFilter("Rejected")}>
                         <div className="at-figure at-figure-2">
                             <BlockIcon className="at-icon" />
                         </div>
                         <div className="at-info">
-                            <h3>Reject</h3>
-                            <p>7 Campaigns</p>
+                            <h3>Bị từ chối</h3>
+                            <p>{rejectedCampaigns.length} Chiến dịch</p>
                         </div>
                     </div>
-                    <div className="admin-tab admin-tab-3">
+                    <div className="admin-tab admin-tab-3" onClick={() => handleFilter("Approved")}>
                         <div className="at-figure at-figure-3">
                             <ActiveIcon className="at-icon" />
                         </div>
                         <div className="at-info">
-                            <h3>Approve</h3>
-                            <p>7 Campaigns</p>
+                            <h3>Đã phê duyệt</h3>
+                            <p>{approvedCampaigns.length} Chiến dịch</p>
+                        </div>
+                    </div>
+                    <div className="admin-tab admin-tab-4" onClick={() => handleFilter("Pending")}>
+                        <div className="at-figure at-figure-4">
+                            <ActiveIcon className="at-icon" />
+                        </div>
+                        <div className="at-info">
+                            <h3>Chờ phê duyệt</h3>
+                            <p>{pendingCampaigns.length} Chiến dịch</p>
                         </div>
                     </div>
                 </div>
@@ -104,51 +129,64 @@ const AdminListCampaignStaffPage: FC = () => {
                         <thead className="table-head">
                             <tr className="table-head-row">
                                 <th className="table-head-cell">
-                                    Campaign Name
+                                    Tên chiến dịch
                                 </th>
                                 <th className="table-head-cell">
-                                    Address
+                                    Trạng thái
                                 </th>
                                 <th className="table-head-cell">
-                                    Receive Date
+                                    Thời gian tạo
                                 </th>
                                 <th className="table-head-cell">
-                                    Description
-                                </th>
-                                <th className="table-head-cell">
-                                    Status
-                                </th>
-                                <th className="table-head-cell">
-                                    Action
+                                    Hành động
                                 </th>
                             </tr>
                         </thead>
                         <tbody className="table-body">
-                            {staffCampaigns.map((campaign, index) => (
+                            {currentCampaignsPage.map((campaign, index) => (
                                 <tr className="table-body-row" key={index}>
-                                    <td className='table-body-cell'>{campaign.nameCampaign}</td>
-                                    <td className='table-body-cell'>{campaign.address}</td>
-                                    <td className='table-body-cell'>{campaign.receiveDate}</td>
-                                    <td className='table-body-cell'>{campaign.description}</td>
-                                    <td className='table-body-cell'>{campaign.status === "Pending" ? <span className='status-pending'>Pending</span> : campaign.status === "Approved" ? <span className='status-approve'>Approve</span> : <span className='status-reject'>Reject</span>}</td>
+                                    <td className='table-body-cell'>{campaign.campaignName}</td>
+                                    <td className='table-body-cell'>
+                                        {campaign.status === "Pending" ? (
+                                            <span className='status-pending'>Đang chờ phê duyệt</span>
+                                        ) : campaign.status === "Approved" ? (
+                                            <span className='status-approve'>Đã được phê duyệt</span>
+                                        ) : campaign.status === "Rejected" ? (
+                                            <span className='status-reject'>Đã bị từ chối</span>
+                                        ) : campaign.status === "Canceled" ? (
+                                            <span className='status-reject'>Đã huỷ</span>
+                                        ) : null}
+                                    </td>
+                                    <td className='table-body-cell'>
+                                        {campaign?.createdDate ? dayjs(campaign.createdDate).fromNow() : ''}
+                                    </td>
                                     <td className="table-body-cell">
                                         <button className='view-btn' onClick={() => handleToDetail(campaign.campaignId)}>View</button>
-                                        {campaign.status === "Pending" && (
-                                            <>
-                                                <button className='approve-btn' onClick={() => handleApproveCampaign({ campaignId: campaign.campaignId })}>Approve</button>
-                                                <button className='reject-btn' onClick={() => handleRejectCampaign(campaign.campaignId)}>Reject</button>
-                                            </>
-                                        )}
-                                        {campaign.status === "Rejected" && <button className='reject-btn' onClick={() => handleViewReason(campaign.rejectComment)}>View Reason</button>}
                                     </td>
                                 </tr>
                             ))}
                         </tbody>
                     </table>
+                    <div className='paginator'>
+                        <div className="p-container">
+                            <div className="pcc2">{currentCampaignPage} of {totalCampaignPages}</div>
+                            <div className="pcc3">
+                                <button disabled={currentCampaignPage === 1} onClick={onPreviousCampaignPage}>
+                                    <ArrowLeft className="pcc3-icon" />
+                                </button>
+                                <button
+                                    disabled={currentCampaignPage >= totalCampaignPages}
+                                    onClick={onNextCampaignPage}
+                                >
+                                    <ArrowRight
+                                        className={`pcc3-icon ${currentCampaignPage >= totalCampaignPages ? 'pcc3-icon-disabled' : ''}`}
+                                    />
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <RejectCampaignModal isOpen={isRejectCampaignModalOpen} setIsOpen={setIsRejectCampaignModalOpen} selectedCampaign={selectedCampaign} />
-            <RejectReasonModal isOpen={isRejectReasonModalOpen} setIsOpen={setIsRejectReasonModalOpen} reason={selectedReason} />
         </section>
     )
 }

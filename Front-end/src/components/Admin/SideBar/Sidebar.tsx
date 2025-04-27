@@ -1,9 +1,10 @@
-import { CampaignIcon, DashboardtIcon, ForumIcon, LogoutIcon, NewsIcon, PostIcon, StaffIcon, UserIcon } from '@/assets/icons';
+import { ArrowRight, CampaignIcon, DashboardtIcon, LogoutIcon, NewsIcon, StaffIcon, UserIcon } from '@/assets/icons';
 import { FC, useRef } from 'react'
 import { Link, useLocation } from 'react-router-dom';
 import classNames from 'classnames';
 import { routes } from '@/routes/routeName';
 import { logoutManager } from '@/utils/helper';
+import { Logo } from '@/assets/images';
 
 const AdminSidebar: FC = () => {
     const location = useLocation();
@@ -16,7 +17,7 @@ const AdminSidebar: FC = () => {
         const dropdown = event.currentTarget.nextElementSibling as HTMLElement;
         dropdown.classList.toggle('open');
 
-        const arrowIcon = event.currentTarget.querySelector('.src2-arrow') as HTMLElement;
+        const arrowIcon = event.currentTarget.querySelector('.ascr2-arrow') as HTMLElement;
         arrowIcon.classList.toggle('rotate-180');
     };
 
@@ -36,7 +37,7 @@ const AdminSidebar: FC = () => {
         <nav id="admin-sidebar" className='as-expanded' ref={sidebarRef} onMouseEnter={handleHover} onMouseLeave={handleMouseOut}>
             <div className="as-container">
                 <div className="ascr1">
-                    <p className='as-logo'>Logo</p>
+                    <img src={Logo} alt="" className='as-logo' />
                 </div>
 
                 <div className="ascr2">
@@ -63,21 +64,22 @@ const AdminSidebar: FC = () => {
                         </div>
                     </Link>
                     <div
-                        className="ascr2-nav-item asrc2-nav-dropdown"
+                        className="ascr2-nav-item ascr2-nav-dropdown"
                         onClick={handleDropdownToggle}
                     >
                         <CampaignIcon className="ascr2-nav-icon" />
                         <span>Chiến dịch</span>
+                        <ArrowRight className={`mg-left-auto ascr2-arrow`} />
                     </div>
-                    <div ref={dropdownRef} className={classNames("asrc2-nav-dropdown-content", {
+                    <div ref={dropdownRef} className={classNames("ascr2-nav-dropdown-content", {
                         'open': location.pathname.startsWith(routes.admin.campaign.list),
                     })}>
                         <Link
                             to={routes.admin.campaign.list}
                             className={classNames('ascr2-nav-item', {
                                 'nav-active': location.pathname.startsWith(routes.admin.campaign.list) &&
-                                              !location.pathname.startsWith(routes.admin.campaign.staff.list) &&
-                                              !location.pathname.startsWith(routes.admin.campaign.donor.list),
+                                    !location.pathname.startsWith(routes.admin.campaign.staff.list) &&
+                                    !location.pathname.startsWith(routes.admin.campaign.donor.list),
                             })}
                         >
                             <div className="ascr2-nav-link">
@@ -119,50 +121,6 @@ const AdminSidebar: FC = () => {
                             <span>Tin tức</span>
                         </div>
                     </Link>
-                    <div
-                        className="ascr2-nav-item asrc2-nav-dropdown"
-                        onClick={handleDropdownToggle}
-                    >
-                        <PostIcon className="ascr2-nav-icon" />
-                        <span>Bài viết</span>
-                    </div>
-                    <div ref={dropdownRef} className={classNames("asrc2-nav-dropdown-content", {
-                        'open': location.pathname.startsWith(routes.admin.post.forum),
-                    })}>
-                        <Link
-                            to={routes.admin.post.forum}
-                            className={classNames('ascr2-nav-item', {
-                                'nav-active': location.pathname === routes.admin.post.forum,
-                            })}
-                        >
-                            <div className="ascr2-nav-link">
-                                <ForumIcon className="ascr2-nav-icon" />
-                                <span>Diễn đàn</span>
-                            </div>
-                        </Link>
-                        <Link
-                            to={routes.admin.post.user}
-                            className={classNames('ascr2-nav-item', {
-                                'nav-active': location.pathname === routes.admin.post.user,
-                            })}
-                        >
-                            <div className="ascr2-nav-link">
-                                <UserIcon className="ascr2-nav-icon" />
-                                <span>Người dùng</span>
-                            </div>
-                        </Link>
-                        <Link
-                            to={routes.admin.post.staff}
-                            className={classNames('ascr2-nav-item', {
-                                'nav-active': location.pathname === routes.admin.post.staff,
-                            })}
-                        >
-                            <div className="ascr2-nav-link">
-                                <StaffIcon className="ascr2-nav-icon" />
-                                <span>Nhân viên</span>
-                            </div>
-                        </Link>
-                    </div>
                     <Link
                         to={""}
                         onClick={logoutManager}

@@ -4,6 +4,7 @@ import { Link, useLocation } from 'react-router-dom';
 import classNames from 'classnames';
 import { routes } from '@/routes/routeName';
 import { logoutManager } from '@/utils/helper';
+import { Logo } from '@/assets/images';
 
 const StaffSidebar: FC = () => {
     const location = useLocation();
@@ -36,7 +37,7 @@ const StaffSidebar: FC = () => {
         <nav id="staff-sidebar" className='ss-expanded' ref={sidebarRef} onMouseEnter={handleHover} onMouseLeave={handleMouseOut}>
             <div className="ss-container">
                 <div className="sscr1">
-                    <p className='ss-logo'>Logo</p>
+                    <img src={Logo} alt="" className='ss-logo'/>
                 </div>
 
                 <div className="sscr2">
@@ -63,7 +64,7 @@ const StaffSidebar: FC = () => {
                         </div>
                     </Link>
                     <div
-                        className="sscr2-nav-item asrc2-nav-dropdown"
+                        className="sscr2-nav-item sscr2-nav-dropdown"
                         onClick={handleDropdownToggle}
                     >
                         <CampaignIcon className="sscr2-nav-icon" />

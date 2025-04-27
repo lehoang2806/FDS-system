@@ -1,5 +1,12 @@
 #admin-detail-campaign {
     .adc-container {
+        .image-preview-container {
+            display: flex;
+            justify-content: start;
+            align-items: center;
+            gap: 20px;
+        }
+        
         .adccr1 {
             display: flex;
             justify-content: space-between;
@@ -23,9 +30,9 @@
                 .admin-tag {
                     font-size: 12px;
                     font-weight: 500;
-                    color: #635bff;
+                    color: var(--main-color);
                     padding: 10px 15px;
-                    background: rgba(99, 91, 255, 0.15);
+                    background: rgba(255, 157, 46, 0.1);
                     border-radius: var(--border-radius-12);
                     margin-left: 10px;
                 }
