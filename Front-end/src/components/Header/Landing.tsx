@@ -65,13 +65,7 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
             notificationId: notification.notificationId || notification.id || notification._id,
             objectId: notification.objectId || notification.ojectId,
         };
-    
-        if (!correctedNotification.notificationId) {
-            console.warn("⚠️ Missing notificationId!", correctedNotification);
-        }
-    
-        console.log("Corrected notification:", correctedNotification);
-    
+        
         dispatch(addNotification(correctedNotification));
     
         // 👉 Lưu nội dung cần hiện toast vào localStorage
@@ -173,7 +167,6 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
                 setIsNotifOpen(false);
             })
             .catch((error) => {
-                console.error("Error marking notification as read:", error);
                 // Hiển thị thông báo lỗi nếu có
                 toast.error(error?.errorMessage || "Có lỗi xảy ra khi đánh dấu thông báo là đã đọc.");
             });
@@ -225,12 +218,10 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
 
     const handleToDetailCertificate = (certificateId?: string, type?: string) => {
         if (!certificateId) {
-            console.error("❌ Certificate ID is required!");
             return;
         }
 
         if (!type) {
-            console.error("❌ Type is required!");
             return;
         }
 

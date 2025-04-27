@@ -47,7 +47,6 @@ const AdditionalCertificateModal: FC<AdditionalCertificateModalProps> = ({ isOpe
 
         } catch (error) {
             toast.error("An error occurred while rejecting the certificate.");
-            console.error(error);
         }
     };
 

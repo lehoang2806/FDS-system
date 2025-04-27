@@ -1,4 +1,5 @@
 import { FC } from "react"
+import { CampaignCardProps } from "./type";
 
 const CampaignCard: FC<CampaignCardProps> = ({ onClickDetail, campaign }) => {
     // Formated Date

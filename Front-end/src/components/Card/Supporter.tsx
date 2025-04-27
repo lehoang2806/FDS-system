@@ -1,5 +1,6 @@
 import { SupporterLogo } from "@/assets/images"
 import { FC } from "react"
+import { SupporterCardProps } from "./type"
 
 const SupporterCard: FC<SupporterCardProps> = ({onClickDetail}) => {
     return (

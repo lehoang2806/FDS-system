@@ -77,7 +77,6 @@ const AdminDetailCampaignPage: FC = () => {
                     }, 1000)
                 });
         } catch (error) {
-            console.error("Error in approval process:", error);
             toast.error("An error occurred while approving the certificate.");
         }
     };

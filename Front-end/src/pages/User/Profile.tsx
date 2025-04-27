@@ -11,8 +11,6 @@ import * as Yup from "yup";
 const UserProfilePage = () => {
     const userProfile = useAppSelector(selectUserLogin);
 
-    console.log(userProfile)
-
     const initialValues: UserUpdate = {
         email: userProfile?.email ?? "",
         fullName: userProfile?.fullName ?? "",
@@ -35,8 +33,8 @@ const UserProfilePage = () => {
             .required("Số điện thoại là bắt buộc"),
     });
 
-    const onSubmit = async (values: UserUpdate) => {
-        console.log(values);
+    const onSubmit = async (_: UserUpdate) => {
+        
     };
 
     return (

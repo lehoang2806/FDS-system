@@ -45,8 +45,7 @@ export default function () {
             dispatch(getAllNewsApiThunk()).unwrap(),
             dispatch(getAllUserApiThunk())
         ])
-            .catch((error) => {
-                console.error("Error fetching data:", error);
+            .catch((_) => {
             })
             .finally(() => {
                 dispatch(setLoading(false));

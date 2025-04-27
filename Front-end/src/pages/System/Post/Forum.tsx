@@ -47,8 +47,7 @@ const PostForumPage = () => {
             dispatch(getAllCampaignApiThunk()).unwrap(),
             dispatch(getAllNewsApiThunk()).unwrap(),
         ])
-            .catch((error) => {
-                console.error("Error fetching data:", error);
+            .catch((_) => {
             })
             .finally(() => {
                 setTimeout(() => {

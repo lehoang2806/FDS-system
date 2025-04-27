@@ -39,7 +39,6 @@ const CancelCampaignModal: FC<CancelCampaignModalProps> = ({ isOpen, setIsOpen, 
 
         } catch (error) {
             toast.error("An error occurred while rejecting the certificate.");
-            console.error(error);
         }
     };
 

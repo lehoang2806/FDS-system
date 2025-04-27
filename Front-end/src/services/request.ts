@@ -34,7 +34,6 @@ request.interceptors.response.use(
                 const token = store.getState().auth.token;
                 if (token) {
                     store.dispatch(setIsAuthenticated(false)); // Chỉ logout khi có token
-                    console.error("Resource 401");
                 }
             }
         }

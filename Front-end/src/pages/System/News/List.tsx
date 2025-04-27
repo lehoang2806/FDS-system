@@ -39,8 +39,7 @@ const ListNewsPage = () => {
         dispatch(setLoading(true));
         dispatch(getAllNewsApiThunk())
             .unwrap()
-            .catch((error) => {
-                console.error("Error fetching data:", error);
+            .catch((_) => {
             })
             .finally(() => {
                 setTimeout(() => {
