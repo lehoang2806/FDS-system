@@ -14,3 +14,8 @@ export const getRequestSupportByIdApi = async (requestSupportId: string) => {
     const data = await request.get(`api/RequestSupport/GetRequestSupportById/${requestSupportId}`);
     return data.data;
 }
+
+export const getAllDonorSupportApi = async () => {
+    const data = await request.get('api/user/GetAllConfirmedDonorForSupport');
+    return data.data;
+}

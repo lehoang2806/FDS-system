@@ -19,6 +19,7 @@ import CreatePostModal from "./CreatePost";
 import CancelCampaignModal from "./CancelCampaign";
 import RejectPostModal from "./RejectPost";
 import CreateRequestSupportModal from "./RequestSupport";
+import RemindLoginModal from "./RemindLogin";
 
 export {
     Modal,
@@ -41,5 +42,6 @@ export {
     CreatePostModal,
     CancelCampaignModal,
     RejectPostModal,
-    CreateRequestSupportModal
+    CreateRequestSupportModal,
+    RemindLoginModal
 };

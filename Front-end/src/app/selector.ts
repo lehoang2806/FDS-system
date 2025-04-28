@@ -102,3 +102,7 @@ export const selectGetAllRequestSupport: Selector<RequestSupportInfo[]> = (state
 export const selectGetRequestSupportById: Selector<RequestSupportInfo | null> = (state: RootState) => {
     return state.requestSupport.requestSupport;
 }
+
+export const selectGetAllDonorSupport: Selector<DonorSupport[]> = (state: RootState) => {
+    return state.requestSupport.listDonorSupport;
+}

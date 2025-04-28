@@ -1,9 +1,10 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { getAllRequestSupportApiThunk, getRequestSupportByIdApiThunk } from "./requestSupportThunk";
+import { getAllDonorSupportApiThunk, getAllRequestSupportApiThunk, getRequestSupportByIdApiThunk } from "./requestSupportThunk";
 
 const initialState: RequestSupportState = {
     listRequestSupport: [],
-    requestSupport: null
+    requestSupport: null,
+    listDonorSupport: []
 };
 
 export const requestSupportSlice = createSlice({
@@ -18,6 +19,9 @@ export const requestSupportSlice = createSlice({
         })
         .addCase(getRequestSupportByIdApiThunk.fulfilled, (state, action: PayloadAction<RequestSupportInfo>) => {
             state.requestSupport = action.payload;
+        })
+        .addCase(getAllDonorSupportApiThunk.fulfilled, (state, action: PayloadAction<DonorSupport[]>) => {
+            state.listDonorSupport = action.payload;
         })
     },
 });

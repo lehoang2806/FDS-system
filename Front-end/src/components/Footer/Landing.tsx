@@ -1,5 +1,6 @@
 import { selectIsAuthenticated, selectUserLogin } from "@/app/selector";
 import { useAppDispatch, useAppSelector } from "@/app/store";
+import { LogoLanding } from "@/assets/images";
 import { routes } from "@/routes/routeName"
 import { getProfileApiThunk } from "@/services/user/userThunk";
 import { useEffect } from "react";
@@ -56,6 +57,13 @@ const FooterLanding = () => {
         <main id="footer-landing">
             <section id="fl-section">
                 <div className="fls-container">
+                    <div className="flscc1">
+                        <img src={LogoLanding} alt="" />
+                        <p>FDS System - Hệ thống hỗ trợ thực phẩm cho các cá nhân có thu nhập thấp.</p>
+                        <p><span className="text-black">Địa chỉ: </span><span>Hoà Xuân, Cẩm Lệ, Đà Nẵng</span></p>
+                        <p><span className="text-black">Số điện thoại: </span><span className="text-orange">0898530964</span></p>
+                        <p><span className="text-black">Email: </span><span className="text-orange">tuanpcl7103@gmail.com</span></p>
+                    </div>
                     <div className="flscc2">
                         {footers.map((footer, index) => (
                             <div className="flscc2c" key={index}>
@@ -68,8 +76,14 @@ const FooterLanding = () => {
                             </div>
                         ))}
                     </div>
+                    <div className="flscc3">
+                        <h4>Liên hệ với chúng tôi</h4>
+                    </div>
                 </div>
             </section>
+            <div className="copyright">
+                © Bản quyền thuộc về <span className="text-black">FDS-System</span> | Cung cấp bởi <span className="text-black">FPT</span>
+            </div>
         </main>
     )
 }

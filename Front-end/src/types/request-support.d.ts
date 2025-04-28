@@ -15,6 +15,7 @@ interface RequestSupportActions {
 interface RequestSupportState {
     listRequestSupport: RequestSupport[];
     requestSupport: RequestSupport | null;
+    listDonorSupport: DonorSupport[];
 }
 
 interface RequestSupportInfo {
@@ -32,5 +33,12 @@ interface RequestSupportInfo {
     incomeSource: string;
     requestedItems: string[];
     createdDate: string; // ISO 8601 format
-  }
-  
+}
+
+interface DonorSupport {
+    donorId: string;
+    email: string;
+    fullName: string;
+    donorType: string;
+}
+

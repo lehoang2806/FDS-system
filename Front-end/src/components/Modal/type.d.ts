@@ -75,3 +75,7 @@ interface RejectPostModalProps extends ModalCommonProps {
 }
 
 interface CreateRequestSupportModalProps extends ModalCommonProps {}
+
+interface RequestDonorModalProps extends ModalCommonProps {}
+
+interface RemindLoginModalProps extends ModalCommonProps {}

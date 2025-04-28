@@ -1,17 +1,20 @@
 import { selectGetRequestSupportById } from '@/app/selector'
 import { useAppDispatch, useAppSelector } from '@/app/store'
+import RequestDonorModal from '@/components/Modal/RequestDonor'
 import { navigateHook } from '@/routes/RouteApp'
 import { routes } from '@/routes/routeName'
 import { setLoading } from '@/services/app/appSlice'
 import { getRequestSupportByIdApiThunk } from '@/services/requestSupport/requestSupportThunk'
-import { FC, useEffect } from 'react'
+import { FC, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
 const StaffDetailRequestSupportPage: FC = () => {
     const { id } = useParams<{ id: string }>();
 
-    const dispatch =useAppDispatch();
+    const dispatch = useAppDispatch();
     const currentRequestSupport = useAppSelector(selectGetRequestSupportById)
+
+    const [isRequestDonorModal, setIsRequestDonorModal] = useState(false);
 
     const createDate = currentRequestSupport?.createdDate && currentRequestSupport?.createdDate.split("T")[0];
     const birthday = currentRequestSupport?.dateOfBirth && currentRequestSupport?.dateOfBirth.split("T")[0];
@@ -80,8 +83,12 @@ const StaffDetailRequestSupportPage: FC = () => {
                             <p>{currentRequestSupport?.incomeSource}</p>
                         </div>
                     </div>
+                    <div className="sdncr2r4">
+                        <button className="approve-btn" onClick={() => setIsRequestDonorModal(true)}>Yêu cầu hỗ trợ</button>
+                    </div>
                 </div>
             </div>
+            <RequestDonorModal isOpen={isRequestDonorModal} setIsOpen={setIsRequestDonorModal} />
         </section>
     )
 }

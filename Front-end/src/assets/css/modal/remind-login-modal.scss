@@ -1,0 +1,41 @@
+#remind-login-modal {
+    .rlm-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: start;
+        align-items: center;
+
+        img {
+            margin-bottom: 24px;
+        }
+
+        h3 {
+            font-size: 16px;
+            font-weight: 700;
+            color: #393939;
+            margin-bottom: 12px;
+        }
+
+        h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: #393939;
+            margin-bottom: 32px;
+        }
+
+        .sc-btn {
+            padding: 12px 22px;
+            font-size: 17px;
+            font-weight: 700;
+            border-radius: 20px;
+            margin-bottom: 16px;
+        }
+
+        p {
+            color: #f54a00;
+            font-size: 17px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+    }
+}
