@@ -6,6 +6,7 @@ import { PersistGate } from "redux-persist/integration/react";
 import { ToastContainer } from "react-toastify";
 import "slick-carousel/slick/slick.css"; 
 import "slick-carousel/slick/slick-theme.css";
+import { CrispChat } from "./components/Elements";
 
 function App() {
     return (
@@ -13,6 +14,7 @@ function App() {
             <PersistGate loading={false} persistor={persistor}>
                 <ToastContainer />
                 <RouteApp />
+                <CrispChat />
             </PersistGate>
         </Provider>
     )

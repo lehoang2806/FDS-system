@@ -1,17 +1,46 @@
 #footer-landing {
-    background: var(--main-color);
-    padding: 80px 20px;
+    background: #f2f3f4;
 
     #fl-section {
-        padding: 0 20px;
+        padding: 80px 20px;
 
         .fls-container {
+            max-width: 1200px;
+            margin: 0 auto;
             display: flex;
             align-items: start;
             justify-content: center;
             gap: 48px;
 
+            .flscc1 {
+                flex: 1;
+                margin-top: -20px;
+
+                img {
+                    width: 250px;
+                }
+
+                p {
+                    font-size: 16px;
+                    font-weight: 500;
+                    margin-bottom: 10px;
+
+                    .text-black {
+                        color: #000;
+                        font-weight: 700;
+                        font-size: 16px;
+                    }
+
+                    .text-orange {
+                        color: var(--main-color);
+                        font-weight: 700;
+                        font-size: 16px;
+                    }
+                }
+            }
+
             .flscc2 {
+                flex: 3;
                 display: flex;
                 align-items: start;
                 justify-content: center;
@@ -21,7 +50,7 @@
                     h4 {
                         font-size: 16px;
                         font-weight: 700;
-                        color: #1A1A1A;
+                        color: var(--main-color);
                     }
 
                     ul {
@@ -35,7 +64,7 @@
                             a {
                                 font-size: 14px;
                                 font-weight: 400;
-                                color: #F5F5F5;
+                                color: var(--main-black);
                                 text-decoration: none;
                             }
                         }
@@ -44,17 +73,27 @@
             }
 
             .flscc3 {
-                .pr-btn {
-                    background: #F5F5F5;
-                    color: var(--main-color);
-                    padding: 10px 20px;
-                    border-radius: var(--border-radius-12);
+                flex: 1;
 
-                    &:hover {
-                        background: #fff !important;
-                    }
+                h4 {
+                    font-size: 16px;
+                    font-weight: 700;
+                    color: var(--main-color);
                 }
             }
+        }
+    }
+
+    .copyright {
+        padding: 20px;
+        text-align: center;
+        background: var(--main-color);
+        color: #fff;
+
+        .text-black {
+            color: #000;
+            font-weight: 700;
+            font-size: 16px;
         }
     }
 }

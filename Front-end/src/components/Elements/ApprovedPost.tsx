@@ -15,6 +15,7 @@ import { commentPostApiThunk } from '@/services/post/comment/commentPostThunk';
 import * as Yup from "yup";
 import { selectIsAuthenticated } from '@/app/selector';
 import Lightbox from 'react-awesome-lightbox';
+import PostContent from './PostContent';
 
 dayjs.locale('vi');
 dayjs.extend(relativeTime);
@@ -124,7 +125,7 @@ const ApprovedPost: FC<ApprovedPostProps> = ({ post, userId }) => {
             </div>
 
             <div className="pcr2">
-                <div className="pcr2-content">{post.postContent}</div>
+                <PostContent content={post.postContent} />
                 {post.images.length > 0 && <PostImageGallery images={post.images} />}
             </div>
             <hr />

@@ -10,5 +10,6 @@ import LS2 from "./ls2.webp";
 import CampaignImage from "./campaign-image.png";
 import Logo from "./logo.png";
 import LogoLanding from "./logo-landing.png";
+import RemindLogin from "./remind-login.webp";
 
-export { SupporterLogo, SupporterAvatar, SupporterImage, AvatarUser, NoResult, ImageCarousel1, ImageCarousel2, ImageCarousel3, LS2, CampaignImage, Logo, LogoLanding };
+export { SupporterLogo, SupporterAvatar, SupporterImage, AvatarUser, NoResult, ImageCarousel1, ImageCarousel2, ImageCarousel3, LS2, CampaignImage, Logo, LogoLanding, RemindLogin };

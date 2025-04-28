@@ -33,7 +33,14 @@
                         color: #626262;
                         cursor: pointer;
 
-                        &:hover {
+                        &.nav-link-active {
+                            color: var(--main-color);
+                            font-size: 18px;
+                            font-weight: 700;
+                            transition: all 0.2s ease-in-out;
+                        }
+
+                        &:not(.nav-link-active):hover {
                             color: var(--main-color);
                             font-size: 16px;
                             transition: all 0.2s ease-in-out;
@@ -52,10 +59,16 @@
                         list-style: none;
                         padding: 0px 20px;
 
+                        .sub-item-active {
+                            color: var(--main-color);
+                            font-size: 16px;
+                            transition: all 0.2s ease-in-out;
+                        }
+
                         .sub-item {
                             margin: 20px 0px;
                             cursor: pointer;
-                            
+
                             span,
                             a {
                                 text-decoration: none;
@@ -82,7 +95,11 @@
             align-items: center;
 
             .name {
+                width: 100px;
                 margin: 0 10px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
             }
 
             .menu-icon,

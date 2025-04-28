@@ -55,35 +55,37 @@
                 text-align: center;
 
                 .cscr2r1 {
-                    .cscr2r1r1 {
-                        margin-bottom: 20px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    gap: 60px;
+                    margin-bottom: 20px;
 
-                        .form-input {
-                            width: 250px;
-                        }
+                    .cscr2r1r1 {
+                        flex: 1;
+
+                        margin-bottom: 16px;
                     }
 
                     .cscr2r1r3 {
+                        flex: 3;
                         .date-filter-container {
                             display: flex;
                             align-items: center;
                             justify-content: start;
                             gap: 20px;
                         }
-
-                        .form-input {
-                            width: 250px;
-                        }
                     }
 
                     .cscr2r1r2 {
+                        flex: 3;
                         display: flex;
                         justify-content: start;
-                        margin-bottom: 40px;
+                        margin-bottom: 16px;
                     }
 
                     .campaign-search-container {
-                        width: 520px;
+                        width: 100%;
                         position: relative;
 
                         .campaign-search-input {

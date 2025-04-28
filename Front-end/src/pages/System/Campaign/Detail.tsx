@@ -21,6 +21,7 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import 'dayjs/locale/vi';
 import { UserProfile } from '@/types/auth';
 import { CampaignInfo, CreateFeedbackCampaign } from '@/types/campaign';
+import { formatDater } from '@/utils/helper';
 
 dayjs.locale('vi');
 dayjs.extend(relativeTime);
@@ -103,7 +104,7 @@ const DetailCampaignPage: React.FC = () => {
             dispatch(getCampaignByIdApiThunk(id)).unwrap(),
             dispatch(getFeedbackCampaignApiThunk(id)).unwrap(),
         ])
-            .catch((_) => {})
+            .catch((_) => { })
             .finally(() => {
                 setTimeout(() => dispatch(setLoading(false)), 1000);
             });
@@ -202,8 +203,8 @@ const DetailCampaignPage: React.FC = () => {
                                         src={selectedImage}
                                         alt="Selected Campaign Image"
                                         style={{
-                                            width: "400px",
-                                            height: "400px",
+                                            width: "770px",
+                                            height: "550px",
                                             objectFit: "cover",
                                             borderRadius: "10px",
                                             marginBottom: "10px"
@@ -219,8 +220,8 @@ const DetailCampaignPage: React.FC = () => {
                                         alt={`Campaign Image ${index + 1}`}
                                         onClick={() => setSelectedImage(img)}
                                         style={{
-                                            width: "100px",
-                                            height: "100px",
+                                            width: "180px",
+                                            height: "180px",
                                             margin: "5px",
                                             objectFit: "cover",
                                             cursor: "pointer",
@@ -370,6 +371,20 @@ const DetailCampaignPage: React.FC = () => {
                                 <div>
                                     <h4>Phần quà</h4>
                                     <p>{currentCampaign?.typeGift}</p>
+                                    {currentCampaign?.campaignType === "Limited" && (
+                                        <>
+                                            <h4>Số lượng giới hạn</h4>
+                                            <p>{currentCampaign?.limitedQuantity}</p>
+                                        </>
+                                    )}
+                                    {currentCampaign?.campaignType === "Voluntary" && (
+                                        <>
+                                            <h4>Ngày mở đăng ký</h4>
+                                            <p>{formatDater(currentCampaign?.startRegisterDate)}</p>
+                                            <h4>Ngày đóng đăng ký</h4>
+                                            <p>{formatDater(currentCampaign?.endRegisterDate)}</p>
+                                        </>
+                                    )}
                                 </div>
                                 <div>
                                     <h4>Địa điểm</h4>

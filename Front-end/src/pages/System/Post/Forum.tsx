@@ -2,7 +2,7 @@ import { selectGetAllCampaign, selectGetAllNews, selectGetAllPosts, selectGetPro
 import { useAppDispatch, useAppSelector } from '@/app/store';
 import { PostIcon } from '@/assets/icons';
 import { ApprovedPost, PersonalApprovedPost, PersonalRejectedPost } from '@/components/Elements';
-import { CreatePostModal } from '@/components/Modal';
+import { CreatePostModal, RemindLoginModal } from '@/components/Modal';
 import { routes } from '@/routes/routeName'
 import { setLoading } from '@/services/app/appSlice';
 import { getAllCampaignApiThunk } from '@/services/campaign/campaignThunk';
@@ -22,6 +22,7 @@ const PostForumPage = () => {
     const userProfile = useAppSelector(selectGetProfileUser)
 
     const [isCreatePostModalOpen, setIsCreatePostModalOpen] = useState(false)
+    const [isRemindLoginModalOpen, setIsRemindLoginModalOpen] = useState(false)
 
     const posts = useAppSelector(selectGetAllPosts)
     const sortedPosts = [...posts].reverse();
@@ -60,7 +61,7 @@ const PostForumPage = () => {
         if (isAuthentication) {
             setIsCreatePostModalOpen(true)
         } else {
-            alert('Vui lòng đăng nhập')
+            setIsRemindLoginModalOpen(true)
         }
     }
 
@@ -68,7 +69,7 @@ const PostForumPage = () => {
         if (isAuthentication) {
             setActiveTab("approved")
         } else {
-            alert('Vui lòng đăng nhập')
+            setIsRemindLoginModalOpen(true)
         }
     }
 
@@ -76,7 +77,7 @@ const PostForumPage = () => {
         if (isAuthentication) {
             setActiveTab("rejected")
         } else {
-            alert('Vui lòng đăng nhập')
+            setIsRemindLoginModalOpen(true)
         }
     }
 
@@ -199,6 +200,7 @@ const PostForumPage = () => {
                 </div>
             </section>
             <CreatePostModal isOpen={isCreatePostModalOpen} setIsOpen={setIsCreatePostModalOpen} />
+            <RemindLoginModal isOpen={isRemindLoginModalOpen} setIsOpen={setIsRemindLoginModalOpen} />
         </main>
     )
 }

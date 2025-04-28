@@ -12,6 +12,9 @@ import { toast } from "react-toastify";
 import { get } from "lodash";
 import classNames from "classnames";
 import Button from "@/components/Elements/Button";
+import { setIsAuthenticated, setToken, setUserLogin } from "@/services/auth/authSlice";
+import { Modal } from "@/components/Modal";
+import { RightIcon } from "@/assets/icons";
 
 const LoginPage = () => {
     const dispatch = useAppDispatch();
@@ -19,7 +22,7 @@ const LoginPage = () => {
     const [showRegisterModal, setShowRegisterModal] = useState(false);
     const [idTokenGoogle, setIdTokenGoogle] = useState<string | null>(null);
     const [phoneNumber, setPhoneNumber] = useState("");
-    const [roleId, setRoleId] = useState(4); // default 4 (user)
+    const [roleId, setRoleId] = useState(3); // default 4 (user)
 
     const initialValues: ILoginEmail = {
         userEmail: "",
@@ -35,7 +38,7 @@ const LoginPage = () => {
         document.title = "Đăng nhập";
 
         if (isAuthenticated) {
-            navigateHook(routes.user.campaign.list);
+            navigateHook(routes.user.home);
         }
     }, [isAuthenticated]);
 
@@ -82,10 +85,12 @@ const LoginPage = () => {
             console.log(data);
 
             if (data.token) {
-                // Đã có tài khoản ➔ login thẳng
-                toast.success("Đăng nhập Google thành công");
-                localStorage.setItem("accessToken", data.token);
-                navigateHook(routes.user.campaign.list);
+                dispatch(setToken(data.token));
+                dispatch(setIsAuthenticated(true));
+                dispatch(setUserLogin(data.userInfo || null));
+
+                toast.success("Đăng nhập Google thành công!");
+                navigateHook(routes.user.home);
             } else {
                 // Chưa có tài khoản ➔ yêu cầu nhập phone/role
                 setIdTokenGoogle(id_token);
@@ -116,10 +121,12 @@ const LoginPage = () => {
             console.log("Register and login:", data);
 
             if (data.token) {
-                toast.success("Đăng ký và đăng nhập thành công!");
-                localStorage.setItem("accessToken", data.token);
+                toast.success("Đăng nhập thành công!");
+                dispatch(setToken(data.token));
+                dispatch(setIsAuthenticated(true));
+                dispatch(setUserLogin(data.userInfo || null));
                 setShowRegisterModal(false);
-                navigateHook(routes.user.campaign.list);
+                navigateHook(routes.user.home);
             } else {
                 toast.error("Đăng ký thất bại. Vui lòng thử lại.");
             }
@@ -197,25 +204,26 @@ const LoginPage = () => {
                             </Formik>
 
                             {/* Hoặc separator nếu bạn muốn: */}
-                            <div className="or-separator">
-                                <span>Hoặc</span>
+                            <div className="or-separator" style={{ textAlign: "center" }}>
+                                <span style={{ fontSize: "16px", fontWeight: "500", color: "#8d8d8d" }}>Hoặc tiếp tục với</span>
                             </div>
 
                             {/* Div này sẽ được Google render nút Sign-In */}
-                            <div id="google-signin-button" style={{ marginTop: "1rem" }}></div>
+                            <div id="google-signin-button" style={{ margin: "0 auto", marginTop: "2rem", width: "200px", marginBottom: "2rem" }}></div>
 
                             <p>Bạn chưa có tài khoản? <span onClick={() => navigateHook(routes.register)}>Đăng ký ngay</span></p>
                         </div>
                     </div>
                 </div>
             </section>
-            {showRegisterModal && (
-                <div className="modal">
-                    <div className="modal-content">
-                        <h2>Hoàn thiện tài khoản</h2>
+            <Modal isOpen={showRegisterModal} setIsOpen={setShowRegisterModal}>
+                <div className="finish-gg-account">
+                    <h2>Hoàn thiện tài khoản</h2>
+                    <div className="form">
                         <div className="form-field">
-                            <label>Số điện thoại</label>
+                            <label className="form-label">Số điện thoại</label>
                             <input
+                                className="form-input"
                                 type="text"
                                 value={phoneNumber}
                                 onChange={(e) => setPhoneNumber(e.target.value)}
@@ -223,20 +231,22 @@ const LoginPage = () => {
                             />
                         </div>
                         <div className="form-field">
-                            <label>Vai trò</label>
-                            <select value={roleId} onChange={(e) => setRoleId(Number(e.target.value))}>
-                                <option value={3}>Tổ chức</option>
-                                <option value={4}>Cá nhân</option>
-                            </select>
-                        </div>
-                        <div className="modal-actions">
-                            <button onClick={handleQuickRegister}>Xác nhận</button>
-                            <button onClick={() => setShowRegisterModal(false)}>Hủy</button>
+                            <label className="form-label">Vai trò</label>
+                            <div className="form-input-select-container">
+                                <select className="form-input-select form-input" value={roleId} onChange={(e) => setRoleId(Number(e.target.value))}>
+                                    <option value={3}>Nguời tặng thực phẩm</option>
+                                    <option value={4}>Người nhận thực phẩm</option>
+                                </select>
+                                <RightIcon className={classNames("form-icon-select")} />
+                            </div>
                         </div>
                     </div>
+                    <div className="modal-actions">
+                        <button onClick={handleQuickRegister} className="sc-btn">Xác nhận</button>
+                        <button onClick={() => setShowRegisterModal(false)} className="pr-btn">Hủy</button>
+                    </div>
                 </div>
-            )}
-
+            </Modal>
         </main>
     );
 };

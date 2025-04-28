@@ -1,9 +1,8 @@
 import { ChangeEvent, FC, useState } from 'react';
-import { Formik, Field, Form, FormikHelpers } from 'formik';
+import { Formik, Form, FormikHelpers } from 'formik';
 import * as Yup from 'yup';
 import { useAppDispatch, useAppSelector } from '@/app/store';
 import { selectUserLogin } from '@/app/selector';
-import classNames from "classnames";
 import { CreatePostModalProps } from './type';
 import Modal from './Modal';
 import Button from '../Elements/Button';
@@ -11,6 +10,7 @@ import { setLoading } from '@/services/app/appSlice';
 import { approvePostApiThunk, createPostApiThunk, getAllPostsApiThunk, rejectPostApiThunk } from '@/services/post/postThunk';
 import { toast } from 'react-toastify';
 import { get } from 'lodash';
+import { RichTextField } from '../Elements';
 
 const CreatePostModal: FC<CreatePostModalProps> = ({ isOpen, setIsOpen }) => {
     const [imagePreview, setImagePreview] = useState<string[]>([]);
@@ -114,7 +114,6 @@ const CreatePostModal: FC<CreatePostModalProps> = ({ isOpen, setIsOpen }) => {
         }
     };
     
-
     return (
         <Modal isOpen={isOpen} setIsOpen={setIsOpen} title="Tạo bài viết">
             <section id="create-post-modal">
@@ -127,13 +126,8 @@ const CreatePostModal: FC<CreatePostModalProps> = ({ isOpen, setIsOpen }) => {
                         {({ setFieldValue, errors, touched, isSubmitting }) => (
                             <Form className="form">
                                 <div className="form-field">
-                                    <label className="form-label">Nhập nội dung bài viết</label>
-                                    <Field
-                                        name="postContent"
-                                        as="textarea"
-                                        placeholder="Nội dung bài viết"
-                                        className={classNames("form-input", { "is-error": errors.postContent && touched.postContent })}
-                                    />
+                                    <label className="form-label" style={{ marginBottom: "8px" }}>Nhập nội dung bài viết</label>
+                                    <RichTextField name="postContent" placeholder="Nội dung bài viết" />
                                     {errors.postContent && touched.postContent && <span className="text-error">{errors.postContent}</span>}
                                 </div>
 
