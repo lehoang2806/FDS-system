@@ -17,7 +17,6 @@ using MongoDB.Driver;
 
 namespace FDSSYSTEM.Services.RequestSupportService
 {
-
     public class RequestSupportService : IRequestSupportService
     {
         private readonly IRequestSupportRepository _requestSupportRepository;
@@ -25,7 +24,6 @@ namespace FDSSYSTEM.Services.RequestSupportService
         private readonly IUserService _userService;
         private readonly IUserContextService _userContextService;
         private readonly INotificationService _notificationService;
-
         private readonly IHubContext<NotificationHub> _hubNotificationContext;
 
         public RequestSupportService(IRequestSupportRepository requestSupportRepository, IUserRepository userRepository
@@ -40,7 +38,6 @@ namespace FDSSYSTEM.Services.RequestSupportService
             _userService = userService;
             _notificationService = notificationService;
             _hubNotificationContext = hubContext;
-
         }
 
         public async Task Create(RequestSupportDto requestSupport)
@@ -48,21 +45,31 @@ namespace FDSSYSTEM.Services.RequestSupportService
             string accountId = _userContextService.UserId ?? "";
             var newRequestSupport = new RequestSupport
             {
-                RequestSupportId= Guid.NewGuid().ToString(),
-                FullName= requestSupport.FullName,
-                DateOfBirth= requestSupport.DateOfBirth,
-                PhoneNumber= requestSupport.PhoneNumber,
-                Address= requestSupport.Address,
-                Email=requestSupport.Email,
-                Reason=requestSupport.Reason,
-                HouseholdSize= requestSupport.HouseholdSize,
-                SpecialMembers= requestSupport.SpecialMembers,
-                IncomeSource= requestSupport.IncomeSource,
-                RequestedItems= requestSupport.RequestedItems,
-                AccountId= accountId,
-                CreatedDate=DateTime.Now,
-                Images= requestSupport.Images,
-
+                RequestSupportId = Guid.NewGuid().ToString(),
+                FullName = requestSupport.FullName,
+                DateOfBirth = requestSupport.DateOfBirth,
+                CitizenId = requestSupport.CitizenId, // Thêm số CMND/CCCD
+                CitizenIdImages = requestSupport.CitizenIdImages, // Thêm hình ảnh giấy tờ tùy thân
+                PhoneNumber = requestSupport.PhoneNumber,
+                Address = requestSupport.Address,
+                Email = requestSupport.Email,
+                LocalAuthorityContact = requestSupport.LocalAuthorityContact, // Thêm thông tin liên hệ chính quyền địa phương
+                RelativeContact = requestSupport.RelativeContact, // Thêm thông tin liên hệ người thân
+                Reason = requestSupport.Reason,
+                HouseholdSize = requestSupport.HouseholdSize,
+                SpecialMembers = requestSupport.SpecialMembers,
+                CircumstanceImages = requestSupport.CircumstanceImages, // Thêm hình ảnh hoàn cảnh
+                LocalAuthorityConfirmation = requestSupport.LocalAuthorityConfirmation, // Thêm giấy xác nhận của chính quyền
+                IncomeSource = requestSupport.IncomeSource,
+                MonthlyIncome = requestSupport.MonthlyIncome, // Thêm thu nhập hàng tháng
+                RequestedItems = requestSupport.RequestedItems,
+                AccountId = accountId,
+                CreatedDate = DateTime.Now,
+                Images = requestSupport.Images,
+                HasReceivedSupportBefore = requestSupport.HasReceivedSupportBefore, // Thêm thông tin lịch sử nhận hỗ trợ
+                PreviousSupportDetails = requestSupport.PreviousSupportDetails, // Thêm chi tiết hỗ trợ trước đây
+                CommitmentToAccuracy = requestSupport.CommitmentToAccuracy, // Thêm cam kết minh bạch
+                SignatureImage = requestSupport.SignatureImage // Thêm hình ảnh chữ ký
             };
             await _requestSupportRepository.AddAsync(newRequestSupport);
 
@@ -78,12 +85,11 @@ namespace FDSSYSTEM.Services.RequestSupportService
                     OjectId = newRequestSupport.RequestSupportId,
                     AccountId = userId
                 };
-                //save notifiation to db
+                // Lưu thông báo vào cơ sở dữ liệu
                 await _notificationService.AddNotificationAsync(notificationDto);
-                //send notification via signalR
+                // Gửi thông báo qua SignalR
                 await _hubNotificationContext.Clients.User(notificationDto.AccountId).SendAsync("ReceiveNotification", notificationDto);
             }
-
         }
 
         public async Task Update(string id, RequestSupportDto requestSupport)
@@ -92,15 +98,26 @@ namespace FDSSYSTEM.Services.RequestSupportService
 
             request.FullName = requestSupport.FullName;
             request.DateOfBirth = requestSupport.DateOfBirth;
+            request.CitizenId = requestSupport.CitizenId; // Cập nhật số CMND/CCCD
+            request.CitizenIdImages = requestSupport.CitizenIdImages; // Cập nhật hình ảnh giấy tờ tùy thân
             request.PhoneNumber = requestSupport.PhoneNumber;
             request.Address = requestSupport.Address;
-            request.Email =request.Email;
+            request.Email = requestSupport.Email; // Sửa lỗi: sử dụng requestSupport.Email thay vì request.Email
+            request.LocalAuthorityContact = requestSupport.LocalAuthorityContact; // Cập nhật thông tin liên hệ chính quyền địa phương
+            request.RelativeContact = requestSupport.RelativeContact; // Cập nhật thông tin liên hệ người thân
             request.Reason = requestSupport.Reason;
             request.HouseholdSize = requestSupport.HouseholdSize;
             request.SpecialMembers = requestSupport.SpecialMembers;
+            request.CircumstanceImages = requestSupport.CircumstanceImages; // Cập nhật hình ảnh hoàn cảnh
+            request.LocalAuthorityConfirmation = requestSupport.LocalAuthorityConfirmation; // Cập nhật giấy xác nhận của chính quyền
             request.IncomeSource = requestSupport.IncomeSource;
+            request.MonthlyIncome = requestSupport.MonthlyIncome; // Cập nhật thu nhập hàng tháng
             request.RequestedItems = requestSupport.RequestedItems;
             request.Images = requestSupport.Images;
+            request.HasReceivedSupportBefore = requestSupport.HasReceivedSupportBefore; // Cập nhật thông tin lịch sử nhận hỗ trợ
+            request.PreviousSupportDetails = requestSupport.PreviousSupportDetails; // Cập nhật chi tiết hỗ trợ trước đây
+            request.CommitmentToAccuracy = requestSupport.CommitmentToAccuracy; // Cập nhật cam kết minh bạch
+            request.SignatureImage = requestSupport.SignatureImage; // Cập nhật hình ảnh chữ ký
 
             await _requestSupportRepository.UpdateAsync(request.Id, request);
 
@@ -115,14 +132,12 @@ namespace FDSSYSTEM.Services.RequestSupportService
                     ObjectType = "Yêu cầu hỗ trợ",
                     OjectId = request.RequestSupportId,
                     AccountId = userId,
-
                 };
-                //save notifiation to db
+                // Lưu thông báo vào cơ sở dữ liệu
                 await _notificationService.AddNotificationAsync(notificationDto);
-                //send notification via signalR
+                // Gửi thông báo qua SignalR
                 await _hubNotificationContext.Clients.User(notificationDto.AccountId).SendAsync("ReceiveNotification", notificationDto);
             }
-
         }
 
         public async Task Delete(string id)
@@ -143,25 +158,156 @@ namespace FDSSYSTEM.Services.RequestSupportService
             foreach (var cp in allRequestSupport)
             {
                 var cpDto = cp.Adapt<RequestSupportWithCreatorDto>();
-                var cretor = allCreator.FirstOrDefault(x => x.AccountId == cp.AccountId);
-                if (cretor != null)
+                var creator = allCreator.FirstOrDefault(x => x.AccountId == cp.AccountId);
+                if (creator != null)
                 {
-                    cpDto.FullName = cretor?.FullName;
-                    cpDto.PhoneNumber = cretor.Phone;
-                    cpDto.Email = cretor.Email;
-              
+                    cpDto.FullName = creator?.FullName;
+                    cpDto.PhoneNumber = creator.Phone;
+                    cpDto.Email = creator.Email;
                 }
+
+                // Ánh xạ danh sách nhà tài trợ
+                cpDto.SupportDonors = cp.SupportDonor?.Select(d => new SupportDonorDto
+                {
+                    DonorId = d.DonorId,
+                    FullName = d.FullName,
+                    CreatedDate = d.CreatedDate,
+                    Status = d.Status
+                }).ToList() ?? new List<SupportDonorDto>();
+
                 rs.Add(cpDto);
             }
 
             return rs;
         }
 
-        public async Task<RequestSupport> GetRequestSupportById(string id)
+        public async Task<RequestSupportDetailDto> GetRequestSupportById(string requestSupportId)
         {
-            var filter = Builders<RequestSupport>.Filter.Eq(c => c.RequestSupportId, id);
-            var getbyId = await _requestSupportRepository.GetAllAsync(filter);
-            return getbyId.FirstOrDefault();
+            var filter = Builders<RequestSupport>.Filter.Eq(c => c.RequestSupportId, requestSupportId);
+            var request = (await _requestSupportRepository.GetAllAsync(filter)).FirstOrDefault();
+
+            if (request == null)
+            {
+                return null;
+            }
+
+            // Chuyển đổi sang DTO
+            var requestDto = request.Adapt<RequestSupportDetailDto>();
+
+            // Lấy thông tin người tạo
+            var creator = await _userService.GetAccountById(request.AccountId);
+            if (creator != null)
+            {
+                requestDto.FullName = creator.FullName;
+                requestDto.PhoneNumber = creator.Phone;
+                requestDto.Email = creator.Email;
+            }
+
+            // Chuyển đổi danh sách nhà tài trợ
+            requestDto.SupportDonors = request.SupportDonor?.Select(d => new SupportDonorDto
+            {
+                DonorId = d.DonorId,
+                FullName = d.FullName,
+                CreatedDate = d.CreatedDate,
+                Status = d.Status
+            }).ToList() ?? new List<SupportDonorDto>();
+
+            return requestDto;
+        }
+
+        public async Task AddDonorSupportRequest(string requestSupportId, CampaignRequestDonorSupportDto donorSupportDto)
+        {
+            var request = await _requestSupportRepository.GetByRequestSupportIdAsync(requestSupportId);
+            if (request == null)
+            {
+                throw new Exception("Không tìm thấy đơn yêu cầu hỗ trợ.");
+            }
+
+            // Lấy thông tin nhà tài trợ từ danh sách email
+            var donorFilter = Builders<Account>.Filter.In(a => a.Email, donorSupportDto.Emails);
+            var donors = await _userRepository.GetAllAsync(donorFilter);
+
+            // Thêm nhà tài trợ vào danh sách SupportDonor với trạng thái Pending
+            foreach (var donor in donors)
+            {
+                if (request.SupportDonor == null)
+                {
+                    request.SupportDonor = new List<SupportDonor>();
+                }
+
+                // Kiểm tra xem nhà tài trợ đã được thêm chưa
+                if (!request.SupportDonor.Any(d => d.DonorId == donor.AccountId))
+                {
+                    request.SupportDonor.Add(new SupportDonor
+                    {
+                        DonorId = donor.AccountId,
+                        FullName = donor.FullName,
+                        CreatedDate = DateTime.Now,
+                        Status = "Pending" // Trạng thái ban đầu
+                    });
+                }
+            }
+
+            // Cập nhật đơn yêu cầu trong cơ sở dữ liệu
+            await _requestSupportRepository.UpdateAsync(request.Id, request);
+/*
+            // Gửi thông báo cho nhân viên/admin
+            var userReceiveNotifications = await _userService.GetAllAdminAndStaffId();
+            foreach (var userId in userReceiveNotifications)
+            {
+                var notificationDto = new NotificationDto
+                {
+                    Title = "Yêu cầu hỗ trợ đã được gửi đến nhà tài trợ",
+                    Content = $"Yêu cầu hỗ trợ {requestSupportId} đã được gửi đến các nhà tài trợ.",
+                    NotificationType = "Gửi yêu cầu",
+                    ObjectType = "Yêu cầu hỗ trợ",
+                    OjectId = requestSupportId,
+                    AccountId = userId
+                };
+                await _notificationService.AddNotificationAsync(notificationDto);
+                await _hubNotificationContext.Clients.User(notificationDto.AccountId).SendAsync("ReceiveNotification", notificationDto);
+            }*/
+        }
+
+        public async Task UpdateDonorStatus(string requestSupportId, string donorId, string status)
+        {
+            if (!new[] { "Participating", "NotParticipating", "Pending" }.Contains(status))
+            {
+                throw new ArgumentException("Trạng thái không hợp lệ.");
+            }
+
+            var request = await _requestSupportRepository.GetByRequestSupportIdAsync(requestSupportId);
+            if (request == null)
+            {
+                throw new Exception("Không tìm thấy đơn yêu cầu hỗ trợ.");
+            }
+
+            var donor = request.SupportDonor?.FirstOrDefault(d => d.DonorId == donorId);
+            if (donor == null)
+            {
+                throw new Exception("Không tìm thấy nhà tài trợ trong đơn yêu cầu.");
+            }
+
+            donor.Status = status;
+
+            await _requestSupportRepository.UpdateAsync(request.Id, request);
+
+           /* // Gửi thông báo cho nhân viên/admin
+            var userReceiveNotifications = await _userService.GetAllAdminAndStaffId();
+            foreach (var userId in userReceiveNotifications)
+            {
+                var notificationDto = new NotificationDto
+                {
+                    Title = $"Nhà tài trợ đã cập nhật trạng thái",
+                    Content = $"Nhà tài trợ {donor.FullName} đã cập nhật trạng thái thành {status} cho đơn {requestSupportId}.",
+                    NotificationType = "Cập nhật trạng thái",
+                    ObjectType = "Yêu cầu hỗ trợ",
+                    OjectId = requestSupportId,
+                    AccountId = userId
+                };
+                await _notificationService.AddNotificationAsync(notificationDto);
+                await _hubNotificationContext.Clients.User(notificationDto.AccountId).SendAsync("ReceiveNotification", notificationDto);
+            }*/
         }
 
     }
