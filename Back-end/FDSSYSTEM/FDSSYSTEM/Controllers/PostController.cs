@@ -1,11 +1,13 @@
 ﻿using FDSSYSTEM.DTOs;
 using FDSSYSTEM.DTOs.Certificates;
 using FDSSYSTEM.Models;
+using FDSSYSTEM.Options;
 using FDSSYSTEM.Services.PostService;
 using Mapster;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 namespace FDSSYSTEM.Controllers
@@ -15,10 +17,12 @@ namespace FDSSYSTEM.Controllers
     public class PostController : Controller
     {
         private readonly IPostService _postService;
+        private readonly PolicyConfig _policyConfig;
 
-        public PostController(IPostService postService)
+        public PostController(IPostService postService, IOptions<PolicyConfig> options)
         {
             _postService = postService;
+            _policyConfig = options.Value;
         }
 
         [HttpPost("CreatePost")]
@@ -27,12 +31,18 @@ namespace FDSSYSTEM.Controllers
         {
             try
             {
+                List<string> policyResult = verifyPolicy(post.PostContent);
+                if (policyResult.Count > 0)
+                {
+                    return BadRequest("Nội dung chứa các từ không được phép: " + string.Join(", ", policyResult));
+                }
+
                 var newPost = await _postService.Create(post);
                 return Ok(newPost);
             }
             catch (Exception ex)
             {
-                return BadRequest();
+                return BadRequest(ex.Message);
             }
         }
 
@@ -118,6 +128,12 @@ namespace FDSSYSTEM.Controllers
         {
             try
             {
+                List<string> policyResult = verifyPolicy(post.PostContent);
+                if (policyResult.Count > 0)
+                {
+                    return BadRequest("Nội dung chứa các từ không được phép: " + string.Join(", ", policyResult));
+                }
+
                 var existingPost = await _postService.GetById(id);
                 if (existingPost == null)
                 {
@@ -162,5 +178,19 @@ namespace FDSSYSTEM.Controllers
         }
 
 
+        private List<string> verifyPolicy(string content)
+        {
+            List<string> rs = new List<string>();
+            foreach (var item in _policyConfig.Content)
+            {
+                if (content.Contains(item))
+                {
+                    rs.Add(item);
+                }
+            }
+            return rs;
+        }
     }
+
+
 }

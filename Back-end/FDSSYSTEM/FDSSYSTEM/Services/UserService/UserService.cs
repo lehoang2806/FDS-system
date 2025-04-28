@@ -25,6 +25,7 @@ using Microsoft.AspNetCore.Identity.Data;
 using FDSSYSTEM.Options;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Mvc;
+using Google.Apis.Auth;
 
 
 namespace FDSSYSTEM.Services.UserService;
@@ -45,6 +46,7 @@ public class UserService : IUserService
     private readonly SMSHelper _smsHeper;
     private readonly IWebHostEnvironment _env;
     private readonly EmailConfig _emailConfig;
+    private readonly JwtSetting _jwtSetting;
 
     public UserService(IUserRepository userRepository
         , IUserContextService userContextService
@@ -58,6 +60,7 @@ public class UserService : IUserService
         , SMSHelper smsHelper
         , IWebHostEnvironment env
         , IOptions<EmailConfig> options
+        , IOptions<JwtSetting> jwtSettings
         )
     {
         _userRepository = userRepository;
@@ -72,6 +75,7 @@ public class UserService : IUserService
         _smsHeper = smsHelper;
         _env = env;
         _emailConfig = options.Value;
+        _jwtSetting = jwtSettings.Value;
     }
 
     public async Task AddUser(Account account)
@@ -91,7 +95,7 @@ public class UserService : IUserService
 
     }
 
-    public async Task CreateUserAsync(RegisterUserDto user, bool verifyOtp)
+    public async Task CreateUserAsync(RegisterUserDto user, bool verifyOtp, bool isGoogleAccount)
     {
 
         //kiểm tra đã xác thực OTP trước khi tạo account
@@ -114,7 +118,7 @@ public class UserService : IUserService
             FullName = user.FullName,
             Phone = user.Phone,
             RoleId = user.RoleId,
-            IsConfirm = !verifyOtp,
+            IsConfirm = !verifyOtp && !isGoogleAccount,
             //CCCD = user.CCCD,
             //TaxIdentificationNumber = user.TaxIdentificationNumber,
             //OrganizationName = user.OrganizationName,
@@ -148,7 +152,7 @@ public class UserService : IUserService
             UserEmail = staffDto.UserEmail,
             RoleId = 2,
         };
-        await CreateUserAsync(staff, false);
+        await CreateUserAsync(staff, false,false);
     }
 
     //public async Task CreateUserAsync(RegisterPersonalDonorDto user)
@@ -1027,4 +1031,23 @@ public class UserService : IUserService
         return (await _userRepository.GetAllAsync(filter)).ToList();
     }
 
+
+    public async Task<GoogleJsonWebSignature.Payload> VerifyGoogleTokenAsync(string idToken)
+    {
+        try
+        {
+            var settings = new GoogleJsonWebSignature.ValidationSettings()
+            {
+                Audience = new List<string>() { _jwtSetting.GoogleClientID } // từ Google Console
+            };
+
+            var payload = await GoogleJsonWebSignature.ValidateAsync(idToken, settings);
+            return payload;
+        }
+        catch
+        {
+
+        }
+        return null;
+    }
 }

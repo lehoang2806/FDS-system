@@ -13,6 +13,6 @@
         public int NumberOfCampaignsCreated { get; set; } // số lượng chiến dịch tạo ra
         public int NumberOfGift { get; set; } // số lượng quà ủng hộ
         public int NumberOfRecipientsParticipating {  get; set; } // số lượng recipeint tham gia trong chiến dịch donor tạo
-        public long AmountOfSupportForTheSystem { get; set; } //tổng số tiền ủng hộ
+        public decimal AmountOfSupportForTheSystem { get; set; } //tổng số tiền ủng hộ
     }
 }

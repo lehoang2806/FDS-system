@@ -21,7 +21,7 @@
         public int NumberOfGiftOfPersonalDonor { get; set; } // số lượng quà trong campaign
         public int NumberOfGiftOrganizaionDonor { get; set; }
         public int NumberOfGiftStaff { get; set; }
-        public long AmountOfSupportForTheSystem { get; set; } // chưa có **********
+        public decimal AmountOfSupportForTheSystem { get; set; } // chưa có **********
         public int NumberOfAllPersonalDonorMember { get; set; }
         public int NumberOfAllOrganizaionDonorMember { get; set; }
         public int NumberOfAllRecipientMember { get; set; }

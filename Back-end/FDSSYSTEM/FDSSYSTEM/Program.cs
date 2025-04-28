@@ -4,6 +4,7 @@ using FDSSYSTEM.Helpers;
 using FDSSYSTEM.Options;
 using FDSSYSTEM.Repositories.CampaignDonorSupportRepository;
 using FDSSYSTEM.Repositories.CampaignRepository;
+using FDSSYSTEM.Repositories.DonorDonateRepository;
 using FDSSYSTEM.Repositories.DonorQuestionRepository;
 using FDSSYSTEM.Repositories.FeedBackCommentRepository;
 using FDSSYSTEM.Repositories.FeedBackLikeRepository;
@@ -30,6 +31,7 @@ using FDSSYSTEM.Repositories.UserRepository;
 using FDSSYSTEM.SeedData;
 using FDSSYSTEM.Services.CampaignDonorSupportService;
 using FDSSYSTEM.Services.CampaignService;
+using FDSSYSTEM.Services.DonorDonateService;
 using FDSSYSTEM.Services.DonorQuestionService;
 using FDSSYSTEM.Services.FeedBackCommentService;
 using FDSSYSTEM.Services.FeedBackLikeService;
@@ -127,6 +129,9 @@ builder.Services.AddScoped<ICampaignDonorSupportService, CampaignDonorSupportSer
 builder.Services.AddScoped<IDonorQuestionRepository, DonorQuestionRepository>();
 builder.Services.AddScoped<IDonorQuestionService, DonorQuestionService>();
 
+builder.Services.AddScoped<IDonorDonateRepository, DonorDonateRepository>();
+builder.Services.AddScoped<IDonorDonateService, DonorDonateService>();
+
 builder.Services.AddScoped<IStatisticService, StatisticService>();
 
 
@@ -139,6 +144,7 @@ builder.Services.AddSingleton<EmailHelper>();
 builder.Services.Configure<SmsTwilioSetting>(builder.Configuration.GetSection("SMSTwilio"));
 builder.Services.AddSingleton<SMSHelper>();
 builder.Services.Configure<EmailConfig>(builder.Configuration.GetSection("EmailConfig"));
+builder.Services.Configure<PolicyConfig>(builder.Configuration.GetSection("Policy"));
 
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -165,8 +171,7 @@ builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(builder =>
     {
-        builder.WithOrigins("null") // Cho phép chạy từ file:/// (không khuyến khích) => dùng để test từ file html
-               .WithOrigins("http://localhost:5173") // gọi từ frontend
+        builder.WithOrigins("null", "http://localhost:5173", "http://localhost:4000")
                .AllowAnyMethod()
                .AllowAnyHeader()
                .AllowCredentials();
@@ -218,7 +223,10 @@ app.MapHub<NotificationHub>("/notificationhub");
 using (var scope = app.Services.CreateScope())
 {
     var userService = scope.ServiceProvider.GetRequiredService<IUserService>();
-    await SeedData.Initialize(userService);
+
+    var roleService = scope.ServiceProvider.GetRequiredService<IRoleService>();
+    var roleRepository = scope.ServiceProvider.GetRequiredService<IRoleRepository>();
+    await SeedData.Initialize(userService, roleService, roleRepository);
 }
 
 // Configure the HTTP request pipeline.

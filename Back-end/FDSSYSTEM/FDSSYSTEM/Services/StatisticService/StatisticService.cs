@@ -1,6 +1,7 @@
 ﻿using FDSSYSTEM.DTOs.Statistic;
 using FDSSYSTEM.Models;
 using FDSSYSTEM.Repositories.CampaignRepository;
+using FDSSYSTEM.Repositories.DonorDonateRepository;
 using FDSSYSTEM.Repositories.OrganizationDonorCertificateRepository;
 using FDSSYSTEM.Repositories.RecipientCertificateRepository;
 using FDSSYSTEM.Repositories.RegisterReceiverRepository;
@@ -15,6 +16,7 @@ namespace FDSSYSTEM.Services.StatisticService
         private readonly ICampaignRepository _campainRepository;
         private readonly IUserRepository _userRepository;
         private readonly IRegisterReceiverRepository _registerReceiverRepository;
+        private readonly IDonorDonateRepository _donateRepository;
         private readonly IPersonalDonorCertificateRepository _personalDonorCertificateRepository;
         private readonly IOrganizationDonorCertificateRepository _organizationDonorCertificateRepository;
         private readonly IRecipientCertificateRepository _recipientCertificateRepository;
@@ -28,6 +30,7 @@ namespace FDSSYSTEM.Services.StatisticService
             , IOrganizationDonorCertificateRepository organizationDonorCertificateRepository
             , IRecipientCertificateRepository recipientCertificateRepository
             , IUserContextService userContextService
+            , IDonorDonateRepository donateRepository
             )
         {
             _campainRepository = campainRepository;
@@ -37,6 +40,7 @@ namespace FDSSYSTEM.Services.StatisticService
             _organizationDonorCertificateRepository = organizationDonorCertificateRepository;
             _recipientCertificateRepository = recipientCertificateRepository;
             _userContextService = userContextService;
+            _donateRepository = donateRepository;
         }
 
         public async Task<StatisticAdminDto> GetStatisticAdmin()
@@ -177,6 +181,14 @@ namespace FDSSYSTEM.Services.StatisticService
             rs.NumberOfAllStaffMember = users.Where(x => x.CreateDate >= fromDateUTC && x.CreateDate < toDateUTC && x.RoleId == 2).Count();
             rs.NumberOfGiftRegisterReceiver = registerReceivers.Sum(x => x.Quantity);
 
+            //donor donate
+            var filterDonorDonate = Builders<DonorDonate>.Filter.And(
+                Builders<DonorDonate>.Filter.Gte(p => p.CreatedAt, fromDateUTC),
+                Builders<DonorDonate>.Filter.Lt(p => p.CreatedAt, toDateUTC)
+            );
+            var donorDonate = await _donateRepository.GetAllAsync(filterDonorDonate);
+            rs.AmountOfSupportForTheSystem = donorDonate.Sum(x => x.Amount);
+
             return rs;
         }
 
@@ -203,9 +215,18 @@ namespace FDSSYSTEM.Services.StatisticService
             );
             var registerReceivers = await _registerReceiverRepository.GetAllAsync(filterRegisterReceiver);
 
+            //donor donate
+            var filterDonorDonate= Builders<DonorDonate>.Filter.And(
+                Builders<DonorDonate>.Filter.Gte(p => p.CreatedAt, fromDateUTC),
+                Builders<DonorDonate>.Filter.Lt(p => p.CreatedAt, toDateUTC),
+                Builders<DonorDonate>.Filter.Eq(p => p.DonorId, _userContextService.UserId)
+            );
+            var donorDonate = await _donateRepository.GetAllAsync(filterDonorDonate);
+
             rs.NumberOfCampaignsCreated = campaigns.Count();
             rs.NumberOfGift = campaigns.Sum(x=>x.LimitedQuantity);
             rs.NumberOfRecipientsParticipating = registerReceivers.Count();
+            rs.AmountOfSupportForTheSystem = donorDonate.Sum(x => x.Amount);
 
             return rs;
         }
