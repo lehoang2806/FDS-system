@@ -26,7 +26,7 @@ const CancelCampaignModal: FC<CancelCampaignModalProps> = ({ isOpen, setIsOpen, 
                 comment: reason
             })).unwrap()
                 .then(() => {
-                    toast.success("Reject Campaign successfully.");
+                    toast.success("Đã huỷ chiến dịch");
                     setIsOpen(false);
                     dispatch(getAllCampaignApiThunk());
                     dispatch(getCampaignByIdApiThunk(selectedCampaign.campaignId));

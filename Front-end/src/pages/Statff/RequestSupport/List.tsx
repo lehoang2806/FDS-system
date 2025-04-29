@@ -6,6 +6,12 @@ import { routes } from '@/routes/routeName'
 import { setLoading } from '@/services/app/appSlice'
 import { getAllRequestSupportApiThunk } from '@/services/requestSupport/requestSupportThunk'
 import { FC, useEffect, useState } from 'react'
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+import 'dayjs/locale/vi';
+
+dayjs.locale('vi');
+dayjs.extend(relativeTime);
 
 const StaffListRequestSupportPage: FC = () => {
     const handleToDetail = (newsId: string) => {
@@ -78,6 +84,9 @@ const StaffListRequestSupportPage: FC = () => {
                                     Số điện thoại
                                 </th>
                                 <th className="table-head-cell">
+                                    Thời gian tạo
+                                </th>
+                                <th className="table-head-cell">
                                     Hành động
                                 </th>
                             </tr>
@@ -87,6 +96,9 @@ const StaffListRequestSupportPage: FC = () => {
                                 <tr className="table-body-row" key={index}>
                                     <td className='table-body-cell'>{item.fullName}</td>
                                     <td className='table-body-cell'>{item.phoneNumber}</td>
+                                    <td className='table-body-cell'>
+                                        {item?.createdDate ? dayjs(item.createdDate).fromNow() : ''}
+                                    </td>
                                     <td className="table-body-cell">
                                         <button className='view-btn' onClick={() => handleToDetail(item.requestSupportId)}>Xem chi tiết</button>
                                     </td>

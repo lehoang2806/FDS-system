@@ -1,5 +1,5 @@
 import LandingBasicLayout from "@/layout/System/LandingBasicLayout";
-import { UserChangePasswordPage, UserDetailCampaignPage, UserDetailCertificate, UserNewPasswordPage, UserPersonalPage, UserProfilePage, UserSubmitCertificatePage } from "@/pages/User";
+import { DetailRequestSupport, ParticipateRequestSupport, UserChangePasswordPage, UserDetailCampaignPage, UserDetailCertificate, UserNewPasswordPage, UserPersonalPage, UserProfilePage, UserSubmitCertificatePage } from "@/pages/User";
 import { RouteObject } from "react-router-dom";
 
 const routeUser: RouteObject[] = [
@@ -54,6 +54,26 @@ const routeUser: RouteObject[] = [
                     {
                         path: "",
                         element: <UserDetailCertificate/>
+                    }
+                ]
+            },
+            {
+                path: "requestSupport/:id/detail",
+                element: <LandingBasicLayout />,
+                children: [
+                    {
+                        path: "",
+                        element: <DetailRequestSupport/>
+                    }
+                ]
+            },
+            {
+                path: "participateRequestSupport/:id/detail",
+                element: <LandingBasicLayout />,
+                children: [
+                    {
+                        path: "",
+                        element: <ParticipateRequestSupport/>
                     }
                 ]
             },

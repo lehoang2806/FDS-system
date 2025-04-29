@@ -197,14 +197,14 @@ const StaffDetailCertificateRecipient = () => {
                                             handleApproveCertificate({ certificateId: currentRecipientCertificate?.recipientCertificateId, type: 3 }, { accountId: currentRecipientCertificate?.recipientId, type: "3" });
                                         }}
                                     >
-                                        Approve
+                                        Phê duyệt
                                     </button>
                                     <button className="reject-btn" onClick={() => {
                                         handleRejectCertificate(currentRecipientCertificate.recipientCertificateId, 3);
                                     }}>
-                                        Reject
+                                        Từ chối
                                     </button>
-                                    <button className='additional-btn' onClick={() => handleAdditionalCertificate(currentRecipientCertificate.recipientCertificateId, 3)}>Additional</button>
+                                    <button className='additional-btn' onClick={() => handleAdditionalCertificate(currentRecipientCertificate.recipientCertificateId, 3)}>Yêu cầu bổ sung</button>
                                 </div>
                             </div>
                         </>

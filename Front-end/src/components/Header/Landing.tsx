@@ -61,6 +61,8 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
     const [isNotifOpen, setIsNotifOpen] = useState(false);
     const notifications = useAppSelector(selectNotifications)
 
+    console.log(notifications)
+
     const handleNewNotification = (notification: any) => {
         const correctedNotification: NotificationDto = {
             ...notification,
@@ -221,9 +223,14 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
         }
     ];
 
-    const handleToDetailCampaign = (campaignId: string) => {
+    const handleToDetailCampaign = (campaignId: string, type: string) => {
+        if(type === "Notification"){
+            const url = routes.user.campaign.detail.replace(":id", campaignId);
+            return navigateHook(url)
+        } else {
         const url = routes.user.detail_campaign.replace(":id", campaignId);
         return navigateHook(url)
+        }
     }
 
     const handleGoToCampaign = (campaignId: string) => {
@@ -369,6 +376,8 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
                                                     if (notif.notificationType === "Pending") actionText = "Có chiến dịch mới được tạo ra.";
                                                     if (notif.notificationType === "Reject") actionText = "Chiến dịch đã bị từ chối.";
                                                     if (notif.notificationType === "Review") actionText = "Chiến dịch đang chờ xem xét.";
+                                                    if (notif.notificationType === "Notification") actionText = "Có một chiến dịch vừa được tạo.";
+                                                    if (notif.notificationType === "Cancel") actionText = "Chiến dịch vừa bị huỷ.";
 
                                                     if (actionText) {
                                                         return (
@@ -377,13 +386,13 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
                                                                 className={`notification-item ${notif.isRead ? "read" : "unread"}`}
                                                                 onClick={() => {
                                                                     markAsRead(notif.notificationId);
-                                                                    handleToDetailCampaign(notif.ojectId || "");
+                                                                    handleToDetailCampaign(notif.ojectId || "", notif.notificationType);
                                                                 }}
                                                             >
                                                                 <CampaignIcon className="notification-icon" />
                                                                 <div>
                                                                     <strong>{notif.content}</strong>
-                                                                    <p>{actionText}</p>
+                                                                    <p>Đi đến chiến dịch</p>
                                                                     <p>
                                                                         {notif?.createdDate
                                                                             ? dayjs.utc(notif.createdDate).tz("Asia/Ho_Chi_Minh").fromNow()
@@ -530,6 +539,7 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
                                                         if (notif.notificationType === "Approve") actionText = "Đơn xác minh danh tính đã được phê duyệt.";
                                                         if (notif.notificationType === "Reject") actionText = "Đơn xác minh danh tính đã bị từ chối.";
                                                         if (notif.notificationType === "Review") actionText = "Đơn xác minh danh tính đang chờ xem xét.";
+                                                        if (notif.notificationType === "Pending") actionText = "Đơn xác minh danh tính cần bổ sung thêm thông tin.";
 
                                                         if (actionText) {
                                                             return (
@@ -544,7 +554,7 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
                                                                     <CertificateIcon className="notification-icon" />
                                                                     <div>
                                                                         <strong>{notif.content}</strong>
-                                                                        <p>{actionText}</p>
+                                                                        <p>Đi đến đơn xác minh</p>
                                                                         <p>
                                                                             {notif?.createdDate
                                                                                 ? dayjs.utc(notif.createdDate).tz("Asia/Ho_Chi_Minh").fromNow()
@@ -561,6 +571,7 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
                                                         if (notif.notificationType === "Approve") actionText = "Đơn xác minh danh tính đã được phê duyệt.";
                                                         if (notif.notificationType === "Reject") actionText = "Đơn xác minh danh tính đã bị từ chối.";
                                                         if (notif.notificationType === "Review") actionText = "Đơn xác minh danh tính đang chờ xem xét.";
+                                                        if (notif.notificationType === "Pending") actionText = "Đơn xác minh danh tính cần bổ sung thêm thông tin.";
 
                                                         if (actionText) {
                                                             return (
@@ -575,7 +586,7 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
                                                                     <CertificateIcon className="notification-icon" />
                                                                     <div>
                                                                         <strong>{notif.content}</strong>
-                                                                        <p>{actionText}</p>
+                                                                        <p>Đi đến đơn xác minh</p>
                                                                         <p>
                                                                             {notif?.createdDate
                                                                                 ? dayjs.utc(notif.createdDate).tz("Asia/Ho_Chi_Minh").fromNow()
@@ -592,6 +603,7 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
                                                         if (notif.notificationType === "Approve") actionText = "Đơn xác minh danh tính đã được phê duyệt.";
                                                         if (notif.notificationType === "Reject") actionText = "Đơn xác minh danh tính đã bị từ chối.";
                                                         if (notif.notificationType === "Review") actionText = "Đơn xác minh danh tính đang chờ xem xét.";
+                                                        if (notif.notificationType === "Pending") actionText = "Đơn xác minh danh tính cần bổ sung thêm thông tin.";
 
                                                         if (actionText) {
                                                             return (
@@ -606,7 +618,7 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
                                                                     <CertificateIcon className="notification-icon" />
                                                                     <div>
                                                                         <strong>{notif.content}</strong>
-                                                                        <p>{actionText}</p>
+                                                                        <p>Đi đến đơn xác minh</p>
                                                                         <p>
                                                                             {notif?.createdDate
                                                                                 ? dayjs.utc(notif.createdDate).tz("Asia/Ho_Chi_Minh").fromNow()

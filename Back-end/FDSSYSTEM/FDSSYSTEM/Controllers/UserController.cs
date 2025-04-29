@@ -204,7 +204,7 @@ namespace FDSSYSTEM.Controllers
         }
 
         [HttpPut("UpdateRecipientCertificate")]
-        [Authorize(Roles = "Donor")]
+        [Authorize(Roles = "Recipient")]
         public async Task<ActionResult> UpdateRecipientCertificate(string id, CreateRecipientCertificateDto recipientCertificate)
         {
             try

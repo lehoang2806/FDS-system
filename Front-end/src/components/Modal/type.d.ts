@@ -76,6 +76,9 @@ interface RejectPostModalProps extends ModalCommonProps {
 
 interface CreateRequestSupportModalProps extends ModalCommonProps {}
 
-interface RequestDonorModalProps extends ModalCommonProps {}
+interface RequestDonorModalProps extends ModalCommonProps {
+    donorSupport?: DonorSupport[] | null;
+    requestSupportId?: string | null;
+}
 
 interface RemindLoginModalProps extends ModalCommonProps {}
