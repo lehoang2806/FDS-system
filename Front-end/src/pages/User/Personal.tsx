@@ -1,4 +1,4 @@
-import { selectGetAllCampaign, selectGetAllDonorCertificate, selectGetAllRecipientCertificate, selectGetAllRegisterReceivers, selectGetProfileUser, selectIsAuthenticated, selectUserLogin } from "@/app/selector";
+import { selectGetAllCampaign, selectGetAllDonorCertificate, selectGetAllRecipientCertificate, selectGetAllRegisterReceivers, selectGetAllRequestSupport, selectGetProfileUser, selectIsAuthenticated, selectUserLogin } from "@/app/selector";
 import { useAppDispatch, useAppSelector } from "@/app/store";
 import { ArrowLeft, ArrowRight } from "@/assets/icons";
 import { AvatarUser, NoResult } from "@/assets/images"
@@ -16,6 +16,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import 'dayjs/locale/vi';
+import { formatDater, formatTime } from "@/utils/helper";
+import { getAllRequestSupportApiThunk } from "@/services/requestSupport/requestSupportThunk";
 
 dayjs.locale('vi');
 dayjs.extend(relativeTime);
@@ -40,6 +42,9 @@ const UserPersonalPage = () => {
     const registerReceivers = useAppSelector(selectGetAllRegisterReceivers);
     const sortedRegisterReceivers = [...registerReceivers].reverse();
 
+    const requestSupport = useAppSelector(selectGetAllRequestSupport);
+    const sortedRequestSupport = [...requestSupport].reverse();
+
     // Lọc dữ liệu theo tài khoản đăng nhập
     const currentCampaigns = sortedCampaigns.filter(
         (campaign) => campaign.accountId === userLogin?.accountId
@@ -55,6 +60,10 @@ const UserPersonalPage = () => {
 
     const currentRegisterReceivers = sortedRegisterReceivers.filter(
         (registerReceiver) => registerReceiver.accountId === userLogin?.accountId
+    );
+
+    const currentRequestDonor = sortedRequestSupport.filter(
+        (requestSupport) => requestSupport.accountId === userLogin?.accountId
     );
 
     // State quản lý modal
@@ -103,11 +112,13 @@ const UserPersonalPage = () => {
     useEffect(() => {
         document.title = "Trang cá nhân";
         dispatch(setLoading(true));
-        dispatch(getAllRegisterReceiversApiThunk())
-        dispatch(getAllDonorCertificateApiThunk())
-        dispatch(getAllRecipientCertificateApiThunk())
-        dispatch(getAllCampaignApiThunk())
-            .unwrap()
+        Promise.all([
+            dispatch(getAllRegisterReceiversApiThunk()).unwrap(),
+            dispatch(getAllDonorCertificateApiThunk()).unwrap(),
+            dispatch(getAllRecipientCertificateApiThunk()).unwrap(),
+            dispatch(getAllCampaignApiThunk()).unwrap(),
+            dispatch(getAllRequestSupportApiThunk()).unwrap()
+        ])
             .catch(() => {
             }).finally(() => {
                 setTimeout(() => {
@@ -137,6 +148,11 @@ const UserPersonalPage = () => {
         return navigateHook(url)
     }
 
+    const handleToDetailCampaignRecipient = (campaignId: string) => {
+        const url = routes.user.campaign.detail.replace(":id", campaignId);
+        return navigateHook(url)
+    }
+
     const handleToDetailCertificate = (certificateId: string, type: string) => {
         const url = routes.user.detail_certificate.replace(":id", certificateId);
         if (type === "Personal") {
@@ -153,6 +169,11 @@ const UserPersonalPage = () => {
     const handelCancelCampain = (campaignId: string) => {
         setIsCancelCampaignModalOpen(true);
         setSelectedCancelCampaign({ campaignId, comment: "" });
+    }
+
+    const handleToDetailRequestSupport = (requestSupportId: string) => {
+        const url = routes.user.detail_request_support.replace(":id", requestSupportId);
+        return navigateHook(url)
     }
 
     //Phân trang
@@ -228,6 +249,24 @@ const UserPersonalPage = () => {
 
     const onNextRecipientCertificatePage = () => {
         if (currentRecipientCertificatePage < totalRecipientCertificatePages) setCurrentRecipientCertificatePage(currentRecipientCertificatePage + 1);
+    };
+
+    //Request support
+    const [currentRequestSupportPage, setCurrentRequestSupportPage] = useState(1);
+
+    const totalNewsPages = Math.ceil(currentRequestDonor.length / ITEMS_PER_PAGE);
+
+    const currentRequestSupportsPage = currentRequestDonor.slice(
+        (currentRequestSupportPage - 1) * ITEMS_PER_PAGE,
+        currentRequestSupportPage * ITEMS_PER_PAGE
+    );
+
+    const onPreviousRequestSupportPage = () => {
+        if (currentRequestSupportPage > 1) setCurrentRequestSupportPage(currentRequestSupportPage - 1);
+    };
+
+    const onNextRequestSupportPage = () => {
+        if (currentRequestSupportPage < totalNewsPages) setCurrentRequestSupportPage(currentRequestSupportPage + 1);
     };
 
     const isWithin24Hours = (createdDate: string) => {
@@ -338,7 +377,7 @@ const UserPersonalPage = () => {
                                                                 </td>
                                                                 <td className="table-body-cell">
                                                                     <button className='view-btn' onClick={() => handleToDetailCampaign(campaign.campaignId)}>Xem chi tiết</button>
-                                                                    {(campaign.status === "Pending" || campaign.status === "Approved" || campaign.status === "Rejected") && (
+                                                                    {(campaign.status === "Pending" || campaign.status === "Approved") && (
                                                                         <button
                                                                             className='reject-btn'
                                                                             onClick={() => handleCancelClick(campaign.campaignId, campaign.createdDate)}
@@ -457,10 +496,16 @@ const UserPersonalPage = () => {
                                     >
                                         Xác nhận danh tính
                                     </div>
+                                    <div
+                                        className={`upp-tabs-item ${activeTab === "yeucauhotro" ? "upp-tabs-item-actived" : ""}`}
+                                        onClick={() => { handleTabChange("yeucauhotro"), handleFilter() }}
+                                    >
+                                        Đơn yêu cầu hỗ tợ
+                                    </div>
                                 </div>
                             </div>
                             <div className="upps2cr3">
-                                {activeTab === "chiendich" ? (
+                                {activeTab === "chiendich" && (
                                     <div className="upp-content">
                                         {currentRegisterReceivers.length === 0 ? (
                                             <>
@@ -493,9 +538,9 @@ const UserPersonalPage = () => {
                                                             <tr className="table-body-row" key={index}>
                                                                 <td className='table-body-cell'>{registerReceiver.registerReceiverName}</td>
                                                                 <td className='table-body-cell'>{registerReceiver.quantity}</td>
-                                                                <td className='table-body-cell'>{registerReceiver.creatAt}</td>
+                                                                <td className='table-body-cell'>{formatDater(registerReceiver.creatAt)}-{formatTime(registerReceiver.creatAt)}</td>
                                                                 <td className='table-body-cell'>
-                                                                    <button className="view-btn" onClick={() => handleToDetailCampaign(registerReceiver.campaignId)}>Đi đến chiến dịch</button>
+                                                                    <button className="view-btn" onClick={() => handleToDetailCampaignRecipient(registerReceiver.campaignId)}>Đi đến chiến dịch</button>
                                                                 </td>
                                                             </tr>
                                                         ))}
@@ -522,7 +567,8 @@ const UserPersonalPage = () => {
                                             </>
                                         )}
                                     </div>
-                                ) : (
+                                )}
+                                {activeTab === "chungchi" && (
                                     <div className="upp-content">
                                         <button className="pr-btn" onClick={() => setIsRecipientCertificateModalOpen(true)}>Xác nhận</button>
                                         {currentRecipientCertificates.length === 0 ? (
@@ -564,7 +610,7 @@ const UserPersonalPage = () => {
                                                                 <td className='table-body-cell'>{row.fullName}</td>
                                                                 <td className='table-body-cell'>{row.phone}</td>
                                                                 <td className='table-body-cell'>{row.registerSupportReason}</td>
-                                                                <td className='table-body-cell'>{row.status === "Pending" ? <span className='status-pending'>Pending</span> : row.status === "Approved" ? <span className='status-approve'>Approve</span> : <span className='status-reject'>Reject</span>}</td>
+                                                                <td className='table-body-cell'>{row.status === "Pending" ? <span className='status-pending'>Đang chờ phê duyệt</span> : row.status === "Approved" ? <span className='status-approve'>Đã được phê duyệt</span> : <span className='status-reject'>Đã bị từ chối</span>}</td>
                                                                 <td className="table-body-cell">
                                                                     <button className="view-btn" onClick={() => handleToDetailCertificate(row.recipientCertificateId, "Recipient")}>Xem chi tiết</button>
                                                                 </td>
@@ -585,6 +631,72 @@ const UserPersonalPage = () => {
                                                             >
                                                                 <ArrowRight
                                                                     className={`pcc3-icon ${currentRecipientCertificatePage >= totalRecipientCertificatePages ? 'pcc3-icon-disabled' : ''}`}
+                                                                />
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </>
+                                        )}
+                                    </div>
+                                )}
+                                {activeTab === "yeucauhotro" && (
+                                    <div className="upp-content">
+                                        <button className="pr-btn" onClick={() => setIsRecipientCertificateModalOpen(true)}>Xác nhận</button>
+                                        {currentRecipientCertificates.length === 0 ? (
+                                            <>
+                                                <figure>
+                                                    <img src={NoResult} alt="" />
+                                                </figure>
+                                                <h1>Chưa có dữ liệu</h1>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <table className="table">
+                                                    <thead className="table-head">
+                                                        <tr className="table-head-row">
+                                                            <th className="table-head-cell">
+                                                                Họ và tên
+                                                            </th>
+                                                            <th className="table-head-cell">
+                                                                Số điện thoại
+                                                            </th>
+                                                            <th className="table-head-cell">
+                                                                Thời gian tạo
+                                                            </th>
+                                                            <th className="table-head-cell">
+                                                                Hành động
+                                                            </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody className="table-body">
+                                                        {currentRequestSupportsPage.map((row, index) => (
+                                                            <tr key={index} className="table-body-row">
+                                                                <td className='table-body-cell'>{row.fullName}</td>
+                                                                <td className='table-body-cell'>{row.phoneNumber}</td>
+                                                                <td className='table-body-cell'>
+                                                                    {row?.createdDate ? dayjs(row.createdDate).fromNow() : ''}
+                                                                </td>
+                                                                <td className="table-body-cell">
+                                                                    <button className='view-btn' onClick={() => handleToDetailRequestSupport(row.requestSupportId)}>Xem chi tiết</button>
+                                                                </td>
+                                                            </tr>
+                                                        ))}
+                                                    </tbody>
+                                                </table>
+                                                <div className='paginator'>
+                                                    <div className="p-container">
+                                                        <div className="pcc2">{currentRequestSupportPage} of {totalNewsPages}</div>
+                                                        <div className="pcc3">
+                                                            <button disabled={currentRequestSupportPage === 1} onClick={onPreviousRequestSupportPage}>
+                                                                <ArrowLeft className="pcc3-icon" />
+                                                            </button>
+                                                            <button
+                                                                disabled={currentRequestSupportPage >= totalNewsPages}
+                                                                onClick={onNextRequestSupportPage}
+                                                            >
+                                                                <ArrowRight
+                                                                    className={`pcc3-icon ${currentRequestSupportPage >= totalNewsPages ? 'pcc3-icon-disabled' : ''}`}
                                                                 />
                                                             </button>
                                                         </div>

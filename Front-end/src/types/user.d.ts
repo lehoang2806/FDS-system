@@ -1,8 +1,13 @@
 export type UserUpdate = {
-    email?: string;
     fullName?: string;
     address?: string;
-    birthDay?: string;
+    birthDay?:  {
+        day: number;
+        month: number;
+        year: number;
+        dayOfWeek: number;
+    };
+    avatar?: string,
     phone?: string;
     gender?: string;
 };

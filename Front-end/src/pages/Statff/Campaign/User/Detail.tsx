@@ -64,9 +64,9 @@ const StaffDetailCampaignUserPage: FC = () => {
 
     const handleApproveCampaign = async (values: ApproveCampaign) => {
         try {
+            dispatch(setLoading(true));
             await dispatch(approveCampaignApiThunk(values)).unwrap();
             toast.success("Phê duyệt thành công");
-            dispatch(setLoading(true));
             dispatch(getCampaignByIdApiThunk(String(id)))
                 .unwrap()
                 .catch(() => {
@@ -108,7 +108,7 @@ const StaffDetailCampaignUserPage: FC = () => {
                     </div>
                     <hr />
                     <div className="sdcucr2r2">
-                        <div className="sdcucr2r2c1">
+                        <div className="col-flex sdcucr2r2c1">
                             <h3>Trạng thái:</h3>
                             <p>
                                 {currentCampaign?.status === "Pending" ? (
@@ -124,14 +124,14 @@ const StaffDetailCampaignUserPage: FC = () => {
                                 )}
                             </p>
                         </div>
-                        <div className="sdcucr2r2c2">
+                        <div className="col-flex sdcucr2r2c2">
                             <h3>Ngày được tạo:</h3>
                             <p>{dateCreate}</p>
                         </div>
                     </div>
                     <hr />
                     <div className="sdcucr2r3">
-                        <div className="sdcucr2r3c1">
+                        <div className="col-flex sdcucr2r3c1">
                             <h2>Thông tin chiến dịch</h2>
                             <h3>Tên chiến dịch:</h3>
                             <p>{currentCampaign?.campaignName}</p>
@@ -162,7 +162,7 @@ const StaffDetailCampaignUserPage: FC = () => {
                                 </>
                             )}
                         </div>
-                        <div className="sdcucr2r3c2">
+                        <div className="col-flex sdcucr2r3c2">
                             {currentCampaign?.estimatedBudget || currentCampaign?.averageCostPerGift ? (
                                 <>
                                     <h2>Thông tin tài chính</h2>

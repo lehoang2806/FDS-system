@@ -8,12 +8,6 @@ const CrispChat = () => {
         const script = document.createElement('script');
         script.src = 'https://client.crisp.chat/l.js';
         script.async = true;
-        script.onload = () => {
-            console.log("Crisp script loaded successfully!");
-        };
-        script.onerror = (error) => {
-            console.error("Error loading Crisp script: ", error);
-        };
         document.body.appendChild(script);
     }, []);
 

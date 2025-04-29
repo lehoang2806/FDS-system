@@ -26,18 +26,20 @@ const StaffHeader: FC = () => {
     const notifications = useAppSelector(selectNotifications)
     const isAuthenticated = useAppSelector(selectIsAuthenticated);
 
+    console.log(notifications)
+
     const handleNewNotification = (notification: any) => {
         const correctedNotification: NotificationDto = {
             ...notification,
             notificationId: notification.notificationId || notification.id || notification._id,
             objectId: notification.objectId || notification.ojectId,
         };
-    
+
         dispatch(addNotification(correctedNotification));
-    
+
         // 👉 Lưu nội dung cần hiện toast vào localStorage
         localStorage.setItem("pendingToastMessage", correctedNotification.content);
-    
+
         // 👉 Reload trang
         window.location.reload();
     };
@@ -48,7 +50,7 @@ const StaffHeader: FC = () => {
             toast.info(`🔔 ${pendingToast}`);
             localStorage.removeItem("pendingToastMessage"); // Xóa để tránh toast lặp lại
         }
-    }, []);   
+    }, []);
 
     useEffect(() => {
         if (!isAuthenticated) return;
@@ -104,6 +106,7 @@ const StaffHeader: FC = () => {
                         )
                     )
                 );
+                setIsNotifOpen(false);
             })
             .catch((error) => {
                 // Hiển thị thông báo lỗi nếu có
@@ -114,6 +117,10 @@ const StaffHeader: FC = () => {
     const unreadCount = notifications.filter((notif) => !notif.isRead).length;
 
     const unReadCampaignCount = notifications.filter((notif) => notif.objectType === "Campain").length;
+
+    const unReadRequestSupportCount = notifications.filter((notif) => notif.objectType === "Yêu cầu trợ giúp").length;
+
+    const unReadPostCount = notifications.filter((notif) => notif.objectType === "Post").length;
 
     const unReadCertificateCount = notifications.filter((notif) =>
         [
@@ -143,6 +150,14 @@ const StaffHeader: FC = () => {
         const url = routes.staff.campaign.user.detail.replace(":id", campaignId);
         navigateHook(url);
     };
+
+    const handleToDetailRequestSupport = (requestSupportId?: string) => {
+        if (!requestSupportId) {
+            return;
+        }
+        const url = routes.staff.request_support.detail.replace(":id", requestSupportId);
+        navigateHook(url);
+    }
 
     const handleToDetailDonorCertificate = (certificateId?: string, type?: string) => {
         if (!certificateId) {
@@ -197,19 +212,37 @@ const StaffHeader: FC = () => {
                                         Chứng nhận
                                         {unReadCertificateCount > 0 && <span className="notification-badge">{unReadCertificateCount > 9 ? "9+" : unReadCertificateCount}</span>}
                                     </div>
+                                    <div
+                                        className={`nd-tabs-item ${notificationTab === "baiviet" ? "nd-tabs-item-actived" : ""}`}
+                                        onClick={() => setNotificationTab("baiviet")}
+                                    >
+                                        Bài viết
+                                        {unReadPostCount > 0 && <span className="notification-badge">{unReadPostCount > 9 ? "9+" : unReadPostCount}</span>}
+                                    </div>
+                                    <div
+                                        className={`nd-tabs-item ${notificationTab === "yeucau" ? "nd-tabs-item-actived" : ""}`}
+                                        onClick={() => setNotificationTab("yeucau")}
+                                    >
+                                        Yêu cầu trợ giúp
+                                        {unReadRequestSupportCount > 0 && <span className="notification-badge">{unReadRequestSupportCount > 9 ? "9+" : unReadRequestSupportCount}</span>}
+                                    </div>
                                 </div>
 
                                 {notifications.length > 0 ? (
                                     notifications
                                         .filter((notif) => {
                                             if (notificationTab === "chiendich") {
-                                                return notif.objectType === "Campain";
-                                            } else {
+                                                return notif.objectType === "Campain" || notif.objectType === "RegisterReceiver";
+                                            } else if (notificationTab === "chungnhan") {
                                                 return [
                                                     "Personal Donor Certificate",
                                                     "Recipient Certificate",
                                                     "Organization Donor Certificate",
                                                 ].includes(notif.objectType);
+                                            } else if (notificationTab === "yeucau") {
+                                                return notif.objectType === "Yêu cầu trợ giúp";
+                                            } else if (notificationTab === "baiviet") {
+                                                return notif.objectType === "Post";
                                             }
                                         })
                                         .map((notif) => {
@@ -239,6 +272,99 @@ const StaffHeader: FC = () => {
                                                         </div>
                                                     </div>
                                                 );
+                                            }
+
+                                            if (notif.objectType === "RegisterReceiver") {
+                                                let actionText = "";
+                                                if (notif.notificationType === "Pending") actionText = "Có người đăng ký chiến dịch của bạn.";
+
+                                                if (actionText) {
+                                                    return (
+                                                        <div
+                                                            key={notif.notificationId}
+                                                            className={`notification-item ${notif.isRead ? "read" : "unread"}`}
+                                                            onClick={() => {
+                                                                markAsRead(notif.notificationId);
+                                                                handleToDetailUserCampaign(notif.ojectId);
+                                                            }}
+                                                        >
+                                                            <CampaignIcon className="notification-icon" />
+                                                            <div>
+                                                                <strong>{notif.content}</strong>
+                                                                <p>Xem chi tiết</p>
+                                                                <p>
+                                                                    {notif?.createdDate
+                                                                        ? dayjs.utc(notif.createdDate).tz("Asia/Ho_Chi_Minh").fromNow()
+                                                                        : ''}
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    );
+                                                }
+                                            } else {
+                                                <div className="notification-empty">Không có thông báo</div>
+                                            }
+
+                                            if (notif.objectType === "Post") {
+                                                let actionText = "";
+                                                if (notif.notificationType === "pending") actionText = "Có một bài đăng mới được tạo ra.";
+
+                                                if (actionText) {
+                                                    return (
+                                                        <div
+                                                            key={notif.notificationId}
+                                                            className={`notification-item ${notif.isRead ? "read" : "unread"}`}
+                                                            onClick={() => {
+                                                                markAsRead(notif.notificationId);
+                                                                navigateHook(routes.staff.post);
+                                                            }}
+                                                        >
+                                                            <CampaignIcon className="notification-icon" />
+                                                            <div>
+                                                                <strong>{notif.content}</strong>
+                                                                <p>Xem chi tiết</p>
+                                                                <p>
+                                                                    {notif?.createdDate
+                                                                        ? dayjs.utc(notif.createdDate).tz("Asia/Ho_Chi_Minh").fromNow()
+                                                                        : ''}
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    );
+                                                }
+                                            } else {
+                                                <div className="notification-empty">Không có thông báo</div>
+                                            }
+
+                                            if (notif.objectType === "Yêu cầu trợ giúp") {
+                                                let actionText = "";
+                                                if (notif.notificationType === "Yêu cầu trợ giúp") actionText = "Có người đang yêu cầu hỗ trợ.";
+
+                                                if (actionText) {
+                                                    return (
+                                                        <div
+                                                            key={notif.notificationId}
+                                                            className={`notification-item ${notif.isRead ? "read" : "unread"}`}
+                                                            onClick={() => {
+                                                                markAsRead(notif.notificationId);
+                                                                handleToDetailRequestSupport(notif.ojectId);
+                                                            }}
+                                                        >
+                                                            <CampaignIcon className="notification-icon" />
+                                                            <div>
+                                                                <strong>{notif.content}</strong>
+                                                                <p>Xem chi tiết</p>
+                                                                <p>
+                                                                    {notif?.createdDate
+                                                                        ? dayjs.utc(notif.createdDate).tz("Asia/Ho_Chi_Minh").fromNow()
+                                                                        : ''}
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    );
+                                                }
+                                            } else {
+                                                <div className="notification-empty">Không có thông báo</div>
                                             }
 
                                             if (notif.objectType === "Personal Donor Certificate") {

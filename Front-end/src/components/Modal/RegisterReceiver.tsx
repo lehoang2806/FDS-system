@@ -15,9 +15,6 @@ import { selectGetAllRegisterReceivers } from '@/app/selector';
 const RegisterReceiverModal: FC<RegisterReceiverModalProps> = ({ isOpen, setIsOpen, campaign }) => {
     const dispatch = useAppDispatch();
 
-    const localDate = new Date();
-    const offset = localDate.getTimezoneOffset();
-
     const registerReceivers = useAppSelector(selectGetAllRegisterReceivers);
     const currentRegisterReceivers = registerReceivers.filter((registerReceiver) => registerReceiver.campaignId === campaign?.campaignId);
     const totalRegisteredQuantity = currentRegisterReceivers.reduce((sum, receiver) => sum + (receiver.quantity || 0), 0);
@@ -35,7 +32,7 @@ const RegisterReceiverModal: FC<RegisterReceiverModalProps> = ({ isOpen, setIsOp
     const initialValues: CreateRegisterReceiver = {
         registerReceiverName: '',
         quantity: 0,
-        creatAt: new Date(localDate.getTime() - offset * 60000).toISOString(),
+        creatAt: new Date().toISOString(),
         campaignId: campaign?.campaignId
     };
 
@@ -50,6 +47,7 @@ const RegisterReceiverModal: FC<RegisterReceiverModalProps> = ({ isOpen, setIsOp
             .typeError('Số lượng phải là số')
             .integer('Số lượng phải là số nguyên')
             .min(1, 'Số lượng phải lớn hơn 0')
+            .max(10, 'Chỉ được đnagw ký không quá 10 phần quà')
             .required('Vui lòng nhập số lượng'),
     });
 
@@ -99,14 +97,14 @@ const RegisterReceiverModal: FC<RegisterReceiverModalProps> = ({ isOpen, setIsOp
                                 <div className="form-field">
                                     <label className="form-label">Tên người đại diện nhận quà</label>
                                     <Field name="registerReceiverName" type="text" placeholder="Hãy nhập tên của bạn" className={classNames("form-input", { "is-error": errors.registerReceiverName && touched.registerReceiverName })} />
-                                    {errors.registerReceiverName && touched.registerReceiverName && <span className="error">{errors.registerReceiverName}</span>}
+                                    {errors.registerReceiverName && touched.registerReceiverName && <span className="text-error">{errors.registerReceiverName}</span>}
                                 </div>
                                 <div className="form-field">
                                     <label className="form-label">Số lượng muốn nhận</label>
                                     <Field name="quantity" type="number" placeholder="Hãy nhập tên của bạn" className={classNames("form-input", { "is-error": errors.quantity && touched.quantity })} />
-                                    {errors.quantity && touched.quantity && <span className="error">{errors.quantity}</span>}
+                                    {errors.quantity && touched.quantity && <span className="text-error">{errors.quantity}</span>}
                                 </div>
-                                <p><span>Ghi chú:</span> Số lượng bạn đăng ký tương ứng với số người có mặt tại địa điểm.</p>
+                                <p><span>Ghi chú:</span> Số lượng bạn đăng ký tương ứng với số người có mặt tại địa điểm và mỗi đại diện không được đăng ký 10 phần quà.</p>
                                 <Button loading={isSubmitting} type="submit" title="Đăng ký" />
                             </Form>
                         )}

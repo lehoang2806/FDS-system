@@ -29,6 +29,8 @@ export const routes = {
         new_pass: "/user/new-pass",
         detail_campaign: "/user/campaign/:id/detail",
         detail_certificate: "/user/certificate/:id/detail",
+        detail_request_support: "/user/requestSupport/:id/detail",
+        participate_request_support: "/user/participateRequestSupport/:id/detail",
     },
     admin: {
         dashboard: "/admin",

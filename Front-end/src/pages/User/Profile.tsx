@@ -12,16 +12,20 @@ const UserProfilePage = () => {
     const userProfile = useAppSelector(selectUserLogin);
 
     const initialValues: UserUpdate = {
-        email: userProfile?.email ?? "",
         fullName: userProfile?.fullName ?? "",
         address: userProfile?.address ?? "",
-        birthDay: userProfile?.birthDay ?? "",
+        birthDay: {
+            day: get(userProfile, "birthDay.day", 0),
+            month: get(userProfile, "birthDay.month", 0),
+            year: get(userProfile, "birthDay.year", 0),
+            dayOfWeek: get(userProfile, "birthDay.dayOfWeek", 0),
+        },
         gender: userProfile?.gender ?? "",
         phone: userProfile?.phone ?? "",
+        avatar: "",
     };
 
     const schema = Yup.object().shape({
-        email: Yup.string().email("Email không hợp lệ").required("Email là bắt buộc"),
         fullName: Yup.string().min(2, "Tên phải có ít nhất 2 ký tự").required("Tên là bắt buộc"),
         address: Yup.string().nullable(),
         birthDay: Yup.date().nullable().typeError("Ngày sinh không hợp lệ"),
@@ -56,15 +60,7 @@ const UserProfilePage = () => {
                                         <label className="form-label">
                                             Email
                                         </label>
-                                        <Field
-                                            disabled
-                                            name="email"
-                                            className="form-input"
-
-                                        />
-                                        <RenderIf condition={Boolean(get(errors, "email") && get(touched, "email"))}>
-                                            <TextError>{get(errors, "email")}</TextError>
-                                        </RenderIf>
+                                        <input type="text" value={userProfile?.email} disabled className="form-input" />
 
                                     </div>
                                     <div className="form-field">

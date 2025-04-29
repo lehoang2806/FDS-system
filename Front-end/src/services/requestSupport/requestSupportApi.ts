@@ -19,3 +19,13 @@ export const getAllDonorSupportApi = async () => {
     const data = await request.get('api/user/GetAllConfirmedDonorForSupport');
     return data.data;
 }
+
+export const requestDonorSupport = async (params: RequestDonor) => {
+    const data = await request.post('api/RequestSupport/RequestDonorSupport', params);
+    return data.data;
+}
+
+export const participateRequestSupportApi = async (requestSupportId: string, donorId: string, params: string) => {
+    const data = await request.post(`api/RequestSupport/UpdateDonorStatus/${requestSupportId}/${donorId}`, params);
+    return data.data;
+}

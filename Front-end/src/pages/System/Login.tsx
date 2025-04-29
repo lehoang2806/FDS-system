@@ -71,7 +71,6 @@ const LoginPage = () => {
 
     const handleCredentialResponse = async (response: any) => {
         const id_token = response.credential;
-        console.log("idtoken: ", id_token);
 
         try {
             const res = await fetch("http://localhost:5213/api/Auth/logingoogle", {
@@ -81,8 +80,6 @@ const LoginPage = () => {
             });
 
             const data = await res.json();
-            console.log("JWT server:", data.token);
-            console.log(data);
 
             if (data.token) {
                 dispatch(setToken(data.token));
@@ -97,7 +94,6 @@ const LoginPage = () => {
                 setShowRegisterModal(true);
             }
         } catch (error) {
-            console.error("Error during Google login:", error);
             toast.error("Đăng nhập Google thất bại");
         }
     };
@@ -118,7 +114,6 @@ const LoginPage = () => {
             });
 
             const data = await res.json();
-            console.log("Register and login:", data);
 
             if (data.token) {
                 toast.success("Đăng nhập thành công!");
@@ -131,7 +126,6 @@ const LoginPage = () => {
                 toast.error("Đăng ký thất bại. Vui lòng thử lại.");
             }
         } catch (error) {
-            console.error("Error during quick register:", error);
             toast.error("Có lỗi xảy ra.");
         }
     };
