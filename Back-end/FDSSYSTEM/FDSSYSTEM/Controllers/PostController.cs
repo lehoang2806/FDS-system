@@ -95,6 +95,7 @@ namespace FDSSYSTEM.Controllers
 
 
         [HttpPut("Approve")]
+        [Authorize(Roles = "Admin,Staff")]
         public async Task<ActionResult> Approve(ApprovePostDto approvePostDto)
         {
             try
@@ -109,6 +110,7 @@ namespace FDSSYSTEM.Controllers
         }
 
         [HttpPut("Reject")]
+        [Authorize(Roles = "Admin,Staff")]
         public async Task<ActionResult> Reject(RejectPostDto rejectPostDto)
         {
             try

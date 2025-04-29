@@ -1,5 +1,4 @@
 ﻿using FDSSYSTEM.DTOs;
-using FDSSYSTEM.DTOs.Campaigns;
 using FDSSYSTEM.Helper;
 using FDSSYSTEM.Models;
 using FDSSYSTEM.Options;
@@ -191,29 +190,7 @@ namespace FDSSYSTEM.Controllers
             }
         }
 
-        [HttpPost("RequestDonorSupport")]
-        [Authorize(Roles = "Staff")]
-        public async Task<ActionResult> RequestDonorSupport(CampaignRequestDonorSupportDto requestDonorSupportDto)
-        {
-            try
-            {
-                string filePath = Path.Combine(_env.ContentRootPath, "EmailTemplates", "CampaignRequestSupport.html");
-                if (!System.IO.File.Exists(filePath))
-                {
-                    throw new FileNotFoundException("Không tìm thấy file template email.", filePath);
-                }
-                string htmlBody = await System.IO.File.ReadAllTextAsync(filePath);
-                string body = string.Format(htmlBody, _emailConfig.DonorSupportLink);
-                string subject = "Lời mời trao gởi yêu thương";
-                await _emailHeper.SendEmailAsync(subject, body, requestDonorSupportDto.Emails, true);
-
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                return BadRequest();
-            }
-        }
+        
 
     }
 }
