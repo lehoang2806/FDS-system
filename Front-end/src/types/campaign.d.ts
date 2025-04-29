@@ -10,7 +10,7 @@ interface AddCampaign {
     sponsors: string;
     implementationMethod: string;
     communication: string;
-    limitedQuantity: string;
+    limitedQuantity: number;
     campaignType: string;
     startRegisterDate: string;
     endRegisterDate: string;

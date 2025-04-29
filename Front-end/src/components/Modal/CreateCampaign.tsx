@@ -31,7 +31,7 @@ const CreateCampaignModal: FC<CreateCampaignModalProps> = ({ isOpen, setIsOpen }
         sponsors: "",
         implementationMethod: "",
         communication: "",
-        limitedQuantity: "",
+        limitedQuantity: 0,
         campaignType: "",
         startRegisterDate: "",
         endRegisterDate: "",
