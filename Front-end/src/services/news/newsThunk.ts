@@ -8,8 +8,6 @@ const GET_ALL_NEWS = 'GET_ALL_NEWS';
 const GET_NEWS_BY_ID = 'GET_NEWS_BY_ID';
 const CREATE_NEWS_COMMENT = 'CREATE_NEWS_COMMENT';
 const INTEREST_NEWS = "INTEREST_NEWS"
-// const REJECT_CAMPAIGN = 'REJECT_CAMPAIGN';
-// const ADDITIONAL_CAMPAIGN = 'ADDITIONAL_CAMPAIGN';
 
 export const createNewsApiThunk = createAsyncThunk<ResponseFromServer<TextResponse>, ActionParamNews>(
     CREATE_NEWS,
