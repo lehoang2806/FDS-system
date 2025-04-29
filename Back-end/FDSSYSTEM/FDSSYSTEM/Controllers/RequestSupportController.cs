@@ -139,7 +139,8 @@ namespace FDSSYSTEM.Controllers
                     throw new FileNotFoundException("Không tìm thấy file template email.", filePath);
                 }
                 string htmlBody = await System.IO.File.ReadAllTextAsync(filePath);
-                string body = string.Format(htmlBody, _emailConfig.DonorSupportLink);
+                var linkDetail = string.Format(_emailConfig.DonorSupportLink, requestDonorSupportDto.RequestSupportId);
+                string body = string.Format(htmlBody, linkDetail);
                 string subject = "Lời mời trao gởi yêu thương";
 
                 // Gửi email
