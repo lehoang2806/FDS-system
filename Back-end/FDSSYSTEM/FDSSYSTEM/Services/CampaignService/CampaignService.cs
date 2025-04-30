@@ -79,19 +79,19 @@ namespace FDSSYSTEM.Services.CampaignService
                 CampaignDescription = campaign.CampaignDescription,
                 Location = campaign.Location,
                 ImplementationTime = campaign.ImplementationTime,
-                TypeGift = campaign.TypeGift,
+                /*TypeGift = campaign.TypeGift,*/
                 EstimatedBudget = campaign.EstimatedBudget,
                 AverageCostPerGift = campaign.AverageCostPerGift,
                 Status = "Pending",// Nếu không truyền, mặc định là "Pending",
                 TypeAccount = donorType, //staff, personal , organization
                 Sponsors = campaign.Sponsors,
-                StartRegisterDate = campaign.StartRegisterDate,
-                EndRegisterDate = campaign.EndRegisterDate,
+                /*StartRegisterDate = campaign.StartRegisterDate,*/
+                /*EndRegisterDate = campaign.EndRegisterDate,*/
                 Images = campaign.Images,
                 ImplementationMethod = campaign.ImplementationMethod,
                 Communication = campaign.Communication,
                 LimitedQuantity = campaign.LimitedQuantity,
-                CampaignType = campaign.CampaignType,
+                /*CampaignType = campaign.CampaignType,*/
                 District = campaign.District,
                 CreatedDate= DateTime.Now,
             };
@@ -161,17 +161,17 @@ namespace FDSSYSTEM.Services.CampaignService
                 existingCampaign.CampaignDescription = campaign.CampaignDescription;
                 existingCampaign.Location = campaign.Location;
                 existingCampaign.ImplementationTime = campaign.ImplementationTime;
-                existingCampaign.TypeGift = campaign.TypeGift;
+                /*existingCampaign.TypeGift = campaign.TypeGift;*/
                 existingCampaign.EstimatedBudget = campaign.EstimatedBudget;
                 existingCampaign.AverageCostPerGift = campaign.AverageCostPerGift;
                 existingCampaign.Sponsors = campaign.Sponsors;
-                existingCampaign.StartRegisterDate = campaign.StartRegisterDate;
-                existingCampaign.EndRegisterDate = campaign.EndRegisterDate;
+               /* existingCampaign.StartRegisterDate = campaign.StartRegisterDate;*/
+               /* existingCampaign.EndRegisterDate = campaign.EndRegisterDate;*/
                 existingCampaign.Images = campaign.Images;
                 existingCampaign.ImplementationMethod = campaign.ImplementationMethod;
                 existingCampaign.Communication = campaign.Communication;
                 existingCampaign.LimitedQuantity = campaign.LimitedQuantity;
-                existingCampaign.CampaignType = campaign.CampaignType;
+                /*existingCampaign.CampaignType = campaign.CampaignType;*/
                 existingCampaign.District = campaign.District;
 
                 await _campaignRepository.UpdateAsync(existingCampaign.Id, existingCampaign);

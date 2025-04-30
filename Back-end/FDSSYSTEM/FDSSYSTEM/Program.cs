@@ -171,7 +171,7 @@ builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(builder =>
     {
-        builder.WithOrigins("null", "http://localhost:5173", "http://localhost:4000")
+        builder.WithOrigins("null", "http://localhost:5173", "https://fds-system-frontend-fdss-ystem.vercel.app")
                .AllowAnyMethod()
                .AllowAnyHeader()
                .AllowCredentials();
