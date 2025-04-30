@@ -14,11 +14,15 @@ import { format } from "date-fns";
 import { setLoading } from '@/services/app/appSlice';
 import Lightbox from 'react-awesome-lightbox';
 import { AddCampaign } from '@/types/campaign';
+import axios from 'axios';
 
 const CreateCampaignModal: FC<CreateCampaignModalProps> = ({ isOpen, setIsOpen }) => {
     const dispatch = useAppDispatch();
     const [imagePreview, setImagePreview] = useState<string[]>([]);
     const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+
+    const CLOUDINARY_URL = 'https://api.cloudinary.com/v1_1/dehc2ftiv/image/upload';
+    const UPLOAD_PRESET = 'fds_system';
 
     const initialValues: AddCampaign = {
         campaignName: "",
@@ -118,52 +122,57 @@ const CreateCampaignModal: FC<CreateCampaignModalProps> = ({ isOpen, setIsOpen }
                 return !isNaN(parsedValue) && parsedValue > 0; // ensure the number is greater than zero
             }),
 
-        images: Yup.array().of(Yup.string().required('Mỗi ảnh phải là một chuỗi hợp lệ')).min(1, 'Cần ít nhất một ảnh').required('Danh sách ảnh là bắt buộc'),
-
+        images: Yup.array()
+            .of(
+                Yup.string()
+                    .required('Mỗi ảnh phải là một chuỗi hợp lệ')
+                    .matches(/\.(jpeg|jpg|gif|png)$/, 'Ảnh phải có định dạng .jpeg, .jpg, .gif, hoặc .png')
+            )
+            .required('Danh sách ảnh là bắt buộc'),
     });
 
-    const handleFileChange = async (event: ChangeEvent<HTMLInputElement>, setFieldValue: Function) => {
-        if (event.target.files) {
-            const files = Array.from(event.target.files);
-            const base64Promises = files.map(file => convertToBase64(file));
+    const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>, setFieldValue: Function, setImagePreview: Function) => {
+        const files = Array.from(e.target.files || []);
+        const previewUrls = files.map(file => URL.createObjectURL(file));
+        setImagePreview(previewUrls); // Hiển thị preview ảnh
 
-            try {
-                const base64Images = await Promise.all(base64Promises);
-                setFieldValue("images", base64Images); // 🔹 Lưu danh sách ảnh vào Formik
-                setImagePreview(base64Images); // 🔹 Cập nhật ảnh xem trước
-            } catch (_) {
-            }
+        try {
+            const uploadedUrls = await Promise.all(
+                files.map(async (file) => {
+                    const formData = new FormData();
+                    formData.append('file', file);
+                    formData.append('upload_preset', UPLOAD_PRESET);
+
+                    const res = await axios.post(CLOUDINARY_URL, formData);
+                    return res.data.secure_url;
+                })
+            );
+
+            setFieldValue("images", uploadedUrls); // Lưu URL ảnh thực tế vào Formik
+        } catch (err) {
+            console.error("Upload thất bại:", err);
         }
     };
 
-    const convertToBase64 = (file: File): Promise<string> => {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = () => resolve(reader.result as string);
-            reader.onerror = (error) => reject(error);
-        });
-    };
-
     const onSubmit = async (values: AddCampaign, helpers: FormikHelpers<AddCampaign>) => {
-
         try {
-            await dispatch(addCampaignApiThunk(values)).unwrap();
+            await dispatch(addCampaignApiThunk(values)).unwrap(); // Gọi API thêm chiến dịch
             toast.success("Tạo chiến dịch thành công");
-            dispatch(setLoading(true));
-            dispatch(getAllCampaignApiThunk());
+            dispatch(setLoading(true)); // Cập nhật trạng thái loading
+            dispatch(getAllCampaignApiThunk()); // Lấy lại danh sách chiến dịch
         } catch (error) {
             const errorData = get(error, "data.message", "An error occurred");
             helpers.setErrors({ campaignName: errorData });
         } finally {
             helpers.setSubmitting(false);
-            setIsOpen(false);
+            setIsOpen(false); // Đóng modal
             setTimeout(() => {
                 dispatch(setLoading(false));
                 setImagePreview([]);
             }, 1000);
         }
     };
+
 
     const formatCurrency = (value: string) => {
         const numericValue = value.replace(/,/g, ''); // Remove commas
@@ -222,9 +231,31 @@ const CreateCampaignModal: FC<CreateCampaignModalProps> = ({ isOpen, setIsOpen }
                                         {errors.location && touched.location && <span className="text-error">{errors.location}</span>}
                                     </div>
                                     <div className="form-50 form-field">
-                                        <label className="form-label">Quận/ Huyện<span>*</span></label>
-                                        <Field name="district" type="text" placeholder="Hãy nhập Quận/ Huyện" className={classNames("form-input", { "is-error": errors.district && touched.district })} />
-                                        {errors.district && touched.district && <span className="text-error">{errors.district}</span>}
+                                        <label className="form-label">
+                                            Quận/ Huyện<span>*</span>
+                                        </label>
+                                        <div className="form-input-select-container">
+                                            <Field
+                                                as="select"
+                                                name="district"
+                                                className={classNames("form-input-select form-input", {
+                                                    "is-error": errors.district && touched.district,
+                                                })}
+                                            >
+                                                <option value="">Chọn Quận/Huyện</option>
+                                                <option value="Hải Châu">Hải Châu</option>
+                                                <option value="Thanh Khê">Thanh Khê</option>
+                                                <option value="Sơn Trà">Sơn Trà</option>
+                                                <option value="Ngũ Hành Sơn">Ngũ Hành Sơn</option>
+                                                <option value="Liên Chiểu">Liên Chiểu</option>
+                                                <option value="Cẩm Lệ">Cẩm Lệ</option>
+                                                <option value="Hoà Vang">Hoà Vang</option>
+                                                <option value="Hoàng Sa">Hoàng Sa</option>
+                                            </Field>
+                                        </div>
+                                        {errors.district && touched.district && (
+                                            <span className="text-error">{errors.district}</span>
+                                        )}
                                     </div>
                                     <div className="form-50 form-field">
                                         <label className="form-label">Thời gian và ngày nhận quà<span>*</span></label>
@@ -339,10 +370,17 @@ const CreateCampaignModal: FC<CreateCampaignModalProps> = ({ isOpen, setIsOpen }
                                 </div>
                                 <div className="form-field">
                                     <label className="form-label">Ảnh<span>*</span></label>
-                                    <input type="file" accept="image/*" multiple onChange={(e) => handleFileChange(e, setFieldValue)} className={classNames("form-input", { "is-error": errors.images && touched.images })} />
+                                    <input
+                                        type="file"
+                                        accept="image/*"
+                                        multiple
+                                        onChange={(e) => handleFileChange(e, setFieldValue, setImagePreview)}
+                                        className={classNames("form-input", { "is-error": errors.images && touched.images })}
+                                    />
                                     {errors.images && touched.images && <span className="text-error">{errors.images}</span>}
                                 </div>
 
+                                {/* Hiển thị ảnh preview */}
                                 {imagePreview.length > 0 && (
                                     <div className="image-preview-container">
                                         {imagePreview.map((img, index) => (
@@ -365,6 +403,7 @@ const CreateCampaignModal: FC<CreateCampaignModalProps> = ({ isOpen, setIsOpen }
                                     </div>
                                 )}
 
+                                {/* Hiển thị lightbox khi click vào ảnh preview */}
                                 {lightboxIndex !== null && (
                                     <Lightbox
                                         images={imagePreview.map((src) => ({ url: src }))}
