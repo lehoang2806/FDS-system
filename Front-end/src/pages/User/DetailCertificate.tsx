@@ -85,8 +85,6 @@ const UserDetailCertificate = () => {
                                     <p>{currentPersonalDonorCertificate?.email}</p>
                                     <h2>Địa chỉ</h2>
                                     <p>{currentPersonalDonorCertificate?.address}</p>
-                                    <h2>Số CCCD</h2>
-                                    <p>{currentPersonalDonorCertificate?.citizenId}</p>
                                     <h2>Liên kết mạng xã hội</h2>
                                     <p>{currentPersonalDonorCertificate?.socialMediaLink ? currentPersonalDonorCertificate.socialMediaLink : "Không có"}</p>
                                 </div>
@@ -116,9 +114,17 @@ const UserDetailCertificate = () => {
                                     <p>{currentPersonalDonorCertificate?.monthlyIncome ? currentPersonalDonorCertificate?.monthlyIncome : "Không có"}</p>
                                 </div>
                                 <div className="udcsc2r2">
-                                    <h1>Hình ảnh xác minh</h1>
+                                    <h1>Hình ảnh CCCD</h1>
                                     <div className="image-preview-container">
-                                        {currentPersonalDonorCertificate?.images.map((image, index) => (
+                                        {currentPersonalDonorCertificate?.citizenImages.map((image, index) => (
+                                            <div key={index}>
+                                                <img src={image} alt={`Image ${index}`} style={{ width: '200px', height: '200px' }} />
+                                            </div>
+                                        ))}
+                                    </div>
+                                    <h1>Hình ảnh liên quan</h1>
+                                    <div className="image-preview-container">
+                                        {currentPersonalDonorCertificate?.otherImages.map((image, index) => (
                                             <div key={index}>
                                                 <img src={image} alt={`Image ${index}`} style={{ width: '200px', height: '200px' }} />
                                             </div>
@@ -207,8 +213,6 @@ const UserDetailCertificate = () => {
                                     <p>{currentRecipientCertificate?.email}</p>
                                     <h2>Địa chỉ</h2>
                                     <p>{currentRecipientCertificate?.address}</p>
-                                    <h2>Số CCCD</h2>
-                                    <p>{currentRecipientCertificate?.citizenId}</p>
                                     <h2>Hoàn cảnh gia đình</h2>
                                     <p>{currentRecipientCertificate?.circumstances}</p>
                                 </div>
@@ -240,9 +244,17 @@ const UserDetailCertificate = () => {
                                     <p>{currentRecipientCertificate?.registerSupportReason}</p>
                                 </div>
                                 <div className="udcsc2r2">
-                                    <h1>Hình ảnh xác minh</h1>
+                                    <h1>Hình ảnh CCCD</h1>
                                     <div className="image-preview-container">
-                                        {currentRecipientCertificate?.images.map((image, index) => (
+                                        {currentRecipientCertificate?.citizenImages.map((image, index) => (
+                                            <div key={index}>
+                                                <img src={image} alt={`Image ${index}`} style={{ width: '200px', height: '200px' }} />
+                                            </div>
+                                        ))} 
+                                    </div>
+                                    <h1>Hình ảnh liên quan</h1>
+                                    <div className="image-preview-container">
+                                        {currentRecipientCertificate?.otherImages.map((image, index) => (
                                             <div key={index}>
                                                 <img src={image} alt={`Image ${index}`} style={{ width: '200px', height: '200px' }} />
                                             </div>

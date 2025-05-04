@@ -443,13 +443,13 @@ const UserPersonalPage = () => {
                                                     <tbody className="table-body">
                                                         {currentDonorCertificatesPage.map((row, index) => (
                                                             <tr key={index} className="table-body-row">
-                                                                <td className='table-body-cell'>{row.citizenId === null ? "Organization" : "Personal"}</td>
+                                                                <td className='table-body-cell'>{row.organizationName === null ? "Cá nhân" : "Tổ chức"}</td>
                                                                 <td className='table-body-cell'>{row.status === "Pending" ? <span className='status-pending'>Đang chờ phê duyệt</span> : row.status === "Approved" ? <span className='status-approve'>Đã được phê duyệt</span> : <span className='status-reject'>Đã bị từ chối</span>}</td>
                                                                 <td className='table-body-cell'>
                                                                     {row?.createdDate ? dayjs(row.createdDate).fromNow() : ''}
                                                                 </td>
                                                                 <td className="table-body-cell">
-                                                                    <button className="view-btn" onClick={() => row.citizenId === null ? handleToDetailCertificate(row.donorCertificateId, "Organization") : handleToDetailCertificate(row.donorCertificateId, "Personal")}>Xem chi tiết</button>
+                                                                    <button className="view-btn" onClick={() => row.organizationName === null ? handleToDetailCertificate(row.donorCertificateId, "Personal") : handleToDetailCertificate(row.donorCertificateId, "Organization")}>Xem chi tiết</button>
                                                                 </td>
                                                             </tr>
                                                         ))}
@@ -584,9 +584,6 @@ const UserPersonalPage = () => {
                                                     <thead className="table-head">
                                                         <tr className="table-head-row">
                                                             <th className="table-head-cell">
-                                                                CCCD
-                                                            </th>
-                                                            <th className="table-head-cell">
                                                                 Họ và tên
                                                             </th>
                                                             <th className="table-head-cell">
@@ -606,7 +603,6 @@ const UserPersonalPage = () => {
                                                     <tbody className="table-body">
                                                         {currentRecipientCertificatesPage.map((row, index) => (
                                                             <tr key={index} className="table-body-row">
-                                                                <td className='table-body-cell'>{row.citizenId}</td>
                                                                 <td className='table-body-cell'>{row.fullName}</td>
                                                                 <td className='table-body-cell'>{row.phone}</td>
                                                                 <td className='table-body-cell'>{row.registerSupportReason}</td>

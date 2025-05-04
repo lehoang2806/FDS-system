@@ -142,13 +142,13 @@ const StaffListDonorCertificate = () => {
                         <tbody className="table-body">
                             {currentCertificatesPage.map((row, index) => (
                                 <tr key={index} className="table-body-row">
-                                    <td className='table-body-cell'>{row.citizenId === null ? "Tổ chức" : "Cá nhân"}</td>
+                                    <td className='table-body-cell'>{row.organizationName === null ? "Cá nhân" : "Tổ chức"}</td>
                                     <td className='table-body-cell'>{row.status === "Pending" ? <span className='status-pending'>Đang chờ phê duyệt</span> : row.status === "Approved" ? <span className='status-approve'>Đã được phê duyệt</span> : <span className='status-reject'>Đã bị từ chối</span>}</td>
                                     <td className='table-body-cell'>
                                         {row?.createdDate ? dayjs(row.createdDate).fromNow() : ''}
                                     </td>
                                     <td className="table-body-cell">
-                                        <button className="view-btn" onClick={() => { row.citizenId === null ? handleToDetail(row.donorCertificateId, "Organization") : handleToDetail(row.donorCertificateId, "Personal") }}>Xem chi tiết</button>
+                                        <button className="view-btn" onClick={() => { row.organizationName === null ? handleToDetail(row.donorCertificateId, "Personal") : handleToDetail(row.donorCertificateId, "Organization") }}>Xem chi tiết</button>
                                     </td>
                                 </tr>
                             ))}

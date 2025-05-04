@@ -29,16 +29,12 @@ const CreateCampaignModal: FC<CreateCampaignModalProps> = ({ isOpen, setIsOpen }
         campaignDescription: "",
         location: "",
         implementationTime: "",
-        typeGift: "",
         estimatedBudget: "",
         averageCostPerGift: "",
         sponsors: "",
         implementationMethod: "",
         communication: "",
         limitedQuantity: 0,
-        campaignType: "",
-        startRegisterDate: "",
-        endRegisterDate: "",
         district: "",
         images: [],
     };
@@ -50,9 +46,6 @@ const CreateCampaignModal: FC<CreateCampaignModalProps> = ({ isOpen, setIsOpen }
 
         campaignDescription: Yup.string()
             .required("Mô tả không được để trống"),
-
-        typeGift: Yup.string()
-            .required("Loại quà tặng không được để trống"),
 
         location: Yup.string()
             .required("Địa chỉ không được để trống"),
@@ -69,42 +62,12 @@ const CreateCampaignModal: FC<CreateCampaignModalProps> = ({ isOpen, setIsOpen }
         implementationMethod: Yup.string()
             .required('Phương thức thực hiện là bắt buộc'),
 
-        campaignType: Yup.string()
-            .required("Loại chiến dịch là bắt buộc"),
-
         limitedQuantity: Yup.number()
-            .nullable()
-            .when("campaignType", {
-                is: "Limited",
-                then: (schema) => schema.min(1, "Số lượng phải lớn hơn 0").required("Số lượng giới hạn là bắt buộc"),
-                otherwise: (schema) => schema.notRequired().nullable(),
-            }),
+            .required('Số lượng là bắt buộc')
+            .moreThan(0, 'Số lượng phải lớn hơn 0'),
 
         district: Yup.string()
             .required("Quận là bắt buộc"),
-
-        startRegisterDate: Yup.date()
-            .nullable()
-            .when("campaignType", {
-                is: "Voluntary",
-                otherwise: (schema) => schema.notRequired(),
-            }),
-
-        endRegisterDate: Yup.date()
-            .nullable()
-            .when("campaignType", {
-                is: "Voluntary",
-                then: (schema) =>
-                    schema
-                        .test(
-                            "is-before-implementationTime",
-                            "Ngày kết thúc đăng ký phải trước ngày nhận quà",
-                            function (value) {
-                                if (!value || !this.parent.receiveDate) return true; // Bỏ qua nếu không có giá trị
-                                return new Date(value).getTime() < new Date(this.parent.receiveDate).getTime();
-                            }
-                        ),
-            }),
 
         estimatedBudget: Yup.string()
             .test('is-valid-number', 'Nhân sách ước tính phải lớn hơn 0', value => {
@@ -221,11 +184,6 @@ const CreateCampaignModal: FC<CreateCampaignModalProps> = ({ isOpen, setIsOpen }
                                         {errors.campaignName && touched.campaignName && <span className="text-error">{errors.campaignName}</span>}
                                     </div>
                                     <div className="form-50 form-field">
-                                        <label className="form-label">Loại quà tặng<span>*</span></label>
-                                        <Field name="typeGift" type="text" placeholder="Hãy nhập loại quà tặng" className={classNames("form-input", { "is-error": errors.typeGift && touched.typeGift })} />
-                                        {errors.typeGift && touched.typeGift && <span className="text-error">{errors.typeGift}</span>}
-                                    </div>
-                                    <div className="form-50 form-field">
                                         <label className="form-label">Địa điểm<span>*</span></label>
                                         <Field name="location" type="text" placeholder="Hãy nhập địa điẻm giao quà" className={classNames("form-input", { "is-error": errors.location && touched.location })} />
                                         {errors.location && touched.location && <span className="text-error">{errors.location}</span>}
@@ -280,51 +238,11 @@ const CreateCampaignModal: FC<CreateCampaignModalProps> = ({ isOpen, setIsOpen }
                                         <Field name="campaignDescription" as="textarea" rows={8} placeholder="Hãy nhập mô tả về chiến dịch" className={classNames("form-input", { "is-error": errors.campaignDescription && touched.campaignDescription })} />
                                         {errors.campaignDescription && touched.campaignDescription && <span className="text-error">{errors.campaignDescription}</span>}
                                     </div>
-                                    <div className="form-100 form-field">
-                                        <label className="form-label">Loại chiến dịch</label>
-                                        <div className="radio-group">
-                                            <label>
-                                                <Field className="form-radio" type="radio" name="campaignType" value="Limited" />
-                                                <span>Số lượng giới hạn</span>
-                                            </label>
-                                            <label>
-                                                <Field className="form-radio" type="radio" name="campaignType" value="Voluntary" />
-                                                <span>Đăng ký theo nguyện vọng</span>
-                                            </label>
-                                        </div>
+                                    <div className="form-50 form-field">
+                                        <label className="form-label">Số lượng quà tặng<span>*</span></label>
+                                        <Field name="limitedQuantity" type="text" placeholder="Nhập số lượng" className="form-input" />
+                                        {errors.limitedQuantity && touched.limitedQuantity && <span className="text-error">{errors.limitedQuantity}</span>}
                                     </div>
-                                    {values.campaignType === "Limited" && (
-                                        <div className="form-50 form-field">
-                                            <label className="form-label">Số lượng giới hạn<span>*</span></label>
-                                            <Field name="limitedQuantity" type="text" placeholder="Nhập số lượng" className="form-input" />
-                                            {errors.limitedQuantity && touched.limitedQuantity && <span className="text-error">{errors.limitedQuantity}</span>}
-                                        </div>
-                                    )}
-                                    {values.campaignType === "Voluntary" && (
-                                        <>
-                                            <div className="form-50 form-field">
-                                                <label className="form-label">Ngày mở đăng ký<span>*</span></label>
-                                                <Field
-                                                    name="startRegisterDate"
-                                                    type="datetime-local"
-                                                    className="form-input"
-                                                    min={format(new Date(Date.now() + 24 * 60 * 60 * 1000), "yyyy-MM-dd'T'HH:mm")}
-                                                />
-                                                {errors.startRegisterDate && touched.startRegisterDate && <span className="text-error">{errors.startRegisterDate}</span>}
-                                            </div>
-
-                                            <div className="form-50 form-field">
-                                                <label className="form-label">Ngày đóng đăng ký<span>*</span></label>
-                                                <Field
-                                                    name="endRegisterDate"
-                                                    type="datetime-local"
-                                                    className="form-input"
-                                                    min={format(new Date(Date.now() + 24 * 60 * 60 * 1000), "yyyy-MM-dd'T'HH:mm")}
-                                                />
-                                                {errors.endRegisterDate && touched.endRegisterDate && <span className="text-error">{errors.endRegisterDate}</span>}
-                                            </div>
-                                        </>
-                                    )}
                                 </div>
                                 <h3>Thông tin tài chính</h3>
                                 <div className="ccm-form-r2">
