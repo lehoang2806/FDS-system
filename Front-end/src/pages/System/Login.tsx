@@ -73,7 +73,7 @@ const LoginPage = () => {
         const id_token = response.credential;
 
         try {
-            const res = await fetch("http://localhost:5213/api/Auth/logingoogle", {
+            const res = await fetch(`${import.meta.env.VITE_API_URL}/api/Auth/logingoogle`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ idToken: id_token }),
@@ -103,7 +103,7 @@ const LoginPage = () => {
         if (!idTokenGoogle) return;
 
         try {
-            const res = await fetch("http://localhost:5213/api/Auth/logingoogle", {
+            const res = await fetch(`${import.meta.env.VITE_API_URL}/api/Auth/logingoogle`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({

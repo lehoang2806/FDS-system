@@ -74,13 +74,7 @@ const RegisterReceiverModal: FC<RegisterReceiverModalProps> = ({ isOpen, setIsOp
             <section id="register-receiver-modal">
                 <div className="rrm-container">
                     <h1>Đăng ký nhận quà</h1>
-                    {
-                        campaign?.campaignType === "Limited" && (
-                            <>
-                                <p>Số lượng còn lại: {Number(campaign?.limitedQuantity) - totalRegisteredQuantity}</p>
-                            </>
-                        )
-                    }
+                    <p>Số lượng còn lại: {Number(campaign?.limitedQuantity) - totalRegisteredQuantity}</p>
                     <p>Số lượng đã đăng ký: {totalRegisteredQuantity}</p>
                     <Formik
                         initialValues={initialValues}

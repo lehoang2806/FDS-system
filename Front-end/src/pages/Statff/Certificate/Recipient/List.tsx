@@ -118,9 +118,6 @@ const StaffListRecipientCertificate = () => {
                         <thead className="table-head">
                             <tr className="table-head-row">
                                 <th className="table-head-cell">
-                                    CCCD
-                                </th>
-                                <th className="table-head-cell">
                                     Họ và tên
                                 </th>
                                 <th className="table-head-cell">
@@ -137,7 +134,6 @@ const StaffListRecipientCertificate = () => {
                         <tbody className="table-body">
                             {currentCertificatesPage.map((row, index) => (
                                 <tr key={index} className="table-body-row">
-                                    <td className='table-body-cell'>{row.citizenId}</td>
                                     <td className='table-body-cell'>{row.fullName}</td>
                                     <td className='table-body-cell'>{row.phone}</td>
                                     <td className='table-body-cell'>{row.status === "Pending" ? <span className='status-pending'>Đang chờ phê duyệt</span> : row.status === "Approved" ? <span className='status-approve'>Đã được phê duyệt</span> : <span className='status-reject'>Đã bị từ chối</span>}</td>

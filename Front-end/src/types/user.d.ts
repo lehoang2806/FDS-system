@@ -60,7 +60,6 @@ interface UserState {
 }
 
 interface PersonalDonor {
-    citizenId: string;
     fullName: string;
     birthDay: string;
     email: string;
@@ -69,7 +68,8 @@ interface PersonalDonor {
     socialMediaLink: string;
     mainSourceIncome: string;
     monthlyIncome: string;
-    images: string[];
+    citizenImages: string[];
+    otherImages: string[];
 }
 
 interface OrganizationDonor {
@@ -89,7 +89,6 @@ interface OrganizationDonor {
 }
 
 interface AddRecipientCertificate {
-    citizenId: string;
     fullName: string;
     email: string;
     phone: string;
@@ -99,7 +98,8 @@ interface AddRecipientCertificate {
     registerSupportReason: string;
     mainSourceIncome: string;
     monthlyIncome: string;
-    images: string[];
+    citizenImages: string[];
+    otherImages: string[];
 }
 
 interface DonorCertificate {
@@ -136,7 +136,6 @@ interface DonorCertificate {
 interface RecipientCertificate {
     recipientCertificateId: string;
     recipientId: string;
-    citizenId: string;
     fullName: string;
     email: string;
     phone: string;
@@ -146,7 +145,8 @@ interface RecipientCertificate {
     registerSupportReason: string;
     mainSourceIncome: string;
     monthlyIncome: string;
-    images: string[];
+    citizenImages: string[];
+    otherImages: string[];    
     status: string;
     rejectComment?: string | null;
     createdDate: string;
@@ -179,7 +179,6 @@ interface currentPersonalDonorCertificate {
     id: string;
     donorId: string;
     personalDonorCertificateId: string;
-    citizenId: string;
     status: string;
     rejectComment?: string | null;
     createdDate: string;
@@ -191,7 +190,8 @@ interface currentPersonalDonorCertificate {
     socialMediaLink?: string;
     mainSourceIncome: string;
     monthlyIncome: string;
-    images: string[];
+    citizenImages: string[];
+    otherImages: string[];
     reviewComments?: ReviewComment[] | null;
 }
 
@@ -222,7 +222,6 @@ interface currentRecipientCertificate {
     id: string;
     recipientId: string;
     recipientCertificateId: string;
-    citizenId: string;
     status: string;
     rejectComment?: string | null;
     campaignId?: string | null;
@@ -235,7 +234,8 @@ interface currentRecipientCertificate {
     registerSupportReason: string;
     mainSourceIncome: string;
     monthlyIncome: string;
-    images: string[];
+    citizenImages: string[];
+    otherImages: string[];    
     createdDate: string;
     reviewComments?: ReviewComment[] | null;
 }

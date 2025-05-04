@@ -15,15 +15,20 @@ import { PersonalDonorModalProps } from './type';
 import { setLoading } from '@/services/app/appSlice';
 import { selectUserLogin } from '@/app/selector';
 import Lightbox from 'react-awesome-lightbox';
+import axios from 'axios';
 
 const PersonalDonorModal: FC<PersonalDonorModalProps> = ({ isOpen, setIsOpen }) => {
     const dispatch = useAppDispatch();
     const [imagePreview, setImagePreview] = useState<string[]>([]);
+    const [othersImagePreview, setOthersImagePreview] = useState<string[]>([]);
     const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+    const [othersLightboxIndex, setOthersLightboxIndex] = useState<number | null>(null);
     const userLogin = useAppSelector(selectUserLogin);
 
+    const CLOUDINARY_URL = 'https://api.cloudinary.com/v1_1/dehc2ftiv/image/upload';
+    const UPLOAD_PRESET = 'fds_system';
+
     const initialValues: PersonalDonor = {
-        citizenId: '',
         fullName: userLogin?.fullName || '',
         birthDay: userLogin?.birthDay || '',
         email: userLogin?.email || '',
@@ -32,13 +37,11 @@ const PersonalDonorModal: FC<PersonalDonorModalProps> = ({ isOpen, setIsOpen }) 
         socialMediaLink: '',
         mainSourceIncome: '',
         monthlyIncome: '',
-        images: [],
+        citizenImages: [],
+        otherImages: [],
     };
 
     const schema = Yup.object().shape({
-        citizenId: Yup.string()
-            .matches(/^\d+$/, 'CMND/CCCD phải là số')
-            .required('CMND/CCCD không được để trống'),
         fullName: Yup.string().required('Họ và tên không được để trống'),
         birthDay: Yup.date().required('Ngày sinh không được để trống'),
         email: Yup.string().email('Email không hợp lệ').required('Email không được để trống'),
@@ -53,30 +56,66 @@ const PersonalDonorModal: FC<PersonalDonorModalProps> = ({ isOpen, setIsOpen }) 
                 const numeric = value.replace(/,/g, '');
                 return !isNaN(Number(numeric));
             }),
-        images: Yup.array().of(Yup.string().required('Mỗi ảnh phải là một chuỗi hợp lệ')).min(1, 'Cần ít nhất một ảnh').required('Danh sách ảnh là bắt buộc'),
+        citizenImages: Yup.array()
+            .of(
+                Yup.string()
+                    .required('Mỗi ảnh phải là một chuỗi hợp lệ')
+                    .matches(/\.(jpeg|jpg|gif|png)$/, 'Ảnh phải có định dạng .jpeg, .jpg, .gif, hoặc .png')
+            )
+            .required('Danh sách ảnh là bắt buộc'),
+        otherImages: Yup.array()
+            .of(
+                Yup.string()
+                    .required('Mỗi ảnh phải là một chuỗi hợp lệ')
+                    .matches(/\.(jpeg|jpg|gif|png)$/, 'Ảnh phải có định dạng .jpeg, .jpg, .gif, hoặc .png')
+            )
+            .required('Danh sách ảnh là bắt buộc'),
     });
 
-    const handleFileChange = async (event: ChangeEvent<HTMLInputElement>, setFieldValue: Function) => {
-        if (event.target.files) {
-            const files = Array.from(event.target.files);
-            const base64Promises = files.map(file => convertToBase64(file));
+    const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>, setFieldValue: Function, setImagePreview: Function) => {
+        const files = Array.from(e.target.files || []);
+        const previewUrls = files.map(file => URL.createObjectURL(file));
+        setImagePreview(previewUrls); // Hiển thị preview ảnh
 
-            try {
-                const base64Images = await Promise.all(base64Promises);
-                setFieldValue("images", base64Images); // 🔹 Lưu danh sách ảnh vào Formik
-                setImagePreview(base64Images); // 🔹 Cập nhật ảnh xem trước
-            } catch (_) {
-            }
+        try {
+            const uploadedUrls = await Promise.all(
+                files.map(async (file) => {
+                    const formData = new FormData();
+                    formData.append('file', file);
+                    formData.append('upload_preset', UPLOAD_PRESET);
+
+                    const res = await axios.post(CLOUDINARY_URL, formData);
+                    return res.data.secure_url;
+                })
+            );
+
+            setFieldValue("citizenImages", uploadedUrls); // Lưu URL ảnh thực tế vào Formik
+        } catch (err) {
+            console.error("Upload thất bại:", err);
         }
     };
 
-    const convertToBase64 = (file: File): Promise<string> => {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = () => resolve(reader.result as string);
-            reader.onerror = (error) => reject(error);
-        });
+    const handleOthersFileChange = async (e: React.ChangeEvent<HTMLInputElement>, setFieldValue: Function, setImagePreview: Function) => {
+        const files = Array.from(e.target.files || []);
+        const previewUrls = files.map(file => URL.createObjectURL(file));
+        setImagePreview(previewUrls); // Hiển thị preview ảnh
+
+        try {
+            const uploadedUrls = await Promise.all(
+                files.map(async (file) => {
+                    const formData = new FormData();
+                    formData.append('file', file);
+                    formData.append('upload_preset', UPLOAD_PRESET);
+
+                    const res = await axios.post(CLOUDINARY_URL, formData);
+                    return res.data.secure_url;
+                })
+            );
+
+            setFieldValue("otherImages", uploadedUrls); // Lưu URL ảnh thực tế vào Formik
+        } catch (err) {
+            console.error("Upload thất bại:", err);
+        }
     };
 
     const onSubmit = async (values: PersonalDonor, helpers: FormikHelpers<PersonalDonor>) => {
@@ -87,7 +126,6 @@ const PersonalDonorModal: FC<PersonalDonorModalProps> = ({ isOpen, setIsOpen }) 
             navigateHook(`${routes.user.personal}?tab=chungchi`);
         }).catch((error) => {
             const errorData = get(error, 'data.message', null);
-            helpers.setErrors({ citizenId: errorData });
             toast.error(errorData);
         }).finally(() => {
             helpers.setSubmitting(false);
@@ -113,6 +151,7 @@ const PersonalDonorModal: FC<PersonalDonorModalProps> = ({ isOpen, setIsOpen }) 
     const handleResetForm = (resetForm: Function) => {
         resetForm(); // Reset Formik form fields
         setImagePreview([]); // Clear the image preview
+        setOthersImagePreview([]);
     };
 
     return (
@@ -166,11 +205,6 @@ const PersonalDonorModal: FC<PersonalDonorModalProps> = ({ isOpen, setIsOpen }) 
                                         <Field name="address" type="text" placeholder="Hãy nhập địa chỉ của bạn" className={classNames("form-input", { "is-error": errors.address && touched.address })} />
                                         {errors.address && touched.address && <span className="text-error">{errors.address}</span>}
                                     </div>
-                                    <div className="form-50 form-field">
-                                        <label className="form-label">Căn cước công dân<span>*</span></label>
-                                        <Field name="citizenId" type="text" placeholder="Hãy nhập CCCD của bạn" className={classNames("form-input", { "is-error": errors.citizenId && touched.citizenId })} />
-                                        {errors.citizenId && touched.citizenId && <span className="text-error">{errors.citizenId}</span>}
-                                    </div>
                                     <div className="form-100 form-field">
                                         <label className="form-label">Liên kết Mạng Xã Hội</label>
                                         <Field name="socialMediaLink" type="text" placeholder="Hãy liên kết xã hội của bạn của bạn" className={classNames("form-input", { "is-error": errors.socialMediaLink && touched.socialMediaLink })} />
@@ -198,35 +232,17 @@ const PersonalDonorModal: FC<PersonalDonorModalProps> = ({ isOpen, setIsOpen }) 
                                         )}
                                     </div>
                                 </div>
-                                <h2>Vui lòng nộp các giấy tờ sau:</h2>
-                                <div className="document-section">
-                                    <h3>📌 Giấy tờ tùy thân:</h3>
-                                    <ul>
-                                        <li>Cung cấp ảnh chụp CMND/CCCD/Hộ chiếu để xác minh danh tính.</li>
-                                    </ul>
-
-                                    <h3>📌 Hình ảnh hoạt động từ thiện:</h3>
-                                    <ul>
-                                        <li>Ảnh chụp cá nhân đang tham gia hoạt động từ thiện, như phát quà, giúp đỡ người khó khăn.</li>
-                                        <li>Hình ảnh cần rõ ràng, có thể kèm ngày tháng và địa điểm (nếu có).</li>
-                                    </ul>
-
-                                    <h3>📌 Chứng nhận từ tổ chức (nếu có):</h3>
-                                    <ul>
-                                        <li>Nếu cá nhân hợp tác với tổ chức, vui lòng bổ sung giấy xác nhận.</li>
-                                    </ul>
-                                </div>
                                 <div className="form-field">
-                                    <label className="form-label">Chọn ảnh cần tải lên<span>*</span></label>
+                                    <label className="form-label">Tải ảnh mặt trước, mặt sau của CCCD<span>*</span></label>
                                     <input
                                         type="file"
                                         accept="image/*"
                                         multiple
-                                        onChange={(e) => handleFileChange(e, setFieldValue)}
+                                        onChange={(e) => handleFileChange(e, setFieldValue, setImagePreview)}
                                         className="form-input"
                                     />
                                     <p className="text-helper">Định dạng hỗ trợ: JPG, PNG (tối đa 5MB mỗi ảnh).</p>
-                                    {errors.images && touched.images && <span className="text-error">{errors.images}</span>}
+                                    {errors.citizenImages && touched.citizenImages && <span className="text-error">{errors.citizenImages}</span>}
                                 </div>
 
                                 {/* Xem trước ảnh */}
@@ -257,6 +273,64 @@ const PersonalDonorModal: FC<PersonalDonorModalProps> = ({ isOpen, setIsOpen }) 
                                         images={imagePreview.map((src) => ({ url: src }))}
                                         startIndex={lightboxIndex}
                                         onClose={() => setLightboxIndex(null)}
+                                    />
+                                )}
+
+                                <h2>Vui lòng nộp các giấy tờ liên quan:</h2>
+                                <div className="document-section">
+                                    <h3>📌 Hình ảnh hoạt động từ thiện:</h3>
+                                    <ul>
+                                        <li>Ảnh chụp cá nhân đang tham gia hoạt động từ thiện, như phát quà, giúp đỡ người khó khăn.</li>
+                                        <li>Hình ảnh cần rõ ràng, có thể kèm ngày tháng và địa điểm (nếu có).</li>
+                                    </ul>
+
+                                    <h3>📌 Chứng nhận từ tổ chức (nếu có):</h3>
+                                    <ul>
+                                        <li>Nếu cá nhân hợp tác với tổ chức, vui lòng bổ sung giấy xác nhận.</li>
+                                    </ul>
+                                </div>
+
+                                <div className="form-field">
+                                    <label className="form-label">Chọn các ảnh liên quan<span>*</span></label>
+                                    <input
+                                        type="file"
+                                        accept="image/*"
+                                        multiple
+                                        onChange={(e) => handleOthersFileChange(e, setFieldValue, setOthersImagePreview)}
+                                        className="form-input"
+                                    />
+                                    <p className="text-helper">Định dạng hỗ trợ: JPG, PNG (tối đa 5MB mỗi ảnh).</p>
+                                    {errors.otherImages && touched.otherImages && <span className="text-error">{errors.otherImages}</span>}
+                                </div>
+
+                                {/* Xem trước ảnh */}
+                                {othersImagePreview.length > 0 && (
+                                    <div className="image-preview-container">
+                                        {othersImagePreview.map((img, index) => (
+                                            <div key={index} className="image-wrapper">
+                                                <img
+                                                    src={img}
+                                                    alt={`Preview ${index}`}
+                                                    className="image-preview"
+                                                    style={{
+                                                        width: '100px',
+                                                        height: '100px',
+                                                        marginRight: '8px',
+                                                        borderRadius: '5px',
+                                                        cursor: 'pointer'
+                                                    }}
+                                                    onClick={() => setOthersLightboxIndex(index)} // mở lightbox khi click ảnh
+                                                />
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+
+                                {othersLightboxIndex !== null && (
+                                    <Lightbox
+                                        images={othersImagePreview.map((src) => ({ url: src }))}
+                                        startIndex={othersLightboxIndex}
+                                        onClose={() => setOthersLightboxIndex(null)}
                                     />
                                 )}
                                 <div className="group-btn">

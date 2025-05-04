@@ -1,3 +1,4 @@
+import { CurrentCampaign } from "@/types/campaign";
 import { currentOrganizationDonorCertificate, currentPersonalDonorCertificate, currentRecipientCertificate, RejectCertificate, ReviewCertificate } from "@/types/user";
 
 interface ModalProps {

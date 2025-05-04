@@ -1,4 +1,4 @@
-import { selectCurrentCampaign, selectGetAllRegisterReceivers, selectUserLogin } from '@/app/selector';
+import { selectCurrentCampaign, selectGetAllRegisterReceivers } from '@/app/selector';
 import { useAppDispatch, useAppSelector } from '@/app/store';
 import { Subscriber } from '@/components/Elements/index'
 import { RegisterReceiverModal, RemindCertificateModal, UpdateCampaignModal } from '@/components/Modal';
@@ -7,13 +7,10 @@ import { routes } from '@/routes/routeName';
 import { setLoading } from '@/services/app/appSlice';
 import { getCampaignByIdApiThunk } from '@/services/campaign/campaignThunk';
 import { getAllRegisterReceiversApiThunk } from '@/services/registerReceive/registerReceiveThunk';
-import { formatDater } from '@/utils/helper';
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom';
 
 const UserDetailCampaignPage: React.FC = () => {
-    const userLogin = useAppSelector(selectUserLogin);
-
     const [activeTab, setActiveTab] = useState<"mota" | "dangky">("mota");
 
     const { id } = useParams<{ id: string }>();
@@ -31,8 +28,6 @@ const UserDetailCampaignPage: React.FC = () => {
     const registerReceivers = useAppSelector(selectGetAllRegisterReceivers);
 
     const currentRegisterReceivers = registerReceivers.filter((registerReceiver) => registerReceiver.campaignId === id);
-
-    const registeredReceiver = currentRegisterReceivers.find((registerReceiver) => registerReceiver.accountId === userLogin?.accountId);
 
     const [selectedImage, setSelectedImage] = useState(currentCampaign?.images?.[0] || "")
 
@@ -71,15 +66,6 @@ const UserDetailCampaignPage: React.FC = () => {
             setSelectedImage(currentCampaign.images[0]);
         }
     }, [JSON.stringify(currentCampaign?.images)]);
-
-    const handleRegisterReceiver = () => {
-        if (registeredReceiver) {
-            alert("Bạn đã đăng ký rồi")
-        }
-        else {
-            setIsRegisterReceiverModalOpend(true);
-        }
-    }
 
     return (
         <main id="user-detail-campaign">
@@ -152,24 +138,6 @@ const UserDetailCampaignPage: React.FC = () => {
                             <button className='sc-btn' onClick={() => navigateHook(routes.user.campaign.detail.replace(":id", String(id)))}>Đi đến bài đăng</button>
                             <div className="udcscr1c2r1">
                                 <div>
-                                    <h4>Phần quà</h4>
-                                    <p>{currentCampaign?.typeGift}</p>
-                                    {currentCampaign?.campaignType === "Limited" && (
-                                        <>
-                                            <h4>Số lượng giới hạn</h4>
-                                            <p>{currentCampaign?.limitedQuantity}</p>
-                                        </>
-                                    )}
-                                    {currentCampaign?.campaignType === "Voluntary" && (
-                                        <>
-                                            <h4>Ngày mở đăng ký</h4>
-                                            <p>{formatDater(currentCampaign?.startRegisterDate)}</p>
-                                            <h4>Ngày đóng đăng ký</h4>
-                                            <p>{formatDater(currentCampaign?.endRegisterDate)}</p>
-                                        </>
-                                    )}
-                                </div>
-                                <div>
                                     <div>
                                         <h4>Địa điểm</h4>
                                         <p>{currentCampaign?.location}, {currentCampaign?.district}</p>
@@ -177,9 +145,6 @@ const UserDetailCampaignPage: React.FC = () => {
                                         <p>{formattedDate} - {formattedTime}</p>
                                     </div>
                                 </div>
-                                {userLogin?.roleId === 4 && (
-                                    <button className='sc-btn' onClick={handleRegisterReceiver}>Đăng ký nhận hỗ trợ</button>
-                                )}
                             </div>
                             {currentCampaign?.status === "Approved" && (
                                 <div className="udcscr1c2r2">

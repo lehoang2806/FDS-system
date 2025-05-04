@@ -4,35 +4,28 @@ interface AddCampaign {
     campaignDescription: string;
     location: string;
     implementationTime: string;
-    typeGift: string;
     estimatedBudget: string;
     averageCostPerGift: string;
     sponsors: string;
     implementationMethod: string;
     communication: string;
     limitedQuantity: number;
-    campaignType: string;
-    startRegisterDate: string;
-    endRegisterDate: string;
     district: string;
     images: string[];
 }
 
 interface UpdateCampaign {
+    camapignId?: string;
     campaignName: string;
     campaignDescription: string;
     location: string;
     implementationTime: string;
-    typeGift: string;
     estimatedBudget: string;
     averageCostPerGift: string;
     sponsors: string;
     implementationMethod: string;
     communication: string;
-    limitedQuantity: string;
-    campaignType: string;
-    startRegisterDate: string;
-    endRegisterDate: string;
+    limitedQuantity: number;
     district: string;
     images: string[];
 }
@@ -48,16 +41,12 @@ interface CampaignInfo {
     campaignDescription: string;
     location: string;
     implementationTime: string;
-    typeGift: string;
     estimatedBudget: string;
     averageCostPerGift: string;
     sponsors: string;
     implementationMethod: string;
     communication: string;
     limitedQuantity: string;
-    campaignType: string;
-    startRegisterDate: string;
-    endRegisterDate: string;
     images: string[];
     rejectComment: string | null;
     cancelComment: string | null;
@@ -80,7 +69,6 @@ interface CurrentCampaign {
     campaignDescription: string;
     location: string;
     implementationTime: string;
-    typeGift: string;
     estimatedBudget: string;
     averageCostPerGift: string;
     sponsors: string;
@@ -90,11 +78,8 @@ interface CurrentCampaign {
     status: string;
     rejectComment: string | null;
     typeAccount: string;
-    campaignType: string;
     reviewComments: ReviewComment[] | null;
     cancelComment: string | null;
-    startRegisterDate: string;
-    endRegisterDate: string;
     images: string[];
     createdDate: string;
     district: string;
@@ -185,4 +170,3 @@ interface FeedbackLike {
     createdDate: string;
     fullName: string;
 }
-

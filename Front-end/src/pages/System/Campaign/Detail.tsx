@@ -21,7 +21,6 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import 'dayjs/locale/vi';
 import { UserProfile } from '@/types/auth';
 import { CampaignInfo, CreateFeedbackCampaign } from '@/types/campaign';
-import { formatDater } from '@/utils/helper';
 
 dayjs.locale('vi');
 dayjs.extend(relativeTime);
@@ -79,9 +78,6 @@ const DetailCampaignPage: React.FC = () => {
 
     const currentDate = new Date();
     const today = currentDate;
-
-    const startDate = currentCampaign?.startRegisterDate ? new Date(currentCampaign.startRegisterDate) : null;
-    const endDate = currentCampaign?.endRegisterDate ? new Date(currentCampaign.endRegisterDate) : null;
     const implementationDate = currentCampaign?.implementationTime ? new Date(currentCampaign.implementationTime) : null;
 
     // Effects
@@ -369,22 +365,8 @@ const DetailCampaignPage: React.FC = () => {
                             </div>
                             <div className="dcscr1c2r1">
                                 <div>
-                                    <h4>Phần quà</h4>
-                                    <p>{currentCampaign?.typeGift}</p>
-                                    {currentCampaign?.campaignType === "Limited" && (
-                                        <>
-                                            <h4>Số lượng giới hạn</h4>
-                                            <p>{currentCampaign?.limitedQuantity}</p>
-                                        </>
-                                    )}
-                                    {currentCampaign?.campaignType === "Voluntary" && (
-                                        <>
-                                            <h4>Ngày mở đăng ký</h4>
-                                            <p>{formatDater(currentCampaign?.startRegisterDate)}</p>
-                                            <h4>Ngày đóng đăng ký</h4>
-                                            <p>{formatDater(currentCampaign?.endRegisterDate)}</p>
-                                        </>
-                                    )}
+                                    <h4>Số lượng còn lại</h4>
+                                    <p>{Number(currentCampaign?.limitedQuantity) - totalRegisteredQuantity}</p>
                                 </div>
                                 <div>
                                     <h4>Địa điểm</h4>
@@ -394,8 +376,7 @@ const DetailCampaignPage: React.FC = () => {
                                 </div>
                                 {userLogin?.roleId === 4 && currentCampaign && (
                                     <>
-                                        {/* Campaign dạng Limited */}
-                                        {currentCampaign?.campaignType === "Limited" &&
+                                        {
                                             implementationDate &&
                                             implementationDate > today && (
                                                 totalRegisteredQuantity >= Number(currentCampaign?.limitedQuantity) ? (
@@ -403,23 +384,6 @@ const DetailCampaignPage: React.FC = () => {
                                                 ) : (
                                                     <button className="sc-btn" onClick={handleRegisterReceiver}>
                                                         Đăng ký nhận hỗ trợ
-                                                    </button>
-                                                )
-                                            )}
-
-                                        {/* Campaign dạng Voluntary */}
-                                        {currentCampaign.campaignType === "Voluntary" &&
-                                            implementationDate &&
-                                            today <= implementationDate &&
-                                            startDate &&
-                                            endDate && (
-                                                today < startDate ? (
-                                                    <p className="sc-text">Chưa mở đăng ký</p>
-                                                ) : today > endDate ? (
-                                                    <p className="sc-text">Đã đóng đăng ký nhận quà</p>
-                                                ) : (
-                                                    <button className="sc-btn" onClick={handleRegisterReceiver}>
-                                                        Đăng ký nhận quà
                                                     </button>
                                                 )
                                             )}
