@@ -273,7 +273,6 @@ public class UserService : IUserService
         {
             PersonalDonorCertificateId = certificateId,
             DonorId = _userContextService.UserId,
-            CitizenId = certificateDto.CitizenId,
             FullName = certificateDto.FullName,
             BirthDay = certificateDto.BirthDay,
             Email = certificateDto.Email,
@@ -282,7 +281,8 @@ public class UserService : IUserService
             SocialMediaLink = certificateDto.SocialMediaLink,
             MainSourceIncome = certificateDto.MainSourceIncome,
             MonthlyIncome = certificateDto.MonthlyIncome,
-            Images = certificateDto.Images,
+            CitizenImages = certificateDto.CitizenImages,
+            OtherImages = certificateDto.OtherImages,
         });
 
         //Send notifiction all staff and admin
@@ -314,7 +314,6 @@ public class UserService : IUserService
         {
             RecipientCertificateId = certificateId,
             RecipientId = _userContextService.UserId,
-            CitizenId = certificateDto.CitizenId,
             FullName = certificateDto.FullName,
             Phone = certificateDto.Phone,
             Address = certificateDto.Address,
@@ -322,9 +321,10 @@ public class UserService : IUserService
             Email = certificateDto.Email,
             Circumstances = certificateDto.Circumstances,
             RegisterSupportReason = certificateDto.RegisterSupportReason,
-            Images = certificateDto.Images,
+            CitizenImages = certificateDto.CitizenImages,
             MainSourceIncome = certificateDto.MainSourceIncome,
             MonthlyIncome = certificateDto.MonthlyIncome,
+            OtherImages = certificateDto.OtherImages,
         });
 
         //Send notifiction all staff and admin
@@ -354,7 +354,6 @@ public class UserService : IUserService
         if (existingPersonalDonorCertificate != null)
         {
 
-            existingPersonalDonorCertificate.CitizenId = personalDonorCertificate.CitizenId;
             existingPersonalDonorCertificate.FullName = personalDonorCertificate.FullName;
             existingPersonalDonorCertificate.BirthDay = personalDonorCertificate.BirthDay;
             existingPersonalDonorCertificate.Email = personalDonorCertificate.Email;
@@ -363,7 +362,8 @@ public class UserService : IUserService
             existingPersonalDonorCertificate.SocialMediaLink = personalDonorCertificate.SocialMediaLink;
             existingPersonalDonorCertificate.MainSourceIncome = personalDonorCertificate.MainSourceIncome;
             existingPersonalDonorCertificate.MonthlyIncome = personalDonorCertificate.MonthlyIncome;
-            existingPersonalDonorCertificate.Images = personalDonorCertificate.Images;
+            existingPersonalDonorCertificate.CitizenImages = personalDonorCertificate.CitizenImages;
+            existingPersonalDonorCertificate.OtherImages = personalDonorCertificate.OtherImages;
             await _personalDonorCertificateRepository.UpdateAsync(existingPersonalDonorCertificate.Id, existingPersonalDonorCertificate);
 
         }
@@ -437,7 +437,6 @@ public class UserService : IUserService
         if (existingRecipientCertificate != null)
         {
 
-            existingRecipientCertificate.CitizenId = recipientCertificate.CitizenId;
             existingRecipientCertificate.FullName = recipientCertificate.FullName;
             existingRecipientCertificate.Phone = recipientCertificate.Phone;
             existingRecipientCertificate.Address = recipientCertificate.Address;
@@ -445,7 +444,8 @@ public class UserService : IUserService
             existingRecipientCertificate.Email = recipientCertificate.Email;
             existingRecipientCertificate.Circumstances = recipientCertificate.Circumstances;
             existingRecipientCertificate.RegisterSupportReason = recipientCertificate.RegisterSupportReason;
-            existingRecipientCertificate.Images = recipientCertificate.Images;
+            existingRecipientCertificate.CitizenImages = recipientCertificate.CitizenImages;
+            existingRecipientCertificate.OtherImages = recipientCertificate.OtherImages;
             existingRecipientCertificate.MainSourceIncome = recipientCertificate.MainSourceIncome;
             existingRecipientCertificate.MonthlyIncome = recipientCertificate.MonthlyIncome;
             await _recipientCertificateRepository.UpdateAsync(existingRecipientCertificate.Id, existingRecipientCertificate);

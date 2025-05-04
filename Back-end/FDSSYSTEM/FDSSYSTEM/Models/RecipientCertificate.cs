@@ -10,7 +10,6 @@ namespace FDSSYSTEM.Models
         public string Id { get; set; }
         public string RecipientId { get; set; }
         public string RecipientCertificateId { get; set; }
-        public string CitizenId { get; set; }
         public string Status { get; set; } = "Pending";
         public string RejectComment { get; set; }
         public string CampaignId { get; set; }
@@ -23,7 +22,8 @@ namespace FDSSYSTEM.Models
         public string RegisterSupportReason { get; set; }
         public string MainSourceIncome { get; set; }
         public string MonthlyIncome { get; set; }
-        public List<string> Images { get; set; }
+        public List<string> CitizenImages { get; set; }
+        public List<string> OtherImages { get; set; }
         public DateTime CreatedDate { get; set; } = DateTime.Now;
         public List<RecipientCertificateReViewComment> ReviewComments { get; set; }
     }
