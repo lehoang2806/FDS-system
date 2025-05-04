@@ -34,7 +34,7 @@ const UpdateCampaignModal: FC<UpdateCampaignModalProps> = ({ isOpen, setIsOpen, 
         sponsors: selectedCampaign?.sponsors || "",
         implementationMethod: selectedCampaign?.implementationMethod || "",
         communication: selectedCampaign?.communication || "",
-        limitedQuantity: selectedCampaign?.limitedQuantity || "",
+        limitedQuantity: Number(selectedCampaign?.limitedQuantity) || 0,
         district: selectedCampaign?.district || "",
         images: selectedCampaign?.images || [],
     };

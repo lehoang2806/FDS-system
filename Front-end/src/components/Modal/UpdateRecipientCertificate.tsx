@@ -6,19 +6,23 @@ import { AddRecipientCertificate } from '@/types/user';
 import { Field, Form, Formik, FormikHelpers } from 'formik';
 import { getRecipientCertificateByIdApiThunk, updateRecipientCertificateApiThunk } from '@/services/user/userThunk';
 import { toast } from 'react-toastify';
-import { ChangeEvent, FC, useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { UpdateRecipientCertificateModalProps } from './type';
 import Modal from './Modal';
 import { get } from 'lodash';
 import { setLoading } from '@/services/app/appSlice';
+import axios from 'axios';
+import Lightbox from 'react-awesome-lightbox';
 
 const UpdateRecipientCertificateModal: FC<UpdateRecipientCertificateModalProps> = ({ isOpen, setIsOpen, selectedCurrentRecipientCertificate }) => {
     const dispatch = useAppDispatch();
 
     const [imagePreview, setImagePreview] = useState<string[]>([]);
+    const [othersImagePreview, setOthersImagePreview] = useState<string[]>([]);
+    const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+    const [othersLightboxIndex, setOthersLightboxIndex] = useState<number | null>(null);
 
     const initialValues: AddRecipientCertificate = {
-        citizenId: selectedCurrentRecipientCertificate?.citizenId || '',
         fullName: selectedCurrentRecipientCertificate?.fullName || '',
         email: selectedCurrentRecipientCertificate?.email || '',
         phone: selectedCurrentRecipientCertificate?.phone || '',
@@ -28,11 +32,15 @@ const UpdateRecipientCertificateModal: FC<UpdateRecipientCertificateModalProps> 
         registerSupportReason: selectedCurrentRecipientCertificate?.registerSupportReason || '',
         mainSourceIncome: selectedCurrentRecipientCertificate?.mainSourceIncome || '',
         monthlyIncome: selectedCurrentRecipientCertificate?.monthlyIncome || '',
-        images: selectedCurrentRecipientCertificate?.images || [],
+        citizenImages: selectedCurrentRecipientCertificate?.citizenImages || [],
+        otherImages: selectedCurrentRecipientCertificate?.otherImages || [],
     };
 
+    const CLOUDINARY_URL = 'https://api.cloudinary.com/v1_1/dehc2ftiv/image/upload';
+    const UPLOAD_PRESET = 'fds_system';
+
+
     const schema = Yup.object().shape({
-        citizenId: Yup.string().required('Vui lòng nhập mã công dân'),
         fullName: Yup.string().required('Vui lòng nhập họ và tên'),
         email: Yup.string().email('Email không hợp lệ').required('Vui lòng nhập email'),
         phone: Yup.string()
@@ -50,7 +58,20 @@ const UpdateRecipientCertificateModal: FC<UpdateRecipientCertificateModalProps> 
                 const numeric = value.replace(/,/g, '');
                 return !isNaN(Number(numeric));
             }),
-        images: Yup.array().of(Yup.string().required('Mỗi ảnh phải là một chuỗi hợp lệ')).min(1, 'Cần ít nhất một ảnh').required('Danh sách ảnh là bắt buộc'),
+        citizenImages: Yup.array()
+            .of(
+                Yup.string()
+                    .required('Mỗi ảnh phải là một chuỗi hợp lệ')
+                    .matches(/\.(jpeg|jpg|gif|png)$/, 'Ảnh phải có định dạng .jpeg, .jpg, .gif, hoặc .png')
+            )
+            .required('Danh sách ảnh là bắt buộc'),
+        otherImages: Yup.array()
+            .of(
+                Yup.string()
+                    .required('Mỗi ảnh phải là một chuỗi hợp lệ')
+                    .matches(/\.(jpeg|jpg|gif|png)$/, 'Ảnh phải có định dạng .jpeg, .jpg, .gif, hoặc .png')
+            )
+            .required('Danh sách ảnh là bắt buộc'),
     });
 
     const onSubmit = async (values: AddRecipientCertificate, helpers: FormikHelpers<AddRecipientCertificate>) => {
@@ -61,7 +82,6 @@ const UpdateRecipientCertificateModal: FC<UpdateRecipientCertificateModalProps> 
             dispatch(getRecipientCertificateByIdApiThunk(String(selectedCurrentRecipientCertificate?.recipientCertificateId)));
         }).catch((error) => {
             const errorData = get(error, 'data.message', null);
-            helpers.setErrors({ citizenId: errorData });
             toast.error(errorData);
         }).finally(() => {
             helpers.setSubmitting(false);
@@ -71,34 +91,65 @@ const UpdateRecipientCertificateModal: FC<UpdateRecipientCertificateModalProps> 
         });
     }
 
-    const handleFileChange = async (event: ChangeEvent<HTMLInputElement>, setFieldValue: Function) => {
-        if (event.target.files) {
-            const files = Array.from(event.target.files);
-            const base64Promises = files.map(file => convertToBase64(file));
+    const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>, setFieldValue: Function, setImagePreview: Function) => {
+        const files = Array.from(e.target.files || []);
+        const previewUrls = files.map(file => URL.createObjectURL(file));
+        setImagePreview(previewUrls); // Hiển thị preview ảnh
 
-            try {
-                const base64Images = await Promise.all(base64Promises);
-                setFieldValue("images", base64Images); // 🔹 Lưu danh sách ảnh vào Formik
-                setImagePreview(base64Images); // 🔹 Cập nhật ảnh xem trước
-            } catch (_) {
-            }
+        try {
+            const uploadedUrls = await Promise.all(
+                files.map(async (file) => {
+                    const formData = new FormData();
+                    formData.append('file', file);
+                    formData.append('upload_preset', UPLOAD_PRESET);
+
+                    const res = await axios.post(CLOUDINARY_URL, formData);
+                    return res.data.secure_url;
+                })
+            );
+
+            setFieldValue("citizenImages", uploadedUrls); // Lưu URL ảnh thực tế vào Formik
+        } catch (err) {
+            console.error("Upload thất bại:", err);
         }
     };
 
-    const convertToBase64 = (file: File): Promise<string> => {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = () => resolve(reader.result as string);
-            reader.onerror = (error) => reject(error);
-        });
+    const handleOthersFileChange = async (e: React.ChangeEvent<HTMLInputElement>, setFieldValue: Function, setImagePreview: Function) => {
+        const files = Array.from(e.target.files || []);
+        const previewUrls = files.map(file => URL.createObjectURL(file));
+        setImagePreview(previewUrls); // Hiển thị preview ảnh
+
+        try {
+            const uploadedUrls = await Promise.all(
+                files.map(async (file) => {
+                    const formData = new FormData();
+                    formData.append('file', file);
+                    formData.append('upload_preset', UPLOAD_PRESET);
+
+                    const res = await axios.post(CLOUDINARY_URL, formData);
+                    return res.data.secure_url;
+                })
+            );
+
+            setFieldValue("otherImages", uploadedUrls); // Lưu URL ảnh thực tế vào Formik
+        } catch (err) {
+            console.error("Upload thất bại:", err);
+        }
     };
 
     useEffect(() => {
-        if (selectedCurrentRecipientCertificate?.images?.length) {
-            setImagePreview(selectedCurrentRecipientCertificate.images);
+        if (selectedCurrentRecipientCertificate?.citizenImages?.length) {
+            setImagePreview(selectedCurrentRecipientCertificate.citizenImages);
         } else {
             setImagePreview([]);
+        }
+    }, [selectedCurrentRecipientCertificate]);
+
+    useEffect(() => {
+        if (selectedCurrentRecipientCertificate?.otherImages?.length) {
+            setImagePreview(selectedCurrentRecipientCertificate.otherImages);
+        } else {
+            setOthersImagePreview([]);
         }
     }, [selectedCurrentRecipientCertificate]);
 
@@ -151,11 +202,6 @@ const UpdateRecipientCertificateModal: FC<UpdateRecipientCertificateModalProps> 
                                     {errors.address && touched.address && <span className="text-error">{errors.address}</span>}
                                 </div>
                                 <div className="form-field">
-                                    <label className="form-label">Căn cước công dân</label>
-                                    <Field name="citizenId" type="text" placeholder="Hãy nhập CCCD của bạn" className={classNames("form-input", { "is-error": errors.citizenId && touched.citizenId })} />
-                                    {errors.citizenId && touched.citizenId && <span className="text-error">{errors.citizenId}</span>}
-                                </div>
-                                <div className="form-field">
                                     <label className="form-label">Hoàn cảnh gia đình</label>
                                     <Field name="circumstances" type="text" placeholder="Hãy nhập CCCD của bạn" className={classNames("form-input", { "is-error": errors.circumstances && touched.circumstances })} />
                                     {errors.circumstances && touched.circumstances && <span className="text-error">{errors.circumstances}</span>}
@@ -176,30 +222,17 @@ const UpdateRecipientCertificateModal: FC<UpdateRecipientCertificateModalProps> 
                                     <Field name="registerSupportReason" type="text" placeholder="Hãy nhập CCCD của bạn" className={classNames("form-input", { "is-error": errors.registerSupportReason && touched.registerSupportReason })} />
                                     {errors.registerSupportReason && touched.registerSupportReason && <span className="text-error">{errors.registerSupportReason}</span>}
                                 </div>
-                                <h2>Vui lòng nộp các giấy tờ sau:</h2>
-                                <div className="document-section">
-                                    <h3>📌 Giấy tờ tùy thân:</h3>
-                                    <ul>
-                                        <li>Cung cấp ảnh chụp CMND/CCCD/Hộ chiếu để xác minh danh tính.</li>
-                                    </ul>
-
-                                    <h3>📌 Hình ảnh chứng minh hoàn cảnh:</h3>
-                                    <ul>
-                                        <li>Tài liệu chứng minh hoàn cảnh (Giấy xác nhận hộ nghèo, giấy khám bệnh, giấy khai sinh con nhỏ, v.v.)</li>
-                                        <li>Hình ảnh cần rõ ràng, có thể kèm ngày tháng và địa điểm (nếu có).</li>
-                                    </ul>
-                                </div>
                                 <div className="form-field">
-                                    <label className="form-label">Chọn ảnh cần tải lên</label>
+                                    <label className="form-label">Tải ảnh mặt trước, mặt sau của CCCD<span>*</span></label>
                                     <input
                                         type="file"
                                         accept="image/*"
                                         multiple
-                                        onChange={(e) => handleFileChange(e, setFieldValue)}
+                                        onChange={(e) => handleFileChange(e, setFieldValue, setImagePreview)}
                                         className="form-input"
                                     />
                                     <p className="text-helper">Định dạng hỗ trợ: JPG, PNG (tối đa 5MB mỗi ảnh).</p>
-                                    {errors.images && touched.images && <span className="text-error">{errors.images}</span>}
+                                    {errors.citizenImages && touched.citizenImages && <span className="text-error">{errors.citizenImages}</span>}
                                 </div>
 
                                 {/* Xem trước ảnh */}
@@ -211,11 +244,79 @@ const UpdateRecipientCertificateModal: FC<UpdateRecipientCertificateModalProps> 
                                                     src={img}
                                                     alt={`Preview ${index}`}
                                                     className="image-preview"
-                                                    style={{ width: "100px", height: "100px", marginRight: "8px", borderRadius: "5px" }}
+                                                    style={{
+                                                        width: '100px',
+                                                        height: '100px',
+                                                        marginRight: '8px',
+                                                        borderRadius: '5px',
+                                                        cursor: 'pointer'
+                                                    }}
+                                                    onClick={() => setLightboxIndex(index)} // mở lightbox khi click ảnh
                                                 />
                                             </div>
                                         ))}
                                     </div>
+                                )}
+
+                                {lightboxIndex !== null && (
+                                    <Lightbox
+                                        images={imagePreview.map((src) => ({ url: src }))}
+                                        startIndex={lightboxIndex}
+                                        onClose={() => setLightboxIndex(null)}
+                                    />
+                                )}
+
+                                <h2>Vui lòng nộp các giấy tờ liên quan:</h2>
+                                <div className="document-section">
+                                    <h3>📌 Hình ảnh chứng minh hoàn cảnh:</h3>
+                                    <ul>
+                                        <li>Tài liệu chứng minh hoàn cảnh (Giấy xác nhận hộ nghèo, giấy khám bệnh, giấy khai sinh con nhỏ, v.v.)</li>
+                                        <li>Hình ảnh cần rõ ràng, có thể kèm ngày tháng và địa điểm (nếu có).</li>
+                                    </ul>
+                                </div>
+
+                                <div className="form-field">
+                                    <label className="form-label">Chọn các ảnh liên quan<span>*</span></label>
+                                    <input
+                                        type="file"
+                                        accept="image/*"
+                                        multiple
+                                        onChange={(e) => handleOthersFileChange(e, setFieldValue, setOthersImagePreview)}
+                                        className="form-input"
+                                    />
+                                    <p className="text-helper">Định dạng hỗ trợ: JPG, PNG (tối đa 5MB mỗi ảnh).</p>
+                                    {errors.otherImages && touched.otherImages && <span className="text-error">{errors.otherImages}</span>}
+                                </div>
+
+                                {/* Xem trước ảnh */}
+                                {othersImagePreview.length > 0 && (
+                                    <div className="image-preview-container">
+                                        {othersImagePreview.map((img, index) => (
+                                            <div key={index} className="image-wrapper">
+                                                <img
+                                                    src={img}
+                                                    alt={`Preview ${index}`}
+                                                    className="image-preview"
+                                                    style={{
+                                                        width: '100px',
+                                                        height: '100px',
+                                                        marginRight: '8px',
+                                                        borderRadius: '5px',
+                                                        cursor: 'pointer'
+                                                    }}
+                                                    onClick={() => setOthersLightboxIndex(index)} // mở lightbox khi click ảnh
+                                                />
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+
+                                {othersLightboxIndex !== null && (
+                                    <Lightbox
+                                        images={othersImagePreview.map((src) => ({ url: src }))}
+                                        startIndex={othersLightboxIndex}
+                                        onClose={() => setOthersLightboxIndex(null)}
+                                    />
                                 )}
                                 <Button loading={isSubmitting} type="submit" title="Cập nhật" />
                             </Form>
