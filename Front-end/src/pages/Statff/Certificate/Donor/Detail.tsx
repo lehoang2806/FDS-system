@@ -58,11 +58,14 @@ const StaffDetailDonorCertificate = () => {
     }, [id, dispatch])
 
     const [imagePreview, setImagePreview] = useState<string[]>([]);
+    const [othersImagePreview, setOthersImagePreview] = useState<string[]>([]);
     const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+    const [othersLightboxIndex, setOthersLightboxIndex] = useState<number | null>(null);
 
     useEffect(() => {
         if (certificateType === "Personal" && currentPersonalDonorCertificate) {
-            setImagePreview(currentPersonalDonorCertificate.images || []);
+            setImagePreview(currentPersonalDonorCertificate.citizenImages || []);
+            setOthersImagePreview(currentPersonalDonorCertificate.otherImages || []);
         } else if (certificateType === "Organization" && currentOrganizationDonorCertificate) {
             setImagePreview(currentOrganizationDonorCertificate.images || []);
         }
@@ -70,12 +73,16 @@ const StaffDetailDonorCertificate = () => {
 
     const handleApproveCertificate = async (values: ApproveCertificate, confirmValues: ConfirmUser) => {
         try {
+            dispatch(setLoading(true));
             await Promise.all([
                 dispatch(confirmUserApiThunk(confirmValues)).unwrap(),
                 dispatch(approveCertificateApiThunk(values)).unwrap()
             ]);
 
             toast.success("Phê duyệt thành công");
+            setTimeout(() => {
+                dispatch(setLoading(false));
+            }, 1000);
 
             if (certificateType === "Personal") {
                 dispatch(getPersonalDonorCertificateByIdApiThunk(String(id)));
@@ -141,8 +148,6 @@ const StaffDetailDonorCertificate = () => {
                                     <p>{currentPersonalDonorCertificate?.email}</p>
                                     <h3>Địa chỉ</h3>
                                     <p>{currentPersonalDonorCertificate?.address}</p>
-                                    <h3>Số CCCD</h3>
-                                    <p>{currentPersonalDonorCertificate?.citizenId}</p>
                                     {currentPersonalDonorCertificate && currentPersonalDonorCertificate.socialMediaLink && (
                                         <>
                                             <h3>Liên kết mạng xã hội</h3>
@@ -203,11 +208,11 @@ const StaffDetailDonorCertificate = () => {
                         )}
                     </div>
                     {/* Personal */}
-                    {currentPersonalDonorCertificate && certificateType === "Personal" && currentPersonalDonorCertificate.images && (
+                    {currentPersonalDonorCertificate && certificateType === "Personal" && currentPersonalDonorCertificate.citizenImages && (
                         <>
                             <hr />
                             <div className="sdcdcr2r4">
-                                <h2>Hình ảnh xác minh</h2>
+                                <h2>Hình ảnh CCCD</h2>
                                 {imagePreview.length > 0 && (
                                     <div className="image-preview-container">
                                         {imagePreview.map((img, index) => (
@@ -228,6 +233,36 @@ const StaffDetailDonorCertificate = () => {
                                         images={imagePreview.map((src) => ({ url: src }))}
                                         startIndex={lightboxIndex}
                                         onClose={() => setLightboxIndex(null)}
+                                    />
+                                )}
+                            </div>
+                        </>
+                    )}
+                    {currentPersonalDonorCertificate && certificateType === "Personal" && currentPersonalDonorCertificate.otherImages && (
+                        <>
+                            <hr />
+                            <div className="sdcdcr2r4">
+                                <h2>Hình ảnh liên quan</h2>
+                                {othersImagePreview.length > 0 && (
+                                    <div className="image-preview-container">
+                                        {othersImagePreview.map((img, index) => (
+                                            <img
+                                                key={index}
+                                                src={img}
+                                                alt={`Preview ${index}`}
+                                                className="image-preview"
+                                                style={{ width: "200px", height: "200px", cursor: "pointer" }}
+                                                onClick={() => setOthersLightboxIndex(index)} // Thêm dòng này để mở Lightbox
+                                            />
+                                        ))}
+                                    </div>
+                                )}
+
+                                {othersLightboxIndex !== null && (
+                                    <Lightbox
+                                        images={othersImagePreview.map((src) => ({ url: src }))}
+                                        startIndex={othersLightboxIndex}
+                                        onClose={() => setOthersLightboxIndex(null)}
                                     />
                                 )}
                             </div>

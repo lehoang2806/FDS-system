@@ -46,11 +46,8 @@ const CampaignCard: FC<CampaignCardProps> = ({ onClickDetail, campaign }) => {
             </div>
             <h4>{campaign.campaignName}</h4>
             <p>{formattedDate} - {formattedTime}</p>
-            <p>{campaign.typeGift}</p>
             <p>
-                {campaign.campaignType === "Limited"
-                    ? "Chiến dịch có phần quà giới hạn"
-                    : "Chiến dịch đăng ký theo nguyện vọng"}
+                {campaign.limitedQuantity} Phần quà
             </p>
             <p className={`cc-status ${status === "Đã kết thúc" ? "ended" : status === "Đang diễn ra" ? "ongoing" : "upcoming"}`}>
                 {status}

@@ -137,30 +137,14 @@ const StaffDetailCampaignUserPage: FC = () => {
                             <p>{currentCampaign?.campaignName}</p>
                             <h3>Mô tả:</h3>
                             <p style={{ whiteSpace: "pre-line" }}>{currentCampaign?.campaignDescription}</p>
-                            <h3>Loại quà tặng:</h3>
-                            <p>{currentCampaign?.typeGift}</p>
                             <h3>Đại điểm:</h3>
                             <p>{currentCampaign?.location}</p>
                             <h3>Thời gian diễn ra:</h3>
                             <p>{date} & {time}</p>
                             <h3>Cách thực hiện:</h3>
                             <p>{currentCampaign?.implementationMethod}</p>
-                            <h3>Loại chiến dịch:</h3>
-                            <p>{currentCampaign?.campaignType === "Limited" ? "Chiến dịch có phần quà giới hạn" : "Chiến dịch đăng ký theo nguyện vọng"}</p>
-                            {currentCampaign?.campaignType === "Limited" && (
-                                <>
-                                    <h3>Số lượng giới hạng:</h3>
-                                    <p>{currentCampaign?.limitedQuantity}</p>
-                                </>
-                            )}
-                            {currentCampaign?.campaignType === "Voluntary" && (
-                                <>
-                                    <h3>Ngày mở đăng ký:</h3>
-                                    <p>{currentCampaign?.startRegisterDate}</p>
-                                    <h3>Ngày đóng đăng ký:</h3>
-                                    <p>{currentCampaign?.endRegisterDate}</p>
-                                </>
-                            )}
+                            <h3>Số lượng qùa tặng:</h3>
+                            <p>{currentCampaign?.limitedQuantity}</p>
                         </div>
                         <div className="col-flex sdcucr2r3c2">
                             {currentCampaign?.estimatedBudget || currentCampaign?.averageCostPerGift ? (

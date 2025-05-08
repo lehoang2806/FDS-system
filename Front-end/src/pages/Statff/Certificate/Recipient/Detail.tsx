@@ -67,13 +67,23 @@ const StaffDetailCertificateRecipient = () => {
     };
 
     const [imagePreview, setImagePreview] = useState<string[]>([]);
+    const [othersImagePreview, setOthersImagePreview] = useState<string[]>([]);
     const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+    const [othersLightboxIndex, setOthersLightboxIndex] = useState<number | null>(null);
 
     useEffect(() => {
-        if (currentRecipientCertificate?.images?.length) {
-            setImagePreview(currentRecipientCertificate.images);
+        if (currentRecipientCertificate?.citizenImages?.length) {
+            setImagePreview(currentRecipientCertificate.citizenImages);
         } else {
             setImagePreview([]);
+        }
+    }, [currentRecipientCertificate]);
+
+    useEffect(() => {
+        if (currentRecipientCertificate?.otherImages?.length) {
+            setOthersImagePreview(currentRecipientCertificate.otherImages);
+        } else {
+            setOthersImagePreview([]);
         }
     }, [currentRecipientCertificate]);
 
@@ -116,8 +126,6 @@ const StaffDetailCertificateRecipient = () => {
                             <p>{currentRecipientCertificate?.email}</p>
                             <h3>Địa chỉ</h3>
                             <p>{currentRecipientCertificate?.address}</p>
-                            <h3>Số CCCD</h3>
-                            <p>{currentRecipientCertificate?.citizenId}</p>
                             <h3>Hoàn cảnh gia đình</h3>
                             <p>{currentRecipientCertificate?.circumstances}</p>
                         </div>
@@ -141,6 +149,7 @@ const StaffDetailCertificateRecipient = () => {
                     </div>
                     <hr />
                     <div className="sdcrcr2r4">
+                        <h2>Hình ảnh CCCD</h2>
                         {imagePreview.length > 0 && (
                             <div className="image-preview-container">
                                 {imagePreview.map((img, index) => (
@@ -161,6 +170,29 @@ const StaffDetailCertificateRecipient = () => {
                                 images={imagePreview.map((src) => ({ url: src }))}
                                 startIndex={lightboxIndex}
                                 onClose={() => setLightboxIndex(null)}
+                            />
+                        )}
+                        <h2 style={{ marginTop: "20px" }}>Hình ảnh liên quan</h2>
+                        {othersImagePreview.length > 0 && (
+                            <div className="image-preview-container">
+                                {othersImagePreview.map((img, index) => (
+                                    <img
+                                        key={index}
+                                        src={img}
+                                        alt={`Preview ${index}`}
+                                        className="image-preview"
+                                        style={{ width: "200px", height: "200px", cursor: "pointer" }}
+                                        onClick={() => setOthersLightboxIndex(index)} // Thêm dòng này để mở Lightbox
+                                    />
+                                ))}
+                            </div>
+                        )}
+
+                        {othersLightboxIndex !== null && (
+                            <Lightbox
+                                images={othersImagePreview.map((src) => ({ url: src }))}
+                                startIndex={othersLightboxIndex}
+                                onClose={() => setOthersLightboxIndex(null)}
                             />
                         )}
                     </div>
