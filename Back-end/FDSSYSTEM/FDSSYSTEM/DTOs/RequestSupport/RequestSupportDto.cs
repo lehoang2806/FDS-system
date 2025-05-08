@@ -12,19 +12,19 @@
         public string PhoneNumber { get; set; }
         public string Address { get; set; }
         public string? Email { get; set; }
-        public string LocalAuthorityContact { get; set; } // Số điện thoại hoặc thông tin liên hệ của chính quyền địa phương
-        public string RelativeContact { get; set; } // Số điện thoại của người thân để xác minh
+       /* public string LocalAuthorityContact { get; set; } // Số điện thoại hoặc thông tin liên hệ của chính quyền địa phương*/
+       /* public string RelativeContact { get; set; } // Số điện thoại của người thân để xác minh*/
 
         // Hoàn cảnh và lý do hỗ trợ
         public string Reason { get; set; }
         public int HouseholdSize { get; set; }
-        public string SpecialMembers { get; set; } // Thành viên đặc biệt (người già, trẻ em, khuyết tật, v.v.)
+        public List<string> SpecialMembers { get; set; } // Ví dụ: ["Người già", "Trẻ em", "Khuyết tật"]
         public List<string> CircumstanceImages { get; set; } // Hình ảnh minh họa hoàn cảnh (nhà ở, điều kiện sống, v.v.)
         public string? LocalAuthorityConfirmation { get; set; } // Đường dẫn đến giấy xác nhận của chính quyền địa phương (nếu có)
 
         // Thông tin tài chính
-        public string IncomeSource { get; set; }
-        public decimal MonthlyIncome { get; set; } // Thu nhập hàng tháng (cụ thể hóa để đánh giá mức độ cần hỗ trợ)
+        /*public string IncomeSource { get; set; }
+        public decimal MonthlyIncome { get; set; } // Thu nhập hàng tháng (cụ thể hóa để đánh giá mức độ cần hỗ trợ)*/
 
         // Yêu cầu hỗ trợ
         public List<string> RequestedItems { get; set; } // Danh sách vật phẩm yêu cầu

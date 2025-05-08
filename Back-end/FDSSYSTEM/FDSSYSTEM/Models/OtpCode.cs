@@ -12,4 +12,6 @@ public class OtpCode
     public string Code { get; set; }
     public DateTime ExpirationTime { get; set; }
     public bool IsVerified { get; set; }
+    public string Phone {  get; set; }
+
 }

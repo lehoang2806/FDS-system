@@ -29,5 +29,6 @@ public partial class Post
     public string PosterRole { get; set; }
     public string PosterApproverId { get; set; }
     public string PosterApproverName { get; set; }
+    public List<string> Hashtags { get; set; } = new List<string>();
 
 }

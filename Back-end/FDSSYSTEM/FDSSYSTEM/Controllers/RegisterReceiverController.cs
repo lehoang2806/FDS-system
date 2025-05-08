@@ -94,5 +94,27 @@ namespace FDSSYSTEM.Controllers
                 return BadRequest();
             }
         }
+
+        [HttpGet("GetTotalQuantityRegistered")]
+        [Authorize(Roles = "Recipient")]
+        public async Task<ActionResult> GetTotalQuantityRegistered([FromQuery] string campaignId)
+        {
+            try
+            {
+                var accountId = User?.Claims?.FirstOrDefault(c => c.Type == "UserId")?.Value;
+                if (string.IsNullOrEmpty(accountId))
+                    return Unauthorized(new { message = "Không tìm thấy người dùng." });
+
+                var total = await _registerReceiverService.GetTotalRegisteredQuantityAsync(campaignId, accountId);
+                return Ok(new { TotalRegisteredQuantity = total });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+
+
     }
 }

@@ -13,6 +13,8 @@ using System.Threading.Tasks;
 using FDSSYSTEM.Services.NotificationService;
 using FDSSYSTEM.SignalR;
 using Microsoft.AspNetCore.SignalR;
+using FDSSYSTEM.Helper;
+using FDSSYSTEM.Repositories.OtpRepository;
 
 namespace FDSSYSTEM.Services.RegisterReceiverService
 {
@@ -23,13 +25,19 @@ namespace FDSSYSTEM.Services.RegisterReceiverService
         private readonly IUserContextService _userContextService;
         private readonly IUserService _userService;
         private readonly INotificationService _notificationService;
+        private readonly IOtpRepository _otpRepository;
+        private readonly EmailHelper _emailHeper;
+        private readonly SMSHelper _smsHeper;
 
         private readonly IHubContext<NotificationHub> _hubNotificationContext;
 
         public RegisterReceiverService(IRegisterReceiverRepository registerReceiverRepository,
              IUserRepository userRepository,  IUserContextService userContextService, IUserService userService
             , INotificationService notificationService
-            , IHubContext<NotificationHub> hubContext)
+            , IHubContext<NotificationHub> hubContext
+            , IOtpRepository otpRepository
+            , EmailHelper emailHeper
+            , SMSHelper smsHelper)
         {
            _registerReceiverRepository = registerReceiverRepository;
             _userRepository = userRepository;
@@ -37,6 +45,9 @@ namespace FDSSYSTEM.Services.RegisterReceiverService
             _userService = userService;
             _notificationService = notificationService;
             _hubNotificationContext = hubContext;
+            _otpRepository = otpRepository;
+            _emailHeper = emailHeper;
+            _smsHeper = smsHelper;
         }
 
         // Lấy tất cả các RegisterReceiver
@@ -91,7 +102,33 @@ namespace FDSSYSTEM.Services.RegisterReceiverService
             };
             await _registerReceiverRepository.AddAsync(newRegisterReceiver);
 
-            //Send notifiction all staff and admin
+           /* // Lấy thông tin người dùng để lấy Email và PhoneNumber
+            var user = await _userService.GetAccountById(_userContextService.UserId);
+            if (user == null || string.IsNullOrEmpty(user.Email) || string.IsNullOrEmpty(user.Phone))
+            {
+                throw new Exception("Không thể lấy thông tin Email hoặc PhoneNumber của người dùng.");
+            }
+
+            // Tạo và lưu mã OTP
+            var otpCode = new OtpCode
+            {
+                Email = user.Email,
+                Phone = user.Phone,
+                Code = OTPGenerator.GenerateOTP(),
+                ExpirationTime = DateTime.UtcNow.AddMinutes(5),
+                IsVerified = false
+            };
+            await _otpRepository.AddAsync(otpCode);
+
+            // Gửi OTP qua Email
+            string subject = "Mã OTP xác nhận đăng ký";
+            string content = $"Mã OTP xác nhận đăng ký chiến dịch của bạn: {otpCode.Code}";
+            await _emailHeper.SendEmailAsync(subject, content, new List<string> { otpCode.Email });
+
+            // Gửi OTP qua SMS
+            await _smsHeper.SendSMS(otpCode.Phone, $"FDSSystem mã xác nhận đăng ký chiến dịch của bạn: {otpCode.Code}");
+*/
+            // Gửi thông báo tới staff và admin
             var userReceiveNotifications = await _userService.GetAllDonorAndStaffId();
             foreach (var userId in userReceiveNotifications)
             {
@@ -104,12 +141,11 @@ namespace FDSSYSTEM.Services.RegisterReceiverService
                     OjectId = newRegisterReceiver.CampaignId,
                     AccountId = userId
                 };
-                //save notifiation to db
+                // Lưu thông báo vào database
                 await _notificationService.AddNotificationAsync(notificationDto);
-                //send notification via signalR
+                // Gửi thông báo qua SignalR
                 await _hubNotificationContext.Clients.User(notificationDto.AccountId).SendAsync("ReceiveNotification", notificationDto);
             }
-
         }
 
         // Cập nhật một RegisterReceiver theo ID
@@ -144,5 +180,21 @@ namespace FDSSYSTEM.Services.RegisterReceiverService
             }
 
         }
+
+
+        public async Task<int> GetTotalRegisteredQuantityAsync(string campaignId, string accountId)
+        {
+            var filter = Builders<RegisterReceiver>.Filter.And(
+                Builders<RegisterReceiver>.Filter.Eq(r => r.CampaignId, campaignId),
+                Builders<RegisterReceiver>.Filter.Eq(r => r.AccountId, accountId)
+            );
+
+            var registrations = await _registerReceiverRepository.GetAllAsync(filter);
+            int total = registrations.Sum(r => r.Quantity);
+            return total;
+        }
+
+
+
     }
 }

@@ -4,6 +4,7 @@ using FDSSYSTEM.Helpers;
 using FDSSYSTEM.Options;
 using FDSSYSTEM.Repositories.CampaignDonorSupportRepository;
 using FDSSYSTEM.Repositories.CampaignRepository;
+using FDSSYSTEM.Repositories.ChatMessageRepository;
 using FDSSYSTEM.Repositories.DonorDonateRepository;
 using FDSSYSTEM.Repositories.DonorQuestionRepository;
 using FDSSYSTEM.Repositories.FeedBackCommentRepository;
@@ -31,6 +32,7 @@ using FDSSYSTEM.Repositories.UserRepository;
 using FDSSYSTEM.SeedData;
 using FDSSYSTEM.Services.CampaignDonorSupportService;
 using FDSSYSTEM.Services.CampaignService;
+using FDSSYSTEM.Services.ChatService;
 using FDSSYSTEM.Services.DonorDonateService;
 using FDSSYSTEM.Services.DonorQuestionService;
 using FDSSYSTEM.Services.FeedBackCommentService;
@@ -133,6 +135,8 @@ builder.Services.AddScoped<IDonorDonateRepository, DonorDonateRepository>();
 builder.Services.AddScoped<IDonorDonateService, DonorDonateService>();
 
 builder.Services.AddScoped<IStatisticService, StatisticService>();
+builder.Services.AddScoped<IChatMessageRepository, ChatMessageRepository>();
+builder.Services.AddScoped<IChatService, ChatService>();
 
 
 builder.Services.AddScoped<IOtpRepository, OtpRepository>();
@@ -218,6 +222,7 @@ builder.Services.AddSignalR();
 var app = builder.Build();
 
 app.MapHub<NotificationHub>("/notificationhub");
+app.MapHub<ChatHub>("/chathub");
 
 //Default data
 using (var scope = app.Services.CreateScope())

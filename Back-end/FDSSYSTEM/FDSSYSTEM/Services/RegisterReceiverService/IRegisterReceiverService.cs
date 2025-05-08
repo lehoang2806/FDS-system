@@ -9,5 +9,7 @@ namespace FDSSYSTEM.Services.RegisterReceiverService
         Task<RegisterReceiver> GetById(string id);
         Task Create(RegisterReceiverDto registerReceiver);
         Task Update(string id, RegisterReceiverDto registerReceiver);
+        Task<int> GetTotalRegisteredQuantityAsync(string campaignId, string accountId);
+
     }
 }

@@ -66,6 +66,7 @@ namespace FDSSYSTEM.Services.PostService
                 PosterRole = _userContextService.Role ?? "",
                 PosterName = post.PosterName,
                 PostContent = post.PostContent,
+                Hashtags = post.Hashtags,
             };
             await _postRepository.AddAsync(newPost);
 
@@ -110,6 +111,7 @@ namespace FDSSYSTEM.Services.PostService
             post.Images = postDto.Images;
             post.PostContent = postDto.PostContent;
             post.PosterName = postDto.PosterName;
+            post.Hashtags = postDto.Hashtags;
 
 
             await _postRepository.UpdateAsync(post.Id, post);
