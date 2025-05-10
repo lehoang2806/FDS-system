@@ -48,7 +48,6 @@ namespace FDSSYSTEM.Services.RequestSupportService
                 RequestSupportId = Guid.NewGuid().ToString(),
                 FullName = requestSupport.FullName,
                 DateOfBirth = requestSupport.DateOfBirth,
-                CitizenId = requestSupport.CitizenId, // Thêm số CMND/CCCD
                 CitizenIdImages = requestSupport.CitizenIdImages, // Thêm hình ảnh giấy tờ tùy thân
                 PhoneNumber = requestSupport.PhoneNumber,
                 Address = requestSupport.Address,
@@ -59,17 +58,12 @@ namespace FDSSYSTEM.Services.RequestSupportService
                 HouseholdSize = requestSupport.HouseholdSize,
                 SpecialMembers = requestSupport.SpecialMembers,
                 CircumstanceImages = requestSupport.CircumstanceImages, // Thêm hình ảnh hoàn cảnh
-                LocalAuthorityConfirmation = requestSupport.LocalAuthorityConfirmation, // Thêm giấy xác nhận của chính quyền
                /* IncomeSource = requestSupport.IncomeSource,
                 MonthlyIncome = requestSupport.MonthlyIncome, // Thêm thu nhập hàng tháng*/
                 RequestedItems = requestSupport.RequestedItems,
+                DesiredQuantity = requestSupport.DesiredQuantity,
                 AccountId = accountId,
                 CreatedDate = DateTime.Now,
-                Images = requestSupport.Images,
-                HasReceivedSupportBefore = requestSupport.HasReceivedSupportBefore, // Thêm thông tin lịch sử nhận hỗ trợ
-                PreviousSupportDetails = requestSupport.PreviousSupportDetails, // Thêm chi tiết hỗ trợ trước đây
-                CommitmentToAccuracy = requestSupport.CommitmentToAccuracy, // Thêm cam kết minh bạch
-                SignatureImage = requestSupport.SignatureImage // Thêm hình ảnh chữ ký
             };
             await _requestSupportRepository.AddAsync(newRequestSupport);
 
@@ -98,7 +92,6 @@ namespace FDSSYSTEM.Services.RequestSupportService
 
             request.FullName = requestSupport.FullName;
             request.DateOfBirth = requestSupport.DateOfBirth;
-            request.CitizenId = requestSupport.CitizenId; // Cập nhật số CMND/CCCD
             request.CitizenIdImages = requestSupport.CitizenIdImages; // Cập nhật hình ảnh giấy tờ tùy thân
             request.PhoneNumber = requestSupport.PhoneNumber;
             request.Address = requestSupport.Address;
@@ -109,16 +102,10 @@ namespace FDSSYSTEM.Services.RequestSupportService
             request.HouseholdSize = requestSupport.HouseholdSize;
             request.SpecialMembers = requestSupport.SpecialMembers;
             request.CircumstanceImages = requestSupport.CircumstanceImages; // Cập nhật hình ảnh hoàn cảnh
-            request.LocalAuthorityConfirmation = requestSupport.LocalAuthorityConfirmation; // Cập nhật giấy xác nhận của chính quyền
             /*request.IncomeSource = requestSupport.IncomeSource;
             request.MonthlyIncome = requestSupport.MonthlyIncome; // Cập nhật thu nhập hàng tháng*/
             request.RequestedItems = requestSupport.RequestedItems;
-            request.Images = requestSupport.Images;
-            request.HasReceivedSupportBefore = requestSupport.HasReceivedSupportBefore; // Cập nhật thông tin lịch sử nhận hỗ trợ
-            request.PreviousSupportDetails = requestSupport.PreviousSupportDetails; // Cập nhật chi tiết hỗ trợ trước đây
-            request.CommitmentToAccuracy = requestSupport.CommitmentToAccuracy; // Cập nhật cam kết minh bạch
-            request.SignatureImage = requestSupport.SignatureImage; // Cập nhật hình ảnh chữ ký
-
+            request.DesiredQuantity = requestSupport.DesiredQuantity;
             await _requestSupportRepository.UpdateAsync(request.Id, request);
 
             var userReceiveNotifications = await _userService.GetAllAdminAndStaffId();
@@ -249,6 +236,10 @@ namespace FDSSYSTEM.Services.RequestSupportService
             }
 
             // Cập nhật đơn yêu cầu trong cơ sở dữ liệu
+            if (donors.Count() > 0)
+            {
+                request.Status = "Sent";
+            }
             await _requestSupportRepository.UpdateAsync(request.Id, request);
 /*
             // Gửi thông báo cho nhân viên/admin
@@ -289,10 +280,9 @@ namespace FDSSYSTEM.Services.RequestSupportService
             }
 
             donor.Status = status;
-
             await _requestSupportRepository.UpdateAsync(request.Id, request);
 
-           /* // Gửi thông báo cho nhân viên/admin
+            // Gửi thông báo cho admin/staff
             var userReceiveNotifications = await _userService.GetAllAdminAndStaffId();
             foreach (var userId in userReceiveNotifications)
             {
@@ -300,14 +290,14 @@ namespace FDSSYSTEM.Services.RequestSupportService
                 {
                     Title = $"Nhà tài trợ đã cập nhật trạng thái",
                     Content = $"Nhà tài trợ {donor.FullName} đã cập nhật trạng thái thành {status} cho đơn {requestSupportId}.",
-                    NotificationType = "Cập nhật trạng thái",
-                    ObjectType = "Yêu cầu hỗ trợ",
+                    NotificationType = "UpdateStatus",
+                    ObjectType = "RequestSupport",
                     OjectId = requestSupportId,
                     AccountId = userId
                 };
                 await _notificationService.AddNotificationAsync(notificationDto);
                 await _hubNotificationContext.Clients.User(notificationDto.AccountId).SendAsync("ReceiveNotification", notificationDto);
-            }*/
+            }
         }
 
     }

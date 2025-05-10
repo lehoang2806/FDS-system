@@ -3,6 +3,7 @@ using FDSSYSTEM.Helper;
 using FDSSYSTEM.Models;
 using FDSSYSTEM.Options;
 using FDSSYSTEM.Repositories.CampaignRepository;
+using FDSSYSTEM.Repositories.RequestSupportRepository;
 using FDSSYSTEM.Repositories.UserRepository;
 using FDSSYSTEM.Services.CampaignDonorSupportService;
 using FDSSYSTEM.Services.NotificationService;
@@ -29,7 +30,7 @@ namespace FDSSYSTEM.Services.CampaignService
         private readonly IUserContextService _userContextService;
         private readonly INotificationService _notificationService;
         private readonly ICampaignDonorSupportService _campaignDonorSupportService;
-
+        private readonly IRequestSupportRepository _requestSupportRepository;
         private readonly IHubContext<NotificationHub> _hubNotificationContext;
         private readonly SMSHelper _smsHeper;
         private readonly EmailHelper _emailHeper;
@@ -42,7 +43,8 @@ namespace FDSSYSTEM.Services.CampaignService
             , ICampaignDonorSupportService campaignDonorSupportService
             , IWebHostEnvironment env
             , IOptions<EmailConfig> options
-            , EmailHelper emailHeper)
+            , EmailHelper emailHeper
+            , IRequestSupportRepository requestSupportRepository)
         {
             _campaignRepository = campaignRepository;
             _userRepository = userRepository;
@@ -55,6 +57,7 @@ namespace FDSSYSTEM.Services.CampaignService
             _env = env;
             _emailConfig = options.Value;
             _emailHeper = emailHeper;
+            _requestSupportRepository = requestSupportRepository;
         }
 
         public async Task Create(CampaignDto campaign)
@@ -71,7 +74,7 @@ namespace FDSSYSTEM.Services.CampaignService
                 isDonorCreate = true;
             }
 
-            var newCampain = new Campaign
+            var newCampaign = new Campaign
             {
                 CampaignId = Guid.NewGuid().ToString(),
                 AccountId = _userContextService.UserId ?? "",
@@ -79,49 +82,51 @@ namespace FDSSYSTEM.Services.CampaignService
                 CampaignDescription = campaign.CampaignDescription,
                 Location = campaign.Location,
                 ImplementationTime = campaign.ImplementationTime,
-                /*TypeGift = campaign.TypeGift,*/
                 EstimatedBudget = campaign.EstimatedBudget,
                 AverageCostPerGift = campaign.AverageCostPerGift,
-                Status = "Pending",// Nếu không truyền, mặc định là "Pending",
-                TypeAccount = donorType, //staff, personal , organization
+                Status = "Pending",
+                TypeAccount = donorType,
                 Sponsors = campaign.Sponsors,
-                /*StartRegisterDate = campaign.StartRegisterDate,*/
-                /*EndRegisterDate = campaign.EndRegisterDate,*/
                 Images = campaign.Images,
                 ImplementationMethod = campaign.ImplementationMethod,
                 Communication = campaign.Communication,
                 LimitedQuantity = campaign.LimitedQuantity,
-                /*CampaignType = campaign.CampaignType,*/
                 District = campaign.District,
-                CreatedDate= DateTime.Now,
+                CreatedDate = DateTime.Now,
+                CampaignRequestSupportId = campaign.CampaignRequestSupportId
             };
 
-            await _campaignRepository.AddAsync(newCampain);
-
-            //Send notifiction all staff and admin
-            var userReceiveNotifications = isDonorCreate ?
-                await _userService.GetAllAdminAndStaffId() //donor tạo gửi cho admin, staff
-                : await _userService.GetAllAdminAndDnonorId(); //staff tạo gửi cho admin, và donor
-
-            foreach (var userid in userReceiveNotifications)
+            if (!string.IsNullOrEmpty(campaign.CampaignRequestSupportId))
             {
-                //Gửi thông báo trong hệ thống
-                var notificationDto = new NotificationDto
+                var request = await _requestSupportRepository.GetByRequestSupportIdAsync(campaign.CampaignRequestSupportId);
+                if (request == null)
                 {
-                    Title = "Campain mới được tạo",
-                    Content = "Có chiến dịch mới được tạo ra",
-                    NotificationType = "Pending",
-                    ObjectType = "Campain",
-                    OjectId = newCampain.CampaignId,
-                    AccountId = userid
-                };
-                //save notifiation to db
-                await _notificationService.AddNotificationAsync(notificationDto);
-                //send notification via signalR
-                await _hubNotificationContext.Clients.User(notificationDto.AccountId).SendAsync("ReceiveNotification", notificationDto);
-
+                    throw new Exception("Đơn yêu cầu hỗ trợ không tồn tại.");
+                }
             }
 
+            await _campaignRepository.AddAsync(newCampaign);
+
+            // Gửi thông báo
+            var userReceiveNotifications = isDonorCreate ?
+                await _userService.GetAllAdminAndStaffId() :
+                await _userService.GetAllAdminAndDnonorId();
+
+            foreach (var userId in userReceiveNotifications) // Sửa cú pháp foreach
+            {
+                var notificationDto = new NotificationDto
+                {
+                    Title = "Chiến dịch mới được tạo",
+                    Content = $"Có chiến dịch mới được tạo ra" +
+                              (string.IsNullOrEmpty(newCampaign.CampaignRequestSupportId) ? "" : " liên quan đến đơn yêu cầu hỗ trợ"),
+                    NotificationType = "Pending",
+                    ObjectType = "Campaign",
+                    OjectId = newCampaign.CampaignId,
+                    AccountId = userId
+                };
+                await _notificationService.AddNotificationAsync(notificationDto);
+                await _hubNotificationContext.Clients.User(notificationDto.AccountId).SendAsync("ReceiveNotification", notificationDto);
+            }
         }
 
         //public async Task<List<CampaignDto>> GetAllCampaignAccount()
@@ -165,14 +170,15 @@ namespace FDSSYSTEM.Services.CampaignService
                 existingCampaign.EstimatedBudget = campaign.EstimatedBudget;
                 existingCampaign.AverageCostPerGift = campaign.AverageCostPerGift;
                 existingCampaign.Sponsors = campaign.Sponsors;
-               /* existingCampaign.StartRegisterDate = campaign.StartRegisterDate;*/
-               /* existingCampaign.EndRegisterDate = campaign.EndRegisterDate;*/
+                /* existingCampaign.StartRegisterDate = campaign.StartRegisterDate;*/
+                /* existingCampaign.EndRegisterDate = campaign.EndRegisterDate;*/
                 existingCampaign.Images = campaign.Images;
                 existingCampaign.ImplementationMethod = campaign.ImplementationMethod;
                 existingCampaign.Communication = campaign.Communication;
                 existingCampaign.LimitedQuantity = campaign.LimitedQuantity;
                 /*existingCampaign.CampaignType = campaign.CampaignType;*/
                 existingCampaign.District = campaign.District;
+                existingCampaign.CampaignRequestSupportId = campaign.CampaignRequestSupportId;
 
                 await _campaignRepository.UpdateAsync(existingCampaign.Id, existingCampaign);
 
@@ -274,26 +280,59 @@ namespace FDSSYSTEM.Services.CampaignService
         public async Task Approve(ApproveCampaignDto approveCampaignDto)
         {
             var filter = Builders<Campaign>.Filter.Eq(c => c.CampaignId, approveCampaignDto.CampaignId);
-            var campain = (await _campaignRepository.GetAllAsync(filter)).FirstOrDefault();
+            var campaign = (await _campaignRepository.GetAllAsync(filter)).FirstOrDefault();
 
-            campain.Status = "Approved";
-            await _campaignRepository.UpdateAsync(campain.Id, campain);
+            if (campaign == null)
+            {
+                throw new Exception("Không tìm thấy chiến dịch.");
+            }
 
-            // Send notification to donor
+            campaign.Status = "Approved";
+            await _campaignRepository.UpdateAsync(campaign.Id, campaign);
+
+            // Xử lý chiến dịch liên quan đến RequestSupport
+            if (!string.IsNullOrEmpty(campaign.CampaignRequestSupportId))
+            {
+                var request = await _requestSupportRepository.GetByRequestSupportIdAsync(campaign.CampaignRequestSupportId);
+                if (request == null)
+                {
+                    throw new Exception("Không tìm thấy đơn yêu cầu hỗ trợ.");
+                }
+
+                // Kiểm tra số lượng
+                if (request.ApprovedQuantity + campaign.LimitedQuantity > request.DesiredQuantity)
+                {
+                    throw new Exception("Số lượng phê duyệt vượt quá số lượng mong muốn của đơn yêu cầu.");
+                }
+
+                // Cập nhật ApprovedQuantity
+                request.ApprovedQuantity += campaign.LimitedQuantity;
+                await _requestSupportRepository.UpdateAsync(request.Id, request);
+
+                // Cập nhật trạng thái donor trong SupportDonor
+                var currentDonor = request.SupportDonor.FirstOrDefault(d => d.DonorId == campaign.AccountId);
+                if (currentDonor != null)
+                {
+                    currentDonor.Status = "Participating";
+                    await _requestSupportRepository.UpdateAsync(request.Id, request);
+                }
+            }
+
+            // Gửi thông báo cho donor
             var donorNotification = new NotificationDto
             {
                 Title = "Phê duyệt chiến dịch thành công",
                 Content = "Chiến dịch của bạn đã được phê duyệt thành công",
                 NotificationType = "Approve",
-                ObjectType = "Campain",
-                OjectId = campain.CampaignId,
-                AccountId = campain.AccountId
+                ObjectType = "Campaign",
+                OjectId = campaign.CampaignId,
+                AccountId = campaign.AccountId
             };
             await _notificationService.AddNotificationAsync(donorNotification);
             await _hubNotificationContext.Clients.User(donorNotification.AccountId).SendAsync("ReceiveNotification", donorNotification);
 
-            // Send email to donor
-            var donor = await _userService.GetAccountById(campain.AccountId);
+            // Gửi email cho donor
+            var donor = await _userService.GetAccountById(campaign.AccountId);
             if (donor != null && !string.IsNullOrEmpty(donor.Email))
             {
                 string filePath = Path.Combine(_env.ContentRootPath, "EmailTemplates", "ApproveCampaign.html");
@@ -303,23 +342,23 @@ namespace FDSSYSTEM.Services.CampaignService
                 }
 
                 string htmlBody = await System.IO.File.ReadAllTextAsync(filePath);
-                string campaignLink = $"{_emailConfig.HomePage}/campaigns/{campain.CampaignId}";
+                string campaignLink = $"{_emailConfig.HomePage}/campaigns/{campaign.CampaignId}";
                 string body = htmlBody
                     .Replace("{{UserName}}", donor.FullName)
-                    .Replace("{{CampaignName}}", campain.CampaignName)
+                    .Replace("{{CampaignName}}", campaign.CampaignName)
                     .Replace("{{CampaignLink}}", campaignLink);
 
                 string subject = "Chiến dịch của bạn đã được duyệt - FDS-System";
                 await _emailHeper.SendEmailAsync(subject, body, new List<string> { donor.Email }, true);
             }
 
-            // Send SMS and notification to recipients
-            var userRecieveSsms = await _userService.GetAllRecipientConfirmed();
-            foreach (var rp in userRecieveSsms)
+            // Gửi SMS và thông báo cho recipient
+            var userReceiveSms = await _userService.GetAllRecipientConfirmed();
+            foreach (var recipient in userReceiveSms)
             {
-                if (!string.IsNullOrEmpty(rp.Phone))
+                if (!string.IsNullOrEmpty(recipient.Phone))
                 {
-                    _smsHeper.SendSMS(rp.Phone, "Có chiến dịch vừa được tạo ra trên Website. Bạn có thể vào đăng ký ngay");
+                    _smsHeper.SendSMS(recipient.Phone, "Có chiến dịch vừa được tạo ra trên Website. Bạn có thể vào đăng ký ngay");
                 }
 
                 var recipientNotification = new NotificationDto
@@ -327,15 +366,14 @@ namespace FDSSYSTEM.Services.CampaignService
                     Title = "Có một chiến dịch vừa được tạo",
                     Content = "Bạn có thể tham gia đăng ký tại hệ thống",
                     NotificationType = "Notification",
-                    ObjectType = "Campain",
-                    OjectId = campain.CampaignId,
-                    AccountId = rp.AccountId
+                    ObjectType = "Campaign",
+                    OjectId = campaign.CampaignId,
+                    AccountId = recipient.AccountId
                 };
                 await _notificationService.AddNotificationAsync(recipientNotification);
                 await _hubNotificationContext.Clients.User(recipientNotification.AccountId).SendAsync("ReceiveNotification", recipientNotification);
             }
         }
-
 
         public async Task Reject(RejectCampaignDto rejectCampaignDto)
         {
@@ -467,6 +505,13 @@ namespace FDSSYSTEM.Services.CampaignService
                 //send notification via signalR
                 await _hubNotificationContext.Clients.User(notificationDto.AccountId).SendAsync("ReceiveNotification", notificationDto);
             }
+        }
+
+        public async Task<int> GetCreatedNumberByUserId(string userId)
+        {
+            var filter = Builders<Campaign>.Filter.Eq(c => c.AccountId, userId);
+            var campaigns = await _campaignRepository.GetAllAsync(filter);
+            return campaigns.Count();
         }
     }
 }

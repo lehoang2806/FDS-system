@@ -90,6 +90,14 @@ namespace FDSSYSTEM.Services.RegisterReceiverService
         // Tạo một RegisterReceiver mới
         public async Task Create(RegisterReceiverDto registerReceiver)
         {
+            // Lấy thông tin người dùng để lấy Email và PhoneNumber
+            var user = await _userService.GetAccountById(_userContextService.UserId);
+            if (user == null || string.IsNullOrEmpty(user.Email) || string.IsNullOrEmpty(user.Phone))
+            {
+                throw new Exception("Không thể lấy thông tin Email hoặc PhoneNumber của người dùng.");
+            }
+
+            var otp = OTPGenerator.GenerateOTP();
             var newRegisterReceiver = new RegisterReceiver
             {
                 AccountId = _userContextService.UserId ?? "",
@@ -99,35 +107,19 @@ namespace FDSSYSTEM.Services.RegisterReceiverService
                 RegisterReceiverId = Guid.NewGuid().ToString(),
                 CampaignId = registerReceiver.CampaignId,
                 CreatedDate = DateTime.Now,
+                OTP = otp
             };
             await _registerReceiverRepository.AddAsync(newRegisterReceiver);
 
-           /* // Lấy thông tin người dùng để lấy Email và PhoneNumber
-            var user = await _userService.GetAccountById(_userContextService.UserId);
-            if (user == null || string.IsNullOrEmpty(user.Email) || string.IsNullOrEmpty(user.Phone))
-            {
-                throw new Exception("Không thể lấy thông tin Email hoặc PhoneNumber của người dùng.");
-            }
-
-            // Tạo và lưu mã OTP
-            var otpCode = new OtpCode
-            {
-                Email = user.Email,
-                Phone = user.Phone,
-                Code = OTPGenerator.GenerateOTP(),
-                ExpirationTime = DateTime.UtcNow.AddMinutes(5),
-                IsVerified = false
-            };
-            await _otpRepository.AddAsync(otpCode);
-
+            
             // Gửi OTP qua Email
-            string subject = "Mã OTP xác nhận đăng ký";
-            string content = $"Mã OTP xác nhận đăng ký chiến dịch của bạn: {otpCode.Code}";
-            await _emailHeper.SendEmailAsync(subject, content, new List<string> { otpCode.Email });
+            string subject = "Đăng thành công";
+            string content = $"Xác nhận đăng ký chiến dịch của bạn: {otp}";
+            await _emailHeper.SendEmailAsync(subject, content, new List<string> { user.Email });
 
             // Gửi OTP qua SMS
-            await _smsHeper.SendSMS(otpCode.Phone, $"FDSSystem mã xác nhận đăng ký chiến dịch của bạn: {otpCode.Code}");
-*/
+            _smsHeper.SendSMS(user.Phone, $"FDSSystem mã xác nhận đăng ký chiến dịch của bạn: {otp}");
+
             // Gửi thông báo tới staff và admin
             var userReceiveNotifications = await _userService.GetAllDonorAndStaffId();
             foreach (var userId in userReceiveNotifications)

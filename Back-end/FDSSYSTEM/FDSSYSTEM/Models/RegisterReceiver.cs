@@ -18,5 +18,6 @@ namespace FDSSYSTEM.Models
         public string CampaignId { get; set; }
         public DateTime CreatedDate { get; set; }
         public bool IsReceived { get; set; } = false; // false là user chưa nhận, true là nhận rồi
+        public string OTP { get; set; }
     }
 }
