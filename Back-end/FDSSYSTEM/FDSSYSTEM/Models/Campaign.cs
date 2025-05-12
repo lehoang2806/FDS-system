@@ -40,6 +40,7 @@ namespace FDSSYSTEM.Models
         public List<string> Images { get; set; }
         public string District { get; set; }
         public  DateTime CreatedDate { get; set; } = DateTime.Now;
+        public string? CampaignRequestSupportId { get; set; }
 
     }
 

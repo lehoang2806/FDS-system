@@ -22,6 +22,7 @@
        /* public string EndRegisterDate { get; set; }*/
         public string District { get; set; }
         public List<string> Images { get; set; }
+        public string? CampaignRequestSupportId { get; set; }
 
     }
 }

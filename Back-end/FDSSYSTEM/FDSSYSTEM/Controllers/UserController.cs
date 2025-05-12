@@ -5,6 +5,7 @@ using FDSSYSTEM.DTOs.Users;
 using FDSSYSTEM.Helpers;
 using FDSSYSTEM.Models;
 using FDSSYSTEM.Repositories.UserRepository;
+using FDSSYSTEM.Services.CampaignService;
 using FDSSYSTEM.Services.UserContextService;
 using FDSSYSTEM.Services.UserService;
 using Mapster;
@@ -19,12 +20,14 @@ namespace FDSSYSTEM.Controllers
     public class UserController : BaseController
     {
         private readonly IUserService _userService;
+        private readonly ICampaignService _campaignService;
         private readonly IConfiguration _configuration;
 
-        public UserController(IConfiguration configuration, IUserService userService)
+        public UserController(IConfiguration configuration, IUserService userService, ICampaignService campaignService)
         {
             _configuration = configuration;
             _userService = userService;
+            _campaignService = campaignService;
         }
 
 
@@ -401,7 +404,16 @@ namespace FDSSYSTEM.Controllers
                 config.NewConfig<Account, DonorForSupportDto>()
                      .Map(dest => dest.DonorId, src => src.AccountId);
 
-                return Ok(donors.Adapt<List<DonorForSupportDto>>(config));
+                //GetCreatedNumberByUserId
+                var rs = donors.Adapt<List<DonorForSupportDto>>(config);
+                var allcampaigns = await _campaignService.GetAll();
+                foreach (var donor in rs)
+                {
+                    donor.NumberOfCampaignCreated = allcampaigns.Count(x => x.AccountId == donor.DonorId);
+                }
+                rs = rs.OrderByDescending(dest => dest.NumberOfCampaignCreated).ToList();
+
+                return Ok(rs);
             }
             catch (Exception ex)
             {

@@ -6,5 +6,6 @@
         public string Email { get; set; }
         public string FullName { get; set; }
         public string DonorType { get; set; }
+        public int NumberOfCampaignCreated {  get; set; }
     }
 }

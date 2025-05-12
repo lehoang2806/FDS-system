@@ -22,5 +22,7 @@ namespace FDSSYSTEM.Services.CampaignService
         Task Delete(string id);
         Task AddReviewComment(ReviewCommentCampaignDto reviewCommentCampaignDto);
         Task Cancel(CancelCampaignDto cancelCampaignDto);
+
+        Task<int> GetCreatedNumberByUserId(string userId);
     }
 }
