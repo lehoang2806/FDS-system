@@ -43,6 +43,7 @@ interface RemindCertificateModalProps extends ModalCommonProps {}
 
 interface RegisterReceiverModalProps extends ModalCommonProps {
     campaign: CurrentCampaign | null;
+    registeredReceiver?: RegisteredReceiver[] | null;
 }
 
 interface AdditionalCampaignModalProps extends ModalCommonProps {

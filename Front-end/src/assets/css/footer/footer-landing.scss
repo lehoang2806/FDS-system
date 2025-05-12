@@ -1,5 +1,5 @@
 #footer-landing {
-    background: #f2f3f4;
+    background: #ffe9c6;
 
     #fl-section {
         padding: 80px 20px;
@@ -13,7 +13,7 @@
             gap: 48px;
 
             .flscc1 {
-                flex: 1;
+                flex: 2;
                 margin-top: -20px;
 
                 img {
@@ -40,7 +40,7 @@
             }
 
             .flscc2 {
-                flex: 3;
+                flex: 4;
                 display: flex;
                 align-items: start;
                 justify-content: center;
@@ -73,12 +73,31 @@
             }
 
             .flscc3 {
-                flex: 1;
+                flex: 2;
 
                 h4 {
                     font-size: 16px;
                     font-weight: 700;
                     color: var(--main-color);
+                    margin-bottom: 16px;
+                }
+
+                p {
+                    font-size: 16px;
+                    font-weight: 500;
+                    margin-bottom: 10px;
+
+                    .text-black {
+                        color: #000;
+                        font-weight: 700;
+                        font-size: 16px;
+                    }
+
+                    .text-orange {
+                        color: var(--main-color);
+                        font-weight: 700;
+                        font-size: 16px;
+                    }
                 }
             }
         }

@@ -78,9 +78,6 @@ const StaffListNewsPage: FC = () => {
                                     Tiêu đề
                                 </th>
                                 <th className="table-head-cell">
-                                    Mô tả
-                                </th>
-                                <th className="table-head-cell">
                                     Hành động
                                 </th>
                             </tr>
@@ -89,7 +86,6 @@ const StaffListNewsPage: FC = () => {
                             {news && currentNewsesPage.map((item, index) => (
                                 <tr className="table-body-row" key={index}>
                                     <td className='table-body-cell'>{item.newsTitle}</td>
-                                    <td className='table-body-cell'>{item.newsDescripttion}</td>
                                     <td className="table-body-cell">
                                         <button className='view-btn' onClick={() => handleToDetail(item.newId)}>Xem chi tiết</button>
                                     </td>

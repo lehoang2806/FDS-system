@@ -11,6 +11,7 @@ import { getAllNewsApiThunk } from "@/services/news/newsThunk";
 import { CampaignCarousel, CarouselLanding } from "@/components/Elements";
 import { LS2 } from "@/assets/images";
 import { getAllUserApiThunk } from "@/services/user/userThunk";
+import { OrganizationIcon, PersonalIcon } from "@/assets/icons";
 
 export default function () {
     const dispatch = useAppDispatch();
@@ -34,7 +35,15 @@ export default function () {
 
     const personalCampaigns = approvedCampaigns.filter((campaign) => campaign.typeAccount === "Personal Donor");
 
+    const totalPersonalLimitedQuantity = personalCampaigns.reduce((total, campaign) => {
+        return total + Number(campaign.limitedQuantity || 0);
+    }, 0);    
+
     const organizationCampaigns = approvedCampaigns.filter((campaign) => campaign.typeAccount === "Organization Donor");
+
+    const totalOrganizationLimitedQuantity = organizationCampaigns.reduce((total, campaign) => {
+        return total + Number(campaign.limitedQuantity || 0);
+    }, 0);
 
     useEffect(() => {
         document.title = "Trang chủ";
@@ -95,23 +104,27 @@ export default function () {
                             <figure className="ls3-img"><img src={LS2} alt="" /></figure>
                         </div>
                         <div className="ls3r1c2">
-                            <div className="ls3r1c2-item">
-                                <div style={{ display: "flex", alignItems: "center" }}>
-                                    <div className="ls3r1c2-item-dot ls3r1c2-item-dot-1"></div><p className="ls3r1c2-item-title">Tổ chức</p>
+                            <div className="ls3r1c2c1">
+                                <div className="ls3r1c2-item">
+                                    <div style={{ display: "flex", alignItems: "center" }}>
+                                        <OrganizationIcon className="ls3r1c2-item-icon"/><p className="ls3r1c2-item-title">Tổ chức</p>
+                                    </div>
+                                    <p className="ls3r1c2-item-quantity"><span>Tổ chức đồng hành: </span>{confirmedOrganizationDonors.length} tổ chức</p>
+                                    <p className="ls3r1c2-item-quantity"><span>Chiến dịch diễn ra: </span>{organizationCampaigns.length} chiến dịch</p>
+                                    <p className="ls3r1c2-item-quantity"><span>Tổng số phần quà: </span>{totalOrganizationLimitedQuantity} phần quà</p>
+                                    <p className="ls3r1c2-item-quantity"><span>Người nhận hỗ trợ: </span>{confirmedOrganizationDonors.length} người</p>
                                 </div>
-                                <p className="ls3r1c2-item-quantity">{confirmedOrganizationDonors.length}</p>
                             </div>
-                            <div className="ls3r1c2-item">
-                                <div style={{ display: "flex", alignItems: "center" }}>
-                                    <div className="ls3r1c2-item-dot ls3r1c2-item-dot-1"></div><p className="ls3r1c2-item-title">Cá nhân</p>
+                            <div className="ls3r1c2c2">
+                                <div className="ls3r1c2-item">
+                                    <div style={{ display: "flex", alignItems: "center" }}>
+                                    <PersonalIcon className="ls3r1c2-item-icon"/><p className="ls3r1c2-item-title">Cá nhân</p>
+                                    </div>
+                                    <p className="ls3r1c2-item-quantity"><span>Cá nhân đồng hành: </span>{confirmedPersonalDonors.length} cá nhân</p>
+                                    <p className="ls3r1c2-item-quantity"><span>Chiến dịch diễn ra: </span>{personalCampaigns.length} chiến dịch</p>
+                                    <p className="ls3r1c2-item-quantity"><span>Tổng số phần quà: </span>{totalPersonalLimitedQuantity} phần quà</p>
+                                    <p className="ls3r1c2-item-quantity"><span>Người nhận hỗ trợ: </span>{confirmedOrganizationDonors.length} người</p>
                                 </div>
-                                <p className="ls3r1c2-item-quantity">{confirmedPersonalDonors.length}</p>
-                            </div>
-                            <div className="ls3r1c2-item">
-                                <div style={{ display: "flex", alignItems: "center" }}>
-                                    <div className="ls3r1c2-item-dot ls3r1c2-item-dot-1"></div><p className="ls3r1c2-item-title">Chiến dịch</p>
-                                </div>
-                                <p className="ls3r1c2-item-quantity">{approvedCampaigns.length}</p>
                             </div>
                         </div>
                     </div>
@@ -138,7 +151,7 @@ export default function () {
                     </div>
                     <div className="ls5cr2">
                         <div className="ls5cr2c1">
-                            {sortedNews?.[0] && <EventCard type={1} news={sortedNews[0]} onClickDetail={() => handleToDetailNews(sortedNews[0].newId)}/>}
+                            {sortedNews?.[0] && <EventCard type={1} news={sortedNews[0]} onClickDetail={() => handleToDetailNews(sortedNews[0].newId)} />}
                         </div>
                         <div className="ls5cr2c2">
                             {sortedNews.slice(1, 6).map((item, index) => (

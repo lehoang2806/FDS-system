@@ -33,146 +33,76 @@ const StaffDetailRequestSupportPage: FC = () => {
     }, [dispatch, id])
 
     return (
-        <section id="staff-detail-news" className="staff-section">
-            <div className="staff-container sdn-container">
-                <div className="sdncr1">
+        <section id="staff-detail-request-support" className="staff-section">
+            <div className="staff-container sdrs-container">
+                <div className="sdrscr1">
                     <h1>Đơn yêu cầu hỗ trợ</h1>
                     <p>Trang tổng quát<span className="staff-tag">Chi tiết đơn yêu cầu hỗ trợ</span></p>
                 </div>
-                <div className="sdncr2">
-                    <div className="sdncr2r1">
+                <div className="sdrscr2">
+                    <div className="sdrscr2r1">
                         <div className="group-btn">
                             <button onClick={() => navigateHook(routes.staff.request_support.list)}>Quay lại danh sách</button>
                         </div>
                     </div>
                     <hr />
-                    <div className="sdncr2r2">
-                        <div className="sdncr2r2c1">
+                    <div className="sdrscr2r2">
+                        <div className="sdrscr2r2c1">
                         </div>
-                        <div className="sdncr2r2c2">
+                        <div className="sdrscr2r2c2">
                             <h3>Ngày tạo:</h3>
                             <p>{formatDater(String(createDate))}</p>
                         </div>
                     </div>
                     <hr />
-                    <div className="sdncr2r3">
-                        <div className="sdncr2r3c1">
-                            <h2>Thông tin định danh</h2>
-                            <h3>Họ và tên:</h3>
-                            <p>{currentRequestSupport?.fullName}</p>
+                    <div className="sdrscr2r3">
+                        <h2>Thông tin định danh</h2>
+                        <h3>Họ và tên: <span>{currentRequestSupport?.fullName}</span></h3>
+                        <h3>Ngày sinh: <span>{formatDater(String(currentRequestSupport?.dateOfBirth))}</span></h3>
 
-                            <h3>Ngày sinh:</h3>
-                            <p>{formatDater(String(currentRequestSupport?.dateOfBirth))}</p> {/* Định dạng ngày sinh */}
+                        <h3>Ảnh CMND:</h3>
+                        {currentRequestSupport?.citizenIdImages?.map((image, index) => (
+                            <img key={index} src={image} alt={`Citizen ID ${index}`} style={{ width: "100px", height: "100px", objectFit: "cover" }} />
+                        ))}
 
-                            <h3>Số CCCD:</h3>
-                            <p>{currentRequestSupport?.citizenId}</p>
+                        <h2>Thông tin liên hệ</h2>
 
-                            <h3>Ảnh CMND:</h3>
-                            {currentRequestSupport?.citizenIdImages?.map((image, index) => (
-                                <img key={index} src={image} alt={`Citizen ID ${index}`} style={{ width: "100px", height: "100px", objectFit: "cover" }} />
-                            ))}
+                        <h3>Email: <span>{currentRequestSupport?.email}</span></h3>
 
-                            <h2>Thông tin liên hệ</h2>
+                        <h3>Số điện thoại: <span>{currentRequestSupport?.phoneNumber}</span></h3>
 
-                            <h3>Email:</h3>
-                            <p>{currentRequestSupport?.email}</p>
+                        <h3>Địa chỉ: <span>{currentRequestSupport?.address}</span></h3>
 
-                            <h3>Số điện thoại:</h3>
-                            <p>{currentRequestSupport?.phoneNumber}</p>
+                        <h2>Hoàn cảnh và lý do hỗ trợ</h2>
 
-                            <h3>Địa chỉ:</h3>
-                            <p>{currentRequestSupport?.address}</p>
+                        <h3>Lý do cần hỗ trợ: <span style={{ whiteSpace: "pre-line" }}>{currentRequestSupport?.reason}</span></h3>
 
-                            <h3>Liên hệ chính quyền địa phương:</h3>
-                            <p>{currentRequestSupport?.localAuthorityContact}</p>
 
-                            <h3>Liên hệ người thân:</h3>
-                            <p>{currentRequestSupport?.relativeContact}</p>
+                        <h3>Số người nhận hỗ trợ: <span>{currentRequestSupport?.householdSize}</span></h3>
 
-                            <h2>Hoàn cảnh và lý do hỗ trợ</h2>
+                        {/* {currentRequestSupport?.specialMembers && (
+                            <>
+                                <h3>Trường hợp đặc biết: <span>{currentRequestSupport?.specialMembers}</span></h3>
+                            </>
+                        )} */}
 
-                            <h3>Lý do cần hỗ trợ:</h3>
-                            <p style={{ whiteSpace: "pre-line" }}>{currentRequestSupport?.reason}</p>
+                        {currentRequestSupport?.circumstanceImages && (
+                            <>
+                                <h3>Hình ảnh hoàn cảnh gia đình:</h3>
+                                {currentRequestSupport?.circumstanceImages?.map((image, index) => (
+                                    <img key={index} src={image} alt={`Circumstance ${index}`} style={{ width: "100px", height: "100px", objectFit: "cover" }} />
+                                ))}
+                            </>
+                        )}
 
-                            <h3>Số người trong hộ gia đình:</h3>
-                            <p>{currentRequestSupport?.householdSize}</p>
-
-                            {currentRequestSupport?.specialMembers && (
-                                <>
-                                    <h3>Trường hợp đặc biết:</h3>
-                                    <p>{currentRequestSupport?.specialMembers}</p>
-                                </>
-                            )}
-
-                            {currentRequestSupport?.localAuthorityConfirmation && (
-                                <>
-                                    <h3>Giấy xác nhận từ chính quyền địa phương:</h3>
-                                    <p>{currentRequestSupport?.localAuthorityConfirmation}</p>
-                                </>
-                            )}
-
-                            <h3>Hình ảnh hoàn cảnh gia đình:</h3>
-                            {currentRequestSupport?.circumstanceImages?.map((image, index) => (
-                                <img key={index} src={image} alt={`Circumstance ${index}`} style={{ width: "100px", height: "100px", objectFit: "cover" }} />
-                            ))}
-                        </div>
-                        <div className="sdncr2r3c2">
-                            <h2>Thông tin tài chính</h2>
-
-                            <h3>Nguồn thu nhập:</h3>
-                            <p>{currentRequestSupport?.incomeSource}</p>
-
-                            <h3>Thu nhập hàng tháng:</h3>
-                            <p>{currentRequestSupport?.monthlyIncome.toLocaleString()}</p>
-
-                            <h2>Thông tin tài chính</h2>
-
-                            <h3>Thực phẩm yêu cầu:</h3>
-                            {currentRequestSupport?.requestedItems?.map((product, index) => (
-                                <p key={index}>{product}</p>
-                            ))}
-
-                            <h2>Lịch sử nhận hỗ trợ</h2>
-
-                            <h3>Đã nhận hỗ trợ trước đó:</h3>
-                            <p>{currentRequestSupport?.hasReceivedSupportBefore ? "Có" : "Không"}</p>
-
-                            <h3>Chi tiết hỗ trợ trước đó:</h3>
-                            <p>{currentRequestSupport?.previousSupportDetails || "Chưa có"}</p>
-
-                            <h2>Cam kết minh bạch</h2>
-
-                            <h3>Cam kết tính chính xác:</h3>
-                            <p>{currentRequestSupport?.commitmentToAccuracy ? "Đã cam kết" : "Chưa cam kết"}</p>
-
-                            <h3>Chữ ký:</h3>
-                            {currentRequestSupport?.signatureImage && <img src={currentRequestSupport.signatureImage} alt="Signature" style={{ width: "100px", height: "100px", objectFit: "cover" }} />}
-                        </div>
+                        <h3>Thực phẩm yêu cầu:</h3>
+                        {currentRequestSupport?.requestedItems?.map((product, index) => (
+                            <p key={index}>{product}</p>
+                        ))}
                     </div>
-                    <div className="sdncr2r4" style={{ margin: "20px 0" }}>
-                        <button className="approve-btn" onClick={() => setIsRequestDonorModal(true)}>Yêu cầu hỗ trợ</button>
+                    <div className="sdrscr2r4" style={{ margin: "20px 0" }}>
+                        <button className="sc-btn" onClick={() => setIsRequestDonorModal(true)}>Xử lý yêu cầu</button>
                     </div>
-                    <h1>Danh sách gửi hỗ trợ</h1>
-                    <table className="table">
-                        <thead className="table-head">
-                            <tr className="table-head-row">
-                                <th className="table-head-cell">
-                                    Họ và tên
-                                </th>
-                                <th className="table-head-cell">
-                                    Trạng thái
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody className="table-body">
-                            {currentRequestSupport && currentRequestSupport?.supportDonors?.map((item, index) => (
-                                <tr className="table-body-row" key={index}>
-                                    <td className='table-body-cell'>{item.fullName}</td>
-                                    <td className='table-body-cell'>{item.status === "Participating" ? "Đã tham gia" : "Chưa tham gia"}</td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
                 </div>
             </div>
             <RequestDonorModal isOpen={isRequestDonorModal} setIsOpen={setIsRequestDonorModal} requestSupportId={currentRequestSupport?.requestSupportId} donorSupport={currentRequestSupport?.supportDonors} />

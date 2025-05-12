@@ -1,10 +1,20 @@
 .campaign-card {
     cursor: pointer;
+    padding: 20px;
+    background: #ffb34a;
+    border-radius: var(--border-radius-16);
+    max-width: 384px;
+    transition: all 0.3s ease;
+
+    &:hover {
+        box-shadow: 0 0 10px 4px rgba(0, 0, 0, 0.2);
+        margin-top: -5px;
+    }
 
     .img-container {
         position: relative;
-        width: 384px;
-        height: 384px;
+        width: 344px;
+        height: 344px;
         overflow: hidden; /* Đảm bảo mọi thứ nằm trong khung ảnh */
         border-radius: var(--border-radius-16);
     
@@ -29,18 +39,18 @@
             transition: transform 0.4s ease;
             border-radius: var(--border-radius-16);
         }
-    
-        &:hover .overlay {
-            transform: translateY(0);
-        }
-    
-        .overlay span {
-            color: var(--main-color);
-            font-size: 30px;
-            font-weight: 700;
-            opacity: 1;
-        }
     }      
+    
+    &:hover .overlay {
+        transform: translateY(0);
+    }
+
+    .overlay span {
+        color: var(--main-color);
+        font-size: 30px;
+        font-weight: 700;
+        opacity: 1;
+    }
 
     h4,
     p {
@@ -49,10 +59,9 @@
     }
 
     h4 {
-        width: 360px;
-        font-size: 20px;
+        font-size: 25px;
         font-weight: 800;
-        color: var(--main-black);
+        color: #460d02;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -60,10 +69,10 @@
     }
 
     p {
-        font-size: 14px;
+        font-size: 18px;
         font-weight: 500;
         margin: 5px 0 0 16px;
-        color: var(--main-gray);
+        color: #94250c;
     }
 
     .cc-status {

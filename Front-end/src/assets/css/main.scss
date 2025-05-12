@@ -58,6 +58,7 @@
 @use "./elements/carousel-landing.scss";
 @use "./elements/carousel-campaign.scss";
 @use "./elements/post-image-gallery.scss";
+@use "./elements/chat-icon.scss";
 
 @use "./campaign/list-campaigns.scss";
 @use "./campaign/detail-campaign.scss";
@@ -99,6 +100,7 @@
 @use "./staff/certificate/donor/staff-detail-donor-certificate.scss";
 @use "./staff/certificate/recipient/staff-list-recipient-certificate.scss";
 @use "./staff/certificate/recipient/staff-detail-recipient-certificate.scss";
+@use "./staff/requestSupport/staff-detail-request-support.scss";
 
 @use "./modal/modal.scss";
 @use "./modal/submit-certificate-modal.scss";

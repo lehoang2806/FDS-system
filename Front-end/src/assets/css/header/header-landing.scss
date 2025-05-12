@@ -1,3 +1,11 @@
+$button-width: 120px;
+$button-height: 32px;
+$border-radius: 12px;
+$gradient-start: #ff6c57;
+$gradient-end: #ff922e;
+$new-color: #ff9d2e; // Màu mới xuất hiện khi hover
+$glow-color: rgba(255, 157, 46, 0.7); // Màu hào quang
+
 #header-landing {
     padding: 15px 20px;
     border-bottom: 1px solid var(--main-gray);
@@ -50,14 +58,15 @@
                     .sub-menu {
                         position: absolute;
                         z-index: 1;
-                        min-width: 100px;
+                        min-width: 160px;
                         top: 100%;
                         left: 0;
                         background: white;
                         border: 1px solid var(--main-color);
                         border-radius: var(--border-radius-12);
                         list-style: none;
-                        padding: 0px 20px;
+                        margin: 0;
+                        padding: 0;
 
                         .sub-item-active {
                             color: var(--main-color);
@@ -66,19 +75,27 @@
                         }
 
                         .sub-item {
-                            margin: 20px 0px;
+                            margin: 0;
+                            padding: 10px 20px;
                             cursor: pointer;
 
                             span,
                             a {
+                                text-align: start;
                                 text-decoration: none;
                                 font-size: 14px;
-                                font-weight: 500;
-                                color: #626262;
+                                font-weight: 600;
+                                color: #7a1f0d;
                                 cursor: pointer;
+                                transition: all 0.2s ease-in-out;
+                            }
 
-                                &:hover {
-                                    color: var(--main-color);
+                            &:hover {
+                                background: #ffb34a;
+                                border-radius: 12px;
+
+                                span,
+                                a {
                                     font-size: 16px;
                                     transition: all 0.2s ease-in-out;
                                 }
@@ -107,17 +124,81 @@
                 cursor: pointer;
             }
 
-            button {
-                width: 120px;
-                height: 32px;
-                background: linear-gradient(#ff6c57, #ff922e);
+            .sc-btn {
+                position: relative;
+                width: $button-width;
+                height: $button-height;
+                background: linear-gradient($gradient-start, $gradient-end);
                 color: var(--white-color);
                 font-size: 14px;
                 font-weight: 800;
                 border: none;
-                border-radius: var(--border-radius-12);
+                border-radius: $border-radius;
                 margin-right: 20px;
                 cursor: pointer;
+                overflow: hidden;
+                z-index: 1;
+                transition: box-shadow 0.3s ease-in-out;
+
+                &::before {
+                    content: "";
+                    position: absolute;
+                    top: 0;
+                    left: 50%;
+                    width: 0;
+                    height: 100%;
+                    background-color: $new-color;
+                    transition: width 0.4s ease, left 0.4s ease;
+                    z-index: -1;
+                }
+
+                &:hover {
+                    box-shadow: 0 0 10px 4px $glow-color; // Hiệu ứng hào quang xung quanh
+                }
+
+                &:hover::before {
+                    width: 100%;
+                    left: 0;
+                }
+            }
+
+            .pr-btn {
+                position: relative;
+                width: $button-width;
+                height: $button-height;
+                background: $new-color;
+                color: var(--white-color);
+                font-size: 14px;
+                font-weight: 800;
+                border: none;
+                border-radius: $border-radius;
+                margin-right: 20px;
+                cursor: pointer;
+                overflow: hidden;
+                z-index: 1;
+                transition: box-shadow 0.3s ease-in-out;
+                padding: 0;
+
+                &::before {
+                    content: "";
+                    position: absolute;
+                    top: 0;
+                    left: 50%;
+                    width: 0;
+                    height: 100%;
+                    background-color: linear-gradient($gradient-start, $gradient-end);
+                    transition: width 0.4s ease, left 0.4s ease;
+                    z-index: -1;
+                }
+
+                &:hover {
+                    box-shadow: 0 0 10px 4px $glow-color; // Hiệu ứng hào quang xung quanh
+                }
+
+                &:hover::before {
+                    width: 100%;
+                    left: 0;
+                }
             }
 
             a {
@@ -126,6 +207,19 @@
                 font-weight: 800;
                 text-decoration: none;
                 margin: 0 10px;
+                display: flex;
+                align-items: center;
+                gap: 5px;
+
+                .manage-icon {
+                    width: 25px;
+                    height: 25px;
+                }
+
+                &:hover {
+                    color: #ff922e;
+                    transition: all 0.2s ease-in-out;
+                }
             }
 
             .note {

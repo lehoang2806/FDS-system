@@ -12,6 +12,7 @@ import Lightbox from 'react-awesome-lightbox';
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import dayjs from "dayjs";
+import { formatDater, formatTime } from '@/utils/helper';
 
 const StaffDetailCampaignUserPage: FC = () => {
     const { id } = useParams<{ id: string }>();
@@ -133,18 +134,12 @@ const StaffDetailCampaignUserPage: FC = () => {
                     <div className="sdcucr2r3">
                         <div className="col-flex sdcucr2r3c1">
                             <h2>Thông tin chiến dịch</h2>
-                            <h3>Tên chiến dịch:</h3>
-                            <p>{currentCampaign?.campaignName}</p>
-                            <h3>Mô tả:</h3>
-                            <p style={{ whiteSpace: "pre-line" }}>{currentCampaign?.campaignDescription}</p>
-                            <h3>Đại điểm:</h3>
-                            <p>{currentCampaign?.location}</p>
-                            <h3>Thời gian diễn ra:</h3>
-                            <p>{date} & {time}</p>
-                            <h3>Cách thực hiện:</h3>
-                            <p>{currentCampaign?.implementationMethod}</p>
-                            <h3>Số lượng qùa tặng:</h3>
-                            <p>{currentCampaign?.limitedQuantity}</p>
+                            <h3>Tên chiến dịch: <span>{currentCampaign?.campaignName}</span></h3>
+                            <h3>Mô tả: <span style={{ whiteSpace: "pre-line" }}>{currentCampaign?.campaignDescription}</span></h3>
+                            <h3>Địa điểm phát quà: <span>{currentCampaign?.location}, {currentCampaign?.district}</span></h3>
+                            <h3>Thời gian diễn ra: <span>{date} & {time}</span></h3>
+                            <h3>Cách thực hiện: <span>{currentCampaign?.implementationMethod}</span></h3>
+                            <h3>Số lượng quà tặng: <span>{currentCampaign?.limitedQuantity}</span></h3>
                         </div>
                         <div className="col-flex sdcucr2r3c2">
                             {currentCampaign?.estimatedBudget || currentCampaign?.averageCostPerGift ? (
@@ -152,14 +147,12 @@ const StaffDetailCampaignUserPage: FC = () => {
                                     <h2>Thông tin tài chính</h2>
                                     {currentCampaign?.estimatedBudget && (
                                         <>
-                                            <h3>Ngân sách ước tính:</h3>
-                                            <p>{currentCampaign?.estimatedBudget}</p>
+                                            <h3>Ngân sách ước tính: <span>{currentCampaign?.estimatedBudget}</span></h3>
                                         </>
                                     )}
                                     {currentCampaign?.averageCostPerGift && (
                                         <>
-                                            <h3>Giá trung bình mỗi phần quà:</h3>
-                                            <p>{currentCampaign?.averageCostPerGift}</p>
+                                            <h3>Giá trung bình mỗi phần quà: <span>{currentCampaign?.averageCostPerGift}</span></h3>
                                         </>
                                     )}
                                 </>
@@ -169,14 +162,12 @@ const StaffDetailCampaignUserPage: FC = () => {
                                     <h2>Thông tin truyền thông</h2>
                                     {currentCampaign?.sponsors && (
                                         <>
-                                            <h3>Nhà tài trợ:</h3>
-                                            <p>{currentCampaign?.sponsors}</p>
+                                            <h3>Nhà tài trợ: <span>{currentCampaign?.sponsors}</span></h3>
                                         </>
                                     )}
                                     {currentCampaign?.communication && (
                                         <>
-                                            <h3>Truyền thông:</h3>
-                                            <p>{currentCampaign?.communication}</p>
+                                            <h3>Truyền thông: <span>{currentCampaign?.communication}</span></h3>
                                         </>
                                     )}
                                 </>
@@ -222,6 +213,15 @@ const StaffDetailCampaignUserPage: FC = () => {
                             <button className='additional-btn' onClick={() => handleAdditionalCampaign(String(id))}>Yêu cầu bổ sung</button>
                         </>
                     )}
+                    {currentCampaign?.status === "Rejected" && (
+                        <>
+                            <h3>Lý do từ chối:</h3>
+                            <p>{currentCampaign?.rejectComment}</p>
+                        </>
+                    )}
+                </div>
+                <div className="sdcucr2">
+                    <h2>Danh sách người đăng ký</h2>
                     {currentCampaign?.status === "Approved" && (
                         <div className="sdcucr2r3">
                             <table className="table">
@@ -243,18 +243,12 @@ const StaffDetailCampaignUserPage: FC = () => {
                                         <tr className="table-body-row" key={index}>
                                             <td className='table-body-cell'>{registerReceiver.registerReceiverName}</td>
                                             <td className='table-body-cell'>{registerReceiver.quantity}</td>
-                                            <td className='table-body-cell'>{registerReceiver.creatAt}</td>
+                                            <td className='table-body-cell'>{formatDater(registerReceiver.creatAt)} - {formatTime(registerReceiver.creatAt)}</td>
                                         </tr>
                                     ))}
                                 </tbody>
                             </table>
                         </div>
-                    )}
-                    {currentCampaign?.status === "Rejected" && (
-                        <>
-                            <h3>Lý do từ chối:</h3>
-                            <p>{currentCampaign?.rejectComment}</p>
-                        </>
                     )}
                 </div>
             </div>

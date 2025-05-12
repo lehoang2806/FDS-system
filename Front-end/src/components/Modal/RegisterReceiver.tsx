@@ -12,12 +12,18 @@ import { createRegisterReceiverApiThunk, getAllRegisterReceiversApiThunk } from 
 import { setLoading } from '@/services/app/appSlice';
 import { selectGetAllRegisterReceivers } from '@/app/selector';
 
-const RegisterReceiverModal: FC<RegisterReceiverModalProps> = ({ isOpen, setIsOpen, campaign }) => {
+const RegisterReceiverModal: FC<RegisterReceiverModalProps> = ({ isOpen, setIsOpen, campaign, registeredReceiver }) => {
     const dispatch = useAppDispatch();
 
     const registerReceivers = useAppSelector(selectGetAllRegisterReceivers);
     const currentRegisterReceivers = registerReceivers.filter((registerReceiver) => registerReceiver.campaignId === campaign?.campaignId);
-    const totalRegisteredQuantity = currentRegisterReceivers.reduce((sum, receiver) => sum + (receiver.quantity || 0), 0);
+
+    const totalQuantityByCurrentUser = registeredReceiver?.reduce((sum, r) => sum + (parseInt(r.quantity) || 0), 0);
+
+    const totalRegisteredQuantity = currentRegisterReceivers.reduce(
+        (sum, receiver) => sum + (parseInt(receiver.quantity) || 0),
+        0
+    );
 
     useEffect(() => {
         if (campaign?.campaignId) {
@@ -47,7 +53,10 @@ const RegisterReceiverModal: FC<RegisterReceiverModalProps> = ({ isOpen, setIsOp
             .typeError('Số lượng phải là số')
             .integer('Số lượng phải là số nguyên')
             .min(1, 'Số lượng phải lớn hơn 0')
-            .max(10, 'Chỉ được đnagw ký không quá 10 phần quà')
+            .max(
+                10 - (registeredReceiver ? totalQuantityByCurrentUser : 0),
+                `Chỉ được đăng ký không quá ${10 - (registeredReceiver ? totalQuantityByCurrentUser : 0)} phần quà`
+            )
             .required('Vui lòng nhập số lượng'),
     });
 
@@ -74,8 +83,8 @@ const RegisterReceiverModal: FC<RegisterReceiverModalProps> = ({ isOpen, setIsOp
             <section id="register-receiver-modal">
                 <div className="rrm-container">
                     <h1>Đăng ký nhận quà</h1>
-                    <p>Số lượng còn lại: {Number(campaign?.limitedQuantity) - totalRegisteredQuantity}</p>
-                    <p>Số lượng đã đăng ký: {totalRegisteredQuantity}</p>
+                    <p>Số lượng còn lại của chiến dịch: {Number(campaign?.limitedQuantity) - totalRegisteredQuantity}</p>
+                    <p>Số lượng bạn đã đăng ký: {registeredReceiver ? totalQuantityByCurrentUser: "0"}</p>
                     <Formik
                         initialValues={initialValues}
                         onSubmit={onSubmit}

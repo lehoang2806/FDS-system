@@ -1,15 +1,18 @@
 #landing {
+    background-color: #fff7eb;
+    
     h2 {
         font-size: 40px;
         font-weight: 700;
-        color: var(--main-black);
+        color: #460d02;
         text-align: center;
+        margin-bottom: 30px;
     }
 
     .view-all {
-        color: var(--main-gray);
-        font-size: 16px;
-        font-weight: 500;
+        color: #dd4d02;
+        font-size: 20px;
+        font-weight: 600;
         text-decoration: none;
 
         &:hover {
@@ -20,10 +23,9 @@
     #landing-s2 {
 
         h3 {
-            font-size: 30px;
+            font-size: 35px;
             font-weight: 600;
-            color: var(--main-color);
-            margin-bottom: 20px;
+            color: #94250c;
         }
 
         .ls2cr2 {
@@ -35,6 +37,10 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            padding: 10px 20px;
+            border-radius: var(--border-radius-16);
+            background: #ffb34a;
+            margin-bottom: 30px;
         }
 
         .ls2cr2r2,
@@ -48,6 +54,8 @@
     }
 
     #landing-s3 {
+        background: #ffd088;
+
         h2 {
             margin-bottom: 40px;
         }
@@ -74,33 +82,35 @@
 
             .ls3r1c2 {
                 display: flex;
-                gap: 100px;
+                gap: 60px;
                 flex-wrap: wrap;
                 margin-left: 20px;
 
                 .ls3r1c2-item {
-                    .ls3r1c2-item-dot {
-                        width: 24px;
-                        height: 24px;
-                        border-radius: var(--border-radius-circle);
-                        margin-right: 12px;
-
-                        &.ls3r1c2-item-dot {
-                            background: #0da55c;
-                        }
+                    .ls3r1c2-item-icon {
+                        width: 40px;
+                        height: 40px;
+                        fill: #7a1f0d;
                     }
 
                     .ls3r1c2-item-title {
-                        color: var(--main-black);
-                        font-size: 24px;
-                        font-weight: 500;
+                        color: #7a1f0d;
+                        font-size: 30px;
+                        font-weight: 700;
+                        margin-left: 10px;
                     }
 
                     .ls3r1c2-item-quantity {
-                        color: var(--main-black);
-                        font-size: 32px;
+                        color: #a52607;
+                        font-size: 35px;
                         font-weight: 700;
-                        padding-left: 36px;
+                        padding-left: 55px;
+
+                        span {
+                            font-size: 28px;
+                            font-weight: 600;
+                            color: #ff6304;
+                        }
                     }
                 }
             }
@@ -145,14 +155,21 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 80px;
+            margin-bottom: 40px;
+            padding: 10px 20px;
+            border-radius: var(--border-radius-16);
+            background: #ffb34a;
+
+            h2 {
+                margin: 0;
+            }
         }
 
         .ls5cr2 {
             display: flex;
             justify-content: center;
             gap: 40px;
-            background: #f7f7f7;
+            background: #ffd088;
             border: none;
             border-radius: var(--border-radius-24);
             padding: 32px;
