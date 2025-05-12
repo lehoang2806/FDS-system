@@ -1,4 +1,4 @@
-import { CampaignIcon, CertificateIcon, MenuIcon, NewsIcon, NotificationIcon, PostIcon } from "@/assets/icons"
+import { CampaignIcon, CertificateIcon, ManageIcon, MenuIcon, NewsIcon, NotificationIcon, PostIcon } from "@/assets/icons"
 import { navigateHook } from "@/routes/RouteApp"
 import { routes } from "@/routes/routeName"
 import { FC, useEffect, useState } from "react"
@@ -60,8 +60,6 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
 
     const [isNotifOpen, setIsNotifOpen] = useState(false);
     const notifications = useAppSelector(selectNotifications)
-
-    console.log(notifications)
 
     const handleNewNotification = (notification: any) => {
         const correctedNotification: NotificationDto = {
@@ -312,8 +310,9 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
                 <div className="hlcc3">
                     {!isLogin && (
                         <>
-                            <Link to={routes.login}>Đăng nhập</Link>
-                            <Link to={routes.register}>Đăng Ký</Link>
+                            <button className="sc-btn" onClick={() => navigateHook(routes.login)}>Đăng nhập</button>
+                            <button className="pr-btn" onClick={() => navigateHook(routes.register)}>Đăng ký</button>
+                            <Link to={routes.admin_login}><ManageIcon className="manage-icon"/>Trang quản lý</Link>
                         </>
                     )}
                     {isLogin && (

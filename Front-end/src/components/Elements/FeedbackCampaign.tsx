@@ -5,10 +5,11 @@ import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import 'dayjs/locale/vi';
 import { useAppDispatch } from '@/app/store';
-import { likeFeedbackApiThunk, unlikeFeedbackApiThunk } from '@/services/campaign/feedback/feedbackCampaignThunk';
+import { getFeedbackCampaignApiThunk, likeFeedbackApiThunk, unlikeFeedbackApiThunk } from '@/services/campaign/feedback/feedbackCampaignThunk';
 import { toast } from 'react-toastify';
 import classNames from 'classnames';
 import { FeedbackLike } from '@/types/campaign';
+import { getCampaignByIdApiThunk } from '@/services/campaign/campaignThunk';
 
 dayjs.locale('vi');
 dayjs.extend(relativeTime);
@@ -28,7 +29,11 @@ const FeedbackCampaign: FC<FeedbackCampaignProps> = ({ feedback, user }) => {
             if (isLiked) {
                 const like = feedback.likes?.find((like: FeedbackLike) => like.feedBackLikeId);
                 if (like?.feedBackLikeId) {
-                    await dispatch(unlikeFeedbackApiThunk(String(like.feedBackLikeId))).unwrap();
+                    await dispatch(unlikeFeedbackApiThunk(String(like.feedBackLikeId))).unwrap().then(() => {
+                        toast.success("Đã huỹ thích nhận xét.");
+                        dispatch(getCampaignByIdApiThunk(feedback.campaignId));
+                        dispatch(getFeedbackCampaignApiThunk(String(feedback.campaignId)));
+                    });
                 } else {
                     toast.error("Không tìm thấy lượt thích để huỷ.");
                     return;
@@ -38,7 +43,11 @@ const FeedbackCampaign: FC<FeedbackCampaignProps> = ({ feedback, user }) => {
                     campaignFeedbackId: String(feedback.feedBackId),
                     replyCampaignFeedbackId: null,
                 };
-                await dispatch(likeFeedbackApiThunk(likePayload)).unwrap();
+                await dispatch(likeFeedbackApiThunk(likePayload)).unwrap().then(() => {
+                    toast.success("Đã thích nhận xét này.");
+                    dispatch(getCampaignByIdApiThunk(feedback.campaignId));
+                    dispatch(getFeedbackCampaignApiThunk(String(feedback.campaignId)));
+                });
             }
 
             setIsLiked(!isLiked);

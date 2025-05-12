@@ -12,7 +12,7 @@ interface RegisterReceiver {
     email: string;
     phone: string;
     roleId: number;
-    quantity: number;
+    quantity: string;
     creatAt: string;
     campaignId: string;
     registerReceiverName: string;

@@ -10,8 +10,8 @@ const Subscriber: FC<SubcriberProps> = ({ registerReceiver }) => {
                 </figure>
             </div>
             <div className="scc2">
-                <h4>Tên người đăng ký: {registerReceiver.registerReceiverName}</h4>
-                <p>Số phần đăng ký: {registerReceiver.quantity}</p>
+                <h4>Tên người đăng ký: <span>{registerReceiver.registerReceiverName}</span></h4>
+                <p>Số phần đăng ký: <span>{registerReceiver.quantity}</span></p>
             </div>
         </div>
     )

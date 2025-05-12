@@ -264,6 +264,28 @@ input.is-error {
     cursor: pointer;
 }
 
+.disabled-btn {
+    background: #ccc !important;
+    cursor: not-allowed !important;
+    border: none !important;
+
+    &::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 50%;
+        width: 0;
+        height: 100%;
+        background-color: #ccc !important;
+        transition: width 0.4s ease, left 0.4s ease;
+        z-index: -1;
+    }
+
+    &:hover {
+        box-shadow: 0 0 0 0 !important; // Hiệu ứng hào quang xung quanh
+    }
+}
+
 .sec-btn {
     background-color: var(--white-color);
     color: var(--main-color);

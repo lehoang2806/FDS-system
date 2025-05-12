@@ -5,7 +5,7 @@
         padding: 0 20px;
 
         .dcs-container {
-            max-width: 1400px;
+            max-width: 1200px;
             margin: 0 auto;
 
             .dcscr1 {
@@ -20,9 +20,9 @@
                         margin-bottom: 20px;
 
                         h1 {
-                            color: #393939;
-                            font-size: 24px;
-                            font-weight: 500;
+                            color: #460d02;
+                            font-size: 40px;
+                            font-weight: 700;
                         }
                     }
 
@@ -44,26 +44,27 @@
                         margin-bottom: 30px;
 
                         .dcscr1c1r3-tags-item {
-                            padding: 8px 12px;
+                            padding: 8px 25px;
                             color: #393939;
-                            font-size: 14px;
-                            font-weight: 500;
+                            font-size: 20px;
+                            font-weight: 600;
                             cursor: pointer;
                         }
 
                         .dcscr1c1r3-tags-item-actived {
-                            background: rgba(245, 74, 0, 0.2);
-                            color: #f54a00;
-                            border-radius: var(--border-radius-16);
+                            background: #ffd088;
+                            color: #dd4d02;
+                            border-radius: var(--border-radius-12);
                         }
                     }
 
                     .dcscr1c1r4 {
                         .dcscr1c1r4-content {
                             max-width: 770px;
-                            font-size: 16px;
+                            text-align: justify;
+                            font-size: 20px;
                             font-weight: 500;
-                            color: #0a0a0a;
+                            color: #7a1f0d;
                             margin-bottom: 30px;
                         }
                     }
@@ -176,12 +177,13 @@
                         padding: 24px;
                         border-radius: var(--border-radius-16);
                         box-shadow: 0px 1px 16px 0px rgba(0, 0, 0, 0.15);
+                        background: #fff;
 
                         h3 {
                             font-size: 20px;
-                            color: #393939;
+                            color: #460d02;
                             padding-bottom: 20px;
-                            border-bottom: 3px solid #393939;
+                            border-bottom: 3px solid #460d02;
                         }
 
                         .dcscr1c2r3-email {
@@ -240,30 +242,63 @@
 
                     .dcscr1c2r1 {
                         display: grid;
-                        grid-template-columns: 49% 49%;
-                        gap: 2%;
                         padding: 24px;
                         border-radius: var(--border-radius-16);
                         box-shadow: 0px 1px 16px 0px rgba(0, 0, 0, 0.15);
                         margin-top: 55px;
                         margin-bottom: 32px;
+                        background: #fff;
 
                         h4 {
-                            font-size: 14px;
-                            font-weight: 400;
-                            color: #8d8d8d;
+                            font-size: 16px;
+                            font-weight: 500;
+                            color: #f97107;
                             margin-bottom: 5px;
                         }
 
                         p {
-                            font-size: 17px;
+                            font-size: 20px;
                             font-weight: 700;
-                            color: #393939;
+                            color: #460d02;
                             margin-bottom: 10px;
                         }
 
                         .sc-btn {
+                            position: relative;
+                            background: linear-gradient(#ff6c57, #ff922e);
+                            color: #fff;
+                            font-size: 18px;
+                            font-weight: 800;
+                            border: none;
+                            border-radius: 12px;
+                            margin: 0 auto;
+                            margin-top: 20px;
                             padding: 12px 20px;
+                            cursor: pointer;
+                            overflow: hidden;
+                            z-index: 1;
+                            transition: box-shadow 0.3s ease-in-out;
+            
+                            &::before {
+                                content: "";
+                                position: absolute;
+                                top: 0;
+                                left: 50%;
+                                width: 0;
+                                height: 100%;
+                                background-color: #ff922e;
+                                transition: width 0.4s ease, left 0.4s ease;
+                                z-index: -1;
+                            }
+            
+                            &:hover {
+                                box-shadow: 0 0 10px 4px rgba(255, 157, 46, 0.7); // Hiệu ứng hào quang xung quanh
+                            }
+            
+                            &:hover::before {
+                                width: 100%;
+                                left: 0;
+                            }
                         }
                     }
 
@@ -271,6 +306,7 @@
                         padding: 24px;
                         border-radius: var(--border-radius-16);
                         box-shadow: 0px 1px 16px 0px rgba(0, 0, 0, 0.15);
+                        background: #fff;
 
                         .dcscr1c2r2-lists {
                             max-height: 500px;
@@ -284,8 +320,26 @@
                         h3 {
                             font-size: 17px;
                             font-weight: 700;
-                            color: #393939;
+                            color: #460d02;
                             margin-bottom: 20px;
+                        }
+
+                        .have-no-register {
+                            display: flex;
+                            flex-direction: column;
+                            align-items: center;
+                            justify-content: start;
+                            gap: 20px;
+
+                            .hnr-icon {
+                                width: 200px;
+                                height: 200px;
+                                fill: #f97107;
+                            }
+
+                            h1 {
+                                color: #f97107;
+                            }
                         }
                     }
                 }
@@ -303,19 +357,24 @@
                     display: flex;
                     align-items: center;
                     justify-content: space-between;
-                    margin-bottom: 20px;
+                    margin-bottom: 30px;
 
                     h2 {
-                        font-size: 17px;
+                        font-size: 35px;
                         font-weight: 700;
-                        color: #393939;
+                        color: #460d02;
+                        margin: 0;
                     }
 
                     a {
                         text-decoration: none;
-                        font-size: 17px;
-                        font-weight: 400;
+                        font-size: 25px;
+                        font-weight: 600;
                         color: var(--main-color);
+
+                        &:hover {
+                            text-decoration: underline;
+                        }
                     }
                 }
 
@@ -324,7 +383,7 @@
                     align-items: center;
                     justify-content: center;
                     flex-wrap: wrap;
-                    gap: 40px;
+                    gap: 24px;
                 }
             }
         }

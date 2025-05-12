@@ -80,7 +80,7 @@ const StaffSidebar: FC = () => {
                                 'nav-active': location.pathname.startsWith(routes.staff.campaign.staff.list)
                             })}
                         >
-                            <div className="sscr2-nav-link">
+                            <div className="sscr2-nav-link" style={{marginLeft: "20px"}}>
                                 <StaffIcon className="sscr2-nav-icon" />
                                 <span>Nhân viên</span>
                             </div>
@@ -91,9 +91,9 @@ const StaffSidebar: FC = () => {
                                 'nav-active': location.pathname.startsWith(routes.staff.campaign.user.list)
                             })}
                         >
-                            <div className="sscr2-nav-link">
+                            <div className="sscr2-nav-link" style={{marginLeft: "20px"}}>
                                 <UserIcon className="sscr2-nav-icon" />
-                                <span>Người dùng</span>
+                                <span>Người tặng thực phẩm</span>
                             </div>
                         </Link>
                     </div>
@@ -136,9 +136,9 @@ const StaffSidebar: FC = () => {
                                 'nav-active': location.pathname.startsWith(routes.staff.certificate.donor.list)
                             })}
                         >
-                            <div className="sscr2-nav-link">
+                            <div className="sscr2-nav-link" style={{marginLeft: "20px"}}>
                                 <StaffIcon className="sscr2-nav-icon" />
-                                <span>Người hiến tặng thực phẩm</span>
+                                <span>Người tặng thực phẩm</span>
                             </div>
                         </Link>
                         <Link
@@ -147,7 +147,7 @@ const StaffSidebar: FC = () => {
                                 'nav-active': location.pathname.startsWith(routes.staff.certificate.recipient.list)
                             })}
                         >
-                            <div className="sscr2-nav-link">
+                            <div className="sscr2-nav-link" style={{marginLeft: "20px"}}>
                                 <StaffIcon className="sscr2-nav-icon" />
                                 <span>Người nhận hỗ trợ</span>
                             </div>

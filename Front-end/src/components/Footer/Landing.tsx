@@ -61,8 +61,6 @@ const FooterLanding = () => {
                         <img src={LogoLanding} alt="" />
                         <p>FDS System - Hệ thống hỗ trợ thực phẩm cho các cá nhân có thu nhập thấp.</p>
                         <p><span className="text-black">Địa chỉ: </span><span>Hoà Xuân, Cẩm Lệ, Đà Nẵng</span></p>
-                        <p><span className="text-black">Số điện thoại: </span><span className="text-orange">0898530964</span></p>
-                        <p><span className="text-black">Email: </span><span className="text-orange">tuanpcl7103@gmail.com</span></p>
                     </div>
                     <div className="flscc2">
                         {footers.map((footer, index) => (
@@ -78,6 +76,9 @@ const FooterLanding = () => {
                     </div>
                     <div className="flscc3">
                         <h4>Liên hệ với chúng tôi</h4>
+                        <p><span className="text-black">Số điện thoại: </span><span className="text-orange">0898530964</span></p>
+                        <p><span className="text-black">Email: </span><span className="text-orange">tuanpcl7103@gmail.com</span></p>
+                        <p><span className="text-black">Website: </span><span className="text-orange">https://fds-system-frontend-fdss-ystem.vercel.app/</span></p>
                     </div>
                 </div>
             </section>

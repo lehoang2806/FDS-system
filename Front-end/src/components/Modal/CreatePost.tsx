@@ -1,4 +1,4 @@
-import { ChangeEvent, FC, useState } from 'react';
+import { FC, useState } from 'react';
 import { Formik, Form, FormikHelpers } from 'formik';
 import * as Yup from 'yup';
 import { useAppDispatch, useAppSelector } from '@/app/store';
@@ -11,9 +11,16 @@ import { approvePostApiThunk, createPostApiThunk, getAllPostsApiThunk, rejectPos
 import { toast } from 'react-toastify';
 import { get } from 'lodash';
 import { RichTextField } from '../Elements';
+import axios from 'axios';
+import classNames from 'classnames';
+import Lightbox from 'react-awesome-lightbox';
 
 const CreatePostModal: FC<CreatePostModalProps> = ({ isOpen, setIsOpen }) => {
     const [imagePreview, setImagePreview] = useState<string[]>([]);
+    const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+
+    const CLOUDINARY_URL = 'https://api.cloudinary.com/v1_1/dehc2ftiv/image/upload';
+    const UPLOAD_PRESET = 'fds_system';
 
     const userLogin = useAppSelector(selectUserLogin)
     const dispatch = useAppDispatch()
@@ -21,36 +28,35 @@ const CreatePostModal: FC<CreatePostModalProps> = ({ isOpen, setIsOpen }) => {
     const initialValues: ActionParamPost = {
         postContent: "",
         images: [],
-        posterId: userLogin?.accountId,
         posterName: userLogin?.fullName,
-        posterRole: String(userLogin?.roleId),
+        hashtags: [""]
     };
 
     const CreatePostModalSchema = Yup.object().shape({
         postContent: Yup.string().required('Nội dung không được để trống').min(10, 'Nội dung phải có ít nhất 10 ký tự'),
     });
 
-    const handleFileChange = async (event: ChangeEvent<HTMLInputElement>, setFieldValue: Function) => {
-        if (event.target.files) {
-            const files = Array.from(event.target.files);
-            const base64Promises = files.map(file => convertToBase64(file));
+    const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>, setFieldValue: Function, setImagePreview: Function) => {
+        const files = Array.from(e.target.files || []);
+        const previewUrls = files.map(file => URL.createObjectURL(file));
+        setImagePreview(previewUrls); // Hiển thị preview ảnh
 
-            try {
-                const base64Images = await Promise.all(base64Promises);
-                setFieldValue("images", base64Images); // 🔹 Lưu danh sách ảnh vào Formik
-                setImagePreview(base64Images); // 🔹 Cập nhật ảnh xem trước
-            } catch (_) {
-            }
+        try {
+            const uploadedUrls = await Promise.all(
+                files.map(async (file) => {
+                    const formData = new FormData();
+                    formData.append('file', file);
+                    formData.append('upload_preset', UPLOAD_PRESET);
+
+                    const res = await axios.post(CLOUDINARY_URL, formData);
+                    return res.data.secure_url;
+                })
+            );
+
+            setFieldValue("images", uploadedUrls); // Lưu URL ảnh thực tế vào Formik
+        } catch (err) {
+            console.error("Upload thất bại:", err);
         }
-    };
-
-    const convertToBase64 = (file: File): Promise<string> => {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = () => resolve(reader.result as string);
-            reader.onerror = (error) => reject(error);
-        });
     };
 
     const handleApprovePost = async (values: ApprovePost) => {
@@ -123,25 +129,81 @@ const CreatePostModal: FC<CreatePostModalProps> = ({ isOpen, setIsOpen }) => {
                         validationSchema={CreatePostModalSchema}
                         onSubmit={onSubmit}
                     >
-                        {({ setFieldValue, errors, touched, isSubmitting }) => (
+                        {({ setFieldValue, errors, touched, isSubmitting, values }) => (
                             <Form className="form">
                                 <div className="form-field">
                                     <label className="form-label" style={{ marginBottom: "8px" }}>Nhập nội dung bài viết</label>
                                     <RichTextField name="postContent" placeholder="Nội dung bài viết" />
                                     {errors.postContent && touched.postContent && <span className="text-error">{errors.postContent}</span>}
                                 </div>
-
                                 <div className="form-field">
-                                    <label className="form-label">Ảnh</label>
-                                    <input type="file" accept="image/*" multiple onChange={(e) => handleFileChange(e, setFieldValue)} className="form-input" />
+                                    <label className="form-label">Hashtags</label>
+                                    {values.hashtags.map((tag, index) => (
+                                        <div key={index} className="flex items-center gap-2 mb-2">
+                                            <input
+                                                type="text"
+                                                name={`hashtags[${index}]`}
+                                                value={tag}
+                                                onChange={(e) => {
+                                                    const updatedTags = [...values.hashtags];
+                                                    updatedTags[index] = e.target.value;
+                                                    setFieldValue("hashtags", updatedTags);
+                                                }}
+                                                placeholder={`Hashtag ${index + 1}`}
+                                                className="form-input w-full"
+                                            />
+                                        </div>
+                                    ))}
+
+                                    <Button
+                                        type="button"
+                                        title="Thêm hashtag"
+                                        onClick={() => setFieldValue("hashtags", [...values.hashtags, ""])}
+                                    />
                                 </div>
 
+                                <div className="form-field">
+                                    <label className="form-label">Tải ảnh lên<span>*</span></label>
+                                    <input
+                                        type="file"
+                                        accept="image/*"
+                                        multiple
+                                        onChange={(e) => handleFileChange(e, setFieldValue, setImagePreview)}
+                                        className={classNames("form-input", { "is-error": errors.images && touched.images })}
+                                    />
+                                    {errors.images && touched.images && <span className="text-error">{errors.images}</span>}
+                                </div>
+
+                                {/* Hiển thị ảnh preview */}
                                 {imagePreview.length > 0 && (
                                     <div className="image-preview-container">
                                         {imagePreview.map((img, index) => (
-                                            <img key={index} src={img} alt={`Preview ${index}`} className="image-preview" style={{ width: "100px", height: "100px" }} />
+                                            <div key={index} className="image-wrapper">
+                                                <img
+                                                    src={img}
+                                                    alt={`Preview ${index}`}
+                                                    className="image-preview"
+                                                    style={{
+                                                        width: '100px',
+                                                        height: '100px',
+                                                        marginRight: '8px',
+                                                        borderRadius: '5px',
+                                                        cursor: 'pointer'
+                                                    }}
+                                                    onClick={() => setLightboxIndex(index)} // mở lightbox khi click ảnh
+                                                />
+                                            </div>
                                         ))}
                                     </div>
+                                )}
+
+                                {/* Hiển thị lightbox khi click vào ảnh preview */}
+                                {lightboxIndex !== null && (
+                                    <Lightbox
+                                        images={imagePreview.map((src) => ({ url: src }))}
+                                        startIndex={lightboxIndex}
+                                        onClose={() => setLightboxIndex(null)}
+                                    />
                                 )}
 
                                 <Button type="submit" title="Đăng bài" loading={isSubmitting} />

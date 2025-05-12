@@ -1,20 +1,59 @@
-#staff-detail-certificate-donor {
-    .sdcd-container {
-        h2 {
-            font-size: 30px;
-            font-weight: 700;
-            color: #ff9d2e;
-            margin-bottom: 20px;
+$button-width: 120px;
+$button-height: 32px;
+$border-radius: 12px;
+$gradient-start: #ff6c57;
+$gradient-end: #ff922e;
+$new-color: #ff9d2e; // Màu mới xuất hiện khi hover
+$glow-color: rgba(255, 157, 46, 0.7); // Màu hào quang
+
+#staff-detail-request-support {
+    .sdrs-container {
+        .sc-btn {
+            position: relative;
+            width: $button-width;
+            height: $button-height;
+            background: linear-gradient($gradient-start, $gradient-end);
+            color: var(--white-color);
+            font-size: 14px;
+            font-weight: 800;
+            border: none;
+            border-radius: $border-radius;
+            margin-right: 20px;
+            cursor: pointer;
+            overflow: hidden;
+            z-index: 1;
+            transition: box-shadow 0.3s ease-in-out;
+
+            &::before {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 50%;
+                width: 0;
+                height: 100%;
+                background-color: $new-color;
+                transition: width 0.4s ease, left 0.4s ease;
+                z-index: -1;
+            }
+
+            &:hover {
+                box-shadow: 0 0 10px 4px $glow-color; // Hiệu ứng hào quang xung quanh
+            }
+
+            &:hover::before {
+                width: 100%;
+                left: 0;
+            }
         }
         
-        .image-preview-container {
-            display: flex;
-            justify-content: start;
-            align-items: center;
-            gap: 20px;
+        h2 {
+            font-size: 25px;
+            font-weight: 700;
+            color: #ff9d2e;
+            margin-bottom: 10px;
         }
 
-        .sdcdcr1 {
+        .sdrscr1 {
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -46,7 +85,7 @@
             }
         }
 
-        .sdcdcr2 {
+        .sdrscr2 {
             padding: 20px 30px;
             background: #fff;
             border-radius: var(--border-radius-12);
@@ -57,7 +96,7 @@
                 margin: 24px 0;
             }
 
-            .sdcdcr2r1 {
+            .sdrscr2r1 {
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
@@ -82,13 +121,13 @@
                 }
             }
 
-            .sdcdcr2r2 {
+            .sdrscr2r2 {
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
 
-                .sdcdcr2r2c1,
-                .sdcdcr2r2c2 {
+                .sdrscr2r2c1,
+                .sdrscr2r2c2 {
                     h3 {
                         font-size: 15px;
                         font-weight: 700;
@@ -102,51 +141,38 @@
                         color: #29343d;
                     }
                 }
-            }
 
-            .sdcdcr2r3 {
-                display: flex;
-                justify-content: space-between;
-                align-items: start;
-
-                .sdcdcr2r3c1, .sdcdcr2r3c2 {
-                    h3 {
-                        font-size: 15px;
-                        font-weight: 700;
-                        color: #29343d;
-                        margin-bottom: 10px;
-                    }
-
-                    p {
-                        font-size: 14px;
-                        font-weight: 500;
-                        color: #29343d;
-                        margin-bottom: 20px;
-                    }
-                }
-
-                .sdcdcr2r3c2 {
+                .sdrscr2r2c2 {
                     text-align: end;
                 }
             }
 
-            .sdcdcr2r4 {
-                margin-bottom: 30px;
-
-                h2 {
-                    font-size: 18px;
+            .sdrscr2r3 {
+                h3 {
+                    font-size: 15px;
                     font-weight: 700;
+                    color: #29343d;
+                    margin-bottom: 10px;
+                }
+
+                span {
+                    font-size: 14px;
+                    font-weight: 500;
                     color: #29343d;
                     margin-bottom: 20px;
                 }
             }
 
-            .udcsc1r5 {
-                h2 {
-                    font-size: 18px;
-                    font-weight: 700;
-                    color: #29343d;
-                    margin-bottom: 20px;
+            .sdrscr2r4 {
+                display: flex;
+                justify-content: start;
+                align-items: start;
+                margin-bottom: 30px;
+            }
+
+            .sdrscr2r5 {
+                p {
+                    margin: 10px 15px;
                 }
             }
         }

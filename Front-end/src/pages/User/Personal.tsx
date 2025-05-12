@@ -18,6 +18,8 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import 'dayjs/locale/vi';
 import { formatDater, formatTime } from "@/utils/helper";
 import { getAllRequestSupportApiThunk } from "@/services/requestSupport/requestSupportThunk";
+import classNames from "classnames";
+import { toast } from "react-toastify";
 
 dayjs.locale('vi');
 dayjs.extend(relativeTime);
@@ -289,6 +291,25 @@ const UserPersonalPage = () => {
         }
     };
 
+    const handleConfirmRecipient = () => {
+        if (profileUser?.isConfirm === false) {
+            setIsRecipientCertificateModalOpen(true)
+        }
+        if (profileUser?.isConfirm === true) {
+            setIsRecipientCertificateModalOpen(false)
+            toast.info("Tài khoản đã được xác minh.");
+        }
+    }
+
+    const handleConfirmDonor = () => {
+        if (profileUser?.isConfirm === false) {
+            navigateHook(routes.user.submit_certificate)
+        }
+        if (profileUser?.isConfirm === true) {
+            toast.info("Tài khoản đã được xác minh.");
+        }
+    }
+
     return (
         <main id="user-personal-page">
             <section id="upp-s1"></section>
@@ -413,7 +434,7 @@ const UserPersonalPage = () => {
                                     </div>
                                 ) : (
                                     <div className="upp-content">
-                                        <button className="pr-btn" onClick={() => navigateHook(routes.user.submit_certificate)}>Xác nhận</button>
+                                        <button className={classNames("pr-btn", { "disabled-btn": profileUser?.isConfirm === true })} onClick={handleConfirmDonor}>{profileUser?.isConfirm === true ? "Xác minh tài khoản" : "Đã được xác minh"}</button>
                                         {currentDonorCertificates.length === 0 ? (
                                             <>
                                                 <figure>
@@ -570,7 +591,7 @@ const UserPersonalPage = () => {
                                 )}
                                 {activeTab === "chungchi" && (
                                     <div className="upp-content">
-                                        <button className="pr-btn" onClick={() => setIsRecipientCertificateModalOpen(true)}>Xác nhận</button>
+                                        <button className={classNames("pr-btn", { "disabled-btn": profileUser?.isConfirm === true })} onClick={handleConfirmRecipient}>{profileUser?.isConfirm === true ? "Xác minh tài khoản" : "Đã được xác minh"}</button>
                                         {currentRecipientCertificates.length === 0 ? (
                                             <>
                                                 <figure>
@@ -638,7 +659,7 @@ const UserPersonalPage = () => {
                                 )}
                                 {activeTab === "yeucauhotro" && (
                                     <div className="upp-content">
-                                        <button className="pr-btn" onClick={() => setIsRecipientCertificateModalOpen(true)}>Xác nhận</button>
+                                        <button className="pr-btn" onClick={() => setIsRecipientCertificateModalOpen(true)}>Tạo đơn yêu cầu hỗ trợ</button>
                                         {currentRecipientCertificates.length === 0 ? (
                                             <>
                                                 <figure>
