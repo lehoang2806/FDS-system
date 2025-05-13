@@ -4,7 +4,7 @@ import { StaffDashboardPage } from "@/pages/Statff";
 import { StaffDetailUserPage, StaffListUserPage } from "@/pages/Statff/User";
 import { StaffAddCampaignStaffPage, StaffDetailCampaignStaffPage, StaffListCampaignStaffPage } from "@/pages/Statff/Campaign/Staff";
 import { StaffDetailCampaignUserPage, StaffListCampaignUserPage } from "@/pages/Statff/Campaign/User";
-import { StaffAddNewsPage, StaffDetailNewsPage, StaffListNewsPage } from "@/pages/Statff/News";
+import { StaffAddNewsPage, StaffDetailNewsPage, StaffListNewsPage, StaffUpdateNewsPage } from "@/pages/Statff/News";
 import { StaffListPostPage } from "@/pages/Statff/Post";
 import { StaffDetailDonorCertificate, StaffListDonorCertificate } from "@/pages/Statff/Certificate/Donor";
 import { StaffDetailCertificateRecipient, StaffListRecipientCertificate } from "@/pages/Statff/Certificate/Recipient";
@@ -58,6 +58,10 @@ const routeStatff: RouteObject[] = [
             {
                 path: "news/:id/detail",
                 element: <StaffDetailNewsPage />
+            },
+            {
+                path: "news/:id/update",
+                element: <StaffUpdateNewsPage />
             },
             {
                 path: "post",

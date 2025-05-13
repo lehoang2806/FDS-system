@@ -1,20 +1,30 @@
+import { selectGetNewsById } from "@/app/selector";
+import { useAppDispatch, useAppSelector } from "@/app/store";
+import { RichTextField } from "@/components/Elements";
+import Button from "@/components/Elements/Button";
 import { navigateHook } from "@/routes/RouteApp";
 import { routes } from "@/routes/routeName";
-import { FC, useState } from "react";
-import classNames from "classnames";
-import Button from "@/components/Elements/Button";
-import { useAppDispatch } from "@/app/store";
-import * as Yup from "yup";
-import { Field, Form, Formik, FormikHelpers } from "formik";
-import { toast } from "react-toastify";
-import { createNewsApiThunk } from "@/services/news/newsThunk";
-import { get } from "lodash";
-import Lightbox from "react-awesome-lightbox";
-import { RichTextField } from "@/components/Elements";
+import { setLoading } from "@/services/app/appSlice";
+import {
+    getNewsByIdApiThunk,
+    updateNewsApiThunk,
+} from "@/services/news/newsThunk";
+import { formatDater } from "@/utils/helper";
 import axios from "axios";
+import classNames from "classnames";
+import { Field, Form, Formik, FormikHelpers } from "formik";
+import { get } from "lodash";
+import { FC, useEffect, useState } from "react";
+import Lightbox from "react-awesome-lightbox";
+import { useParams } from "react-router-dom";
+import { toast } from "react-toastify";
+import * as Yup from "yup";
 
-const StaffAddNewsPage: FC = () => {
+const StaffUpdateNewsPage: FC = () => {
+    const { id } = useParams<{ id: string }>();
     const dispatch = useAppDispatch();
+
+    const currentNews = useAppSelector(selectGetNewsById);
 
     const [imagePreview, setImagePreview] = useState<string[]>([]); //state
     const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
@@ -24,10 +34,10 @@ const StaffAddNewsPage: FC = () => {
     const UPLOAD_PRESET = "fds_system";
 
     const initialValues: ActionParamNews = {
-        newsTitle: "",
-        images: [],
-        newsDescripttion: "",
-        supportBeneficiaries: "",
+        newsTitle: currentNews?.newsTitle || "",
+        images: currentNews?.images || [],
+        newsDescripttion: currentNews?.newsDescripttion || "",
+        supportBeneficiaries: currentNews?.supportBeneficiaries || "",
     };
 
     const schema = Yup.object().shape({
@@ -49,6 +59,30 @@ const StaffAddNewsPage: FC = () => {
             "Đối tượng hỗ trợ không được để trống"
         ),
     });
+
+    useEffect(() => {
+        if (!currentNews || currentNews.newId !== id) {
+            dispatch(setLoading(true));
+            dispatch(getNewsByIdApiThunk(String(id)))
+                .unwrap()
+                .catch(() => {
+                    toast.error("Không tìm thấy tin tức");
+                })
+                .finally(() => {
+                    setTimeout(() => {
+                        dispatch(setLoading(false));
+                    }, 1000);
+                });
+        }
+    }, [dispatch, id, currentNews]);
+
+    useEffect(() => {
+        if (currentNews?.images?.length) {
+            setImagePreview(currentNews.images);
+        } else {
+            setImagePreview([]);
+        }
+    }, [currentNews]);
 
     const handleFileChange = async (
         e: React.ChangeEvent<HTMLInputElement>,
@@ -76,8 +110,6 @@ const StaffAddNewsPage: FC = () => {
             console.error("Upload thất bại:", err);
         }
     };
-
-    const dateCurrent = new Date().toISOString().split("T")[0];
 
     const moderateContentAI = async (
         content: string
@@ -116,12 +148,18 @@ const StaffAddNewsPage: FC = () => {
         }
 
         // Gửi nếu không có từ cấm
-        await dispatch(createNewsApiThunk(values))
+        await dispatch(
+            updateNewsApiThunk({
+                newsId: String(id),
+                params: values,
+            })
+        )
             .unwrap()
             .then(() => {
-                toast.success("Tạo tin tức thành công");
+                toast.success("Cập nhật tin tức thành công");
                 helpers.resetForm();
                 setImagePreview([]);
+                navigateHook(routes.staff.news.detail.replace(":id", String(id)));
             })
             .catch((error) => {
                 const errorData = get(error, "data", null);
@@ -137,6 +175,7 @@ const StaffAddNewsPage: FC = () => {
             initialValues={initialValues}
             onSubmit={onSubmit}
             validationSchema={schema}
+            enableReinitialize={true}
         >
             {({
                 handleSubmit,
@@ -153,7 +192,7 @@ const StaffAddNewsPage: FC = () => {
                                 <p>
                                     Dashboard
                                     <span className="staff-tag">
-                                        Tạo tin tức
+                                        Cập nhật tin tức
                                     </span>
                                 </p>
                             </div>
@@ -164,7 +203,10 @@ const StaffAddNewsPage: FC = () => {
                                         <button
                                             onClick={() =>
                                                 navigateHook(
-                                                    routes.staff.news.list
+                                                    routes.staff.news.detail.replace(
+                                                        ":id",
+                                                        String(id)
+                                                    )
                                                 )
                                             }
                                         >
@@ -172,7 +214,7 @@ const StaffAddNewsPage: FC = () => {
                                         </button>
                                         <Button
                                             type="submit"
-                                            title="Tạo tin tức"
+                                            title="Cập nhật tin tức"
                                             loading={isSubmitting}
                                         />
                                     </div>
@@ -182,7 +224,11 @@ const StaffAddNewsPage: FC = () => {
                                     <div className="sancr2r2c1"></div>
                                     <div className="sancr2r2c2">
                                         <h3>Ngày tạo:</h3>
-                                        <p>{dateCurrent}</p>
+                                        <p>
+                                            {formatDater(
+                                                String(currentNews?.createdDate)
+                                            )}
+                                        </p>
                                     </div>
                                 </div>
                                 <hr />
@@ -342,4 +388,4 @@ const StaffAddNewsPage: FC = () => {
     );
 };
 
-export default StaffAddNewsPage;
+export default StaffUpdateNewsPage;

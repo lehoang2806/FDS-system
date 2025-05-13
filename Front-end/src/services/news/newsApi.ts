@@ -5,6 +5,16 @@ export const createNewsApi = async (params: ActionParamNews) => {
     return data.data;
 };
 
+export const updateNewsApi = async (newsId: string,params: ActionParamNews) => {
+    const data = await request.put(`api/news/UpdateNews/${newsId}`, params);
+    return data.data;
+};
+
+export const deleteNewsApi = async (newsId: string) => {
+    const data = await request.delete(`api/news/DeleteNews/${newsId}`);
+    return data.data;
+}
+
 export const getAllNewsApi = async () => {
     const data = await request.get('api/news/GetAllNews');
     return data.data;

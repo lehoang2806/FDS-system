@@ -1,5 +1,12 @@
 #staff-detail-campaign-user {
     .sdcu-container {
+        .image-preview-container {
+            display: flex;
+            justify-content: start;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
         h2 {
             font-size: 30px;
             font-weight: 700;

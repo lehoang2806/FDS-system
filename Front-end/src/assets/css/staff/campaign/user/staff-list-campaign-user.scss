@@ -44,10 +44,49 @@
             }
         }
 
-        .slcucr3 {
+        .slcucr3, .slcucr4 {
             padding: 30px;
             background: #fff;
             border-radius: var(--border-radius-12);
+        }
+
+        .slcucr4 {
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+
+            .slcucr4c1, .slcucr4c2, .slcucr4c3 {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                align-items: start;
+
+                label {
+                    font-size: 16px;
+                    font-weight: 600;
+                }
+
+                .pr-input {
+                    width: 100%;
+                }
+
+                select {
+                    appearance: none;
+                    cursor: pointer;
+                }
+            }
+
+            .slcucr4c3 {
+                flex: 2;
+
+                .group-input {
+                    width: 100%;
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                }
+            }
         }
     }
 }
