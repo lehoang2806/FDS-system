@@ -1,33 +1,55 @@
-import { selectGetAllCampaign } from '@/app/selector'
-import { useAppDispatch, useAppSelector } from '@/app/store'
-import { ActiveIcon, ArrowLeft, ArrowRight, BlockIcon, TotalIcon } from '@/assets/icons'
-import { Loading } from '@/components/Elements'
-import { navigateHook } from '@/routes/RouteApp'
-import { routes } from '@/routes/routeName'
-import { setLoading } from '@/services/app/appSlice'
-import { getAllCampaignApiThunk } from '@/services/campaign/campaignThunk'
-import { FC, useEffect, useState } from 'react'
+import { selectGetAllCampaign } from "@/app/selector";
+import { useAppDispatch, useAppSelector } from "@/app/store";
+import {
+    ActiveIcon,
+    ArrowLeft,
+    ArrowRight,
+    BlockIcon,
+    TotalIcon,
+} from "@/assets/icons";
+import { Loading } from "@/components/Elements";
+import { navigateHook } from "@/routes/RouteApp";
+import { routes } from "@/routes/routeName";
+import { setLoading } from "@/services/app/appSlice";
+import { getAllCampaignApiThunk } from "@/services/campaign/campaignThunk";
+import { FC, useEffect, useState } from "react";
 
 const StaffListCampaignUserPage: FC = () => {
-    const dispatch = useAppDispatch()
+    const dispatch = useAppDispatch();
 
     const [isFiltering, setIsFiltering] = useState(false);
 
-    const handleToDetail = (campaignId: string) => {
-        const url = routes.staff.campaign.user.detail.replace(":id", campaignId);
-        return navigateHook(url)
-    }
+    const [searchTerm, setSearchTerm] = useState("");
+    const [districtFilter, setDistrictFilter] = useState("");
+    const [startDate, setStartDate] = useState("");
+    const [endDate, setEndDate] = useState("");
 
-    const campaigns = useAppSelector(selectGetAllCampaign)
+    const handleToDetail = (campaignId: string) => {
+        const url = routes.staff.campaign.user.detail.replace(
+            ":id",
+            campaignId
+        );
+        return navigateHook(url);
+    };
+
+    const campaigns = useAppSelector(selectGetAllCampaign);
     const sortedCampaigns = [...campaigns].reverse();
 
-    const userCampaigns = sortedCampaigns.filter(campaign => campaign.roleId === 3)
+    const userCampaigns = sortedCampaigns.filter(
+        (campaign) => campaign.roleId === 3
+    );
 
-    const userRejectedCampaigns = userCampaigns.filter(campaign => campaign.status === "Rejected")
+    const userRejectedCampaigns = userCampaigns.filter(
+        (campaign) => campaign.status === "Rejected"
+    );
 
-    const userApprovedCampaigns = userCampaigns.filter(campaign => campaign.status === "Approved")
+    const userApprovedCampaigns = userCampaigns.filter(
+        (campaign) => campaign.status === "Approved"
+    );
 
-    const userPendingCampaigns = userCampaigns.filter(campaign => campaign.status === "Pending")
+    const userPendingCampaigns = userCampaigns.filter(
+        (campaign) => campaign.status === "Pending"
+    );
 
     const [filterStatus, setFilterStatus] = useState<string | null>(null);
 
@@ -39,17 +61,31 @@ const StaffListCampaignUserPage: FC = () => {
         }, 500);
     };
 
-    const filteredCampaigns = filterStatus
-        ? userCampaigns.filter((c) => c.status === filterStatus)
-        : userCampaigns;
+    const filteredCampaigns = userCampaigns.filter((c) => {
+        const matchStatus = filterStatus ? c.status === filterStatus : true;
+        const matchName = c.campaignName
+            .toLowerCase()
+            .includes(searchTerm.toLowerCase());
+        const matchDistrict = districtFilter
+            ? c.district === districtFilter
+            : true;
 
+        const campaignDate = new Date(c.implementationTime.split("T")[0]);
+        const fromDate = startDate ? new Date(startDate) : null;
+        const toDate = endDate ? new Date(endDate) : null;
+        const matchDate =
+            (!fromDate || campaignDate >= fromDate) &&
+            (!toDate || campaignDate <= toDate);
+
+        return matchStatus && matchName && matchDistrict && matchDate;
+    });
 
     useEffect(() => {
         dispatch(setLoading(true));
         dispatch(getAllCampaignApiThunk())
             .unwrap()
-            .catch(() => {
-            }).finally(() => {
+            .catch(() => {})
+            .finally(() => {
                 setTimeout(() => {
                     dispatch(setLoading(false));
                 }, 1000);
@@ -60,7 +96,9 @@ const StaffListCampaignUserPage: FC = () => {
 
     const [currentCampaignPage, setCurrentCampaignPage] = useState(1);
 
-    const totalCampaignPages = Math.ceil(filteredCampaigns.length / ITEMS_PER_PAGE);
+    const totalCampaignPages = Math.ceil(
+        filteredCampaigns.length / ITEMS_PER_PAGE
+    );
 
     const currentCampaignsPage = filteredCampaigns.slice(
         (currentCampaignPage - 1) * ITEMS_PER_PAGE,
@@ -68,11 +106,13 @@ const StaffListCampaignUserPage: FC = () => {
     );
 
     const onPreviousCampaignPage = () => {
-        if (currentCampaignPage > 1) setCurrentCampaignPage(currentCampaignPage - 1);
+        if (currentCampaignPage > 1)
+            setCurrentCampaignPage(currentCampaignPage - 1);
     };
 
     const onNextCampaignPage = () => {
-        if (currentCampaignPage < totalCampaignPages) setCurrentCampaignPage(currentCampaignPage + 1);
+        if (currentCampaignPage < totalCampaignPages)
+            setCurrentCampaignPage(currentCampaignPage + 1);
     };
 
     return (
@@ -81,10 +121,16 @@ const StaffListCampaignUserPage: FC = () => {
             <div className="staff-container slcu-container">
                 <div className="slcucr1">
                     <h1>Người hiến tặng thực phẩm</h1>
-                    <p>Trang tổng quát<span className="staff-tag">Danh sách chiến dịch</span></p>
+                    <p>
+                        Trang tổng quát
+                        <span className="staff-tag">Danh sách chiến dịch</span>
+                    </p>
                 </div>
                 <div className="slcucr2">
-                    <div className="staff-tab staff-tab-1" onClick={() => handleFilter(null)}>
+                    <div
+                        className="staff-tab staff-tab-1"
+                        onClick={() => handleFilter(null)}
+                    >
                         <div className="st-figure st-figure-1">
                             <TotalIcon className="st-icon" />
                         </div>
@@ -93,7 +139,10 @@ const StaffListCampaignUserPage: FC = () => {
                             <p>{userCampaigns.length} Chiến dịch</p>
                         </div>
                     </div>
-                    <div className="staff-tab staff-tab-2" onClick={() => handleFilter("Rejected")}>
+                    <div
+                        className="staff-tab staff-tab-2"
+                        onClick={() => handleFilter("Rejected")}
+                    >
                         <div className="st-figure st-figure-2">
                             <BlockIcon className="st-icon" />
                         </div>
@@ -102,7 +151,10 @@ const StaffListCampaignUserPage: FC = () => {
                             <p>{userRejectedCampaigns.length} Chiến dịch</p>
                         </div>
                     </div>
-                    <div className="staff-tab staff-tab-3" onClick={() => handleFilter("Approved")}>
+                    <div
+                        className="staff-tab staff-tab-3"
+                        onClick={() => handleFilter("Approved")}
+                    >
                         <div className="st-figure st-figure-3">
                             <ActiveIcon className="st-icon" />
                         </div>
@@ -111,13 +163,64 @@ const StaffListCampaignUserPage: FC = () => {
                             <p>{userApprovedCampaigns.length} Chiến dịch</p>
                         </div>
                     </div>
-                    <div className="staff-tab staff-tab-4" onClick={() => handleFilter("Pending")}>
+                    <div
+                        className="staff-tab staff-tab-4"
+                        onClick={() => handleFilter("Pending")}
+                    >
                         <div className="st-figure st-figure-4">
                             <ActiveIcon className="st-icon" />
                         </div>
                         <div className="st-info">
                             <h3>Chờ phê duyệt</h3>
                             <p>{userPendingCampaigns.length} Chiến dịch</p>
+                        </div>
+                    </div>
+                </div>
+                <div className="slcucr4">
+                    <div className="slcucr4c1">
+                        <label>Tìm kiếm</label>
+                        <input
+                            type="text"
+                            className="pr-input"
+                            placeholder="Tìm kiếm tên chiến dịch"
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                        />
+                    </div>
+                    <div className="slcucr4c2">
+                        <label>Quận/ Huyện</label>
+                        <select
+                            className="pr-input"
+                            value={districtFilter}
+                            onChange={(e) => setDistrictFilter(e.target.value)}
+                        >
+                            <option value="">Chọn Quận/Huyện</option>
+                            <option value="Hải Châu">Hải Châu</option>
+                            <option value="Thanh Khê">Thanh Khê</option>
+                            <option value="Sơn Trà">Sơn Trà</option>
+                            <option value="Ngũ Hành Sơn">Ngũ Hành Sơn</option>
+                            <option value="Liên Chiểu">Liên Chiểu</option>
+                            <option value="Cẩm Lệ">Cẩm Lệ</option>
+                            <option value="Hoà Vang">Hoà Vang</option>
+                            <option value="Hoàng Sa">Hoàng Sa</option>
+                        </select>
+                    </div>
+                    <div className="slcucr4c3">
+                        <label>Thời gian diễn ra</label>
+                        <div className="group-input">
+                            <input
+                                type="date"
+                                className="pr-input"
+                                value={startDate}
+                                onChange={(e) => setStartDate(e.target.value)}
+                            />
+                            -
+                            <input
+                                type="date"
+                                className="pr-input"
+                                value={endDate}
+                                onChange={(e) => setEndDate(e.target.value)}
+                            />
                         </div>
                     </div>
                 </div>
@@ -129,49 +232,77 @@ const StaffListCampaignUserPage: FC = () => {
                                 <th className="table-head-cell">
                                     Tên chiến dịch
                                 </th>
-                                <th className="table-head-cell">
-                                    Trạng thái
-                                </th>
-                                <th className="table-head-cell">
-                                    Hành động
-                                </th>
+                                <th className="table-head-cell">Trạng thái</th>
+                                <th className="table-head-cell">Hành động</th>
                             </tr>
                         </thead>
                         <tbody className="table-body">
                             {currentCampaignsPage.map((campaign, index) => (
                                 <tr className="table-body-row" key={index}>
-                                    <td className='table-body-cell'>{campaign.campaignName}</td>
-                                    <td className='table-body-cell'>
+                                    <td className="table-body-cell">
+                                        {campaign.campaignName}
+                                    </td>
+                                    <td className="table-body-cell">
                                         {campaign.status === "Pending" ? (
-                                            <span className='status-pending'>Đang chờ phê duyệt</span>
+                                            <span className="status-pending">
+                                                Đang chờ phê duyệt
+                                            </span>
                                         ) : campaign.status === "Approved" ? (
-                                            <span className='status-approve'>Đã được phê duyệt</span>
+                                            <span className="status-approve">
+                                                Đã được phê duyệt
+                                            </span>
                                         ) : campaign.status === "Rejected" ? (
-                                            <span className='status-reject'>Đã bị từ chối</span>
+                                            <span className="status-reject">
+                                                Đã bị từ chối
+                                            </span>
                                         ) : campaign.status === "Canceled" ? (
-                                            <span className='status-reject'>Đã huỷ</span>
+                                            <span className="status-reject">
+                                                Đã huỷ
+                                            </span>
                                         ) : null}
                                     </td>
                                     <td className="table-body-cell">
-                                        <button className='view-btn' onClick={() => handleToDetail(campaign.campaignId)}>Xem chi tiết</button>
+                                        <button
+                                            className="view-btn"
+                                            onClick={() =>
+                                                handleToDetail(
+                                                    campaign.campaignId
+                                                )
+                                            }
+                                        >
+                                            Xem chi tiết
+                                        </button>
                                     </td>
                                 </tr>
                             ))}
                         </tbody>
                     </table>
-                    <div className='paginator'>
+                    <div className="paginator">
                         <div className="p-container">
-                            <div className="pcc2">{currentCampaignPage} of {totalCampaignPages}</div>
+                            <div className="pcc2">
+                                {currentCampaignPage} of {totalCampaignPages}
+                            </div>
                             <div className="pcc3">
-                                <button disabled={currentCampaignPage === 1} onClick={onPreviousCampaignPage}>
+                                <button
+                                    disabled={currentCampaignPage === 1}
+                                    onClick={onPreviousCampaignPage}
+                                >
                                     <ArrowLeft className="pcc3-icon" />
                                 </button>
                                 <button
-                                    disabled={currentCampaignPage >= totalCampaignPages}
+                                    disabled={
+                                        currentCampaignPage >=
+                                        totalCampaignPages
+                                    }
                                     onClick={onNextCampaignPage}
                                 >
                                     <ArrowRight
-                                        className={`pcc3-icon ${currentCampaignPage >= totalCampaignPages ? 'pcc3-icon-disabled' : ''}`}
+                                        className={`pcc3-icon ${
+                                            currentCampaignPage >=
+                                            totalCampaignPages
+                                                ? "pcc3-icon-disabled"
+                                                : ""
+                                        }`}
                                     />
                                 </button>
                             </div>
@@ -180,7 +311,7 @@ const StaffListCampaignUserPage: FC = () => {
                 </div>
             </div>
         </section>
-    )
-}
+    );
+};
 
-export default StaffListCampaignUserPage
+export default StaffListCampaignUserPage;

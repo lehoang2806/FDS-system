@@ -3,8 +3,10 @@ import Modal from './Modal'
 import { toast } from 'react-toastify';
 import { useAppDispatch } from '@/app/store';
 import { AdditionalCampaignModalProps } from './type';
-import { additionalCampaignApiThunk, getAllCampaignApiThunk, getCampaignByIdApiThunk } from '@/services/campaign/campaignThunk';
+import { additionalCampaignApiThunk, getAllCampaignApiThunk } from '@/services/campaign/campaignThunk';
 import { setLoading } from '@/services/app/appSlice';
+import { navigateHook } from '@/routes/RouteApp';
+import { routes } from '@/routes/routeName';
 
 const AdditionalCampaignModal: FC<AdditionalCampaignModalProps> = ({ isOpen, setIsOpen, selectedCampaign }) => {
     const dispatch = useAppDispatch();
@@ -29,7 +31,7 @@ const AdditionalCampaignModal: FC<AdditionalCampaignModalProps> = ({ isOpen, set
                     toast.success("Đã yêu cầu bổ sung.");
                     setIsOpen(false);
                     dispatch(getAllCampaignApiThunk());
-                    dispatch(getCampaignByIdApiThunk(selectedCampaign.campaignId));
+                    navigateHook(routes.staff.campaign.user.list);
                 }).catch(() => {
                 }).finally(() => {
                     setTimeout(() => {

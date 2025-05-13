@@ -46,12 +46,17 @@
 
         .slncr3 {
             display: flex;
-            justify-content: end;
+            justify-content: space-between;
             align-items: center;
             padding: 30px;
             background: #fff;
             border-radius: var(--border-radius-12);
             margin-bottom: 30px;
+
+            .pr-input {
+                margin: 0;
+                width: 400px;
+            }
         }
 
         .slncr4 {
