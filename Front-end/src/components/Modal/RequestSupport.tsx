@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC, useState } from 'react'
 import Modal from './Modal'
 import { CreateRequestSupportModalProps } from './type'
 import { useAppDispatch, useAppSelector } from '@/app/store';
@@ -12,10 +12,19 @@ import classNames from "classnames";
 import { setLoading } from '@/services/app/appSlice';
 import { selectUserLogin } from '@/app/selector';
 import { createRequestSupportApiThunk } from '@/services/requestSupport/requestSupportThunk';
+import axios from 'axios';
+import Lightbox from 'react-awesome-lightbox';
 
 const CreateRequestSupportModal: FC<CreateRequestSupportModalProps> = ({ isOpen, setIsOpen }) => {
     const dispatch = useAppDispatch();
     const userLogin = useAppSelector(selectUserLogin);
+    const [imageCCCDPreview, setImageCCCDPreview] = useState<string[]>([]);
+    const [lightboxCCCDIndex, setLightboxCCCDIndex] = useState<number | null>(null);
+    const [imageCircumstancePreview, setImageCircumstancePreview] = useState<string[]>([]);
+    const [lightboxCircumstanceIndex, setLightboxCircumstanceIndex] = useState<number | null>(null);
+
+    const CLOUDINARY_URL = 'https://api.cloudinary.com/v1_1/dehc2ftiv/image/upload';
+    const UPLOAD_PRESET = 'fds_system';
 
     const initialValues: RequestSupportActions = {
         fullName: userLogin?.fullName || '',
@@ -23,24 +32,13 @@ const CreateRequestSupportModal: FC<CreateRequestSupportModalProps> = ({ isOpen,
         phoneNumber: userLogin?.phone || '',
         address: userLogin?.address || '',
         dateOfBirth: userLogin?.birthDay || '',
-        localAuthorityContact: '',
-        relativeContact: '',
-        citizenId: '',
         citizenIdImages: [],
         reason: '',
         householdSize: 0,
-        specialMembers: '',
-        incomeSource: '',
-        monthlyIncome: 0,
+        specialMembers: [],
         circumstanceImages: [],
-        localAuthorityConfirmation: '',
         requestedItems: [],
-        createdDate: new Date().toISOString(),
-        images: [],
-        hasReceivedSupportBefore: true,
-        previousSupportDetails: '',
-        commitmentToAccuracy: true,
-        signatureImage: '',
+        desiredQuantity: 0,
     };
 
     const schema = Yup.object().shape({
@@ -49,23 +47,12 @@ const CreateRequestSupportModal: FC<CreateRequestSupportModalProps> = ({ isOpen,
         phoneNumber: Yup.string().required('Số điện thoại không được để trống'),
         address: Yup.string().required('Địa chỉ không được để trống'),
         dateOfBirth: Yup.string().required('Ngày sinh không được để trống'),
-        localAuthorityContact: Yup.string().required('Thông tin liên hệ chính quyền địa phương không được để trống'),
-        relativeContact: Yup.string().required('Thông tin người thân không được để trống'),
-        citizenId: Yup.string().required('CMND/CCCD không được để trống'),
         citizenIdImages: Yup.array().of(Yup.string()).min(1, 'Vui lòng tải lên ít nhất 1 ảnh CMND/CCCD'),
         reason: Yup.string().required('Lý do cần hỗ trợ không được để trống'),
         householdSize: Yup.number().min(1, 'Số lượng thành viên phải lớn hơn 0').required('Số lượng thành viên không được để trống'),
-        incomeSource: Yup.string().required('Nguồn thu nhập không được để trống'),
-        monthlyIncome: Yup.number().min(0, 'Thu nhập không hợp lệ').required('Thu nhập hàng tháng không được để trống'),
         circumstanceImages: Yup.array().of(Yup.string()),
         requestedItems: Yup.array().of(Yup.string()).min(1, 'Vui lòng chọn ít nhất 1 mục cần hỗ trợ'),
-        createdDate: Yup.string().required(),
-        hasReceivedSupportBefore: Yup.boolean().required(),
-        previousSupportDetails: Yup.string(),
-        commitmentToAccuracy: Yup.boolean()
-            .oneOf([true], 'Bạn phải cam kết rằng thông tin chính xác')
-            .required('Bạn phải cam kết rằng thông tin chính xác'),
-        signatureImage: Yup.string().required('Chữ ký không được để trống'),
+        desiredQuantity: Yup.number().min(1, 'Số lượng cần hỗ trợ phải lớn hơn 0').required('Số lượng cần hỗ trợ không được để trống'),
     });
 
     const onSubmit = async (values: RequestSupportActions, helpers: FormikHelpers<RequestSupportActions>) => {
@@ -91,25 +78,49 @@ const CreateRequestSupportModal: FC<CreateRequestSupportModalProps> = ({ isOpen,
         resetForm(); // Reset Formik form fields
     };
 
-    const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>, setFieldValue: any, fieldName: string, single = false) => {
-        const files = event.target.files;
-        if (!files) return;
+    const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>, setFieldValue: Function, setImagePreview: Function) => {
+        const files = Array.from(e.target.files || []);
+        const previewUrls = files.map(file => URL.createObjectURL(file));
+        setImagePreview(previewUrls); // Hiển thị preview ảnh
 
-        const promises = Array.from(files).map(file => {
-            return new Promise<string>((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onload = () => resolve(reader.result as string);
-                reader.onerror = reject;
-                reader.readAsDataURL(file);
-            });
-        });
+        try {
+            const uploadedUrls = await Promise.all(
+                files.map(async (file) => {
+                    const formData = new FormData();
+                    formData.append('file', file);
+                    formData.append('upload_preset', UPLOAD_PRESET);
 
-        const base64Files = await Promise.all(promises);
+                    const res = await axios.post(CLOUDINARY_URL, formData);
+                    return res.data.secure_url;
+                })
+            );
 
-        if (single) {
-            setFieldValue(fieldName, base64Files[0]);
-        } else {
-            setFieldValue(fieldName, base64Files);
+            setFieldValue("citizenIdImages", uploadedUrls); // Lưu URL ảnh thực tế vào Formik
+        } catch (err) {
+            console.error("Upload thất bại:", err);
+        }
+    };
+
+    const handleFileCircumstanceChange = async (e: React.ChangeEvent<HTMLInputElement>, setFieldValue: Function, setImagePreview: Function) => {
+        const files = Array.from(e.target.files || []);
+        const previewUrls = files.map(file => URL.createObjectURL(file));
+        setImagePreview(previewUrls); // Hiển thị preview ảnh
+
+        try {
+            const uploadedUrls = await Promise.all(
+                files.map(async (file) => {
+                    const formData = new FormData();
+                    formData.append('file', file);
+                    formData.append('upload_preset', UPLOAD_PRESET);
+
+                    const res = await axios.post(CLOUDINARY_URL, formData);
+                    return res.data.secure_url;
+                })
+            );
+
+            setFieldValue("circumstanceImages", uploadedUrls); // Lưu URL ảnh thực tế vào Formik
+        } catch (err) {
+            console.error("Upload thất bại:", err);
         }
     };
 
@@ -128,7 +139,6 @@ const CreateRequestSupportModal: FC<CreateRequestSupportModalProps> = ({ isOpen,
                             touched,
                             isSubmitting,
                             resetForm,
-                            values,
                             setFieldValue
                         }) => (
                             <Form onSubmit={handleSubmit} className='form'>
@@ -145,33 +155,51 @@ const CreateRequestSupportModal: FC<CreateRequestSupportModalProps> = ({ isOpen,
                                         <Field name="dateOfBirth" type="date" placeholder="Hãy nhập phương thức thực hiện" className={classNames("form-input", { "is-error": errors.dateOfBirth && touched.dateOfBirth })} />
                                         {errors.dateOfBirth && touched.dateOfBirth && <span className="text-error">{errors.dateOfBirth}</span>}
                                     </div>
-                                    {/* CMND/CCCD */}
-                                    <div className="form-50 form-field">
-                                        <label className="form-label">Số CMND/CCCD<span>*</span></label>
-                                        <Field
-                                            name="citizenId"
-                                            type="text"
-                                            placeholder="Nhập số CMND/CCCD"
-                                            className={classNames("form-input", { "is-error": errors.citizenId && touched.citizenId })}
-                                        />
-                                        {errors.citizenId && touched.citizenId && <span className="text-error">{errors.citizenId}</span>}
-                                    </div>
 
                                     {/* Upload ảnh CMND/CCCD */}
-                                    <div className="form-50 form-field">
-                                        <label className="form-label">Ảnh CMND/CCCD<span>*</span></label>
+                                    <div className="form-100 form-field">
+                                        <label className="form-label">Mặt trước, mặt sau cảu CCCD<span>*</span></label>
                                         <input
                                             type="file"
-                                            multiple
                                             accept="image/*"
+                                            multiple
+                                            onChange={(e) => handleFileChange(e, setFieldValue, setImageCCCDPreview)}
                                             className={classNames("form-input", { "is-error": errors.citizenIdImages && touched.citizenIdImages })}
-                                            onChange={(event) => handleFileUpload(event, setFieldValue, 'citizenIdImages')}
                                         />
-                                        {/* Preview hình */}
-                                        {values.citizenIdImages?.map((img, index) => (
-                                            <img key={index} src={img} alt="CMND/CCCD" style={{ width: '100px', marginRight: '8px' }} />
-                                        ))}
+                                        {errors.citizenIdImages && touched.citizenIdImages && <span className="text-error">{errors.citizenIdImages}</span>}
                                     </div>
+
+                                    {/* Hiển thị ảnh preview */}
+                                    {imageCCCDPreview.length > 0 && (
+                                        <div className="image-preview-container">
+                                            {imageCCCDPreview.map((img, index) => (
+                                                <div key={index} className="image-wrapper">
+                                                    <img
+                                                        src={img}
+                                                        alt={`Preview ${index}`}
+                                                        className="image-preview"
+                                                        style={{
+                                                            width: '100px',
+                                                            height: '100px',
+                                                            marginRight: '8px',
+                                                            borderRadius: '5px',
+                                                            cursor: 'pointer'
+                                                        }}
+                                                        onClick={() => setLightboxCCCDIndex(index)} // mở lightbox khi click ảnh
+                                                    />
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+
+                                    {/* Hiển thị lightbox khi click vào ảnh preview */}
+                                    {lightboxCCCDIndex !== null && (
+                                        <Lightbox
+                                            images={imageCCCDPreview.map((src) => ({ url: src }))}
+                                            startIndex={lightboxCCCDIndex}
+                                            onClose={() => setLightboxCCCDIndex(null)}
+                                        />
+                                    )}
                                 </div>
                                 <h3>Thông tin liên hệ</h3>
                                 <div className="ccm-form-r1">
@@ -189,29 +217,6 @@ const CreateRequestSupportModal: FC<CreateRequestSupportModalProps> = ({ isOpen,
                                         <label className="form-label">Email<span>*</span></label>
                                         <Field name="email" type="text" placeholder="Hãy nhập email của bạn" className={classNames("form-input", { "is-error": errors.email && touched.email })} />
                                         {errors.email && touched.email && <span className="text-error">{errors.email}</span>}
-                                    </div>
-                                    {/* Thông tin liên hệ chính quyền */}
-                                    <div className="form-50 form-field">
-                                        <label className="form-label">Thông tin liên hệ chính quyền địa phương<span>*</span></label>
-                                        <Field
-                                            name="localAuthorityContact"
-                                            type="text"
-                                            placeholder="Nhập thông tin liên hệ"
-                                            className={classNames("form-input", { "is-error": errors.localAuthorityContact && touched.localAuthorityContact })}
-                                        />
-                                        {errors.localAuthorityContact && touched.localAuthorityContact && <span className="text-error">{errors.localAuthorityContact}</span>}
-                                    </div>
-
-                                    {/* Thông tin liên hệ người thân */}
-                                    <div className="form-50 form-field">
-                                        <label className="form-label">Thông tin liên hệ người thân<span>*</span></label>
-                                        <Field
-                                            name="relativeContact"
-                                            type="text"
-                                            placeholder="Nhập thông tin người thân"
-                                            className={classNames("form-input", { "is-error": errors.relativeContact && touched.relativeContact })}
-                                        />
-                                        {errors.relativeContact && touched.relativeContact && <span className="text-error">{errors.relativeContact}</span>}
                                     </div>
                                 </div>
                                 <h3>Hoàn cảnh và lý do hỗ trợ</h3>
@@ -234,60 +239,77 @@ const CreateRequestSupportModal: FC<CreateRequestSupportModalProps> = ({ isOpen,
                                         )}
                                     </div>
                                     <div className="form-50 form-field">
-                                        <label className="form-label">Số người trong hộ gia đình<span>*</span></label>
+                                        <label className="form-label">Số người mong muốn hỗ trợ<span>*</span></label>
                                         <Field name="householdSize" type="number" placeholder="Hãy nhập số người trong hộ gia đình" className={classNames("form-input", { "is-error": errors.householdSize && touched.householdSize })} />
                                         {errors.householdSize && touched.householdSize && <span className="text-error">{errors.householdSize}</span>}
                                     </div>
                                     <div className="form-50 form-field">
-                                        <label className="form-label" style={{ paddingTop: "8px" }}>Trẻ em/ Người già/ Người bệnh(Nếu có)</label>
-                                        <Field name="specialMembers" type="text" placeholder="" className={classNames("form-input", { "is-error": errors.specialMembers && touched.specialMembers })} />
-                                        {errors.specialMembers && touched.specialMembers && <span className="text-error">{errors.specialMembers}</span>}
-                                    </div>
-                                    {/* Xác nhận chính quyền */}
-                                    <div className="form-100 form-field">
-                                        <label className="form-label">Đường dẫn đến giấy xác nhận của chính quyền địa phương (nếu có)</label>
-                                        <Field
-                                            type="text"
-                                            name="localAuthorityConfirmation"
-                                            placeholder="Nhập xác nhận"
-                                            className={classNames("form-input", { "is-error": errors.localAuthorityConfirmation && touched.localAuthorityConfirmation })}
-                                        />
-                                        {errors.localAuthorityConfirmation && touched.localAuthorityConfirmation && <span className="text-error">{errors.localAuthorityConfirmation}</span>}
+                                        <label className="form-label" style={{ paddingTop: "8px" }}>
+                                            Trường hợp đặc biệt
+                                        </label>
+                                        <div role="group" aria-labelledby="checkbox-group" className="form-checkbox-group" style={{ paddingTop: "8px", display: "flex", flexDirection: "column", gap: "8px" }}>
+                                            <label>
+                                                <Field type="checkbox" name="specialMembers" value="Trẻ em" />
+                                                Trẻ em
+                                            </label>
+                                            <label>
+                                                <Field type="checkbox" name="specialMembers" value="Người già" />
+                                                Người già
+                                            </label>
+                                            <label>
+                                                <Field type="checkbox" name="specialMembers" value="Người bệnh" />
+                                                Người bệnh
+                                            </label>
+                                        </div>
+                                        {errors.specialMembers && touched.specialMembers && (
+                                            <span className="text-error">{errors.specialMembers}</span>
+                                        )}
                                     </div>
 
                                     {/* Upload ảnh hoàn cảnh */}
                                     <div className="form-100 form-field">
-                                        <label className="form-label">Ảnh hoàn cảnh hiện tại</label>
+                                        <label className="form-label">Hình ảnh hoàn cảnh</label>
                                         <input
                                             type="file"
-                                            multiple
                                             accept="image/*"
+                                            multiple
+                                            onChange={(e) => handleFileCircumstanceChange(e, setFieldValue, setImageCircumstancePreview)}
                                             className={classNames("form-input", { "is-error": errors.circumstanceImages && touched.circumstanceImages })}
-                                            onChange={(event) => handleFileUpload(event, setFieldValue, 'circumstanceImages')}
                                         />
-                                        {values.circumstanceImages?.map((img, index) => (
-                                            <img key={index} src={img} alt="Circumstance" style={{ width: '100px', marginRight: '8px' }} />
-                                        ))}
+                                        {errors.circumstanceImages && touched.circumstanceImages && <span className="text-error">{errors.circumstanceImages}</span>}
                                     </div>
-                                </div>
-                                <h3>Thông tin tài chính</h3>
-                                <div className="ccm-form-r3">
-                                    <div className="form-50 form-field">
-                                        <label className="form-label">Nguồn thu nhập hiện tại<span>*</span></label>
-                                        <Field name="incomeSource" type="text" placeholder="Hãy nhập nguồn thu nhập hiện tại" className={classNames("form-input", { "is-error": errors.incomeSource && touched.incomeSource })} />
-                                        {errors.incomeSource && touched.incomeSource && <span className="text-error">{errors.incomeSource}</span>}
-                                    </div>
-                                    {/* Thu nhập hàng tháng */}
-                                    <div className="form-50 form-field">
-                                        <label className="form-label">Thu nhập hàng tháng<span>*</span></label>
-                                        <Field
-                                            name="monthlyIncome"
-                                            type="number"
-                                            placeholder="Nhập thu nhập hàng tháng"
-                                            className={classNames("form-input", { "is-error": errors.monthlyIncome && touched.monthlyIncome })}
+
+                                    {/* Hiển thị ảnh preview */}
+                                    {imageCircumstancePreview.length > 0 && (
+                                        <div className="image-preview-container">
+                                            {imageCircumstancePreview.map((img, index) => (
+                                                <div key={index} className="image-wrapper">
+                                                    <img
+                                                        src={img}
+                                                        alt={`Preview ${index}`}
+                                                        className="image-preview"
+                                                        style={{
+                                                            width: '100px',
+                                                            height: '100px',
+                                                            marginRight: '8px',
+                                                            borderRadius: '5px',
+                                                            cursor: 'pointer'
+                                                        }}
+                                                        onClick={() => setLightboxCircumstanceIndex(index)} // mở lightbox khi click ảnh
+                                                    />
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+
+                                    {/* Hiển thị lightbox khi click vào ảnh preview */}
+                                    {lightboxCircumstanceIndex !== null && (
+                                        <Lightbox
+                                            images={imageCircumstancePreview.map((src) => ({ url: src }))}
+                                            startIndex={lightboxCircumstanceIndex}
+                                            onClose={() => setLightboxCircumstanceIndex(null)}
                                         />
-                                        {errors.monthlyIncome && touched.monthlyIncome && <span className="text-error">{errors.monthlyIncome}</span>}
-                                    </div>
+                                    )}
                                 </div>
                                 <h3>Yêu cầu hỗ trợ</h3>
                                 <div className="ccm-form-r3">
@@ -341,56 +363,12 @@ const CreateRequestSupportModal: FC<CreateRequestSupportModalProps> = ({ isOpen,
                                         {errors.requestedItems && touched.requestedItems && (
                                             <span className="text-error">{errors.requestedItems}</span>
                                         )}
-                                    </div>
 
-                                </div>
-                                <h3>Lịch sử nhận hỗ trợ</h3>
-                                <div className="ccm-form-r3">
-                                    {/* Đã từng nhận hỗ trợ chưa */}
-                                    <div className="form-100 form-field">
-                                        <label className="form-label">
-                                            <Field type="checkbox" name="hasReceivedSupportBefore" />
-                                            Bạn đã từng nhận hỗ trợ trước đây?
-                                        </label>
                                     </div>
-
-                                    {/* Nếu đã từng hỗ trợ, nhập chi tiết */}
-                                    {values.hasReceivedSupportBefore && (
-                                        <div className="form-100 form-field">
-                                            <label className="form-label">Chi tiết hỗ trợ trước đây</label>
-                                            <Field
-                                                as="textarea"
-                                                name="previousSupportDetails"
-                                                placeholder="Nhập chi tiết"
-                                                rows={4}
-                                                className="form-input"
-                                            />
-                                        </div>
-                                    )}
-                                </div>
-                                <h3>Cam kết minh bạch</h3>
-                                <div className="ccm-form-r3">
-                                    {/* Cam kết thông tin chính xác */}
-                                    <div className="form-100 form-field">
-                                        <label className="form-label">
-                                            <Field type="checkbox" name="commitmentToAccuracy" />
-                                            Tôi cam kết những thông tin đã cung cấp là hoàn toàn chính xác
-                                        </label>
-                                        {errors.commitmentToAccuracy && touched.commitmentToAccuracy && <span className="text-error">{errors.commitmentToAccuracy}</span>}
-                                    </div>
-
-                                    {/* Upload chữ ký */}
-                                    <div className="form-100 form-field">
-                                        <label className="form-label">Ảnh chữ ký<span>*</span></label>
-                                        <input
-                                            type="file"
-                                            accept="image/*"
-                                            className='form-input'
-                                            onChange={(event) => handleFileUpload(event, setFieldValue, 'signatureImage', true)}
-                                        />
-                                        {values.signatureImage && (
-                                            <img src={values.signatureImage} alt="Signature" style={{ width: '100px' }} />
-                                        )}
+                                    <div className="form-50 form-field">
+                                        <label className="form-label" style={{ paddingTop: "8px" }}>Số lượng phần quà mong muốn <span>*</span></label>
+                                        <Field name="desiredQuantity" type="text" placeholder="" className={classNames("form-input", { "is-error": errors.desiredQuantity && touched.desiredQuantity })} />
+                                        {errors.desiredQuantity && touched.desiredQuantity && <span className="text-error">{errors.desiredQuantity}</span>}
                                     </div>
                                 </div>
                                 <div className="group-btn">

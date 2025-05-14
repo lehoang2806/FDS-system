@@ -1,6 +1,6 @@
 import { selectCurrentCampaign, selectGetAllCampaign, selectGetAllFeedbackCampaign, selectGetAllRegisterReceivers, selectUserLogin } from '@/app/selector';
 import { useAppDispatch, useAppSelector } from '@/app/store';
-import { AvatarIcon, CameraIcon, MailIcon, SendIcon } from '@/assets/icons';
+import { AvatarIcon, CameraIcon, MailIcon, RegisterPersonIcon, SendIcon } from '@/assets/icons';
 import { CampaignCard } from '@/components/Card/index';
 import { FeedbackCampaign, Subscriber } from '@/components/Elements/index'
 import { RegisterReceiverModal, RemindCertificateModal } from '@/components/Modal';
@@ -21,6 +21,7 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import 'dayjs/locale/vi';
 import { UserProfile } from '@/types/auth';
 import { CampaignInfo, CreateFeedbackCampaign } from '@/types/campaign';
+import classNames from "classnames";
 
 dayjs.locale('vi');
 dayjs.extend(relativeTime);
@@ -57,9 +58,14 @@ const DetailCampaignPage: React.FC = () => {
     const otherCampaigns = approvedCampaigns.filter(c => c.campaignId !== id).slice(0, 3) as CampaignInfo[];
 
     const currentRegisterReceivers = registerReceivers.filter(r => r.campaignId === id);
-    const registeredReceiver = currentRegisterReceivers.find(r => r.accountId === userLogin?.accountId);
+    const registeredReceiver = currentRegisterReceivers.filter(r => r.accountId === userLogin?.accountId);
 
-    const totalRegisteredQuantity = currentRegisterReceivers.reduce((sum, r) => sum + (r.quantity || 0), 0);
+    const totalQuantityByCurrentUser = registeredReceiver.reduce((sum, r) => sum + (parseInt(r.quantity) || 0), 0);
+
+    const totalRegisteredQuantity = currentRegisterReceivers.reduce(
+        (sum, r) => sum + (parseInt(r.quantity) || 0),
+        0
+    );
 
     // Formatted date/time
     const formattedDate = currentCampaign?.implementationTime
@@ -118,8 +124,8 @@ const DetailCampaignPage: React.FC = () => {
     };
 
     const handleRegisterReceiver = () => {
-        if (registeredReceiver) {
-            alert("Bạn đã đăng ký rồi");
+        if (registeredReceiver && totalQuantityByCurrentUser === 10) {
+            toast.warn("Bạn đã đăng ký đủ số lượng");
         } else {
             setIsRegisterReceiverModalOpend(true);
         }
@@ -155,7 +161,8 @@ const DetailCampaignPage: React.FC = () => {
             .then(() => {
                 toast.success("Gửi nhận xét thành công");
                 dispatch(getCampaignByIdApiThunk(String(id)));
-                helpers.resetForm();
+                dispatch(getFeedbackCampaignApiThunk(String(id))),
+                    helpers.resetForm();
                 setPreviewImages([]);
             })
             .catch(() => { })
@@ -186,7 +193,6 @@ const DetailCampaignPage: React.FC = () => {
         }
     };
 
-
     return (
         <main id="detail-campaign">
             <section id="dc-section">
@@ -216,8 +222,8 @@ const DetailCampaignPage: React.FC = () => {
                                         alt={`Campaign Image ${index + 1}`}
                                         onClick={() => setSelectedImage(img)}
                                         style={{
-                                            width: "180px",
-                                            height: "180px",
+                                            width: "178px",
+                                            height: "178px",
                                             margin: "5px",
                                             objectFit: "cover",
                                             cursor: "pointer",
@@ -366,12 +372,15 @@ const DetailCampaignPage: React.FC = () => {
                             <div className="dcscr1c2r1">
                                 <div>
                                     <h4>Số lượng còn lại</h4>
-                                    <p>{Number(currentCampaign?.limitedQuantity) - totalRegisteredQuantity}</p>
+                                    <p>{!isNaN(Number(currentCampaign?.limitedQuantity) - totalRegisteredQuantity)
+                                        ? Number(currentCampaign?.limitedQuantity) - totalRegisteredQuantity
+                                        : 'N/A'}
+                                    </p>
                                 </div>
                                 <div>
-                                    <h4>Địa điểm</h4>
+                                    <h4>Địa điểm phát quà</h4>
                                     <p>{currentCampaign?.location}, {currentCampaign?.district}</p>
-                                    <h4>Thời gian</h4>
+                                    <h4>Thời gian diễn ra</h4>
                                     <p>{formattedDate} - {formattedTime}</p>
                                 </div>
                                 {userLogin?.roleId === 4 && currentCampaign && (
@@ -382,7 +391,7 @@ const DetailCampaignPage: React.FC = () => {
                                                 totalRegisteredQuantity >= Number(currentCampaign?.limitedQuantity) ? (
                                                     <p className="sc-text">Đã đăng ký đủ số lượng</p>
                                                 ) : (
-                                                    <button className="sc-btn" onClick={handleRegisterReceiver}>
+                                                    <button className={classNames("sc-btn", { "disabled-btn": registeredReceiver && totalQuantityByCurrentUser === 10 })} onClick={handleRegisterReceiver}>
                                                         Đăng ký nhận hỗ trợ
                                                     </button>
                                                 )
@@ -399,7 +408,10 @@ const DetailCampaignPage: React.FC = () => {
                                             <Subscriber key={registerReceiver.registerReceiverId} registerReceiver={registerReceiver} />
                                         ))
                                     ) : (
-                                        <h1>Chưa có người đăng ký</h1>
+                                        <div className="have-no-register">
+                                            <RegisterPersonIcon className='hnr-icon' />
+                                            <h1>Chưa có người đăng ký</h1>
+                                        </div>
                                     )
                                     }
                                 </div>
@@ -430,7 +442,7 @@ const DetailCampaignPage: React.FC = () => {
                 </div>
             </section>
             <RemindCertificateModal isOpen={isRemindCertificateModalOpend} setIsOpen={setIsRemindCertificateModalOpend} />
-            <RegisterReceiverModal isOpen={isRegisterReceiverModalOpend} setIsOpen={setIsRegisterReceiverModalOpend} campaign={currentCampaign} />
+            <RegisterReceiverModal isOpen={isRegisterReceiverModalOpend} setIsOpen={setIsRegisterReceiverModalOpend} campaign={currentCampaign} registeredReceiver={registeredReceiver} />
         </main>
     )
 }

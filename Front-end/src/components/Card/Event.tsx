@@ -1,5 +1,6 @@
 import { FC } from "react"
 import { EventCardProps } from "./type"
+import { formatDater } from "@/utils/helper"
 
 const EventCard: FC<EventCardProps> = ({ type, news, onClickDetail }) => {
     const createdDate = news?.createdDate && news?.createdDate.split('T')[0]
@@ -8,7 +9,7 @@ const EventCard: FC<EventCardProps> = ({ type, news, onClickDetail }) => {
         <div className="event-card-1">
             <img src={news?.images[0]} className="ec1-img" />
             <h4 className="ec1-name" onClick={onClickDetail}>{news?.newsTitle}</h4>
-            <p className="ec1-date">{createdDate}</p>
+            <p className="ec1-date">{formatDater(String(createdDate))}</p>
         </div>
     )
 
@@ -16,11 +17,10 @@ const EventCard: FC<EventCardProps> = ({ type, news, onClickDetail }) => {
         <div className="event-card-2">
             <div className="ec2c1">
                 <h4 className="ec2-name">{news?.newsTitle}</h4>
-                <p className="ec2-date">{createdDate}</p>
+                <p className="ec2-date">{formatDater(String(createdDate))}</p>
             </div>
             <div className="ec2c2">
                 <img src={news?.images[0]} className="ec2-img" />
-
             </div>
         </div>
     )

@@ -126,6 +126,7 @@ const ApprovedPost: FC<ApprovedPostProps> = ({ post, userId }) => {
 
             <div className="pcr2">
                 <PostContent content={post.postContent} />
+                
                 {post.images.length > 0 && <PostImageGallery images={post.images} />}
             </div>
             <hr />

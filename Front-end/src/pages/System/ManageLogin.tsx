@@ -54,7 +54,7 @@ const ManageLogin = () => {
             <section id="ml-section">
                 <div className="mls-container">
                     <div className="col-flex mlsc1">
-                        <h1>Tiến hành đăng nhập</h1>
+                        <h1>Đăng nhập</h1>
                         <Formik
                             initialValues={initialValues}
                             onSubmit={onSubmit}

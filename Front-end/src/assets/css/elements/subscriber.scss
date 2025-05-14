@@ -27,16 +27,29 @@
 
     .scc2 {
         h4 {
-            font-size: 14px;
+            font-size: 18px;
             font-weight: 500;
-            color: #393939;
+            color: #460d02;
+            margin-bottom: 10px;
+
+            span {
+                font-size: 20px;
+                font-weight: 700;
+                color: #f97107;
+            }
         }
 
         p {
             font-size: 14;
             font-weight: 500;
             font-style: italic;
-            color: #6f6f6f;
+            color: #460d02;
+
+            span {
+                font-size: 16px;
+                font-weight: 700;
+                color: #f97107;
+            }
         }
     }
 }

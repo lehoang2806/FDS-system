@@ -16,14 +16,14 @@
     .pagination-item {
         width: 12px;
         height: 12px;
-        background: var(--light-orange);
+        background: #ffb34a;
         border-radius: var(--border-radius-circle);
         cursor: pointer;
     }
 
     .pagination-item-active {
         width: 32px;
-        background: var(--main-color);
+        background: #dd4d02;
         border-radius: var(--border-radius-16);
     }
 }

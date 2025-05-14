@@ -49,6 +49,9 @@ const CampaignCard: FC<CampaignCardProps> = ({ onClickDetail, campaign }) => {
             <p>
                 {campaign.limitedQuantity} Phần quà
             </p>
+            <p>
+                {campaign.location}, {campaign.district}
+            </p>
             <p className={`cc-status ${status === "Đã kết thúc" ? "ended" : status === "Đang diễn ra" ? "ongoing" : "upcoming"}`}>
                 {status}
             </p>

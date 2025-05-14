@@ -2,16 +2,35 @@ import { FC, useEffect, useState } from 'react';
 import Modal from './Modal';
 import { useAppDispatch, useAppSelector } from '@/app/store';
 import { RequestDonorModalProps } from './type';
-import { selectGetAllDonorSupport } from '@/app/selector';
+import { selectGetAllCampaign, selectGetAllDonorSupport } from '@/app/selector';
 import { getAllDonorSupportApiThunk, requestDonorSupportApiThunk } from '@/services/requestSupport/requestSupportThunk';
 import { ArrowLeft, ArrowRight } from '@/assets/icons';
 import { toast } from 'react-toastify';
 import { setLoading } from '@/services/app/appSlice';
+import { getAllCampaignApiThunk } from '@/services/campaign/campaignThunk';
 
 const RequestDonorModal: FC<RequestDonorModalProps> = ({ isOpen, setIsOpen, donorSupport, requestSupportId }) => {
     const dispatch = useAppDispatch();
     const donorSupports = useAppSelector(selectGetAllDonorSupport);
-    const sortedDonorSupports = [...donorSupports].reverse();
+    const campaigns = useAppSelector(selectGetAllCampaign);
+
+    const countCampaign = (acountID: string) => {
+        const count = campaigns.filter(campaign => campaign.accountId === acountID).length;
+        return count;
+    }
+
+    const sortedDonorSupports = [...donorSupports].sort((a, b) => {
+        const countA = countCampaign(a.donorId);
+        const countB = countCampaign(b.donorId);
+        return countB - countA; // giảm dần (nhiều chiến dịch hơn lên trước)
+    });
+    
+    const [searchTerm, setSearchTerm] = useState('');
+
+    const filteredDonorSupports = sortedDonorSupports.filter(donor =>
+        donor.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        donor.email.toLowerCase().includes(searchTerm.toLowerCase())
+    );
 
     const [selectedDonors, setSelectedDonors] = useState<string[]>([]);
     const [isAllSelected, setIsAllSelected] = useState(false);
@@ -20,6 +39,7 @@ const RequestDonorModal: FC<RequestDonorModalProps> = ({ isOpen, setIsOpen, dono
 
     useEffect(() => {
         dispatch(getAllDonorSupportApiThunk());
+        dispatch(getAllCampaignApiThunk());
     }, [dispatch]);
 
     const handleSelectAll = () => {
@@ -38,9 +58,9 @@ const RequestDonorModal: FC<RequestDonorModalProps> = ({ isOpen, setIsOpen, dono
 
     const [currentDonorSupportsPage, setCurrentDonorSupportsPage] = useState(1);
 
-    const totalNewsPages = Math.ceil(sortedDonorSupports.length / ITEMS_PER_PAGE);
+    const totalNewsPages = Math.ceil(filteredDonorSupports.length / ITEMS_PER_PAGE);
 
-    const currentDonorSupportsesPage = sortedDonorSupports.slice(
+    const currentDonorSupportsesPage = filteredDonorSupports.slice(
         (currentDonorSupportsPage - 1) * ITEMS_PER_PAGE,
         currentDonorSupportsPage * ITEMS_PER_PAGE
     );
@@ -92,7 +112,19 @@ const RequestDonorModal: FC<RequestDonorModalProps> = ({ isOpen, setIsOpen, dono
 
     return (
         <Modal isOpen={isOpen} setIsOpen={setIsOpen}>
-            <section id="request-donor-modal">
+            <section id="request-donor-modal" style={{ width: '1000px' }}>
+                <p style={{ fontSize: '20px', fontWeight: 'bold' }}>Tìm kiếm</p>
+                <input
+                    type="text"
+                    placeholder='Tìm kiếm theo tên hoặc email'
+                    className="pr-input"
+                    value={searchTerm}
+                    onChange={(e) => {
+                        setSearchTerm(e.target.value);
+                        setCurrentDonorSupportsPage(1); // Reset về page 1 khi tìm kiếm
+                    }}
+                    style={{ width: '400px', marginBottom: '20px' }}
+                />
                 <table className="table">
                     <thead className="table-head">
                         <tr className="table-head-row">
@@ -108,6 +140,9 @@ const RequestDonorModal: FC<RequestDonorModalProps> = ({ isOpen, setIsOpen, dono
                             </th>
                             <th className="table-head-cell">
                                 Email
+                            </th>
+                            <th className="table-head-cell">
+                                Chiến dịch đã tạo
                             </th>
                             <th className="table-head-cell">
                                 Trạng thái
@@ -131,6 +166,9 @@ const RequestDonorModal: FC<RequestDonorModalProps> = ({ isOpen, setIsOpen, dono
                                     <td className='table-body-cell'>{donorSupport.fullName}</td>
                                     <td className='table-body-cell'>
                                         {donorSupport.email}
+                                    </td>
+                                    <td className='table-body-cell'>
+                                        {countCampaign(donorSupport.donorId)}
                                     </td>
                                     <td className='table-body-cell'>
                                         {isSent ? (

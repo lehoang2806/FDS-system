@@ -91,28 +91,18 @@
             }
 
             .sducr2r3 {
-                display: flex;
-                justify-content: space-between;
-                align-items: start;
-
-                .sducr2r3c1, .sducr2r3c2 {
-                    h3 {
-                        font-size: 15px;
-                        font-weight: 700;
-                        color: #29343d;
-                        margin-bottom: 10px;
-                    }
-
-                    p {
-                        font-size: 14px;
-                        font-weight: 500;
-                        color: #29343d;
-                        margin-bottom: 20px;
-                    }
+                h3 {
+                    font-size: 15px;
+                    font-weight: 700;
+                    color: #29343d;
+                    margin-bottom: 10px;
                 }
 
-                .sducr2r3c2 {
-                    text-align: end;
+                span {
+                    font-size: 14px;
+                    font-weight: 500;
+                    color: #29343d;
+                    margin-bottom: 20px;
                 }
             }
         }

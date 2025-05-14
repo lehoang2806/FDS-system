@@ -1,10 +1,8 @@
 interface ActionParamPost {
-    postId?: string;
     postContent?: string;
     images: string[];
-    posterId?: string;
     posterName?: string;
-    posterRole?: string;
+    hashtags: string[];
 }
 
 interface PostState {

@@ -14,7 +14,7 @@ function App() {
             <PersistGate loading={false} persistor={persistor}>
                 <ToastContainer />
                 <RouteApp />
-                <CrispChat />
+                {/* <CrispChat /> */}
             </PersistGate>
         </Provider>
     )

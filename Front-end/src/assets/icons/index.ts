@@ -26,6 +26,8 @@ import PersonalIcon from "./personal-icon.svg?react";
 import OrganizationIcon from "./organization-icon.svg?react";
 import AvatarIcon from "./avatar-icon.png";
 import MailIcon from "./mail-icon.svg?react";
+import ManageIcon from "./manage-icon.svg?react";
+import RegisterPersonIcon from "./register-person-icon.svg?react";
 
 export {
     MenuIcon,
@@ -55,5 +57,7 @@ export {
     PersonalIcon,
     OrganizationIcon,
     AvatarIcon,
-    MailIcon
+    MailIcon,
+    ManageIcon,
+    RegisterPersonIcon
 };

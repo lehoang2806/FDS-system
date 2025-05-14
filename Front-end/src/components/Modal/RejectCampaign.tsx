@@ -3,8 +3,10 @@ import Modal from './Modal'
 import { toast } from 'react-toastify';
 import { useAppDispatch } from '@/app/store';
 import { RejectCampaignModalProps } from './type';
-import { getAllCampaignApiThunk, getCampaignByIdApiThunk, rejectCampaignApiThunk } from '@/services/campaign/campaignThunk';
+import { getAllCampaignApiThunk, rejectCampaignApiThunk } from '@/services/campaign/campaignThunk';
 import { setLoading } from '@/services/app/appSlice';
+import { navigateHook } from '@/routes/RouteApp';
+import { routes } from '@/routes/routeName';
 
 const RejectCampaignModal: FC<RejectCampaignModalProps> = ({ isOpen, setIsOpen, selectedCampaign }) => {
     const dispatch = useAppDispatch();
@@ -29,7 +31,7 @@ const RejectCampaignModal: FC<RejectCampaignModalProps> = ({ isOpen, setIsOpen, 
                     toast.success("Đã từ chối chiến dịch này.");
                     setIsOpen(false);
                     dispatch(getAllCampaignApiThunk());
-                    dispatch(getCampaignByIdApiThunk(selectedCampaign.campaignId));
+                    navigateHook(routes.staff.campaign.user.list);
                 }).catch(() => {
                 }).finally(() => {
                     setTimeout(() => {
