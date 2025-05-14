@@ -149,6 +149,7 @@ builder.Services.Configure<SmsTwilioSetting>(builder.Configuration.GetSection("S
 builder.Services.AddSingleton<SMSHelper>();
 builder.Services.Configure<EmailConfig>(builder.Configuration.GetSection("EmailConfig"));
 builder.Services.Configure<PolicyConfig>(builder.Configuration.GetSection("Policy"));
+builder.Services.Configure<VnPaySetting>(builder.Configuration.GetSection("VnPay"));
 
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

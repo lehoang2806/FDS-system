@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 namespace FDSSYSTEM.Services.DonorDonateService 
 { public interface IDonorDonateService 
     {
-        Task Create(DonorDonateDto donorDonateDto); 
-        Task Update(string id, DonorDonateDto donorDonateDto);
+        Task<DonorDonate> Create(DonorDonateDto donorDonateDto); 
+        Task Update(string donorDonateId, bool isPaid, string transactionId);
         Task Delete(string id); 
         Task<List<DonorDonate>> GetAll();
         Task<DonorDonate> GetByDonorDonateId(string donorDonateId); 

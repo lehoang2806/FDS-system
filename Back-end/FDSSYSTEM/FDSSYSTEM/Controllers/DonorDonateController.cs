@@ -1,7 +1,10 @@
 ﻿using FDSSYSTEM.DTOs;
+using FDSSYSTEM.Helper;
+using FDSSYSTEM.Options;
 using FDSSYSTEM.Services.DonorDonateService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using System;
 using System.Threading.Tasks;
 
@@ -12,20 +15,34 @@ namespace FDSSYSTEM.Controllers
     public class DonorDonateController : ControllerBase
     {
         private readonly IDonorDonateService _donorDonateService;
-
-        public DonorDonateController(IDonorDonateService donorDonateService)
+        private readonly VnPaySetting _vnPaySetting;
+        public DonorDonateController(IDonorDonateService donorDonateService, IOptions<VnPaySetting> options)
         {
             _donorDonateService = donorDonateService;
+            _vnPaySetting = options.Value;
         }
 
         [HttpPost("CreateDonorDonate")]
-        [Authorize(Roles = "Staff")]
+        [Authorize(Roles = "Donor")]
         public async Task<ActionResult> CreateDonorDonate(DonorDonateDto donorDonateDto)
         {
             try
             {
-                await _donorDonateService.Create(donorDonateDto);
-                return Ok();
+                var donorDonate = await _donorDonateService.Create(donorDonateDto);
+
+                var baseUrl = $"{Request.Scheme}://{Request.Host}";
+                var returnUrl = $"{baseUrl}/api/donordonate/vnpayreturn";
+
+                var url = VnPayHelper.CreatePaymentUrl(
+                    _vnPaySetting.PaymentUrl,
+                    _vnPaySetting.TmnCode,
+                    _vnPaySetting.HashSecret,
+                    returnUrl,
+                    donorDonate.DonorDonateId,
+                    donorDonate.Amount
+                );
+
+                return Ok(new { paymentUrl = url });
             }
             catch (Exception ex)
             {
@@ -33,35 +50,31 @@ namespace FDSSYSTEM.Controllers
             }
         }
 
-        [HttpPut("UpdateDonorDonate/{DonorDonateId}")]
-        [Authorize(Roles = "Staff")]
-        public async Task<ActionResult> UpdateDonorDonate(string id, DonorDonateDto donorDonateDto)
+        [HttpGet("vnpayreturn")]
+        [AllowAnonymous]
+        public async Task<ActionResult> VnpayReturn()
         {
-            try
+            var query = Request.Query;
+            var hashSecret = _vnPaySetting.HashSecret;
+
+            if (!VnPayHelper.ValidateSignature(query, hashSecret))
+                return Content("❌ Chữ ký không hợp lệ!");
+
+            var responseCode = query["vnp_ResponseCode"];
+            var donorDonateId = query["vnp_TxnRef"];
+            var transactionId = query["vnp_TransactionNo"];
+            if (responseCode == "00")
             {
-                await _donorDonateService.Update(id, donorDonateDto);
-                return Ok();
+                // TUpdate DB khi thanh toán thành công
+                await _donorDonateService.Update(donorDonateId, true, transactionId);
             }
-            catch (Exception ex)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
+
+            var frontendRedirect = _vnPaySetting.FrontendReturnUrl;
+            frontendRedirect += $"?status={(responseCode == "00" ? "success" : "fail")}&donorDonateId={donorDonateId}";
+
+            return Redirect(frontendRedirect);
         }
 
-        [HttpDelete("DeleteDonorDonate/{id}")]
-        [Authorize(Roles = "Staff")]
-        public async Task<ActionResult> DeleteDonorDonate(string id)
-        {
-            try
-            {
-                await _donorDonateService.Delete(id);
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
-        }
 
         [HttpGet("GetAllDonorDonates")]
         [Authorize(Roles = "Staff,Admin")]

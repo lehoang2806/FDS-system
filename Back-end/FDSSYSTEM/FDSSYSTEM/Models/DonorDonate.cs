@@ -15,9 +15,8 @@ namespace FDSSYSTEM.Models
         public string Message { get; set; }
         public string TransactionId { get; set; }
         public DateTime DonateDate { get; set; }
-        public string StaffId { get; set; }
-        public string StaffName { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
+        public bool IsPaid { get; set; }
     }
 }

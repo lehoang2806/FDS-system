@@ -25,43 +25,34 @@ namespace FDSSYSTEM.Services.DonorDonateService
             _userService = userService;
         }
 
-        public async Task Create(DonorDonateDto donorDonateDto)
+        public async Task<DonorDonate> Create(DonorDonateDto donorDonateDto)
         {
-            var staff = await _userService.GetAccountById(_userContextService.UserId);
+            var donor = await _userService.GetAccountById(_userContextService.UserId);
 
             var donorDonate = new DonorDonate
             {
                 DonorDonateId = Guid.NewGuid().ToString(),
-                DonorId = donorDonateDto.DonorId,
+                DonorId = donor.AccountId,
                 Amount = donorDonateDto.Amount,
                 Message = donorDonateDto.Message,
-                TransactionId = donorDonateDto.TransactionId,
-                DonateDate = donorDonateDto.DonateDate,
-                StaffId = _userContextService.UserId ??"",
-                StaffName = staff.FullName,
-                CreatedAt = DateTime.Now
+                DonateDate = DateTime.Now,
+                CreatedAt = DateTime.Now,
+                IsPaid = false
             };
 
             await _donorDonateRepository.AddAsync(donorDonate);
+            return donorDonate;
         }
 
-        public async Task Update(string id, DonorDonateDto donorDonateDto)
+        public async Task Update(string donorDonateId,bool isPaid, string transactionId)
         {
-            var existingDonorDonate = await _donorDonateRepository.GetByIdAsync(id);
+            var existingDonorDonate = await _donorDonateRepository.GetByIdAsync(donorDonateId);
             if (existingDonorDonate == null)
             {
                 throw new Exception("Donor donation not found");
             }
-
-            var staff = await _userService.GetAccountById(_userContextService.UserId);
-
-            existingDonorDonate.DonorId = donorDonateDto.DonorId;
-            existingDonorDonate.Amount = donorDonateDto.Amount;
-            existingDonorDonate.Message = donorDonateDto.Message;
-            existingDonorDonate.TransactionId = donorDonateDto.TransactionId;
-            existingDonorDonate.DonateDate = donorDonateDto.DonateDate;
-            existingDonorDonate.StaffId = _userContextService.UserId ??"";
-            existingDonorDonate.StaffName = staff.FullName;
+            existingDonorDonate.IsPaid = isPaid;
+            existingDonorDonate.TransactionId = transactionId;
             existingDonorDonate.UpdatedAt = DateTime.Now;
 
             await _donorDonateRepository.UpdateAsync(existingDonorDonate.Id, existingDonorDonate);
