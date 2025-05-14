@@ -70,7 +70,9 @@ namespace FDSSYSTEM.Services.ChatService
             {
                 UserId = user.AccountId,
                 FullName = user.FullName,
-                Role = role.RoleName
+                Role = role.RoleName,
+                RoleId = role.RoleId,
+                Email = user.Email,
             }
             ).Where(x => x.UserId != userId).ToList();
 
@@ -96,7 +98,9 @@ namespace FDSSYSTEM.Services.ChatService
             {
                 UserId = user.AccountId,
                 FullName = user.FullName,
-                Role = role.RoleName
+                Role = role.RoleName,
+                RoleId= role.RoleId,
+                Email= user.Email,
             }
             ).ToList();
 

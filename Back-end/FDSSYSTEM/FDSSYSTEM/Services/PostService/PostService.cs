@@ -227,6 +227,7 @@ namespace FDSSYSTEM.Services.PostService
                     PosterApproverName = p.PosterApproverName,
                     PostId = p.PostId,
                     PublicDate = p.PublicDate,
+                    Hashtags = p.Hashtags,
                 };
 
                 //Lấy thông tin Like của bài post

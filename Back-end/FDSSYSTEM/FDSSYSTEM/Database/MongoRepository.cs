@@ -8,7 +8,8 @@ namespace FDSSYSTEM.Database;
 public class MongoRepository<T> : IMongoRepository<T> where T : class
 {
 
-    private readonly IMongoCollection<T> _collection;
+    protected readonly IMongoCollection<T> _collection;
+
 
     public MongoRepository(IMongoDatabase database, string collectionName)
     {

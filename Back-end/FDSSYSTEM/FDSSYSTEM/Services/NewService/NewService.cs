@@ -102,7 +102,7 @@ namespace FDSSYSTEM.Services.NewService
 
             await _newRepository.UpdateAsync(news.Id, news);
 
-            //Send notifiction all staff and admin
+           /* //Send notifiction all staff and admin
             var userReceiveNotifications = await _userService.GetAllAdminAndStaffId();
             foreach (var userId in userReceiveNotifications)
             {
@@ -119,7 +119,7 @@ namespace FDSSYSTEM.Services.NewService
                 await _notificationService.AddNotificationAsync(notificationDto);
                 //send notification via signalR
                 await _hubNotificationContext.Clients.User(notificationDto.AccountId).SendAsync("ReceiveNotification", notificationDto);
-            }
+            }*/
 
         }
 

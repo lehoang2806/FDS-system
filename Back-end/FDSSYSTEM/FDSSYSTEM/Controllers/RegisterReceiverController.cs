@@ -115,6 +115,28 @@ namespace FDSSYSTEM.Controllers
         }
 
 
+        [HttpPut("UpdateStatus/{registerReceiverId}")]
+        [Authorize(Roles = "Staff,Admin")]
+        public async Task<IActionResult> UpdateStatus(string registerReceiverId, [FromBody] string status)
+        {
+            try
+            {
+                var registerReceiver = await _registerReceiverService.GetById(registerReceiverId);
+                if (registerReceiver == null)
+                    return NotFound(new { message = "RegisterReceiver không tồn tại." });
+
+                registerReceiver.Status = status;
+                registerReceiver.DateUpdated = DateTime.Now;
+
+                await _registerReceiverService.Update(registerReceiver.Id, registerReceiver.Adapt<RegisterReceiverDto>());
+                return Ok(new { message = "Cập nhật trạng thái thành công." });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
 
     }
 }

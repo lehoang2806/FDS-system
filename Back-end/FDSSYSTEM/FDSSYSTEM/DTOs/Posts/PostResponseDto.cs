@@ -16,6 +16,7 @@
 
         public List<PostLikeResponseDto> Likes { get; set; }
         public List<PostCommentResponseDto> Comments { get; set; }
+        public List<string> Hashtags { get; set; } = new List<string>();
     }
 
     public class PostLikeResponseDto

@@ -14,6 +14,7 @@ public class PostDetailDto
     public string PosterRole { get; set; }
     public string PosterApproverId { get; set; }
     public string PosterApproverName { get; set; }
+    public List<string> Hashtags { get; set; } = new List<string>();
 
     public IEnumerable<PostLikeDetailDto> Likes { get; set; }
     public IEnumerable<PostCommentDetailDto> Comments { get; set; }

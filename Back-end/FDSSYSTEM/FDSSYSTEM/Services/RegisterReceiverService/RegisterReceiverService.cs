@@ -107,8 +107,11 @@ namespace FDSSYSTEM.Services.RegisterReceiverService
                 RegisterReceiverId = Guid.NewGuid().ToString(),
                 CampaignId = registerReceiver.CampaignId,
                 CreatedDate = DateTime.Now,
-                OTP = otp
+                OTP = otp,
+                Code = otp,  // gán Code giống OTP
+                Status = "Pending"     // trạng thái mặc định
             };
+
             await _registerReceiverRepository.AddAsync(newRegisterReceiver);
 
             

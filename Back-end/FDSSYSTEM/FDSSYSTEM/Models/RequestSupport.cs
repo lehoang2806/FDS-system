@@ -53,5 +53,6 @@ namespace FDSSYSTEM.Models
         public string FullName { get; set; } // Tên nhà tài trợ
         public DateTime CreatedDate { get; set; } // Ngày gửi yêu cầu
         public string Status { get; set; } // Trạng thái: "Participating", "NotParticipating", "Pending"
+        public string Email { get; set; }
     }
 }

@@ -159,7 +159,8 @@ namespace FDSSYSTEM.Services.RequestSupportService
                     DonorId = d.DonorId,
                     FullName = d.FullName,
                     CreatedDate = d.CreatedDate,
-                    Status = d.Status
+                    Status = d.Status,
+                    Email = d.Email,
                 }).ToList() ?? new List<SupportDonorDto>();
 
                 rs.Add(cpDto);
@@ -196,7 +197,8 @@ namespace FDSSYSTEM.Services.RequestSupportService
                 DonorId = d.DonorId,
                 FullName = d.FullName,
                 CreatedDate = d.CreatedDate,
-                Status = d.Status
+                Status = d.Status,
+                Email = d.Email,
             }).ToList() ?? new List<SupportDonorDto>();
 
             return requestDto;

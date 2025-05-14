@@ -38,5 +38,6 @@
         public string FullName { get; set; }
         public DateTime CreatedDate { get; set; }
         public string Status { get; set; } // Trạng thái: "Participating", "NotParticipating", "Pending"
+        public string Email { get;set; }
     }
 }

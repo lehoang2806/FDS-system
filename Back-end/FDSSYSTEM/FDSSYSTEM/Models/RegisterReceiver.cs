@@ -19,5 +19,8 @@ namespace FDSSYSTEM.Models
         public DateTime CreatedDate { get; set; }
         public bool IsReceived { get; set; } = false; // false là user chưa nhận, true là nhận rồi
         public string OTP { get; set; }
+
+        public string Code { get; set; }
+        public string Status { get; set; } // ví dụ: "Pending", "Approved", "Rejected"
     }
 }

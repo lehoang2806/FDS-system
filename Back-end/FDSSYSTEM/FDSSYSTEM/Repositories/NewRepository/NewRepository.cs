@@ -13,10 +13,12 @@ namespace FDSSYSTEM.Repositories.NewRepository
             _dbContext = dbContext;
         }
 
-        public Task DeleteAsync(FilterDefinition<New> filter)
+        public async Task DeleteAsync(FilterDefinition<New> filter)
         {
-            throw new NotImplementedException();
+            await _collection.DeleteOneAsync(filter);
         }
+
+
 
         public async Task<New> GetByIdAsync(string id)
         {
