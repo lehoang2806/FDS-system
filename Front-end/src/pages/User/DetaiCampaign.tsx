@@ -6,6 +6,7 @@ import { useAppDispatch, useAppSelector } from "@/app/store";
 import { RegisterPersonIcon } from "@/assets/icons";
 import { Subscriber } from "@/components/Elements/index";
 import {
+    ListRegisterReceiverModal,
     RegisterReceiverModal,
     RemindCertificateModal,
     UpdateCampaignModal,
@@ -34,6 +35,9 @@ const UserDetailCampaignPage: React.FC = () => {
         useState(false);
 
     const [isUpdateCampaignModalOpend, setIsUpdateCampaignModalOpend] =
+        useState(false);
+    
+    const [isListRegisterReceiverModalOpend, setIsListRegisterReceiverModalOpend] =
         useState(false);
 
     const registerReceivers = useAppSelector(selectGetAllRegisterReceivers);
@@ -180,17 +184,17 @@ const UserDetailCampaignPage: React.FC = () => {
                             </div>
                         </div>
                         <div className="udcscr1c2">
-                            {currentCampaign?.status === "Pending" ||
-                                (currentCampaign?.status === "Approved" && (
-                                    <button
-                                        className="pr-btn"
-                                        onClick={() =>
-                                            setIsUpdateCampaignModalOpend(true)
-                                        }
-                                    >
-                                        Cập nhật
-                                    </button>
-                                ))}
+                            {(currentCampaign?.status === "Pending" ||
+                                currentCampaign?.status === "Approved") && (
+                                <button
+                                    className="pr-btn"
+                                    onClick={() =>
+                                        setIsUpdateCampaignModalOpend(true)
+                                    }
+                                >
+                                    Cập nhật
+                                </button>
+                            )}
                             {currentCampaign?.status === "Approved" && (
                                 <button
                                     className="sc-btn"
@@ -236,6 +240,9 @@ const UserDetailCampaignPage: React.FC = () => {
                             {currentCampaign?.status === "Approved" && (
                                 <div className="udcscr1c2r2">
                                     <h3>Danh sách dăng ký nhận hỗ trợ</h3>
+                                    {currentRegisterReceivers.length > 0 && (
+                                        <p className="view-list" onClick={() => setIsListRegisterReceiverModalOpend(true)}>Xem danh sách</p>
+                                    )}
                                     <div className="udcscr1c2r2-lists">
                                         {currentRegisterReceivers.length > 0 ? (
                                             currentRegisterReceivers.map(
@@ -301,6 +308,11 @@ const UserDetailCampaignPage: React.FC = () => {
                 isOpen={isUpdateCampaignModalOpend}
                 setIsOpen={setIsUpdateCampaignModalOpend}
                 selectedCampaign={currentCampaign}
+            />
+            <ListRegisterReceiverModal
+                isOpen={isListRegisterReceiverModalOpend}
+                setIsOpen={setIsListRegisterReceiverModalOpend}
+                registeredReceiver={currentRegisterReceivers}
             />
         </main>
     );

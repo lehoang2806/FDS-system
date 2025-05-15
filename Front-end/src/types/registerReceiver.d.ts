@@ -16,6 +16,8 @@ interface RegisterReceiver {
     creatAt: string;
     campaignId: string;
     registerReceiverName: string;
+    code: string;
+    status: string;
 }
 
 interface RegisterReceiverState {
