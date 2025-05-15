@@ -4,6 +4,7 @@ import ChatBox from "./ChatBox";
 import { useAppSelector } from "@/app/store";
 import { selectUserLogin } from "@/app/selector";
 import UserList from "./UserList";
+import { ChatIconBox } from "@/assets/icons";
 
 interface User {
     userId: string;
@@ -18,7 +19,7 @@ const ChatIcon = () => {
     return (
         <>
             <div className="chat-icon" onClick={() => setIsOpen(true)}>
-                <ChatIcon />
+                <ChatIconBox className="chat-icon-icon"/>
             </div>
             <Modal isOpen={isOpen} setIsOpen={setIsOpen}>
                 <div className="chat-modal">
@@ -33,7 +34,7 @@ const ChatIcon = () => {
                                 currentUserId={String(userLogin?.accountId)}
                             />
                         ) : (
-                            <p>Chọn người dùng để bắt đầu trò chuyện.</p>
+                            <p className="chat-modal-right-empty">Chọn tài khoản để bắt đầu trò chuyện.</p>
                         )}
                     </div>
                 </div>
