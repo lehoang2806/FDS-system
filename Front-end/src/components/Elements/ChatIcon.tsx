@@ -17,7 +17,9 @@ const ChatIcon = () => {
 
     return (
         <>
-            <div className="chat-icon" onClick={() => setIsOpen(true)}></div>
+            <div className="chat-icon" onClick={() => setIsOpen(true)}>
+                <ChatIcon />
+            </div>
             <Modal isOpen={isOpen} setIsOpen={setIsOpen}>
                 <div className="chat-modal">
                     <div className="chat-modal-left"> 
