@@ -101,9 +101,6 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
             "pendingToastMessage",
             correctedNotification.content
         );
-
-        // 👉 Reload trang
-        window.location.reload();
     };
 
     useEffect(() => {
@@ -592,7 +589,7 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
                                                                 );
                                                             }
                                                         }
-                                                        break;
+                                                        return null;
                                                     case "Campain":
                                                         if (
                                                             notificationTab ===
@@ -687,7 +684,7 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
                                                                 );
                                                             }
                                                         }
-                                                        break;
+                                                        return null;
 
                                                     case "Post":
                                                         if (
@@ -767,7 +764,7 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
                                                                 );
                                                             }
                                                         }
-                                                        break;
+                                                        return null;
 
                                                     case "New":
                                                         if (
@@ -822,7 +819,7 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
                                                                 </div>
                                                             );
                                                         }
-                                                        break;
+                                                        return null;
 
                                                     case "Personal Donor Certificate":
                                                     case "Organization Donor Certificate":
@@ -927,7 +924,7 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
                                                                 );
                                                             }
                                                         }
-                                                        break;
+                                                        return null;
 
                                                     default:
                                                         return null;
@@ -943,7 +940,9 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
                                     </div>
                                 )}
                             </div>
-                            <p className="name">Hello {userLogin?.fullName}</p>
+                            <p className="name">
+                                Hello {userLogin?.fullName || "Người dùng"}
+                            </p>
                             <MenuIcon
                                 width={30}
                                 height={30}

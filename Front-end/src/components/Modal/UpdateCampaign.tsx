@@ -118,6 +118,8 @@ const UpdateCampaignModal: FC<UpdateCampaignModalProps> = ({ isOpen, setIsOpen, 
     };
 
     const onSubmit = async (values: UpdateCampaign, helpers: FormikHelpers<UpdateCampaign>) => {
+        console.log(values)
+        
         try {
             await dispatch(updateCampaignApiThunk({ params: values, campaignId: String(selectedCampaign?.campaignId) })).unwrap();
             toast.success("Cập nhật chiến dịch thành công");
