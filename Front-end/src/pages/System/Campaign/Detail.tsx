@@ -104,6 +104,9 @@ const DetailCampaignPage: React.FC = () => {
         (sum, r) => sum + (parseInt(r.quantity) || 0),
         0
     );
+console.log(currentCampaign?.limitedQuantity)
+    // console.log(totalQuantityByCurrentUser)
+    // console.log(totalRegisteredQuantity)
 
     // Formatted date/time
     const formattedDate = currentCampaign?.implementationTime
@@ -503,15 +506,7 @@ const DetailCampaignPage: React.FC = () => {
                                 <div>
                                     <h4>Số lượng còn lại</h4>
                                     <p>
-                                        {!isNaN(
-                                            Number(
-                                                currentCampaign?.limitedQuantity
-                                            ) - totalRegisteredQuantity
-                                        )
-                                            ? Number(
-                                                  currentCampaign?.limitedQuantity
-                                              ) - totalRegisteredQuantity
-                                            : "N/A"}
+                                        {Number(currentCampaign?.limitedQuantity) - totalRegisteredQuantity}
                                     </p>
                                 </div>
                                 <div>

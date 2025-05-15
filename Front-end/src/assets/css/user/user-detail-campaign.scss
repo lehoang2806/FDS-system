@@ -121,6 +121,19 @@
                         box-shadow: 0px 1px 16px 0px rgba(0, 0, 0, 0.15);
                         background: #fff;
 
+                        .view-list {
+                            font-size: 14px;
+                            font-weight: 600;
+                            color: #ff9d2e;
+                            margin-bottom: 20px;
+                            cursor: pointer;
+
+                            &:hover {
+                                color: #dd4d02;
+                                text-decoration: underline;
+                            }
+                        }
+
                         .udcscr1c2r2-lists {
                             max-height: 500px;
                             overflow-y: scroll;
@@ -134,7 +147,7 @@
                             font-size: 17px;
                             font-weight: 700;
                             color: #460d02;
-                            margin-bottom: 20px;
+                            margin-bottom: 10px;
                         }
 
                         .have-no-register {

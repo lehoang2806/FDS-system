@@ -84,3 +84,7 @@ interface RequestDonorModalProps extends ModalCommonProps {
 }
 
 interface RemindLoginModalProps extends ModalCommonProps {}
+
+interface ListRegisterReceiverModalProps extends ModalCommonProps {
+    registeredReceiver?: RegisterReceiver[] | null;
+}
