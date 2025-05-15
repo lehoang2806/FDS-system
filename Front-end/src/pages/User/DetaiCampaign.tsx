@@ -1,14 +1,22 @@
-import { selectCurrentCampaign, selectGetAllRegisterReceivers } from '@/app/selector';
-import { useAppDispatch, useAppSelector } from '@/app/store';
-import { Subscriber } from '@/components/Elements/index'
-import { RegisterReceiverModal, RemindCertificateModal, UpdateCampaignModal } from '@/components/Modal';
-import { navigateHook } from '@/routes/RouteApp';
-import { routes } from '@/routes/routeName';
-import { setLoading } from '@/services/app/appSlice';
-import { getCampaignByIdApiThunk } from '@/services/campaign/campaignThunk';
-import { getAllRegisterReceiversApiThunk } from '@/services/registerReceive/registerReceiveThunk';
-import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom';
+import {
+    selectCurrentCampaign,
+    selectGetAllRegisterReceivers,
+} from "@/app/selector";
+import { useAppDispatch, useAppSelector } from "@/app/store";
+import { RegisterPersonIcon } from "@/assets/icons";
+import { Subscriber } from "@/components/Elements/index";
+import {
+    RegisterReceiverModal,
+    RemindCertificateModal,
+    UpdateCampaignModal,
+} from "@/components/Modal";
+import { navigateHook } from "@/routes/RouteApp";
+import { routes } from "@/routes/routeName";
+import { setLoading } from "@/services/app/appSlice";
+import { getCampaignByIdApiThunk } from "@/services/campaign/campaignThunk";
+import { getAllRegisterReceiversApiThunk } from "@/services/registerReceive/registerReceiveThunk";
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 
 const UserDetailCampaignPage: React.FC = () => {
     const [activeTab, setActiveTab] = useState<"mota" | "dangky">("mota");
@@ -19,24 +27,38 @@ const UserDetailCampaignPage: React.FC = () => {
 
     const currentCampaign = useAppSelector(selectCurrentCampaign);
 
-    const [isRemindCertificateModalOpend, setIsRemindCertificateModalOpend] = useState(false);
+    const [isRemindCertificateModalOpend, setIsRemindCertificateModalOpend] =
+        useState(false);
 
-    const [isRegisterReceiverModalOpend, setIsRegisterReceiverModalOpend] = useState(false);
+    const [isRegisterReceiverModalOpend, setIsRegisterReceiverModalOpend] =
+        useState(false);
 
-    const [isUpdateCampaignModalOpend, setIsUpdateCampaignModalOpend] = useState(false);
+    const [isUpdateCampaignModalOpend, setIsUpdateCampaignModalOpend] =
+        useState(false);
 
     const registerReceivers = useAppSelector(selectGetAllRegisterReceivers);
 
-    const currentRegisterReceivers = registerReceivers.filter((registerReceiver) => registerReceiver.campaignId === id);
+    const currentRegisterReceivers = registerReceivers.filter(
+        (registerReceiver) => registerReceiver.campaignId === id
+    );
 
-    const [selectedImage, setSelectedImage] = useState(currentCampaign?.images?.[0] || "")
+    const totalRegisteredQuantity = currentRegisterReceivers.reduce(
+        (sum, r) => sum + (parseInt(r.quantity) || 0),
+        0
+    );
+
+    const [selectedImage, setSelectedImage] = useState(
+        currentCampaign?.images?.[0] || ""
+    );
 
     // Formatted date/time
     const formattedDate = currentCampaign?.implementationTime
         ? (() => {
-            const [year, month, day] = currentCampaign.implementationTime.split("T")[0].split("-");
-            return `${day}-${month}-${year}`;
-        })()
+              const [year, month, day] = currentCampaign.implementationTime
+                  .split("T")[0]
+                  .split("-");
+              return `${day}-${month}-${year}`;
+          })()
         : "";
 
     const formattedTime = currentCampaign?.implementationTime
@@ -49,17 +71,17 @@ const UserDetailCampaignPage: React.FC = () => {
     useEffect(() => {
         if (id) {
             dispatch(setLoading(true));
-            dispatch(getAllRegisterReceiversApiThunk())
+            dispatch(getAllRegisterReceiversApiThunk());
             dispatch(getCampaignByIdApiThunk(id))
                 .unwrap()
-                .catch(() => {
-                }).finally(() => {
+                .catch(() => {})
+                .finally(() => {
                     setTimeout(() => {
                         dispatch(setLoading(false));
-                    }, 1000)
+                    }, 1000);
                 });
         }
-    }, [id, dispatch])
+    }, [id, dispatch]);
 
     useEffect(() => {
         if (currentCampaign?.images && currentCampaign.images.length > 0) {
@@ -73,19 +95,21 @@ const UserDetailCampaignPage: React.FC = () => {
                 <div className="udcs-container">
                     <div className="udcscr1">
                         <div className="udcscr1c1">
-                            {selectedImage && (
-                                <img
-                                    src={selectedImage}
-                                    alt="Selected Campaign Image"
-                                    style={{
-                                        width: "600px",
-                                        height: "600px",
-                                        objectFit: "cover",
-                                        borderRadius: "10px",
-                                        marginBottom: "10px"
-                                    }}
-                                />
-                            )}
+                            <div className="udcscr1c1r4">
+                                {selectedImage && (
+                                    <img
+                                        src={selectedImage}
+                                        alt="Selected Campaign Image"
+                                        style={{
+                                            width: "770px",
+                                            height: "550px",
+                                            objectFit: "cover",
+                                            borderRadius: "10px",
+                                            marginBottom: "10px",
+                                        }}
+                                    />
+                                )}
+                            </div>
                             <div className="udcscr1c1r4">
                                 {currentCampaign?.images?.map((img, index) => (
                                     <img
@@ -94,56 +118,119 @@ const UserDetailCampaignPage: React.FC = () => {
                                         alt={`Campaign Image ${index + 1}`}
                                         onClick={() => setSelectedImage(img)}
                                         style={{
-                                            width: "100px",
-                                            height: "100px",
+                                            width: "178px",
+                                            height: "178px",
                                             margin: "5px",
                                             objectFit: "cover",
                                             cursor: "pointer",
                                             borderRadius: "5px",
-                                            border: selectedImage === img ? "3px solid blue" : "2px solid gray",
-                                            transition: "0.3s"
+                                            border:
+                                                selectedImage === img
+                                                    ? "3px solid blue"
+                                                    : "2px solid gray",
+                                            transition: "0.3s",
                                         }}
                                     />
                                 ))}
                             </div>
                             <div className="udcscr1c1r1">
-                                <h1>{currentCampaign?.campaignName} -
-                                    <span>
-                                        {currentCampaign?.status === "Pending" ? (
-                                            <span className='status-pending'>Đang chờ phê duyệt</span>
-                                        ) : currentCampaign?.status === "Approved" ? (
-                                            <span className='status-approve'>Đã được phê duyệt</span>
-                                        ) : currentCampaign?.status === "Rejected" ? (
-                                            <span className='status-reject'>Đã bị từ chối</span>
-                                        ) : currentCampaign?.status === "Canceled" ? (
-                                            <span className='status-reject'>Đã huỷ</span>
-                                        ) : null}
-                                    </span>
+                                <h1>
+                                    {currentCampaign?.campaignName} -
+                                    {currentCampaign?.status === "Pending" ? (
+                                        <span className="status-pending">
+                                            Đang chờ phê duyệt
+                                        </span>
+                                    ) : currentCampaign?.status ===
+                                      "Approved" ? (
+                                        <span className="status-approve">
+                                            Đã được phê duyệt
+                                        </span>
+                                    ) : currentCampaign?.status ===
+                                      "Rejected" ? (
+                                        <span className="status-reject">
+                                            Đã bị từ chối
+                                        </span>
+                                    ) : currentCampaign?.status ===
+                                      "Canceled" ? (
+                                        <span className="status-reject">
+                                            Đã huỷ
+                                        </span>
+                                    ) : null}
                                 </h1>
                             </div>
                             <div className="udcscr1c1r3">
                                 <div
-                                    className={`udcscr1c1r3-tags-item ${activeTab === "mota" ? "udcscr1c1r3-tags-item-actived" : ""}`}
+                                    className={`udcscr1c1r3-tags-item ${
+                                        activeTab === "mota"
+                                            ? "udcscr1c1r3-tags-item-actived"
+                                            : ""
+                                    }`}
                                     onClick={() => setActiveTab("mota")}
                                 >
                                     Mô tả
                                 </div>
                             </div>
                             <div className="udcscr1c1r4">
-                                <div className="udcscr1c1r4-content" style={{ whiteSpace: "pre-line" }}>{currentCampaign?.campaignDescription}</div>
+                                <div
+                                    className="udcscr1c1r4-content"
+                                    style={{ whiteSpace: "pre-line" }}
+                                >
+                                    {currentCampaign?.campaignDescription}
+                                </div>
                             </div>
                         </div>
                         <div className="udcscr1c2">
-                            <button className='pr-btn' onClick={() => setIsUpdateCampaignModalOpend(true)}>Cập nhật</button>
-                            <button className='sc-btn' onClick={() => navigateHook(routes.user.campaign.detail.replace(":id", String(id)))}>Đi đến bài đăng</button>
+                            {currentCampaign?.status === "Pending" ||
+                                (currentCampaign?.status === "Approved" && (
+                                    <button
+                                        className="pr-btn"
+                                        onClick={() =>
+                                            setIsUpdateCampaignModalOpend(true)
+                                        }
+                                    >
+                                        Cập nhật
+                                    </button>
+                                ))}
+                            {currentCampaign?.status === "Approved" && (
+                                <button
+                                    className="sc-btn"
+                                    onClick={() =>
+                                        navigateHook(
+                                            routes.user.campaign.detail.replace(
+                                                ":id",
+                                                String(id)
+                                            )
+                                        )
+                                    }
+                                >
+                                    Đi đến bài đăng
+                                </button>
+                            )}
                             <div className="udcscr1c2r1">
                                 <div>
-                                    <div>
-                                        <h4>Địa điểm</h4>
-                                        <p>{currentCampaign?.location}, {currentCampaign?.district}</p>
-                                        <h4>Thời gian</h4>
-                                        <p>{formattedDate} - {formattedTime}</p>
-                                    </div>
+                                    <h4>Số lượng còn lại</h4>
+                                    <p>
+                                        {!isNaN(
+                                            Number(
+                                                currentCampaign?.limitedQuantity
+                                            ) - totalRegisteredQuantity
+                                        )
+                                            ? Number(
+                                                  currentCampaign?.limitedQuantity
+                                              ) - totalRegisteredQuantity
+                                            : "N/A"}
+                                    </p>
+                                </div>
+                                <div>
+                                    <h4>Địa điểm phát quà</h4>
+                                    <p>
+                                        {currentCampaign?.location},{" "}
+                                        {currentCampaign?.district}
+                                    </p>
+                                    <h4>Thời gian diễn ra</h4>
+                                    <p>
+                                        {formattedDate} - {formattedTime}
+                                    </p>
                                 </div>
                             </div>
                             {currentCampaign?.status === "Approved" && (
@@ -151,13 +238,24 @@ const UserDetailCampaignPage: React.FC = () => {
                                     <h3>Danh sách dăng ký nhận hỗ trợ</h3>
                                     <div className="udcscr1c2r2-lists">
                                         {currentRegisterReceivers.length > 0 ? (
-                                            currentRegisterReceivers.map((registerReceiver) => (
-                                                <Subscriber key={registerReceiver.registerReceiverId} registerReceiver={registerReceiver} />
-                                            ))
+                                            currentRegisterReceivers.map(
+                                                (registerReceiver) => (
+                                                    <Subscriber
+                                                        key={
+                                                            registerReceiver.registerReceiverId
+                                                        }
+                                                        registerReceiver={
+                                                            registerReceiver
+                                                        }
+                                                    />
+                                                )
+                                            )
                                         ) : (
-                                            <h1>Chưa có người đăng ký</h1>
-                                        )
-                                        }
+                                            <div className="have-no-register">
+                                                <RegisterPersonIcon className="hnr-icon" />
+                                                <h1>Chưa có người đăng ký</h1>
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                             )}
@@ -165,9 +263,18 @@ const UserDetailCampaignPage: React.FC = () => {
                                 <>
                                     <div className="sdcucr2r5">
                                         <h3>Cần bổ sung các thông tin sau:</h3>
-                                        {currentCampaign.reviewComments?.map((comment, index) => (
-                                            <p key={index} style={{ whiteSpace: "pre-line" }}>{comment.content}</p>
-                                        ))}
+                                        {currentCampaign.reviewComments?.map(
+                                            (comment, index) => (
+                                                <p
+                                                    key={index}
+                                                    style={{
+                                                        whiteSpace: "pre-line",
+                                                    }}
+                                                >
+                                                    {comment.content}
+                                                </p>
+                                            )
+                                        )}
                                     </div>
                                 </>
                             )}
@@ -181,11 +288,22 @@ const UserDetailCampaignPage: React.FC = () => {
                     </div>
                 </div>
             </section>
-            <RemindCertificateModal isOpen={isRemindCertificateModalOpend} setIsOpen={setIsRemindCertificateModalOpend} />
-            <RegisterReceiverModal isOpen={isRegisterReceiverModalOpend} setIsOpen={setIsRegisterReceiverModalOpend} campaign={currentCampaign} />
-            <UpdateCampaignModal isOpen={isUpdateCampaignModalOpend} setIsOpen={setIsUpdateCampaignModalOpend} selectedCampaign={currentCampaign} />
+            <RemindCertificateModal
+                isOpen={isRemindCertificateModalOpend}
+                setIsOpen={setIsRemindCertificateModalOpend}
+            />
+            <RegisterReceiverModal
+                isOpen={isRegisterReceiverModalOpend}
+                setIsOpen={setIsRegisterReceiverModalOpend}
+                campaign={currentCampaign}
+            />
+            <UpdateCampaignModal
+                isOpen={isUpdateCampaignModalOpend}
+                setIsOpen={setIsUpdateCampaignModalOpend}
+                selectedCampaign={currentCampaign}
+            />
         </main>
-    )
-}
+    );
+};
 
-export default UserDetailCampaignPage
+export default UserDetailCampaignPage;

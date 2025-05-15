@@ -1,5 +1,6 @@
 import { selectGetNewsById } from "@/app/selector";
 import { useAppDispatch, useAppSelector } from "@/app/store";
+import { PostContent } from "@/components/Elements";
 import { setLoading } from "@/services/app/appSlice";
 import { getNewsByIdApiThunk } from "@/services/news/newsThunk";
 import { useEffect } from "react";
@@ -42,7 +43,9 @@ const DetailNewsPage = () => {
                     <div className="dnscr3">
                         <div className="dnscr3r2">
                             <h4>Chi tiết tin tức</h4>
-                            <p style={{ whiteSpace: "pre-line" }}>{currentNews?.newsDescripttion}</p>
+                            <PostContent
+                                content={String(currentNews?.newsDescripttion)}
+                            />
                             <h4>Đối tượng hỗ trợ</h4>
                             <p>{currentNews?.supportBeneficiaries}</p>
                         </div>

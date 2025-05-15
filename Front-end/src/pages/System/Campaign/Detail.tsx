@@ -1,29 +1,50 @@
-import { selectCurrentCampaign, selectGetAllCampaign, selectGetAllFeedbackCampaign, selectGetAllRegisterReceivers, selectUserLogin } from '@/app/selector';
-import { useAppDispatch, useAppSelector } from '@/app/store';
-import { AvatarIcon, CameraIcon, MailIcon, RegisterPersonIcon, SendIcon } from '@/assets/icons';
-import { CampaignCard } from '@/components/Card/index';
-import { FeedbackCampaign, Subscriber } from '@/components/Elements/index'
-import { RegisterReceiverModal, RemindCertificateModal } from '@/components/Modal';
-import { navigateHook } from '@/routes/RouteApp';
-import { routes } from '@/routes/routeName';
-import { setLoading } from '@/services/app/appSlice';
-import { getAllCampaignApiThunk, getCampaignByIdApiThunk } from '@/services/campaign/campaignThunk';
-import { getAllRegisterReceiversApiThunk } from '@/services/registerReceive/registerReceiveThunk';
-import { Field, Formik, FormikHelpers } from 'formik';
-import React, { useEffect, useRef, useState } from 'react'
-import { Form, Link, useParams } from 'react-router-dom';
+import {
+    selectCurrentCampaign,
+    selectGetAllCampaign,
+    selectGetAllFeedbackCampaign,
+    selectGetAllRegisterReceivers,
+    selectUserLogin,
+} from "@/app/selector";
+import { useAppDispatch, useAppSelector } from "@/app/store";
+import {
+    AvatarIcon,
+    CameraIcon,
+    MailIcon,
+    RegisterPersonIcon,
+    SendIcon,
+} from "@/assets/icons";
+import { CampaignCard } from "@/components/Card/index";
+import { FeedbackCampaign, Subscriber } from "@/components/Elements/index";
+import {
+    RegisterReceiverModal,
+    RemindCertificateModal,
+} from "@/components/Modal";
+import { navigateHook } from "@/routes/RouteApp";
+import { routes } from "@/routes/routeName";
+import { setLoading } from "@/services/app/appSlice";
+import {
+    getAllCampaignApiThunk,
+    getCampaignByIdApiThunk,
+} from "@/services/campaign/campaignThunk";
+import { getAllRegisterReceiversApiThunk } from "@/services/registerReceive/registerReceiveThunk";
+import { Field, Formik, FormikHelpers } from "formik";
+import React, { useEffect, useRef, useState } from "react";
+import { Form, Link, useParams } from "react-router-dom";
 import * as Yup from "yup";
-import { createFeedbackCampaignApiThunk, getFeedbackCampaignApiThunk } from '@/services/campaign/feedback/feedbackCampaignThunk';
-import { toast } from 'react-toastify';
-import Lightbox from 'react-awesome-lightbox';
-import dayjs from 'dayjs';
-import relativeTime from 'dayjs/plugin/relativeTime';
-import 'dayjs/locale/vi';
-import { UserProfile } from '@/types/auth';
-import { CampaignInfo, CreateFeedbackCampaign } from '@/types/campaign';
+import {
+    createFeedbackCampaignApiThunk,
+    getFeedbackCampaignApiThunk,
+} from "@/services/campaign/feedback/feedbackCampaignThunk";
+import { toast } from "react-toastify";
+import Lightbox from "react-awesome-lightbox";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+import "dayjs/locale/vi";
+import { UserProfile } from "@/types/auth";
+import { CampaignInfo, CreateFeedbackCampaign } from "@/types/campaign";
 import classNames from "classnames";
 
-dayjs.locale('vi');
+dayjs.locale("vi");
 dayjs.extend(relativeTime);
 
 const DetailCampaignPage: React.FC = () => {
@@ -38,13 +59,19 @@ const DetailCampaignPage: React.FC = () => {
     const campaigns = useAppSelector(selectGetAllCampaign);
     const currentCampaign = useAppSelector(selectCurrentCampaign);
     const registerReceivers = useAppSelector(selectGetAllRegisterReceivers);
-    const currentFeedbackCampaign = useAppSelector(selectGetAllFeedbackCampaign);
+    const currentFeedbackCampaign = useAppSelector(
+        selectGetAllFeedbackCampaign
+    );
 
     // States
     const [activeTab, setActiveTab] = useState<"mota" | "dangky">("mota");
-    const [selectedImage, setSelectedImage] = useState(currentCampaign?.images?.[0] || "");
-    const [isRemindCertificateModalOpend, setIsRemindCertificateModalOpend] = useState(false);
-    const [isRegisterReceiverModalOpend, setIsRegisterReceiverModalOpend] = useState(false);
+    const [selectedImage, setSelectedImage] = useState(
+        currentCampaign?.images?.[0] || ""
+    );
+    const [isRemindCertificateModalOpend, setIsRemindCertificateModalOpend] =
+        useState(false);
+    const [isRegisterReceiverModalOpend, setIsRegisterReceiverModalOpend] =
+        useState(false);
     const [previewImages, setPreviewImages] = useState<string[]>([]);
     const [isLightboxOpen, setIsLightboxOpen] = useState(false);
     const [photoIndex, setPhotoIndex] = useState<number | null>(null);
@@ -54,13 +81,24 @@ const DetailCampaignPage: React.FC = () => {
 
     // Campaign logic
     const sortedCampaigns = [...campaigns].reverse();
-    const approvedCampaigns = sortedCampaigns.filter(c => c.status === "Approved");
-    const otherCampaigns = approvedCampaigns.filter(c => c.campaignId !== id).slice(0, 3) as CampaignInfo[];
+    const approvedCampaigns = sortedCampaigns.filter(
+        (c) => c.status === "Approved"
+    );
+    const otherCampaigns = approvedCampaigns
+        .filter((c) => c.campaignId !== id)
+        .slice(0, 3) as CampaignInfo[];
 
-    const currentRegisterReceivers = registerReceivers.filter(r => r.campaignId === id);
-    const registeredReceiver = currentRegisterReceivers.filter(r => r.accountId === userLogin?.accountId);
+    const currentRegisterReceivers = registerReceivers.filter(
+        (r) => r.campaignId === id
+    );
+    const registeredReceiver = currentRegisterReceivers.filter(
+        (r) => r.accountId === userLogin?.accountId
+    );
 
-    const totalQuantityByCurrentUser = registeredReceiver.reduce((sum, r) => sum + (parseInt(r.quantity) || 0), 0);
+    const totalQuantityByCurrentUser = registeredReceiver.reduce(
+        (sum, r) => sum + (parseInt(r.quantity) || 0),
+        0
+    );
 
     const totalRegisteredQuantity = currentRegisterReceivers.reduce(
         (sum, r) => sum + (parseInt(r.quantity) || 0),
@@ -70,9 +108,11 @@ const DetailCampaignPage: React.FC = () => {
     // Formatted date/time
     const formattedDate = currentCampaign?.implementationTime
         ? (() => {
-            const [year, month, day] = currentCampaign.implementationTime.split("T")[0].split("-");
-            return `${day}-${month}-${year}`;
-        })()
+              const [year, month, day] = currentCampaign.implementationTime
+                  .split("T")[0]
+                  .split("-");
+              return `${day}-${month}-${year}`;
+          })()
         : "";
 
     const formattedTime = currentCampaign?.implementationTime
@@ -84,14 +124,16 @@ const DetailCampaignPage: React.FC = () => {
 
     const currentDate = new Date();
     const today = currentDate;
-    const implementationDate = currentCampaign?.implementationTime ? new Date(currentCampaign.implementationTime) : null;
+    const implementationDate = currentCampaign?.implementationTime
+        ? new Date(currentCampaign.implementationTime)
+        : null;
 
     // Effects
     useEffect(() => {
         dispatch(setLoading(true));
         dispatch(getAllCampaignApiThunk())
             .unwrap()
-            .catch(() => { })
+            .catch(() => {})
             .finally(() => {
                 setTimeout(() => dispatch(setLoading(false)), 1000);
             });
@@ -106,7 +148,7 @@ const DetailCampaignPage: React.FC = () => {
             dispatch(getCampaignByIdApiThunk(id)).unwrap(),
             dispatch(getFeedbackCampaignApiThunk(id)).unwrap(),
         ])
-            .catch((_) => { })
+            .catch((_) => {})
             .finally(() => {
                 setTimeout(() => dispatch(setLoading(false)), 1000);
             });
@@ -165,7 +207,7 @@ const DetailCampaignPage: React.FC = () => {
                     helpers.resetForm();
                 setPreviewImages([]);
             })
-            .catch(() => { })
+            .catch(() => {})
             .finally(() => {
                 setTimeout(() => dispatch(setLoading(false)), 1000);
             });
@@ -177,13 +219,15 @@ const DetailCampaignPage: React.FC = () => {
     ) => {
         const files = event.target.files;
         if (files?.length) {
-            const readers = Array.from(files).map(file =>
-                new Promise<string>((resolve, reject) => {
-                    const reader = new FileReader();
-                    reader.onloadend = () => resolve(reader.result as string);
-                    reader.onerror = reject;
-                    reader.readAsDataURL(file);
-                })
+            const readers = Array.from(files).map(
+                (file) =>
+                    new Promise<string>((resolve, reject) => {
+                        const reader = new FileReader();
+                        reader.onloadend = () =>
+                            resolve(reader.result as string);
+                        reader.onerror = reject;
+                        reader.readAsDataURL(file);
+                    })
             );
 
             Promise.all(readers).then((base64Images) => {
@@ -209,7 +253,7 @@ const DetailCampaignPage: React.FC = () => {
                                             height: "550px",
                                             objectFit: "cover",
                                             borderRadius: "10px",
-                                            marginBottom: "10px"
+                                            marginBottom: "10px",
                                         }}
                                     />
                                 )}
@@ -228,8 +272,11 @@ const DetailCampaignPage: React.FC = () => {
                                             objectFit: "cover",
                                             cursor: "pointer",
                                             borderRadius: "5px",
-                                            border: selectedImage === img ? "3px solid blue" : "2px solid gray",
-                                            transition: "0.3s"
+                                            border:
+                                                selectedImage === img
+                                                    ? "3px solid blue"
+                                                    : "2px solid gray",
+                                            transition: "0.3s",
                                         }}
                                     />
                                 ))}
@@ -239,14 +286,23 @@ const DetailCampaignPage: React.FC = () => {
                             </div>
                             <div className="dcscr1c1r3">
                                 <div
-                                    className={`dcscr1c1r3-tags-item ${activeTab === "mota" ? "dcscr1c1r3-tags-item-actived" : ""}`}
+                                    className={`dcscr1c1r3-tags-item ${
+                                        activeTab === "mota"
+                                            ? "dcscr1c1r3-tags-item-actived"
+                                            : ""
+                                    }`}
                                     onClick={() => setActiveTab("mota")}
                                 >
                                     Mô tả
                                 </div>
                             </div>
                             <div className="dcscr1c1r4">
-                                <div className="dcscr1c1r4-content" style={{ whiteSpace: "pre-line" }}>{currentCampaign?.campaignDescription}</div>
+                                <div
+                                    className="dcscr1c1r4-content"
+                                    style={{ whiteSpace: "pre-line" }}
+                                >
+                                    {currentCampaign?.campaignDescription}
+                                </div>
                             </div>
                             <div className="dcscr1c1r5">
                                 <h3>Nhận xét</h3>
@@ -255,10 +311,7 @@ const DetailCampaignPage: React.FC = () => {
                                     onSubmit={hanldeSendFeedback}
                                     validationSchema={schema}
                                 >
-                                    {({
-                                        handleSubmit,
-                                        setFieldValue,
-                                    }) => (
+                                    {({ handleSubmit, setFieldValue }) => (
                                         <Form onSubmit={handleSubmit}>
                                             <div className="input-feedback-container">
                                                 {/* Hidden file input */}
@@ -267,13 +320,20 @@ const DetailCampaignPage: React.FC = () => {
                                                     accept="image/*"
                                                     ref={fileInputRef}
                                                     multiple
-                                                    style={{ display: 'none' }}
-                                                    onChange={(e) => handleFileChange(e, setFieldValue)}
+                                                    style={{ display: "none" }}
+                                                    onChange={(e) =>
+                                                        handleFileChange(
+                                                            e,
+                                                            setFieldValue
+                                                        )
+                                                    }
                                                 />
 
-
                                                 {/* Camera Icon */}
-                                                <CameraIcon className='camera-icon' onClick={handleCameraClick} />
+                                                <CameraIcon
+                                                    className="camera-icon"
+                                                    onClick={handleCameraClick}
+                                                />
 
                                                 {/* Feedback text input */}
                                                 <Field
@@ -284,71 +344,128 @@ const DetailCampaignPage: React.FC = () => {
                                                 />
 
                                                 {/* Submit */}
-                                                <button className='btn-send-feedback' type='submit'>
-                                                    <SendIcon className='send-icon' />
+                                                <button
+                                                    className="btn-send-feedback"
+                                                    type="submit"
+                                                >
+                                                    <SendIcon className="send-icon" />
                                                 </button>
                                             </div>
 
                                             {/* Preview base64 image */}
-                                            <div className="preview-images-container" style={{ marginTop: "20px", display: "flex", gap: "10px", flexWrap: "wrap" }}>
-                                                {previewImages.map((img, idx) => (
-                                                    <div key={idx} style={{ position: "relative" }}>
-                                                        <button
-                                                            type="button"
-                                                            onClick={() => {
-                                                                const newImages = previewImages.filter((_, i) => i !== idx);
-                                                                setPreviewImages(newImages);
-                                                                setFieldValue("images", newImages);
-                                                            }}
+                                            <div
+                                                className="preview-images-container"
+                                                style={{
+                                                    marginTop: "20px",
+                                                    display: "flex",
+                                                    gap: "10px",
+                                                    flexWrap: "wrap",
+                                                }}
+                                            >
+                                                {previewImages.map(
+                                                    (img, idx) => (
+                                                        <div
+                                                            key={idx}
                                                             style={{
-                                                                position: "absolute",
-                                                                top: "-8px",
-                                                                right: "-8px",
-                                                                background: "red",
-                                                                color: "white",
-                                                                border: "none",
-                                                                borderRadius: "50%",
-                                                                width: "20px",
-                                                                height: "20px",
-                                                                cursor: "pointer",
-                                                                fontSize: "12px",
+                                                                position:
+                                                                    "relative",
                                                             }}
                                                         >
-                                                            X
-                                                        </button>
-                                                        <img
-                                                            src={img}
-                                                            alt={`Preview ${idx}`}
-                                                            onClick={() => openLightbox(idx)}
-                                                            style={{
-                                                                width: "80px",
-                                                                height: "80px",
-                                                                objectFit: "cover",
-                                                                borderRadius: "6px",
-                                                                cursor: "pointer"
-                                                            }}
-                                                        />
-                                                    </div>
-                                                ))}
+                                                            <button
+                                                                type="button"
+                                                                onClick={() => {
+                                                                    const newImages =
+                                                                        previewImages.filter(
+                                                                            (
+                                                                                _,
+                                                                                i
+                                                                            ) =>
+                                                                                i !==
+                                                                                idx
+                                                                        );
+                                                                    setPreviewImages(
+                                                                        newImages
+                                                                    );
+                                                                    setFieldValue(
+                                                                        "images",
+                                                                        newImages
+                                                                    );
+                                                                }}
+                                                                style={{
+                                                                    position:
+                                                                        "absolute",
+                                                                    top: "-8px",
+                                                                    right: "-8px",
+                                                                    background:
+                                                                        "red",
+                                                                    color: "white",
+                                                                    border: "none",
+                                                                    borderRadius:
+                                                                        "50%",
+                                                                    width: "20px",
+                                                                    height: "20px",
+                                                                    cursor: "pointer",
+                                                                    fontSize:
+                                                                        "12px",
+                                                                }}
+                                                            >
+                                                                X
+                                                            </button>
+                                                            <img
+                                                                src={img}
+                                                                alt={`Preview ${idx}`}
+                                                                onClick={() =>
+                                                                    openLightbox(
+                                                                        idx
+                                                                    )
+                                                                }
+                                                                style={{
+                                                                    width: "80px",
+                                                                    height: "80px",
+                                                                    objectFit:
+                                                                        "cover",
+                                                                    borderRadius:
+                                                                        "6px",
+                                                                    cursor: "pointer",
+                                                                }}
+                                                            />
+                                                        </div>
+                                                    )
+                                                )}
                                             </div>
-                                            {isLightboxOpen && photoIndex !== null && (
-                                                <Lightbox
-                                                    images={previewImages.map((src) => ({ url: src }))}
-                                                    startIndex={photoIndex}
-                                                    onClose={() => {
-                                                        setIsLightboxOpen(false);
-                                                        setPhotoIndex(null);
-                                                    }}
-                                                />
-                                            )}
+                                            {isLightboxOpen &&
+                                                photoIndex !== null && (
+                                                    <Lightbox
+                                                        images={previewImages.map(
+                                                            (src) => ({
+                                                                url: src,
+                                                            })
+                                                        )}
+                                                        startIndex={photoIndex}
+                                                        onClose={() => {
+                                                            setIsLightboxOpen(
+                                                                false
+                                                            );
+                                                            setPhotoIndex(null);
+                                                        }}
+                                                    />
+                                                )}
                                         </Form>
                                     )}
                                 </Formik>
                                 {currentFeedbackCampaign?.length > 0 && (
                                     <>
-                                        {currentFeedbackCampaign.map((item, index) => (
-                                            <FeedbackCampaign key={index} feedback={item} user={userLogin as UserProfile} />
-                                        ))}
+                                        {currentFeedbackCampaign.map(
+                                            (item, index) => (
+                                                <FeedbackCampaign
+                                                    key={index}
+                                                    feedback={item}
+                                                    user={
+                                                        userLogin as UserProfile
+                                                    }
+                                                />
+                                            )
+                                        )}
                                     </>
                                 )}
                             </div>
@@ -358,62 +475,110 @@ const DetailCampaignPage: React.FC = () => {
                                 <h3>Thông tin người vận động</h3>
                                 <div className="dcscr1c2r3-info">
                                     <div className="dcscr1c2r3-info-c1">
-                                        <img src={AvatarIcon} className='dcscr1c2r3-info-avatar' />
+                                        <img
+                                            src={AvatarIcon}
+                                            className="dcscr1c2r3-info-avatar"
+                                        />
                                     </div>
                                     <div className="dcscr1c2r3-info-c2">
-                                        <p className="name">{currentCampaign?.fullName}</p>
-                                        <p className="tag">{currentCampaign?.typeAccount === "Organization Donor" ? "Tổ chức" : "Cá nhân"}</p>
+                                        <p className="name">
+                                            {currentCampaign?.fullName}
+                                        </p>
+                                        <p className="tag">
+                                            {currentCampaign?.typeAccount ===
+                                            "Organization Donor"
+                                                ? "Tổ chức"
+                                                : "Cá nhân"}
+                                        </p>
                                     </div>
                                 </div>
                                 <div className="dcscr1c2r3-email">
-                                    <MailIcon className='dcscr1c2r3-icon' /><p className="email">{currentCampaign?.email}</p>
+                                    <MailIcon className="dcscr1c2r3-icon" />
+                                    <p className="email">
+                                        {currentCampaign?.email}
+                                    </p>
                                 </div>
                             </div>
                             <div className="dcscr1c2r1">
                                 <div>
                                     <h4>Số lượng còn lại</h4>
-                                    <p>{!isNaN(Number(currentCampaign?.limitedQuantity) - totalRegisteredQuantity)
-                                        ? Number(currentCampaign?.limitedQuantity) - totalRegisteredQuantity
-                                        : 'N/A'}
+                                    <p>
+                                        {!isNaN(
+                                            Number(
+                                                currentCampaign?.limitedQuantity
+                                            ) - totalRegisteredQuantity
+                                        )
+                                            ? Number(
+                                                  currentCampaign?.limitedQuantity
+                                              ) - totalRegisteredQuantity
+                                            : "N/A"}
                                     </p>
                                 </div>
                                 <div>
                                     <h4>Địa điểm phát quà</h4>
-                                    <p>{currentCampaign?.location}, {currentCampaign?.district}</p>
+                                    <p>
+                                        {currentCampaign?.location},{" "}
+                                        {currentCampaign?.district}
+                                    </p>
                                     <h4>Thời gian diễn ra</h4>
-                                    <p>{formattedDate} - {formattedTime}</p>
+                                    <p>
+                                        {formattedDate} - {formattedTime}
+                                    </p>
                                 </div>
                                 {userLogin?.roleId === 4 && currentCampaign && (
                                     <>
-                                        {
-                                            implementationDate &&
-                                            implementationDate > today && (
-                                                totalRegisteredQuantity >= Number(currentCampaign?.limitedQuantity) ? (
-                                                    <p className="sc-text">Đã đăng ký đủ số lượng</p>
-                                                ) : (
-                                                    <button className={classNames("sc-btn", { "disabled-btn": registeredReceiver && totalQuantityByCurrentUser === 10 })} onClick={handleRegisterReceiver}>
-                                                        Đăng ký nhận hỗ trợ
-                                                    </button>
-                                                )
-                                            )}
+                                        {implementationDate &&
+                                            implementationDate > today &&
+                                            (totalRegisteredQuantity >=
+                                            Number(
+                                                currentCampaign?.limitedQuantity
+                                            ) ? (
+                                                <p className="sc-text">
+                                                    Đã đăng ký đủ số lượng
+                                                </p>
+                                            ) : (
+                                                <button
+                                                    className={classNames(
+                                                        "sc-btn",
+                                                        {
+                                                            "disabled-btn":
+                                                                registeredReceiver &&
+                                                                totalQuantityByCurrentUser ===
+                                                                    10,
+                                                        }
+                                                    )}
+                                                    onClick={
+                                                        handleRegisterReceiver
+                                                    }
+                                                >
+                                                    Đăng ký nhận hỗ trợ
+                                                </button>
+                                            ))}
                                     </>
                                 )}
-
                             </div>
                             <div className="dcscr1c2r2">
                                 <h3>Danh sách dăng ký nhận hỗ trợ</h3>
                                 <div className="dcscr1c2r2-lists">
                                     {currentRegisterReceivers.length > 0 ? (
-                                        currentRegisterReceivers.map((registerReceiver) => (
-                                            <Subscriber key={registerReceiver.registerReceiverId} registerReceiver={registerReceiver} />
-                                        ))
+                                        currentRegisterReceivers.map(
+                                            (registerReceiver) => (
+                                                <Subscriber
+                                                    key={
+                                                        registerReceiver.registerReceiverId
+                                                    }
+                                                    registerReceiver={
+                                                        registerReceiver
+                                                    }
+                                                />
+                                            )
+                                        )
                                     ) : (
                                         <div className="have-no-register">
-                                            <RegisterPersonIcon className='hnr-icon' />
+                                            <RegisterPersonIcon className="hnr-icon" />
                                             <h1>Chưa có người đăng ký</h1>
                                         </div>
-                                    )
-                                    }
+                                    )}
                                 </div>
                             </div>
                         </div>
@@ -422,7 +587,9 @@ const DetailCampaignPage: React.FC = () => {
                     <div className="dcscr2">
                         <div className="dcscr2r1">
                             <h2>Các chiến dịch khác</h2>
-                            <Link to={routes.user.campaign.list}>Xem tất cả</Link>
+                            <Link to={routes.user.campaign.list}>
+                                Xem tất cả
+                            </Link>
                         </div>
                         <div className="dcscr2r2">
                             {otherCampaigns.length > 0 ? (
@@ -430,21 +597,30 @@ const DetailCampaignPage: React.FC = () => {
                                     <CampaignCard
                                         campaign={campaign}
                                         key={campaign.campaignId}
-                                        onClickDetail={() => handleToDetail(campaign.campaignId)}
+                                        onClickDetail={() =>
+                                            handleToDetail(campaign.campaignId)
+                                        }
                                     />
                                 ))
                             ) : (
                                 <h1>Chưa có dữ liệu</h1>
-                            )
-                            }
+                            )}
                         </div>
                     </div>
                 </div>
             </section>
-            <RemindCertificateModal isOpen={isRemindCertificateModalOpend} setIsOpen={setIsRemindCertificateModalOpend} />
-            <RegisterReceiverModal isOpen={isRegisterReceiverModalOpend} setIsOpen={setIsRegisterReceiverModalOpend} campaign={currentCampaign} registeredReceiver={registeredReceiver} />
+            <RemindCertificateModal
+                isOpen={isRemindCertificateModalOpend}
+                setIsOpen={setIsRemindCertificateModalOpend}
+            />
+            <RegisterReceiverModal
+                isOpen={isRegisterReceiverModalOpend}
+                setIsOpen={setIsRegisterReceiverModalOpend}
+                campaign={currentCampaign}
+                registeredReceiver={registeredReceiver}
+            />
         </main>
-    )
-}
+    );
+};
 
-export default DetailCampaignPage
+export default DetailCampaignPage;
