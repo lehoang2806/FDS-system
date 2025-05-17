@@ -78,6 +78,7 @@
 @use "./user/user-detail-certificate.scss";
 @use "./user/user-detail-request-support.scss";
 @use "./user/user-participate-request-support.scss";
+@use "./user/donate-page.scss";
 
 @use "./post/post-forum.scss";
 
@@ -101,6 +102,7 @@
 @use "./staff/certificate/recipient/staff-list-recipient-certificate.scss";
 @use "./staff/certificate/recipient/staff-detail-recipient-certificate.scss";
 @use "./staff/requestSupport/staff-detail-request-support.scss";
+@use "./staff/chat/staff-chat-with-user.scss";
 
 @use "./modal/modal.scss";
 @use "./modal/submit-certificate-modal.scss";
@@ -118,3 +120,4 @@
 @use "./modal/register-receiver-modal.scss";
 @use "./modal/finish-account-modal.scss";
 @use "./modal/remind-login-modal.scss";
+@use "./modal/list-register-receiver-modal.scss";

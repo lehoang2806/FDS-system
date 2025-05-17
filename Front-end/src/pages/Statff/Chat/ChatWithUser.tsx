@@ -1,10 +1,7 @@
-import { useState } from "react";
-import { Modal } from "../Modal";
-import ChatBox from "./ChatBox";
-import { useAppSelector } from "@/app/store";
 import { selectUserLogin } from "@/app/selector";
-import UserList from "./UserList";
-import { ChatIconBox } from "@/assets/icons";
+import { useAppSelector } from "@/app/store";
+import { ChatBox, UserList } from "@/components/Elements";
+import { useState } from "react";
 
 interface User {
     userId: string;
@@ -14,26 +11,29 @@ interface User {
     roleId: number;
 }
 
-const ChatIcon = () => {
+const StaffChatWithUserPage = () => {
     const [selectedUser, setSelectedUser] = useState<User | null>(null);
-    const [isOpen, setIsOpen] = useState(false);
     const userLogin = useAppSelector(selectUserLogin);
 
     return (
-        <>
-            <div className="chat-icon" onClick={() => setIsOpen(true)}>
-                <ChatIconBox className="chat-icon-icon" />
-            </div>
-            <Modal isOpen={isOpen} setIsOpen={setIsOpen}>
-                <div className="chat-modal">
-                    <div className="chat-modal-left">
+        <section id="staff-chat-with-user" className="staff-section">
+            <div className="staff-container scwu-conatiner">
+                <div className="scwucr1">
+                    <h1>Đơn yêu cầu hỗ trợ</h1>
+                    <p>
+                        Trang tổng quát
+                        <span className="staff-tag">Đơn yêu cầu hỗ trợ</span>
+                    </p>
+                </div>
+                <div className="scwucr2">
+                    <div className="scwucr2c1">
                         <UserList
                             onSelectUser={setSelectedUser}
                             selectedUserId={selectedUser?.userId}
-                            title="Danh sách nhân viên của hệ thống"
+                            title="Danh sách người dùng"
                         />
                     </div>
-                    <div className="chat-modal-right">
+                    <div className="scwucr2c2">
                         {selectedUser ? (
                             <ChatBox
                                 selectedUserId={selectedUser.userId}
@@ -47,9 +47,9 @@ const ChatIcon = () => {
                         )}
                     </div>
                 </div>
-            </Modal>
-        </>
+            </div>
+        </section>
     );
 };
 
-export default ChatIcon;
+export default StaffChatWithUserPage;

@@ -59,8 +59,8 @@ const StaffListRequestSupportPage: FC = () => {
         <section id="staff-list-news" className="staff-section">
             <div className="staff-container sln-container">
                 <div className="slncr1">
-                    <h1>Đơn yêu cầu hỗ trợ</h1>
-                    <p>Trang tổng quát<span className="staff-tag">Đơn yêu cầu hỗ trợ</span></p>
+                    <h1>Trò chuyện</h1>
+                    <p>Trang tổng quát<span className="staff-tag">Trò chuyện với người dùng</span></p>
                 </div>
                 <div className="slncr2">
                     <div className="staff-tab staff-tab-1">

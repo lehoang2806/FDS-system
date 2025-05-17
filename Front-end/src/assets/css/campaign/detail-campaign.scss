@@ -128,8 +128,18 @@
                         }
 
                         .feedback-item {
-                            padding-left: 60px;
+                            display: flex;
+                            align-items: start;
+                            justify-content: start;
                             padding-top: 24px;
+                            padding-left: 60px;
+
+                            .ft-avatar {
+                                width: 40px;
+                                height: 40px;
+                                border-radius: var(--border-radius-circle);
+                                margin-right: 20px;
+                            }
 
                             .ft-name {
                                 font-size: 14px;

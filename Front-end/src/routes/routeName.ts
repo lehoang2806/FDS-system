@@ -31,6 +31,8 @@ export const routes = {
         detail_certificate: "/user/certificate/:id/detail",
         detail_request_support: "/user/requestSupport/:id/detail",
         participate_request_support: "/user/participateRequestSupport/:id/detail",
+        donate: "/user/donate",
+        return: "/user/return"
     },
     admin: {
         dashboard: "/admin",
@@ -98,6 +100,7 @@ export const routes = {
         request_support: {
             list: "/staff/requestSupport",
             detail: "/staff/requestSupport/:id/detail",
-        }
+        },
+        chat: "/staff/chat"
     }
 }

@@ -1,4 +1,4 @@
-import { ArrowRight, CampaignIcon, CertificateIcon, DashboardtIcon, LogoutIcon, NewsIcon, PostIcon, StaffIcon, UserIcon } from '@/assets/icons';
+import { ArrowRight, CampaignIcon, CertificateIcon, ChatIconBox, DashboardtIcon, LogoutIcon, NewsIcon, PostIcon, StaffIcon, UserIcon } from '@/assets/icons';
 import { FC, useRef } from 'react'
 import { Link, useLocation } from 'react-router-dom';
 import classNames from 'classnames';
@@ -162,6 +162,17 @@ const StaffSidebar: FC = () => {
                         <div className="sscr2-nav-link">
                             <PostIcon className="sscr2-nav-icon" />
                             <span>Đơn yêu cầu hỗ trợ</span>
+                        </div>
+                    </Link>
+                    <Link
+                        to={routes.staff.chat}
+                        className={classNames('sscr2-nav-item', {
+                            'nav-active': location.pathname.startsWith(routes.staff.chat),
+                        })}
+                    >
+                        <div className="sscr2-nav-link">
+                            <ChatIconBox className="sscr2-nav-icon" />
+                            <span>Trò chuyện với người dùng</span>
                         </div>
                     </Link>
                     <Link

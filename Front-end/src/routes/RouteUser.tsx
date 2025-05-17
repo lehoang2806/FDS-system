@@ -1,5 +1,17 @@
 import LandingBasicLayout from "@/layout/System/LandingBasicLayout";
-import { DetailRequestSupport, ParticipateRequestSupport, UserChangePasswordPage, UserDetailCampaignPage, UserDetailCertificate, UserNewPasswordPage, UserPersonalPage, UserProfilePage, UserSubmitCertificatePage } from "@/pages/User";
+import {
+    DetailRequestSupport,
+    DonatePage,
+    ParticipateRequestSupport,
+    ReturnPage,
+    UserChangePasswordPage,
+    UserDetailCampaignPage,
+    UserDetailCertificate,
+    UserNewPasswordPage,
+    UserPersonalPage,
+    UserProfilePage,
+    UserSubmitCertificatePage,
+} from "@/pages/User";
 import { RouteObject } from "react-router-dom";
 
 const routeUser: RouteObject[] = [
@@ -13,9 +25,9 @@ const routeUser: RouteObject[] = [
                 children: [
                     {
                         path: "",
-                        element: <UserProfilePage/>
-                    }
-                ]
+                        element: <UserProfilePage />,
+                    },
+                ],
             },
             {
                 path: "submit-certificate",
@@ -23,9 +35,9 @@ const routeUser: RouteObject[] = [
                 children: [
                     {
                         path: "",
-                        element: <UserSubmitCertificatePage/>
-                    }
-                ]
+                        element: <UserSubmitCertificatePage />,
+                    },
+                ],
             },
             {
                 path: "personal",
@@ -33,9 +45,9 @@ const routeUser: RouteObject[] = [
                 children: [
                     {
                         path: "",
-                        element: <UserPersonalPage/>
-                    }
-                ]
+                        element: <UserPersonalPage />,
+                    },
+                ],
             },
             {
                 path: "campaign/:id/detail",
@@ -43,9 +55,9 @@ const routeUser: RouteObject[] = [
                 children: [
                     {
                         path: "",
-                        element: <UserDetailCampaignPage/>
-                    }
-                ]
+                        element: <UserDetailCampaignPage />,
+                    },
+                ],
             },
             {
                 path: "certificate/:id/detail",
@@ -53,9 +65,9 @@ const routeUser: RouteObject[] = [
                 children: [
                     {
                         path: "",
-                        element: <UserDetailCertificate/>
-                    }
-                ]
+                        element: <UserDetailCertificate />,
+                    },
+                ],
             },
             {
                 path: "requestSupport/:id/detail",
@@ -63,9 +75,9 @@ const routeUser: RouteObject[] = [
                 children: [
                     {
                         path: "",
-                        element: <DetailRequestSupport/>
-                    }
-                ]
+                        element: <DetailRequestSupport />,
+                    },
+                ],
             },
             {
                 path: "participateRequestSupport/:id/detail",
@@ -73,20 +85,40 @@ const routeUser: RouteObject[] = [
                 children: [
                     {
                         path: "",
-                        element: <ParticipateRequestSupport/>
-                    }
-                ]
+                        element: <ParticipateRequestSupport />,
+                    },
+                ],
+            },
+            {
+                path: "donate",
+                element: <LandingBasicLayout />,
+                children: [
+                    {
+                        path: "",
+                        element: <DonatePage />,
+                    },
+                ],
+            },
+            {
+                path: "return",
+                element: <LandingBasicLayout />,
+                children: [
+                    {
+                        path: "",
+                        element: <ReturnPage />,
+                    },
+                ],
             },
             {
                 path: "change-pass",
-                element: <UserChangePasswordPage/>
+                element: <UserChangePasswordPage />,
             },
             {
                 path: "new-pass",
-                element: <UserNewPasswordPage/>
-            }
-        ]
-    }
-]
+                element: <UserNewPasswordPage />,
+            },
+        ],
+    },
+];
 
 export default routeUser;

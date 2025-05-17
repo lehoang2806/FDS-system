@@ -362,7 +362,7 @@ const CreateCampaignModal: FC<CreateCampaignModalProps> = ({
                                                 const hours =
                                                     selectedDate.getHours();
 
-                                                if (hours < 7 || hours > 17) {
+                                                if (hours <= 7 || hours >= 17) {
                                                     toast.warning(
                                                         "Vui lòng chỉ chọn thời gian trong khoảng 7 giờ đến 17 giờ"
                                                     );

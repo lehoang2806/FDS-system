@@ -33,3 +33,8 @@ interface Option {
     value: string;
     label: string;
 }
+
+interface Payment {
+	amount: number;
+	message: string;
+}

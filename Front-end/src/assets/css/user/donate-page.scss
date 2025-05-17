@@ -1,0 +1,71 @@
+$button-width: 100%;
+$button-height: 50px;
+$border-radius: 12px;
+$gradient-start: #ff6c57;
+$gradient-end: #ff922e;
+$new-color: #ff9d2e; // Màu mới xuất hiện khi hover
+$glow-color: rgba(255, 157, 46, 0.7); // Màu hào quang
+
+#donate-page {
+    padding: 200px;
+
+    .dp-conatiner {
+        max-width: 1100px;
+        margin: 0 auto;
+
+        h1 {
+            font-size: 40px;
+            font-weight: 700;
+            color: #460d02;
+            text-align: center;
+            margin-bottom: 80px;
+        }
+
+        .form {
+            max-width: 700px;
+            margin: 0 auto;
+            
+            .form-label {
+                margin-top: 20px;
+            }
+
+            .sc-btn {
+                position: relative;
+                width: $button-width;
+                height: $button-height;
+                background: linear-gradient($gradient-start, $gradient-end);
+                color: var(--white-color);
+                font-size: 20px;
+                font-weight: 700;
+                border: none;
+                border-radius: $border-radius;
+                margin-top: 20px;
+                cursor: pointer;
+                overflow: hidden;
+                z-index: 1;
+                transition: box-shadow 0.3s ease-in-out;
+
+                &::before {
+                    content: "";
+                    position: absolute;
+                    top: 0;
+                    left: 50%;
+                    width: 0;
+                    height: 100%;
+                    background-color: $new-color;
+                    transition: width 0.4s ease, left 0.4s ease;
+                    z-index: -1;
+                }
+
+                &:hover {
+                    box-shadow: 0 0 10px 4px $glow-color; // Hiệu ứng hào quang xung quanh
+                }
+
+                &:hover::before {
+                    width: 100%;
+                    left: 0;
+                }
+            }
+        }
+    }
+}
