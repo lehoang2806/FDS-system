@@ -21,7 +21,7 @@ public partial class Account
 
     public string? FullName { get; set; }
 
-    public DateOnly? BirthDay { get; set; }
+    public string? BirthDay { get; set; }
 
     public string? Phone { get; set; }
 
