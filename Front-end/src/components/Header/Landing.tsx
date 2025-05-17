@@ -201,10 +201,9 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
                 );
                 setIsNotifOpen(false);
             })
-            .catch(() => {
-            });
+            .catch(() => {});
 
-            setIsNotifOpen(false);
+        setIsNotifOpen(false);
     };
 
     const menuItems = [
@@ -212,18 +211,9 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
             name: "Chiến dịch",
             active: location.pathname === routes.user.campaign.list,
             subMenu: [
-                {
-                    title: "Tất cả",
-                    to: routes.user.campaign.list,
-                },
-                {
-                    title: "Tổ chức",
-                    to: `${routes.user.campaign.list}?tab=2`,
-                },
-                {
-                    title: "Cá nhân",
-                    to: `${routes.user.campaign.list}?tab=1`,
-                },
+                { title: "Tất cả", to: routes.user.campaign.list },
+                { title: "Tổ chức", to: `${routes.user.campaign.list}?tab=2` },
+                { title: "Cá nhân", to: `${routes.user.campaign.list}?tab=1` },
             ],
         },
         {
@@ -232,27 +222,18 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
                 location.pathname === routes.user.news.list ||
                 location.pathname === routes.user.post.forum,
             subMenu: [
-                {
-                    title: "Tin tức",
-                    to: routes.user.news.list,
-                },
-                {
-                    title: "Bản tin",
-                    to: routes.user.post.forum,
-                },
+                { title: "Tin tức", to: routes.user.news.list },
+                { title: "Bản tin", to: routes.user.post.forum },
             ],
         },
         {
             name: "Giới thiệu",
             subMenu: [
-                {
-                    title: "Về chúng tôi",
-                    to: "",
-                },
-                {
-                    title: "Liên hệ",
-                    to: "",
-                },
+                { title: "Về chúng tôi", to: "" },
+                { title: "Liên hệ", to: "" },
+                ...(userLogin?.roleId === 3 && isAuthenticated
+                    ? [{ title: "Ủng hộ chúng tôi", to: routes.user.donate }]
+                    : []),
             ],
         },
     ];
