@@ -14,6 +14,7 @@ interface User {
 interface Props {
     onSelectUser: (user: User) => void;
     selectedUserId?: string;
+    title?: string;
 }
 
 const getToken = (): string | null => {
@@ -27,10 +28,14 @@ const getToken = (): string | null => {
     }
 };
 
-const UserList = ({ onSelectUser, selectedUserId }: Props) => {
+const UserList = ({ onSelectUser, selectedUserId, title }: Props) => {
     const [users, setUsers] = useState<User[]>([]);
     const userLogin = useAppSelector(selectUserLogin);
+    const [searchTerm, setSearchTerm] = useState("");
 
+    const filteredUsers = users.filter((u) =>
+        u.email.toLowerCase().includes(searchTerm.toLowerCase())
+    );
     useEffect(() => {
         const fetchUsers = async () => {
             const token = getToken();
@@ -53,7 +58,7 @@ const UserList = ({ onSelectUser, selectedUserId }: Props) => {
                     return [1, 2].includes(u.roleId);
                 }
                 if ([1, 2].includes(userLogin.roleId)) {
-                    return [1, 2].includes(u.roleId);
+                    return [3, 4].includes(u.roleId);
                 }
                 return false; // Các role khác nếu cần
             });
@@ -66,8 +71,16 @@ const UserList = ({ onSelectUser, selectedUserId }: Props) => {
 
     return (
         <div>
-            <h1>Danh sách nhân viên của hệ thống</h1>
-            {users.map((u) => (
+            <h1>{title}</h1>
+            <p>Tìm kiếm</p>
+            <input
+                type="text"
+                className="pr-input"
+                placeholder="Tìm kiếm tài khoản theo email"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+            />
+            {filteredUsers.map((u) => (
                 <div
                     key={u.userId}
                     className={`user-item ${
@@ -76,7 +89,17 @@ const UserList = ({ onSelectUser, selectedUserId }: Props) => {
                     onClick={() => onSelectUser(u)}
                 >
                     <img src={AvatarIcon} alt="" />
-                    <h2>{u.fullName}</h2>
+                    <div>
+                        <h2>{u.fullName}</h2>
+                        {(userLogin?.roleId === 1 ||
+                            userLogin?.roleId === 2) && (
+                            <p style={{ fontSize: "14px", marginTop: "5px" }}>
+                                {u.roleId === 3
+                                    ? "Người tặng thực phẩm"
+                                    : "Người nhận hỗ trợ"}
+                            </p>
+                        )}
+                    </div>
                 </div>
             ))}
         </div>
