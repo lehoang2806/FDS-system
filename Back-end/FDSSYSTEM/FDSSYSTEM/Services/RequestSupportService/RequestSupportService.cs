@@ -232,7 +232,8 @@ namespace FDSSYSTEM.Services.RequestSupportService
                         DonorId = donor.AccountId,
                         FullName = donor.FullName,
                         CreatedDate = DateTime.Now,
-                        Status = "Pending" // Trạng thái ban đầu
+                        Status = "Pending", // Trạng thái ban đầu,
+                        Email = donor.Email,
                     });
                 }
             }

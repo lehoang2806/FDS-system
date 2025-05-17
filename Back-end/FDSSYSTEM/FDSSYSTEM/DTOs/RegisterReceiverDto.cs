@@ -7,5 +7,7 @@
         public int Quantity { get; set; }
         public string CreatAt { get; set; }
         public string CampaignId { get; set; }
+        public string? UpdatedByDonorId { get; set; }
+
     }
 }
