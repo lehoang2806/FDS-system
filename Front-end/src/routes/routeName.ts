@@ -98,6 +98,7 @@ export const routes = {
         request_support: {
             list: "/staff/requestSupport",
             detail: "/staff/requestSupport/:id/detail",
-        }
+        },
+        chat: "/staff/chat"
     }
 }
