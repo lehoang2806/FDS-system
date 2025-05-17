@@ -7,5 +7,19 @@ import UserDetailCampaignPage from "./DetaiCampaign";
 import UserDetailCertificate from "./DetailCertificate";
 import DetailRequestSupport from "./DetailRequestSupport";
 import ParticipateRequestSupport from "./ParticipateRequestSupport";
+import DonatePage from "./DonatePage";
+import ReturnPage from "./ReturnPage";
 
-export { UserProfilePage, UserChangePasswordPage, UserNewPasswordPage, UserSubmitCertificatePage, UserPersonalPage, UserDetailCampaignPage, UserDetailCertificate, DetailRequestSupport, ParticipateRequestSupport };
+export {
+    UserProfilePage,
+    UserChangePasswordPage,
+    UserNewPasswordPage,
+    UserSubmitCertificatePage,
+    UserPersonalPage,
+    UserDetailCampaignPage,
+    UserDetailCertificate,
+    DetailRequestSupport,
+    ParticipateRequestSupport,
+    DonatePage,
+    ReturnPage
+};
