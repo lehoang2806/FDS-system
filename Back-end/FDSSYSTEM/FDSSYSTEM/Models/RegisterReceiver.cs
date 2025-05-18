@@ -22,5 +22,7 @@ namespace FDSSYSTEM.Models
 
         public string Code { get; set; }
         public string Status { get; set; } // ví dụ: "Pending", "Approved", "Rejected"
+        public string? UpdatedByDonorId { get; set; }
+
     }
 }

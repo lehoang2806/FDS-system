@@ -190,6 +190,38 @@ namespace FDSSYSTEM.Services.RegisterReceiverService
         }
 
 
+        public async Task DonorUpdate(string id, RegisterReceiverDto registerReceiverDto)
+        {
+            var existingRegisterReceiver = await GetById(id);
+            if (existingRegisterReceiver != null)
+            {
+                existingRegisterReceiver.RegisterReceiverName = registerReceiverDto.RegisterReceiverName;
+                existingRegisterReceiver.Quantity = registerReceiverDto.Quantity;
+                existingRegisterReceiver.CreatAt = registerReceiverDto.CreatAt;
+                existingRegisterReceiver.CampaignId = registerReceiverDto.CampaignId;
+                existingRegisterReceiver.UpdatedByDonorId = _userContextService.UserId;
+                existingRegisterReceiver.DateUpdated = DateTime.Now;
+
+                // Ghi nhận cập nhật bởi Donor (nếu cần có thêm field)
+                await _registerReceiverRepository.UpdateAsync(existingRegisterReceiver.Id, existingRegisterReceiver);
+            }
+
+            // Gửi thông báo tới người nhận (hoặc staff tùy mục tiêu)
+            var notificationDto = new NotificationDto
+            {
+                Title = "Người ủng hộ đã cập nhật đăng ký nhận",
+                Content = "Thông tin đăng ký  đã được cập nhật ",
+                NotificationType = "DonorUpdate",
+                ObjectType = "RegisterReceiver",
+                OjectId = existingRegisterReceiver.RegisterReceiverId,
+                AccountId = existingRegisterReceiver.AccountId
+            };
+
+            await _notificationService.AddNotificationAsync(notificationDto);
+            await _hubNotificationContext.Clients.User(notificationDto.AccountId).SendAsync("ReceiveNotification", notificationDto);
+        }
+
+
 
     }
 }

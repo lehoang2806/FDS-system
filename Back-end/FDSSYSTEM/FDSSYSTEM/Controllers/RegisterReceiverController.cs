@@ -138,5 +138,29 @@ namespace FDSSYSTEM.Controllers
         }
 
 
+        [HttpPut("DonorUpdateRegisterReceiver/{id}")]
+        [Authorize(Roles = "Donor")]
+        public async Task<ActionResult> DonorUpdateRegisterReceiver(string id, RegisterReceiverDto registerReceiverDto)
+        {
+            try
+            {
+                var existingRegisterReceiver = await _registerReceiverService.GetById(id);
+                if (existingRegisterReceiver == null)
+                {
+                    return NotFound(new { message = "RegisterReceiver không tồn tại." });
+                }
+
+                // Gọi hàm service chuyên biệt cho Donor cập nhật
+                await _registerReceiverService.DonorUpdate(id, registerReceiverDto);
+                return Ok(new { message = "Donor cập nhật thành công." });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+
+
     }
 }
