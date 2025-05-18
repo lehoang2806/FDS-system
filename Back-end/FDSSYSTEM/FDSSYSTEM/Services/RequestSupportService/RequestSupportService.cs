@@ -244,9 +244,9 @@ namespace FDSSYSTEM.Services.RequestSupportService
                 request.Status = "Sent";
             }
             await _requestSupportRepository.UpdateAsync(request.Id, request);
-/*
-            // Gửi thông báo cho nhân viên/admin
-            var userReceiveNotifications = await _userService.GetAllAdminAndStaffId();
+
+            // Gửi thông báo cho donor
+            var userReceiveNotifications = await _userService.GetAllDonorConfirmedId();
             foreach (var userId in userReceiveNotifications)
             {
                 var notificationDto = new NotificationDto
@@ -260,7 +260,7 @@ namespace FDSSYSTEM.Services.RequestSupportService
                 };
                 await _notificationService.AddNotificationAsync(notificationDto);
                 await _hubNotificationContext.Clients.User(notificationDto.AccountId).SendAsync("ReceiveNotification", notificationDto);
-            }*/
+            }
         }
 
         public async Task UpdateDonorStatus(string requestSupportId, string donorId, string status)

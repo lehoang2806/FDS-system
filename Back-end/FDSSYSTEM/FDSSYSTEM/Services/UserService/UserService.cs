@@ -770,7 +770,18 @@ public class UserService : IUserService
         return (await _userRepository.GetAllAsync(filter)).ToList();
     }
 
+    public async Task<List<string>> GetAllDonorConfirmedId()
+    {
 
+        List<int> roleIds = new List<int>
+        {
+
+            3,//donor
+           
+        };
+        var filter = Builders<Account>.Filter.In(c => c.RoleId, roleIds);
+        return (await _userRepository.GetAllAsync(filter)).Select(x => x.AccountId).ToList();
+    }
 
 
     public async Task<PersonalDonorCertificate> GetPersonalDonorCertificateById(string id)

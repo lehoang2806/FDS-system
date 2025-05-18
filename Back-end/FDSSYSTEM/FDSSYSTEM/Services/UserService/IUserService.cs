@@ -39,6 +39,7 @@ public interface IUserService
     Task<List<string>> GetAllDonorAndStaffId();
     Task<List<Account>> GetAllAdminAndStaffAndRecipientId();
     Task<List<string>> GetAllDonorAndRecipientConfirmedId();
+    Task<List<string>> GetAllDonorConfirmedId();
     Task AddCertificateReviewComment(ReviewCommentCertificateDto reviewCommentCertificateDto);
     Task UpdatePersonalDonorCertificate(string id, CreatePersonalDonorCertificateDto personalDonorCertificate);
     Task UpdateOrganizationDonorCertificate(string id, CreateOrganizationDonorCertificateDto organizationDonorCertificate);
