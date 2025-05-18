@@ -17,6 +17,7 @@ import {
     updateOrganizationDonorCertificateApi,
     updatePersonalDonorCertificateApi,
     updateRecipientCertificateApi,
+    updateUserProfileApi,
 } from "./userApi";
 import {
     AddRecipientCertificate,
@@ -32,11 +33,13 @@ import {
     RejectCertificate,
     ReviewCertificate,
     UserInfo,
+    UserUpdate,
 } from "@/types/user";
 import { TextResponse } from "@/types/auth";
 import { ResponseFromServer } from "@/types/app";
 
 const GET_ALL_USER = "GET_ALL_USER";
+const UPDATE_USER_PROFILE = "UPDATE_USER_PROFILE";
 const CREATE_PERSONAL_DONOR_CERTIFICATE = "CREATE_PERSONAL_DONOR_CERTIFICATE";
 const CREATE_ORGANIZATION_DONOR_CERTIFICATE =
     "CREATE_ORGANIZATION_DONOR_CERTIFICATE";
@@ -107,6 +110,21 @@ export const createOrganizationDonorCertificateApiThunk = createAsyncThunk<
         }
     }
 );
+
+export const updateUserProfileApiThunk = createAsyncThunk<
+    ResponseFromServer<TextResponse>,
+    UserUpdate
+>(UPDATE_USER_PROFILE, async (payload, { rejectWithValue }) => {
+    try {
+        const response = await updateUserProfileApi(payload);
+        return response;
+    } catch (err: any) {
+        return rejectWithValue({
+            errorMessage: err.message,
+            data: err.response.data,
+        });
+    }
+});
 
 export const getAllDonorCertificateApiThunk = createAsyncThunk<
     DonorCertificate[]
@@ -281,10 +299,13 @@ export const getProfileApiThunk = createAsyncThunk<UserInfo, string>(
 
 export const updatePersonalDonorCertificateApiThunk = createAsyncThunk<
     ResponseFromServer<TextResponse>,
-    {params: PersonalDonor, id: string}
+    { params: PersonalDonor; id: string }
 >(UPDATE_PERSONAL_DONOR_CERTIFICATE, async (payload, { rejectWithValue }) => {
     try {
-        const response = await updatePersonalDonorCertificateApi(payload.id, payload.params);
+        const response = await updatePersonalDonorCertificateApi(
+            payload.id,
+            payload.params
+        );
         return response;
     } catch (err: any) {
         return rejectWithValue({
@@ -296,25 +317,34 @@ export const updatePersonalDonorCertificateApiThunk = createAsyncThunk<
 
 export const updateOrganizationDonorCertificateApiThunk = createAsyncThunk<
     ResponseFromServer<TextResponse>,
-    {params: OrganizationDonor, id: string}
->(UPDATE_ORGANIZATION_DONOR_CERTIFICATE, async (payload, { rejectWithValue }) => {
-    try {
-        const response = await updateOrganizationDonorCertificateApi(payload.id, payload.params);
-        return response;
-    } catch (err: any) {
-        return rejectWithValue({
-            errorMessage: err.message,
-            data: err.response.data,
-        });
+    { params: OrganizationDonor; id: string }
+>(
+    UPDATE_ORGANIZATION_DONOR_CERTIFICATE,
+    async (payload, { rejectWithValue }) => {
+        try {
+            const response = await updateOrganizationDonorCertificateApi(
+                payload.id,
+                payload.params
+            );
+            return response;
+        } catch (err: any) {
+            return rejectWithValue({
+                errorMessage: err.message,
+                data: err.response.data,
+            });
+        }
     }
-})
+);
 
 export const updateRecipientCertificateApiThunk = createAsyncThunk<
     ResponseFromServer<TextResponse>,
-    {params: AddRecipientCertificate, id: string}
+    { params: AddRecipientCertificate; id: string }
 >(UPDATE_RECIPIENT_CERTIFICATE, async (payload, { rejectWithValue }) => {
     try {
-        const response = await updateRecipientCertificateApi(payload.id, payload.params);
+        const response = await updateRecipientCertificateApi(
+            payload.id,
+            payload.params
+        );
         return response;
     } catch (err: any) {
         return rejectWithValue({
@@ -322,4 +352,4 @@ export const updateRecipientCertificateApiThunk = createAsyncThunk<
             data: err.response.data,
         });
     }
-})
+});

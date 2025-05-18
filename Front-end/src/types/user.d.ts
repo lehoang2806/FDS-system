@@ -1,12 +1,7 @@
 export type UserUpdate = {
     fullName?: string;
     address?: string;
-    birthDay?:  {
-        day: number;
-        month: number;
-        year: number;
-        dayOfWeek: number;
-    };
+    birthDay?: string;
     avatar?: string,
     phone?: string;
     gender?: string;
