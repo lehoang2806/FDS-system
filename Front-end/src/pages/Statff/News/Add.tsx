@@ -38,7 +38,6 @@ const StaffAddNewsPage: FC = () => {
 
         images: Yup.array()
             .of(Yup.string().required("Mỗi ảnh phải là một chuỗi hợp lệ"))
-            .min(1, "Cần ít nhất một ảnh")
             .required("Danh sách ảnh là bắt buộc"),
 
         newsDescripttion: Yup.string()

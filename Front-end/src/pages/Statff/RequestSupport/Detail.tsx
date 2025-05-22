@@ -8,7 +8,7 @@ import { setLoading } from "@/services/app/appSlice";
 import { getRequestSupportByIdApiThunk } from "@/services/requestSupport/requestSupportThunk";
 import { formatDater } from "@/utils/helper";
 import { FC, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const StaffDetailRequestSupportPage: FC = () => {
     const { id } = useParams<{ id: string }>();
@@ -34,6 +34,8 @@ const StaffDetailRequestSupportPage: FC = () => {
                 }, 1000);
             });
     }, [dispatch, id]);
+
+    const navigate = useNavigate();
 
     return (
         <section id="staff-detail-request-support" className="staff-section">
@@ -183,6 +185,17 @@ const StaffDetailRequestSupportPage: FC = () => {
                                     : "Xử lý yêu cầu"
                             }
                             onClick={() => setIsRequestDonorModal(true)}
+                        />
+                        <Button
+                            title="Chat với người nhận"
+                            onClick={() =>
+                                navigate("/staff/chat", {
+                                    state: {
+                                        email: currentRequestSupport?.email,
+                                    },
+                                })
+                            }
+                            type="button"
                         />
                     </div>
                 </div>

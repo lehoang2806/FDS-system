@@ -28,7 +28,7 @@ const ReturnPage = () => {
         <div
             style={{
                 fontFamily: "Arial, sans-serif",
-                padding: "40px",
+                padding: "100px 20px",
                 backgroundColor: "#f0f2f5",
                 textAlign: "center",
             }}
