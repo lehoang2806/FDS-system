@@ -35,8 +35,7 @@
         .slpcr2 {
             background: #fff;
             border-radius: var(--border-radius-12);
-            display: flex;
-            max-height: calc(100vh - 250px);
+            padding: 30px;
 
             .slpcr2c1 {
                 flex: 2;

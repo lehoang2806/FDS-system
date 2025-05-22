@@ -28,3 +28,10 @@ export const formatTime = (date: string) => {
     const minutes = newDate.getMinutes().toString().padStart(2, '0');
     return `${hours}:${minutes}`;
 }
+
+export const isOver24h = (createDate: string) => {
+    const now = new Date();
+    const created = new Date(createDate);
+    const diff = now.getTime() - created.getTime();
+    return diff >= 24 * 60 * 60 * 1000; // 24h tính theo milliseconds
+};

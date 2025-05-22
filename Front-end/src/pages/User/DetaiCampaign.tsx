@@ -139,28 +139,28 @@ const UserDetailCampaignPage: React.FC = () => {
                             </div>
                             <div className="udcscr1c1r1">
                                 <h1>
-                                    {currentCampaign?.campaignName} -
-                                    {currentCampaign?.status === "Pending" ? (
-                                        <span className="status-pending">
+                                    {currentCampaign?.campaignName}
+                                </h1>
+                                {currentCampaign?.status === "Pending" ? (
+                                        <p className="status-pending">
                                             Đang chờ phê duyệt
-                                        </span>
+                                        </p>
                                     ) : currentCampaign?.status ===
                                       "Approved" ? (
-                                        <span className="status-approve">
+                                        <p className="status-approve">
                                             Đã được phê duyệt
-                                        </span>
+                                        </p>
                                     ) : currentCampaign?.status ===
                                       "Rejected" ? (
-                                        <span className="status-reject">
+                                        <p className="status-reject">
                                             Đã bị từ chối
-                                        </span>
+                                        </p>
                                     ) : currentCampaign?.status ===
                                       "Canceled" ? (
-                                        <span className="status-reject">
+                                        <p className="status-reject">
                                             Đã huỷ
-                                        </span>
+                                        </p>
                                     ) : null}
-                                </h1>
                             </div>
                             <div className="udcscr1c1r3">
                                 <div
@@ -313,6 +313,7 @@ const UserDetailCampaignPage: React.FC = () => {
                 isOpen={isListRegisterReceiverModalOpend}
                 setIsOpen={setIsListRegisterReceiverModalOpend}
                 registeredReceiver={currentRegisterReceivers}
+                implementTime={currentCampaign?.implementationTime || ""}
             />
         </main>
     );
