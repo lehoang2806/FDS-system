@@ -9,8 +9,9 @@ type PostProps = {
 }
 
 interface ApprovedPostProps{
-    post: Post
-    userId: string
+    post: Post;
+    userId: string;
+    onClickHashtag?: (hashtag: string) => void;
 }
 
 interface PersonalApprovedPostProps extends ApprovedPostProps {}

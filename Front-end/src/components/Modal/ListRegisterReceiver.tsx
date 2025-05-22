@@ -7,18 +7,22 @@ const ListRegisterReceiverModal: FC<ListRegisterReceiverModalProps> = ({
     isOpen,
     setIsOpen,
     registeredReceiver,
+    implementTime,
 }) => {
     const [searchTerm, setSearchTerm] = useState("");
 
-    const filteredRegisterReceiver = (registeredReceiver ?? []).filter((donor) =>
-        donor.code.toLowerCase().includes(searchTerm.toLowerCase())
+    const filteredRegisterReceiver = (registeredReceiver ?? []).filter(
+        (donor) => donor.code.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     const ITEMS_PER_PAGE = 5;
 
-    const [currentListRegisterReceiver, setCurrentListRegisterReceiver] = useState(1);
+    const [currentListRegisterReceiver, setCurrentListRegisterReceiver] =
+        useState(1);
 
-    const totalNewsPages = Math.ceil(filteredRegisterReceiver.length / ITEMS_PER_PAGE);
+    const totalNewsPages = Math.ceil(
+        filteredRegisterReceiver.length / ITEMS_PER_PAGE
+    );
 
     const currentRegisterReceiveresPage = filteredRegisterReceiver.slice(
         (currentListRegisterReceiver - 1) * ITEMS_PER_PAGE,
@@ -26,11 +30,13 @@ const ListRegisterReceiverModal: FC<ListRegisterReceiverModalProps> = ({
     );
 
     const onPreviousListRegisterReceiver = () => {
-        if (currentListRegisterReceiver > 1) setCurrentListRegisterReceiver(currentListRegisterReceiver - 1);
+        if (currentListRegisterReceiver > 1)
+            setCurrentListRegisterReceiver(currentListRegisterReceiver - 1);
     };
 
     const onNextListRegisterReceiver = () => {
-        if (currentListRegisterReceiver < totalNewsPages) setCurrentListRegisterReceiver(currentListRegisterReceiver + 1);
+        if (currentListRegisterReceiver < totalNewsPages)
+            setCurrentListRegisterReceiver(currentListRegisterReceiver + 1);
     };
 
     return (
@@ -63,7 +69,10 @@ const ListRegisterReceiverModal: FC<ListRegisterReceiverModalProps> = ({
                     <tbody className="table-body">
                         {registeredReceiver &&
                             currentRegisterReceiveresPage.map((receiver) => (
-                                <tr className="table-body-row">
+                                <tr
+                                    className="table-body-row"
+                                    key={receiver.registerReceiverId}
+                                >
                                     <td className="table-body-cell">
                                         {receiver.registerReceiverName}
                                     </td>
@@ -74,26 +83,52 @@ const ListRegisterReceiverModal: FC<ListRegisterReceiverModalProps> = ({
                                         {receiver.code}
                                     </td>
                                     <td className="table-body-cell">
-                                        {receiver.status === "Pending" ? "Chưa nhận quà" : "Đã nhận quà"}
+                                        {receiver.status === "Pending"
+                                            ? "Chưa nhận quà"
+                                            : "Đã nhận quà"}
                                     </td>
-
+                                    <td className="table-body-cell">
+                                        <button
+                                            className={`pr-btn ${
+                                                new Date() <
+                                                new Date(implementTime)
+                                                    ? "disabled-btn"
+                                                    : ""
+                                            }`}
+                                        >
+                                            Đã nhận
+                                        </button>
+                                    </td>
                                 </tr>
                             ))}
                     </tbody>
                 </table>
-                <div className='paginator'>
+                <div className="paginator">
                     <div className="p-container">
-                        <div className="pcc2">{currentListRegisterReceiver} of {totalNewsPages}</div>
+                        <div className="pcc2">
+                            {currentListRegisterReceiver} of {totalNewsPages}
+                        </div>
                         <div className="pcc3">
-                            <button disabled={currentListRegisterReceiver === 1} onClick={onPreviousListRegisterReceiver}>
+                            <button
+                                disabled={currentListRegisterReceiver === 1}
+                                onClick={onPreviousListRegisterReceiver}
+                            >
                                 <ArrowLeft className="pcc3-icon" />
                             </button>
                             <button
-                                disabled={currentListRegisterReceiver >= totalNewsPages}
+                                disabled={
+                                    currentListRegisterReceiver >=
+                                    totalNewsPages
+                                }
                                 onClick={onNextListRegisterReceiver}
                             >
                                 <ArrowRight
-                                    className={`pcc3-icon ${currentListRegisterReceiver >= totalNewsPages ? 'pcc3-icon-disabled' : ''}`}
+                                    className={`pcc3-icon ${
+                                        currentListRegisterReceiver >=
+                                        totalNewsPages
+                                            ? "pcc3-icon-disabled"
+                                            : ""
+                                    }`}
                                 />
                             </button>
                         </div>

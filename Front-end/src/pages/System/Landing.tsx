@@ -9,7 +9,7 @@ import { getAllCampaignApiThunk } from "@/services/campaign/campaignThunk";
 import { setLoading } from "@/services/app/appSlice";
 import { getAllNewsApiThunk } from "@/services/news/newsThunk";
 import { CampaignCarousel, CarouselLanding } from "@/components/Elements";
-import { LS2 } from "@/assets/images";
+import { LS3 } from "@/assets/images";
 import { getAllUserApiThunk } from "@/services/user/userThunk";
 import { OrganizationIcon, PersonalIcon } from "@/assets/icons";
 
@@ -101,7 +101,7 @@ export default function () {
                     <h2>Đồng Hành Cùng Chúng Tôi</h2>
                     <div className="ls3r1">
                         <div className="ls3r1c1">
-                            <figure className="ls3-img"><img src={LS2} alt="" /></figure>
+                            <figure className="ls3-img"><img src={LS3} alt="" /></figure>
                         </div>
                         <div className="ls3r1c2">
                             <div className="ls3r1c2c1">

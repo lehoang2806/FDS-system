@@ -118,8 +118,8 @@ const ParticipateRequestSupport = () => {
                                     src={image}
                                     alt={`Citizen ID ${index}`}
                                     style={{
-                                        width: "100px",
-                                        height: "100px",
+                                        width: "300px",
+                                        height: "300px",
                                         objectFit: "cover",
                                     }}
                                 />
@@ -136,7 +136,8 @@ const ParticipateRequestSupport = () => {
 
                         <h3>Địa chỉ:</h3>
                         <p>{currentRequestSupport?.address}</p>
-
+                    </div>
+                    <div className="col-flex prsr2c2">
                         <h2>Hoàn cảnh và lý do hỗ trợ</h2>
 
                         <h3>Lý do cần hỗ trợ:</h3>
@@ -147,32 +148,32 @@ const ParticipateRequestSupport = () => {
                         <h3>Số người trong hộ gia đình:</h3>
                         <p>{currentRequestSupport?.householdSize}</p>
 
-                        {currentRequestSupport?.specialMembers && (
+                        {/* {currentRequestSupport?.specialMembers && (
                             <>
                                 <h3>Trường hợp đặc biết:</h3>
                                 <p>{currentRequestSupport?.specialMembers}</p>
                             </>
-                        )}
+                        )} */}
 
-                        <h3>Hình ảnh hoàn cảnh gia đình:</h3>
-                        {currentRequestSupport?.circumstanceImages?.map(
-                            (image, index) => (
-                                <img
-                                    key={index}
-                                    src={image}
-                                    alt={`Circumstance ${index}`}
-                                    style={{
-                                        width: "100px",
-                                        height: "100px",
-                                        objectFit: "cover",
-                                    }}
-                                />
-                            )
+                        {currentRequestSupport?.circumstanceImages && currentRequestSupport?.circumstanceImages.length > 0 && (
+                            <>
+                                <h3>Hình ảnh hoàn cảnh gia đình:</h3>
+                                {currentRequestSupport?.circumstanceImages?.map(
+                                    (image, index) => (
+                                        <img
+                                            key={index}
+                                            src={image}
+                                            alt={`Circumstance ${index}`}
+                                            style={{
+                                                width: "100px",
+                                                height: "100px",
+                                                objectFit: "cover",
+                                            }}
+                                        />
+                                    )
+                                )}
+                            </>
                         )}
-                    </div>
-                    <div className="col-flex prsr2c2">
-                        <h2>Thông tin tài chính</h2>
-
                         <h3>Thực phẩm yêu cầu:</h3>
                         {currentRequestSupport?.requestedItems?.map(
                             (product, index) => (

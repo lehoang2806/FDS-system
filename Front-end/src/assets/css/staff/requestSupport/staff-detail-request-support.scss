@@ -148,6 +148,10 @@ $glow-color: rgba(255, 157, 46, 0.7); // Màu hào quang
             }
 
             .sdrscr2r3 {
+                display: flex;
+                justify-content: space-between;
+                align-items: start;
+
                 h3 {
                     font-size: 15px;
                     font-weight: 700;

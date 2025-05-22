@@ -87,4 +87,5 @@ interface RemindLoginModalProps extends ModalCommonProps {}
 
 interface ListRegisterReceiverModalProps extends ModalCommonProps {
     registeredReceiver?: RegisterReceiver[] | null;
+    implementTime: string;
 }

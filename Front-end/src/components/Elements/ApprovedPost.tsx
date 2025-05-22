@@ -1,41 +1,60 @@
-import dayjs from 'dayjs';
-import relativeTime from 'dayjs/plugin/relativeTime';
-import 'dayjs/locale/vi';
-import { FC, useRef, useState } from 'react';
-import { ApprovedPostProps } from './type';
-import { CameraIcon, CommentIcon, FarvoriteIcon, FavoriteIcon, SendIcon } from '@/assets/icons';
-import { useAppDispatch, useAppSelector } from '@/app/store';
-import { getAllPostsApiThunk, getPostByIdApiThunk, likePostApiThunk, unlikePostApiThunk } from '@/services/post/postThunk';
-import { toast } from 'react-toastify';
-import PostImageGallery from './PostImageGallery';
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+import "dayjs/locale/vi";
+import { FC, useRef, useState } from "react";
+import { ApprovedPostProps } from "./type";
+import {
+    CameraIcon,
+    CommentIcon,
+    FarvoriteIcon,
+    FavoriteIcon,
+    SendIcon,
+} from "@/assets/icons";
+import { useAppDispatch, useAppSelector } from "@/app/store";
+import {
+    getAllPostsApiThunk,
+    getPostByIdApiThunk,
+    likePostApiThunk,
+    unlikePostApiThunk,
+} from "@/services/post/postThunk";
+import { toast } from "react-toastify";
+import PostImageGallery from "./PostImageGallery";
 import classNames from "classnames";
-import { Field, Form, Formik, FormikHelpers } from 'formik';
-import { setLoading } from '@/services/app/appSlice';
-import { commentPostApiThunk } from '@/services/post/comment/commentPostThunk';
+import { Field, Form, Formik, FormikHelpers } from "formik";
+import { setLoading } from "@/services/app/appSlice";
+import { commentPostApiThunk } from "@/services/post/comment/commentPostThunk";
 import * as Yup from "yup";
-import { selectIsAuthenticated } from '@/app/selector';
-import Lightbox from 'react-awesome-lightbox';
-import PostContent from './PostContent';
+import { selectIsAuthenticated } from "@/app/selector";
+import Lightbox from "react-awesome-lightbox";
+import PostContent from "./PostContent";
 
-dayjs.locale('vi');
+dayjs.locale("vi");
 dayjs.extend(relativeTime);
 
-const ApprovedPost: FC<ApprovedPostProps> = ({ post, userId }) => {
+const ApprovedPost: FC<ApprovedPostProps> = ({
+    post,
+    userId,
+    onClickHashtag,
+}) => {
     const dispatch = useAppDispatch();
 
-    const isFavoritePost = Array.isArray(post.likes) && post.likes.some((like) => like.accountId === userId);
+    const isFavoritePost =
+        Array.isArray(post.likes) &&
+        post.likes.some((like) => like.accountId === userId);
     const isAuthentication = useAppSelector(selectIsAuthenticated);
 
     const handleFavoritePost = async (postId: string, postLikeId?: string) => {
         if (postLikeId) {
-            dispatch(unlikePostApiThunk(postLikeId)).unwrap()
+            dispatch(unlikePostApiThunk(postLikeId))
+                .unwrap()
                 .then(() => {
                     dispatch(getPostByIdApiThunk(postId));
                     dispatch(getAllPostsApiThunk());
                 })
                 .catch(() => toast.error("Có lỗi xảy ra."));
         } else {
-            dispatch(likePostApiThunk(postId)).unwrap()
+            dispatch(likePostApiThunk(postId))
+                .unwrap()
                 .then(() => {
                     dispatch(getPostByIdApiThunk(postId));
                     dispatch(getAllPostsApiThunk());
@@ -90,7 +109,10 @@ const ApprovedPost: FC<ApprovedPostProps> = ({ post, userId }) => {
         content: Yup.string().required("Vui lòng nhập nội dung"),
     });
 
-    const hanldeSendFeedback = async (values: CommentPost, helpers: FormikHelpers<CommentPost>) => {
+    const hanldeSendFeedback = async (
+        values: CommentPost,
+        helpers: FormikHelpers<CommentPost>
+    ) => {
         try {
             dispatch(setLoading(true));
             await dispatch(commentPostApiThunk(values)).unwrap();
@@ -107,7 +129,7 @@ const ApprovedPost: FC<ApprovedPostProps> = ({ post, userId }) => {
 
     const handleIsAuthencation = () => {
         if (isAuthentication === false) {
-            alert('Vui lòng đăng nhập')
+            alert("Vui lòng đăng nhập");
         }
     };
 
@@ -115,26 +137,57 @@ const ApprovedPost: FC<ApprovedPostProps> = ({ post, userId }) => {
         <div className="post-container">
             <div className="pcr1">
                 <div className="pcr1c2">
-                    <h5 className="p-name">
-                        {post.posterName}
-                    </h5>
+                    <h5 className="p-name">{post.posterName}</h5>
                     <p className="p-time">
-                        {post?.publicDate ? dayjs(post.publicDate).fromNow() : ''}
+                        {post?.publicDate
+                            ? dayjs(post.publicDate).fromNow()
+                            : ""}
                     </p>
                 </div>
             </div>
 
             <div className="pcr2">
                 <PostContent content={post.postContent} />
-                
-                {post.images.length > 0 && <PostImageGallery images={post.images} />}
+                {post.hashtags.length > 0 && (
+                    <div
+                        style={{
+                            paddingLeft: "20px",
+                            display: "flex",
+                            gap: "10px",
+                            flexWrap: "wrap",
+                        }}
+                    >
+                        {post.hashtags.map((hashtag, index) => (
+                            <p
+                                className="p-hashtag"
+                                key={index}
+                                onClick={() => onClickHashtag?.(hashtag)}
+                            >
+                                #{hashtag}
+                            </p>
+                        ))}
+                    </div>
+                )}
+                {post.images.length > 0 && (
+                    <PostImageGallery images={post.images} />
+                )}
             </div>
             <hr />
             <div className="pcr3">
                 <div className="pcr3c1">
                     <FarvoriteIcon
-                        onClick={() => handleFavoritePost(post.postId, post.likes.find(like => like.accountId === userId)?.postLikeId)}
-                        className={classNames("pcr3-icon", isFavoritePost ? "pcr3-icon-active" : "")}
+                        onClick={() =>
+                            handleFavoritePost(
+                                post.postId,
+                                post.likes.find(
+                                    (like) => like.accountId === userId
+                                )?.postLikeId
+                            )
+                        }
+                        className={classNames(
+                            "pcr3-icon",
+                            isFavoritePost ? "pcr3-icon-active" : ""
+                        )}
                     />
                     <CommentIcon className="pcr3-icon" />
                 </div>
@@ -167,22 +220,50 @@ const ApprovedPost: FC<ApprovedPostProps> = ({ post, userId }) => {
                                         accept="image/*"
                                         ref={fileInputRef}
                                         multiple
-                                        style={{ display: 'none' }}
-                                        onChange={(e) => handleFileChange(e, setFieldValue)}
+                                        style={{ display: "none" }}
+                                        onChange={(e) =>
+                                            handleFileChange(e, setFieldValue)
+                                        }
                                     />
-                                    <CameraIcon className='camera-icon' onClick={handleCameraClick} />
-                                    <button className="btn-comment" onClick={handleIsAuthencation} type="submit"><SendIcon className="btn-icon" /></button>
+                                    <CameraIcon
+                                        className="camera-icon"
+                                        onClick={handleCameraClick}
+                                    />
+                                    <button
+                                        className="btn-comment"
+                                        onClick={handleIsAuthencation}
+                                        type="submit"
+                                    >
+                                        <SendIcon className="btn-icon" />
+                                    </button>
                                 </div>
                             </div>
-                            <div className="preview-images-container" style={{ display: "flex", marginTop: "20px", gap: "10px", flexWrap: "wrap" }}>
+                            <div
+                                className="preview-images-container"
+                                style={{
+                                    display: "flex",
+                                    marginTop: "20px",
+                                    gap: "10px",
+                                    flexWrap: "wrap",
+                                }}
+                            >
                                 {previewImages.map((img, idx) => (
-                                    <div key={idx} style={{ position: "relative" }}>
+                                    <div
+                                        key={idx}
+                                        style={{ position: "relative" }}
+                                    >
                                         <button
                                             type="button"
                                             onClick={() => {
-                                                const newImages = previewImages.filter((_, i) => i !== idx);
+                                                const newImages =
+                                                    previewImages.filter(
+                                                        (_, i) => i !== idx
+                                                    );
                                                 setPreviewImages(newImages);
-                                                setFieldValue("images", newImages);
+                                                setFieldValue(
+                                                    "images",
+                                                    newImages
+                                                );
                                             }}
                                             style={{
                                                 position: "absolute",
@@ -209,7 +290,7 @@ const ApprovedPost: FC<ApprovedPostProps> = ({ post, userId }) => {
                                                 height: "80px",
                                                 objectFit: "cover",
                                                 borderRadius: "6px",
-                                                cursor: "pointer"
+                                                cursor: "pointer",
                                             }}
                                         />
                                     </div>
@@ -217,7 +298,9 @@ const ApprovedPost: FC<ApprovedPostProps> = ({ post, userId }) => {
                             </div>
                             {isLightboxOpen && photoIndex !== null && (
                                 <Lightbox
-                                    images={previewImages.map((src) => ({ url: src }))}
+                                    images={previewImages.map((src) => ({
+                                        url: src,
+                                    }))}
                                     startIndex={photoIndex}
                                     onClose={() => {
                                         setIsLightboxOpen(false);
@@ -232,12 +315,17 @@ const ApprovedPost: FC<ApprovedPostProps> = ({ post, userId }) => {
             <div className="pcr5">
                 {post?.comments && post.comments.length > 0 ? (
                     post.comments.map((item, index) => (
-                        <div key={item.postCommentId || index} className="feedback-item">
+                        <div
+                            key={item.postCommentId || index}
+                            className="feedback-item"
+                        >
                             <h4 className="ft-name">{item.fullName}</h4>
                             <p className="ft-content">{item.content}</p>
                             <div className="ft-info">
                                 <p className="ft-time">
-                                    {item?.createdDate ? dayjs(item.createdDate).fromNow() : ""}
+                                    {item?.createdDate
+                                        ? dayjs(item.createdDate).fromNow()
+                                        : ""}
                                 </p>
                                 <FavoriteIcon className="ft-favorite-icon" />
                             </div>
@@ -250,7 +338,7 @@ const ApprovedPost: FC<ApprovedPostProps> = ({ post, userId }) => {
                 )}
             </div>
         </div>
-    )
-}
+    );
+};
 
-export default ApprovedPost
+export default ApprovedPost;

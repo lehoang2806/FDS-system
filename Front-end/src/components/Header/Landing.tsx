@@ -84,6 +84,8 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
     const [isNotifOpen, setIsNotifOpen] = useState(false);
     const notifications = useAppSelector(selectNotifications);
 
+    console.log(notifications);
+
     const handleNewNotification = (notification: any) => {
         const correctedNotification: NotificationDto = {
             ...notification,
@@ -149,8 +151,8 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
 
     const unreadCount = notifications.filter((notif) => !notif.isRead).length;
 
-    const unReadCampaignCount = notifications.filter(
-        (notif) => notif.objectType === "Campain"
+    const unReadCampaignCount = notifications.filter((notif) =>
+        ["Campaign", "RegisterReceiver"].includes(notif.objectType)
     ).length;
 
     const unReadCertificateCount = notifications.filter((notif) =>
@@ -568,7 +570,7 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
                                                             }
                                                         }
                                                         return null;
-                                                    case "Campain":
+                                                    case "Campaign":
                                                         if (
                                                             notificationTab ===
                                                             "chiendich"
