@@ -101,6 +101,10 @@ export const routes = {
             list: "/staff/requestSupport",
             detail: "/staff/requestSupport/:id/detail",
         },
-        chat: "/staff/chat"
+        chat: "/staff/chat",
+        donate: {
+            list: "/staff/donate",
+            detail: "/staff/donate/:id/detail",
+        }
     }
 }

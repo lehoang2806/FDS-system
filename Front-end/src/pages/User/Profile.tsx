@@ -1,5 +1,6 @@
 import { selectGetProfileUser, selectUserLogin } from "@/app/selector";
 import { useAppDispatch, useAppSelector } from "@/app/store";
+import { AvatarIcon, EditIcon } from "@/assets/icons";
 import { RenderIf } from "@/components/Elements";
 import Button from "@/components/Elements/Button";
 import TextError from "@/components/Elements/TextError";
@@ -9,16 +10,24 @@ import {
     updateUserProfileApiThunk,
 } from "@/services/user/userThunk";
 import { UserUpdate } from "@/types/user";
+import axios from "axios";
 import { Field, Form, Formik } from "formik";
 import { get } from "lodash";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import * as Yup from "yup";
+import { useRef } from "react";
 
 const UserProfilePage = () => {
     const dispatch = useAppDispatch();
     const userProfile = useAppSelector(selectGetProfileUser);
     const useLogin = useAppSelector(selectUserLogin);
+    const [imagePreview, setImagePreview] = useState<string[]>([]);
+    const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+    const CLOUDINARY_URL =
+        "https://api.cloudinary.com/v1_1/dehc2ftiv/image/upload";
+    const UPLOAD_PRESET = "fds_system";
 
     const initialValues: UserUpdate = {
         fullName: userProfile?.fullName ?? "",
@@ -44,6 +53,30 @@ const UserProfilePage = () => {
             .max(11, "Số điện thoại không được quá 11 chữ số")
             .required("Số điện thoại là bắt buộc"),
     });
+
+    const handleFileChange = async (
+        e: React.ChangeEvent<HTMLInputElement>,
+        setFieldValue: Function
+    ) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        const previewUrl = URL.createObjectURL(file);
+        setImagePreview([previewUrl]); // Hiển thị ảnh preview
+
+        try {
+            const formData = new FormData();
+            formData.append("file", file);
+            formData.append("upload_preset", UPLOAD_PRESET);
+
+            const res = await axios.post(CLOUDINARY_URL, formData);
+            const uploadedUrl = res.data.secure_url;
+
+            setFieldValue("avatar", uploadedUrl); // Gán URL vào Formik
+        } catch (err) {
+            console.error("Upload thất bại:", err);
+        }
+    };
 
     const onSubmit = async (values: UserUpdate) => {
         dispatch(setLoading(true));
@@ -85,7 +118,43 @@ const UserProfilePage = () => {
                     <Form onSubmit={handleSubmit} className="form">
                         <section id="up-section">
                             <div className="ups-container">
-                                {/* <div className="up-avatar"></div> */}
+                                <Field name="avatar">
+                                    {({ form }: any) => (
+                                        <div
+                                            className="up-avatar-wrapper group cursor-pointer relative"
+                                            onClick={() =>
+                                                fileInputRef.current?.click()
+                                            }
+                                        >
+                                            <img
+                                                src={
+                                                    imagePreview[0] ||
+                                                    form.values.avatar ||
+                                                    userProfile?.avatar ||
+                                                    AvatarIcon
+                                                }
+                                                className="up-avatar"
+                                                alt="avatar"
+                                            />
+                                            {/* Icon hiển thị khi hover */}
+                                            <div className="up-edit-overlay">
+                                                <EditIcon className="up-edit-icon" />
+                                            </div>
+                                            <input
+                                                type="file"
+                                                accept="image/*"
+                                                style={{ display: "none" }}
+                                                ref={fileInputRef}
+                                                onChange={(e) =>
+                                                    handleFileChange(
+                                                        e,
+                                                        form.setFieldValue
+                                                    )
+                                                }
+                                            />
+                                        </div>
+                                    )}
+                                </Field>
                                 <h1>Thông tin cá nhân</h1>
                                 <div className="form">
                                     <div className="form-field">

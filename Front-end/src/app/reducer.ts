@@ -3,6 +3,7 @@ import { appSlice } from '@/services/app/appSlice';
 import { authSlice } from '@/services/auth/authSlice';
 import { campaignSlice } from '@/services/campaign/campaignSlice';
 import { feedbackCampaignSlice } from '@/services/campaign/feedback/feedbackCampaignSlice';
+import { donateSlice } from '@/services/donate/donateSlice';
 import { newsSlice } from '@/services/news/newsSlice';
 import { notificationSlice } from '@/services/notification/notificationSlice';
 import { postSlice } from '@/services/post/postSlice';
@@ -22,7 +23,8 @@ const reducer = combineReducers({
     news: newsSlice.reducer,
     post: postSlice.reducer,
     feedbackCampaign: feedbackCampaignSlice.reducer,
-    requestSupport: requestSupportSlice.reducer
+    requestSupport: requestSupportSlice.reducer,
+    donate: donateSlice.reducer,
 });
 
 export type RootState = ReturnType<typeof reducer>;
