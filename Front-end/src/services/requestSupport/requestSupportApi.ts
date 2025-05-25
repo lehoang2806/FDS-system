@@ -26,6 +26,6 @@ export const requestDonorSupport = async (params: RequestDonor) => {
 }
 
 export const participateRequestSupportApi = async (requestSupportId: string, donorId: string, params: string) => {
-    const data = await request.post(`api/RequestSupport/UpdateDonorStatus/${requestSupportId}/${donorId}`, params);
+    const data = await request.put(`api/RequestSupport/UpdateDonorStatus/${requestSupportId}/${donorId}`, params);
     return data.data;
 }

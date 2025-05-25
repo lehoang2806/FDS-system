@@ -39,9 +39,6 @@ const StaffHeader: FC = () => {
 
         // 👉 Lưu nội dung cần hiện toast vào localStorage
         localStorage.setItem("pendingToastMessage", correctedNotification.content);
-
-        // 👉 Reload trang
-        window.location.reload();
     };
 
     useEffect(() => {
@@ -232,7 +229,7 @@ const StaffHeader: FC = () => {
                                     notifications
                                         .filter((notif) => {
                                             if (notificationTab === "chiendich") {
-                                                return notif.objectType === "Campain" || notif.objectType === "RegisterReceiver";
+                                                return notif.objectType === "Campaign" || notif.objectType === "RegisterReceiver";
                                             } else if (notificationTab === "chungnhan") {
                                                 return [
                                                     "Personal Donor Certificate",
@@ -248,7 +245,7 @@ const StaffHeader: FC = () => {
                                         .map((notif) => {
                                             let actionText = "";
 
-                                            if (notif.objectType === "Campain") {
+                                            if (notif.objectType === "Campaign") {
                                                 if (notif.notificationType === "Pending") actionText = "Có chiến dịch được tạo";
                                                 if (notif.notificationType === "Update") actionText = "Có chiến dịch được cập nhật";
                                                 return (

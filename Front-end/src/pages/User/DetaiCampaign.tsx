@@ -184,8 +184,7 @@ const UserDetailCampaignPage: React.FC = () => {
                             </div>
                         </div>
                         <div className="udcscr1c2">
-                            {(currentCampaign?.status === "Pending" ||
-                                currentCampaign?.status === "Approved") && (
+                            {currentCampaign?.status === "Pending"  && (
                                 <button
                                     className="pr-btn"
                                     onClick={() =>
