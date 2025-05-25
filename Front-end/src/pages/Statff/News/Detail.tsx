@@ -5,7 +5,11 @@ import { Modal } from "@/components/Modal";
 import { navigateHook } from "@/routes/RouteApp";
 import { routes } from "@/routes/routeName";
 import { setLoading } from "@/services/app/appSlice";
-import { deleteNewsApiThunk, getAllNewsApiThunk, getNewsByIdApiThunk } from "@/services/news/newsThunk";
+import {
+    deleteNewsApiThunk,
+    getAllNewsApiThunk,
+    getNewsByIdApiThunk,
+} from "@/services/news/newsThunk";
 import { formatDater } from "@/utils/helper";
 import { FC, useEffect, useState } from "react";
 import Lightbox from "react-awesome-lightbox";
@@ -21,7 +25,7 @@ const StaffDetailNewsPage: FC = () => {
     const createDate =
         currentNews?.createdDate && currentNews?.createdDate.split("T")[0];
 
-        const [showModalConfirm, setShowModalConfirm] = useState<boolean>(false);
+    const [showModalConfirm, setShowModalConfirm] = useState<boolean>(false);
 
     useEffect(() => {
         dispatch(setLoading(true));
@@ -65,8 +69,8 @@ const StaffDetailNewsPage: FC = () => {
                 setTimeout(() => {
                     dispatch(setLoading(false));
                 }, 1000);
-            })
-    }
+            });
+    };
 
     return (
         <section id="staff-detail-news" className="staff-section">
@@ -87,18 +91,14 @@ const StaffDetailNewsPage: FC = () => {
                             >
                                 Cập nhật tin tức
                             </button>
-                            <button
-                                onClick={() =>
-                                    setShowModalConfirm(true)
-                                }
-                            >
+                            <button onClick={() => setShowModalConfirm(true)}>
                                 Xoá
                             </button>
                             <button
                                 onClick={() =>
                                     navigateHook(routes.staff.news.list)
                                 }
-                                style={{background: "#480d02"}}
+                                style={{ background: "#480d02" }}
                             >
                                 Quay lại danh sách
                             </button>
@@ -162,8 +162,12 @@ const StaffDetailNewsPage: FC = () => {
                 <div className="confirm-delete-container">
                     <h1>Bạn có chắc chắn muốn xoá tin tức này không?</h1>
                     <div className="group-btn">
-                        <button onClick={() => handleDeleteNews()}>Chắc chắn</button>
-                        <button onClick={() => setShowModalConfirm(false)}>Huỷ</button>
+                        <button onClick={() => handleDeleteNews()}>
+                            Chắc chắn
+                        </button>
+                        <button onClick={() => setShowModalConfirm(false)}>
+                            Huỷ
+                        </button>
                     </div>
                 </div>
             </Modal>

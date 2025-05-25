@@ -24,8 +24,9 @@ const RequestDonorModal: FC<RequestDonorModalProps> = ({
     const donorSupports = useAppSelector(selectGetAllDonorSupport);
     const campaigns = useAppSelector(selectGetAllCampaign);
     const [isSubmitting, setIsSubmitting] = useState(false);
-
-    console.log(donorSupport);
+    const [statusFilter, setStatusFilter] = useState<
+        "all" | "sent" | "expired" | "unsent"
+    >("all");
 
     const countCampaign = (acountID: string) => {
         const count = campaigns.filter(
@@ -42,11 +43,28 @@ const RequestDonorModal: FC<RequestDonorModalProps> = ({
 
     const [searchTerm, setSearchTerm] = useState("");
 
-    const filteredDonorSupports = sortedDonorSupports.filter(
-        (donor) =>
+    const filteredDonorSupports = sortedDonorSupports.filter((donor) => {
+        const matchesSearch =
             donor.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            donor.email.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+            donor.email.toLowerCase().includes(searchTerm.toLowerCase());
+
+        const matchedSentDonor = donorSupport?.find(
+            (d) => d.email === donor.email
+        );
+        const isSent = !!matchedSentDonor;
+        const isExpired =
+            isSent &&
+            matchedSentDonor?.createdDate &&
+            isOver24h(matchedSentDonor.createdDate);
+
+        const matchesStatus =
+            statusFilter === "all" ||
+            (statusFilter === "sent" && isSent && !isExpired) ||
+            (statusFilter === "expired" && isExpired) ||
+            (statusFilter === "unsent" && !isSent);
+
+        return matchesSearch && matchesStatus;
+    });
 
     const [selectedDonors, setSelectedDonors] = useState<string[]>([]);
     const [isAllSelected, setIsAllSelected] = useState(false);
@@ -141,18 +159,44 @@ const RequestDonorModal: FC<RequestDonorModalProps> = ({
     return (
         <Modal isOpen={isOpen} setIsOpen={setIsOpen}>
             <section id="request-donor-modal" style={{ width: "1000px" }}>
-                <p style={{ fontSize: "20px", fontWeight: "bold" }}>Tìm kiếm</p>
-                <input
-                    type="text"
-                    placeholder="Tìm kiếm theo tên hoặc email"
-                    className="pr-input"
-                    value={searchTerm}
-                    onChange={(e) => {
-                        setSearchTerm(e.target.value);
-                        setCurrentDonorSupportsPage(1); // Reset về page 1 khi tìm kiếm
-                    }}
-                    style={{ width: "400px", marginBottom: "20px" }}
-                />
+                <h1>Gửi yêu cầu đến người tặng thực phẩm</h1>
+                <div className="group-filter">
+                    <div className="gfc1">
+                        <p style={{ fontSize: "20px", fontWeight: "bold" }}>
+                            Tìm kiếm
+                        </p>
+                        <input
+                            type="text"
+                            placeholder="Tìm kiếm theo tên hoặc email"
+                            className="pr-input"
+                            value={searchTerm}
+                            onChange={(e) => {
+                                setSearchTerm(e.target.value);
+                                setCurrentDonorSupportsPage(1); // Reset về page 1 khi tìm kiếm
+                            }}
+                            style={{ width: "400px", marginBottom: "20px" }}
+                        />
+                    </div>
+                    <div className="gfc2">
+                        <p style={{ fontSize: "20px", fontWeight: "bold" }}>
+                            Trạng thái
+                        </p>
+                        <select
+                            className="pr-input"
+                            style={{ width: "200px" }}
+                            value={statusFilter}
+                            onChange={(e) => {
+                                setStatusFilter(e.target.value as any);
+                                setCurrentDonorSupportsPage(1);
+                            }}
+                        >
+                            <option value="all">Tất cả</option>
+                            <option value="sent">Đã gửi</option>
+                            <option value="expired">Đã gửi (quá 24h)</option>
+                            <option value="unsent">Chưa gửi</option>
+                        </select>
+                    </div>
+                </div>
                 <table className="table">
                     <thead className="table-head">
                         <tr className="table-head-row">
@@ -183,8 +227,6 @@ const RequestDonorModal: FC<RequestDonorModalProps> = ({
                                 matchedSentDonor?.createdDate &&
                                 isOver24h(matchedSentDonor.createdDate);
                             const shouldDisable = isSent && !isExpired;
-
-                            console.log(isSent, isExpired, shouldDisable);
 
                             return (
                                 <tr className="table-body-row" key={index}>

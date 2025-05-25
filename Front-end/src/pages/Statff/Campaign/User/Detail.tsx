@@ -5,6 +5,7 @@ import {
 import { useAppDispatch, useAppSelector } from "@/app/store";
 import {
     AdditionalCampaignModal,
+    Modal,
     RejectCampaignModal,
 } from "@/components/Modal";
 import { navigateHook } from "@/routes/RouteApp";
@@ -12,6 +13,8 @@ import { routes } from "@/routes/routeName";
 import { setLoading } from "@/services/app/appSlice";
 import {
     approveCampaignApiThunk,
+    deleteCampaignApiThunk,
+    getAllCampaignApiThunk,
     getCampaignByIdApiThunk,
 } from "@/services/campaign/campaignThunk";
 import { getAllRegisterReceiversApiThunk } from "@/services/registerReceive/registerReceiveThunk";
@@ -35,6 +38,8 @@ const StaffDetailCampaignUserPage: FC = () => {
     const currentCampaign = useAppSelector(selectCurrentCampaign);
 
     const registerReceivers = useAppSelector(selectGetAllRegisterReceivers);
+
+    const [showModalConfirm, setShowModalConfirm] = useState<boolean>(false);
 
     const currentRegisterReceivers = registerReceivers.filter(
         (registerReceiver) => registerReceiver.campaignId === id
@@ -117,6 +122,23 @@ const StaffDetailCampaignUserPage: FC = () => {
         setIsAdditionalCampaignModalOpen(true);
     };
 
+    const handleDeleteCampaign = async () => {
+        dispatch(setLoading(true));
+        dispatch(deleteCampaignApiThunk(String(id)))
+            .unwrap()
+            .then(() => {
+                navigateHook(routes.staff.campaign.user.list);
+                toast.success("Xóa tin tức thành công");
+                dispatch(getAllCampaignApiThunk());
+            })
+            .catch()
+            .finally(() => {
+                setTimeout(() => {
+                    dispatch(setLoading(false));
+                }, 1000);
+            });
+    };
+
     return (
         <section id="staff-detail-campaign-user" className="staff-section">
             <div className="staff-container sdcu-container">
@@ -131,6 +153,9 @@ const StaffDetailCampaignUserPage: FC = () => {
                     <div className="sdcucr2r1">
                         <h2></h2>
                         <div className="group-btn">
+                            <button onClick={() => setShowModalConfirm(true)}>
+                                Xoá
+                            </button>
                             <button
                                 onClick={() =>
                                     navigateHook(
@@ -408,6 +433,19 @@ const StaffDetailCampaignUserPage: FC = () => {
                 setIsOpen={setIsAdditionalCampaignModalOpen}
                 selectedCampaign={selectedAdditionalCampaign}
             />
+            <Modal isOpen={showModalConfirm} setIsOpen={setShowModalConfirm}>
+                <div className="confirm-delete-container">
+                    <h1>Bạn có chắc chắn muốn xoá chiến dịch này không này không?</h1>
+                    <div className="group-btn">
+                        <button onClick={() => handleDeleteCampaign()}>
+                            Chắc chắn
+                        </button>
+                        <button onClick={() => setShowModalConfirm(false)}>
+                            Huỷ
+                        </button>
+                    </div>
+                </div>
+            </Modal>
         </section>
     );
 };

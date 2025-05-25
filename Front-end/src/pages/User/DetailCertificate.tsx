@@ -15,6 +15,7 @@ import {
     getPersonalDonorCertificateByIdApiThunk,
     getRecipientCertificateByIdApiThunk,
 } from "@/services/user/userThunk";
+import { formatDater } from "@/utils/helper";
 import { useEffect, useState } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 
@@ -212,9 +213,9 @@ const UserDetailCertificate = () => {
                                     </p>
                                     <h2>Ngày sinh</h2>
                                     <p>
-                                        {
+                                        {formatDater(
                                             currentPersonalDonorCertificate?.birthDay
-                                        }
+                                        )}
                                     </p>
                                     <h2>Số điện thoại</h2>
                                     <p>
@@ -477,7 +478,9 @@ const UserDetailCertificate = () => {
                                     </p>
                                     <h2>Ngày sinh</h2>
                                     <p>
-                                        {currentRecipientCertificate?.birthDay}
+                                        {formatDater(
+                                            currentRecipientCertificate?.birthDay
+                                        )}
                                     </p>
                                     <h2>Số điện thoại</h2>
                                     <p>{currentRecipientCertificate?.phone}</p>

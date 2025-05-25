@@ -1,12 +1,13 @@
 import { selectGetRequestSupportById, selectUserLogin } from "@/app/selector";
 import { useAppDispatch, useAppSelector } from "@/app/store";
+import { CreateCampaignModal } from "@/components/Modal";
 import { setLoading } from "@/services/app/appSlice";
 import {
     getRequestSupportByIdApiThunk,
     participateRequestSupportApiThunk,
 } from "@/services/requestSupport/requestSupportThunk";
 import { formatDater } from "@/utils/helper";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 const ParticipateRequestSupport = () => {
@@ -14,7 +15,8 @@ const ParticipateRequestSupport = () => {
 
     const dispatch = useAppDispatch();
     const currentRequestSupport = useAppSelector(selectGetRequestSupportById);
-
+    const [isCreateCampaignModalOpen, setIsCreateCampaignModalOpen] =
+        useState(false);
     const useLogin = useAppSelector(selectUserLogin);
 
     const status = currentRequestSupport?.supportDonors?.find(
@@ -36,26 +38,27 @@ const ParticipateRequestSupport = () => {
             });
     }, [dispatch, id]);
 
-    const handleParticipateRequestSupport = async () => {
-        dispatch(setLoading(true));
-        await dispatch(
-            participateRequestSupportApiThunk({
-                requestSupportId: String(id),
-                donorId: String(useLogin?.accountId),
-                params: "Participating",
-            })
-        )
-            .unwrap()
-            .then(() => {
-                dispatch(getRequestSupportByIdApiThunk(String(id)));
-            })
-            .catch()
-            .finally(() => {
-                setTimeout(() => {
-                    dispatch(setLoading(false));
-                }, 1000);
-            });
-    };
+    // const handleParticipateRequestSupport = async () => {
+    //     dispatch(setLoading(true));
+    //     await dispatch(
+    //         participateRequestSupportApiThunk({
+    //             requestSupportId: String(id),
+    //             donorId: String(useLogin?.accountId),
+    //             params: "Participating",
+    //         })
+    //     )
+    //         .unwrap()
+    //         .then(() => {
+    //             dispatch(getRequestSupportByIdApiThunk(String(id)));
+    //         })
+    //         .catch()
+    //         .finally(() => {
+    //             setTimeout(() => {
+    //                 dispatch(setLoading(false));
+    //             }, 1000);
+    //         });
+    // };
+
     const handleNotParticipateRequestSupport = async () => {
         dispatch(setLoading(true));
         await dispatch(
@@ -85,7 +88,7 @@ const ParticipateRequestSupport = () => {
                     <div className="group-btn">
                         <button
                             className="sc-btn"
-                            onClick={handleParticipateRequestSupport}
+                            onClick={() => setIsCreateCampaignModalOpen(true)}
                         >
                             Tham gia
                         </button>
@@ -155,25 +158,27 @@ const ParticipateRequestSupport = () => {
                             </>
                         )} */}
 
-                        {currentRequestSupport?.circumstanceImages && currentRequestSupport?.circumstanceImages.length > 0 && (
-                            <>
-                                <h3>Hình ảnh hoàn cảnh gia đình:</h3>
-                                {currentRequestSupport?.circumstanceImages?.map(
-                                    (image, index) => (
-                                        <img
-                                            key={index}
-                                            src={image}
-                                            alt={`Circumstance ${index}`}
-                                            style={{
-                                                width: "100px",
-                                                height: "100px",
-                                                objectFit: "cover",
-                                            }}
-                                        />
-                                    )
-                                )}
-                            </>
-                        )}
+                        {currentRequestSupport?.circumstanceImages &&
+                            currentRequestSupport?.circumstanceImages.length >
+                                0 && (
+                                <>
+                                    <h3>Hình ảnh hoàn cảnh gia đình:</h3>
+                                    {currentRequestSupport?.circumstanceImages?.map(
+                                        (image, index) => (
+                                            <img
+                                                key={index}
+                                                src={image}
+                                                alt={`Circumstance ${index}`}
+                                                style={{
+                                                    width: "100px",
+                                                    height: "100px",
+                                                    objectFit: "cover",
+                                                }}
+                                            />
+                                        )
+                                    )}
+                                </>
+                            )}
                         <h3>Thực phẩm yêu cầu:</h3>
                         {currentRequestSupport?.requestedItems?.map(
                             (product, index) => (
@@ -183,6 +188,10 @@ const ParticipateRequestSupport = () => {
                     </div>
                 </div>
             </div>
+            <CreateCampaignModal
+                isOpen={isCreateCampaignModalOpen}
+                setIsOpen={setIsCreateCampaignModalOpen}
+            />
         </section>
     );
 };

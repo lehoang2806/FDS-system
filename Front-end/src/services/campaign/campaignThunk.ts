@@ -4,6 +4,7 @@ import {
     additionalCampaignApi,
     approveCampaignApi,
     cancelCampaignApi,
+    deleteCampaignApi,
     getAllCampaignApi,
     getCampaignByIdApi,
     rejectCampaignApi,
@@ -11,10 +12,20 @@ import {
 } from "./campaignApi";
 import { ResponseFromServer } from "@/types/app";
 import { TextResponse } from "@/types/auth";
-import { AddCampaign, AdditionalCampaign, ApproveCampaign, CampaignInfo, CancelCampaign, CurrentCampaign, RejectCampaign, UpdateCampaign } from "@/types/campaign";
+import {
+    AddCampaign,
+    AdditionalCampaign,
+    ApproveCampaign,
+    CampaignInfo,
+    CancelCampaign,
+    CurrentCampaign,
+    RejectCampaign,
+    UpdateCampaign,
+} from "@/types/campaign";
 
 const ADD_CAMPAIGN = "ADD_CAMPAIGN";
 const UPDATE_CAMPAIGN = "UPDATE_CAMPAIGN";
+const DETELE_CAMPAIGN = "DETELE_CAMPAIGN";
 const GET_ALL_CAMPAIGNS = "GET_ALL_CAMPAIGNS";
 const GET_CURRENT_CAMPAIGN = "GET_CURRENT_CAMPAIGN";
 const APPROVE_CAMPAIGN = "APPROVE_CAMPAIGN";
@@ -43,6 +54,21 @@ export const updateCampaignApiThunk = createAsyncThunk<
 >(UPDATE_CAMPAIGN, async ({ campaignId, params }, { rejectWithValue }) => {
     try {
         const response = await updateCampaignApi(params, campaignId);
+        return response;
+    } catch (err: any) {
+        return rejectWithValue({
+            errorMessage: err.message,
+            data: err.response.data,
+        });
+    }
+});
+
+export const deleteCampaignApiThunk = createAsyncThunk<
+    ResponseFromServer<TextResponse>,
+    string
+>(DETELE_CAMPAIGN, async (payload, { rejectWithValue }) => {
+    try {
+        const response = await deleteCampaignApi(payload);
         return response;
     } catch (err: any) {
         return rejectWithValue({
