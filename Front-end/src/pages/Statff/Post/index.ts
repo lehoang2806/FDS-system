@@ -1,3 +1,4 @@
 import StaffListPostPage from "./List";
+import StaffDetailPostPage from "./Detail";
 
-export { StaffListPostPage }
+export { StaffListPostPage, StaffDetailPostPage }

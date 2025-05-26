@@ -3,7 +3,7 @@ import { useAppDispatch, useAppSelector } from "@/app/store";
 import { ArrowLeft, ArrowRight, TotalIcon } from "@/assets/icons";
 import { setLoading } from "@/services/app/appSlice";
 import { getAllDonateApiThunk } from "@/services/donate/donateThunk";
-import { formatDater } from "@/utils/helper";
+import { formatDater, formatNumberWithDot } from "@/utils/helper";
 import { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
@@ -19,6 +19,10 @@ const StaffListDonatePage = () => {
     const donates = useAppSelector(selectGetAllDonate);
     const paidDonates = donates.filter((donate) => donate.isPaid === true);
     const donatesSorted = [...paidDonates].reverse();
+    const totalAmount = paidDonates.reduce(
+        (sum, donate) => sum + donate.amount,
+        0
+    );
 
     const [filterType, setFilterType] = useState("all");
 
@@ -94,7 +98,7 @@ const StaffListDonatePage = () => {
                         </div>
                         <div className="st-info">
                             <h3>Tất cả</h3>
-                            <p>{donates.length} Tin tức</p>
+                            <p>{formatNumberWithDot(totalAmount)} VNĐ</p>
                         </div>
                     </div>
                 </div>
@@ -120,7 +124,7 @@ const StaffListDonatePage = () => {
                         <thead className="table-head">
                             <tr className="table-head-row">
                                 <th className="table-head-cell">
-                                    Số tiền ủng hộ
+                                    Số tiền ủng hộ (VNĐ)
                                 </th>
                                 <th className="table-head-cell">Ngày ủng hộ</th>
                                 <th className="table-head-cell">Hành động</th>
@@ -131,7 +135,7 @@ const StaffListDonatePage = () => {
                                 currentDonatesPage.map((item, index) => (
                                     <tr className="table-body-row" key={index}>
                                         <td className="table-body-cell">
-                                            {item.amount}
+                                            {formatNumberWithDot(item.amount)}
                                         </td>
                                         <td className="table-body-cell">
                                             {formatDater(item.createdAt)}

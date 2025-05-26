@@ -29,6 +29,7 @@ import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import dayjs from "dayjs";
 import { formatDater, formatTime } from "@/utils/helper";
+import Button from "@/components/Elements/Button";
 
 const StaffDetailCampaignUserPage: FC = () => {
     const { id } = useParams<{ id: string }>();
@@ -36,10 +37,13 @@ const StaffDetailCampaignUserPage: FC = () => {
     const dispatch = useAppDispatch();
 
     const currentCampaign = useAppSelector(selectCurrentCampaign);
+    console.log(currentCampaign)
 
     const registerReceivers = useAppSelector(selectGetAllRegisterReceivers);
 
     const [showModalConfirm, setShowModalConfirm] = useState<boolean>(false);
+
+    const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
     const currentRegisterReceivers = registerReceivers.filter(
         (registerReceiver) => registerReceiver.campaignId === id
@@ -123,20 +127,17 @@ const StaffDetailCampaignUserPage: FC = () => {
     };
 
     const handleDeleteCampaign = async () => {
-        dispatch(setLoading(true));
-        dispatch(deleteCampaignApiThunk(String(id)))
+        setIsSubmitting(true);
+        dispatch(deleteCampaignApiThunk(String(currentCampaign?.id)))
             .unwrap()
             .then(() => {
                 navigateHook(routes.staff.campaign.user.list);
-                toast.success("Xóa tin tức thành công");
+                toast.success("Xóa chiến dịch thành công");
                 dispatch(getAllCampaignApiThunk());
+                setIsSubmitting(false);
             })
             .catch()
-            .finally(() => {
-                setTimeout(() => {
-                    dispatch(setLoading(false));
-                }, 1000);
-            });
+            .finally(() => {});
     };
 
     return (
@@ -204,6 +205,8 @@ const StaffDetailCampaignUserPage: FC = () => {
                                     {currentCampaign?.campaignDescription}
                                 </span>
                             </h3>
+                        </div>
+                        <div className="col-flex sdcucr2r3c2">
                             <h3>
                                 Địa điểm phát quà:{" "}
                                 <span>
@@ -227,8 +230,6 @@ const StaffDetailCampaignUserPage: FC = () => {
                                 Số lượng quà tặng:{" "}
                                 <span>{currentCampaign?.limitedQuantity}</span>
                             </h3>
-                        </div>
-                        <div className="col-flex sdcucr2r3c2">
                             {currentCampaign?.estimatedBudget ||
                             currentCampaign?.averageCostPerGift ? (
                                 <>
@@ -435,11 +436,16 @@ const StaffDetailCampaignUserPage: FC = () => {
             />
             <Modal isOpen={showModalConfirm} setIsOpen={setShowModalConfirm}>
                 <div className="confirm-delete-container">
-                    <h1>Bạn có chắc chắn muốn xoá chiến dịch này không này không?</h1>
+                    <h1>
+                        Bạn có chắc chắn muốn xoá chiến dịch này không này
+                        không?
+                    </h1>
                     <div className="group-btn">
-                        <button onClick={() => handleDeleteCampaign()}>
-                            Chắc chắn
-                        </button>
+                        <Button
+                            title="Chắc chắn"
+                            loading={isSubmitting}
+                            onClick={() => handleDeleteCampaign()}
+                        />
                         <button onClick={() => setShowModalConfirm(false)}>
                             Huỷ
                         </button>

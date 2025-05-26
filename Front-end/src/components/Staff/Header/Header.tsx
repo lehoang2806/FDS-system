@@ -26,8 +26,6 @@ const StaffHeader: FC = () => {
     const notifications = useAppSelector(selectNotifications)
     const isAuthenticated = useAppSelector(selectIsAuthenticated);
 
-    console.log(notifications)
-
     const handleNewNotification = (notification: any) => {
         const correctedNotification: NotificationDto = {
             ...notification,
@@ -313,7 +311,7 @@ const StaffHeader: FC = () => {
                                                             className={`notification-item ${notif.isRead ? "read" : "unread"}`}
                                                             onClick={() => {
                                                                 markAsRead(notif.notificationId);
-                                                                navigateHook(routes.staff.post);
+                                                                navigateHook(routes.staff.post.list);
                                                             }}
                                                         >
                                                             <CampaignIcon className="notification-icon" />

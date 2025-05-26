@@ -1,17 +1,14 @@
-import {
-    selectGetAllPosts,
-    selectUserLogin,
-} from "@/app/selector";
+import { selectGetAllPosts } from "@/app/selector";
 import { useAppDispatch, useAppSelector } from "@/app/store";
 import { ArrowLeft, ArrowRight } from "@/assets/icons";
+import { navigateHook } from "@/routes/RouteApp";
+import { routes } from "@/routes/routeName";
 import { setLoading } from "@/services/app/appSlice";
 import { getAllPostsApiThunk } from "@/services/post/postThunk";
-import { getProfileApiThunk } from "@/services/user/userThunk";
 import { formatDater } from "@/utils/helper";
 import { FC, useEffect, useState } from "react";
 
 const StaffListPostPage: FC = () => {
-
     const dispatch = useAppDispatch();
     const posts = useAppSelector(selectGetAllPosts);
     const sortedPosts = [...posts].reverse();
@@ -20,14 +17,10 @@ const StaffListPostPage: FC = () => {
         (post) => post.status === "Approved"
     );
 
-    const userLogin = useAppSelector(selectUserLogin);
-
     useEffect(() => {
         dispatch(setLoading(true));
-        Promise.all([
-            dispatch(getAllPostsApiThunk()).unwrap(),
-            dispatch(getProfileApiThunk(String(userLogin?.accountId))).unwrap(),
-        ])
+        dispatch(getAllPostsApiThunk())
+            .unwrap()
             .then()
             .catch()
             .finally(() => {
@@ -38,24 +31,29 @@ const StaffListPostPage: FC = () => {
     }, [dispatch]);
 
     const ITEMS_PER_PAGE = 5;
-    
-        const [currentPostPage, setCurrentPostPage] = useState(1);
-    
-        const totalPostPages = Math.ceil(approvedPosts.length / ITEMS_PER_PAGE);
-    
-        const currentPostesPage = approvedPosts.slice(
-            (currentPostPage - 1) * ITEMS_PER_PAGE,
-            currentPostPage * ITEMS_PER_PAGE
-        );
-    
-        const onPreviousPostPage = () => {
-            if (currentPostPage > 1) setCurrentPostPage(currentPostPage - 1);
-        };
-    
-        const onNextPostPage = () => {
-            if (currentPostPage < totalPostPages)
-                setCurrentPostPage(currentPostPage + 1);
-        };
+
+    const [currentPostPage, setCurrentPostPage] = useState(1);
+
+    const totalPostPages = Math.ceil(approvedPosts.length / ITEMS_PER_PAGE);
+
+    const currentPostesPage = approvedPosts.slice(
+        (currentPostPage - 1) * ITEMS_PER_PAGE,
+        currentPostPage * ITEMS_PER_PAGE
+    );
+
+    const onPreviousPostPage = () => {
+        if (currentPostPage > 1) setCurrentPostPage(currentPostPage - 1);
+    };
+
+    const onNextPostPage = () => {
+        if (currentPostPage < totalPostPages)
+            setCurrentPostPage(currentPostPage + 1);
+    };
+
+    const handleToDetail = (postId: string) => {
+        const url = routes.staff.post.detail.replace(":id", postId);
+        return navigateHook(url);
+    };
 
     return (
         <section id="staff-list-post" className="staff-section">
@@ -71,7 +69,9 @@ const StaffListPostPage: FC = () => {
                     <table className="table">
                         <thead className="table-head">
                             <tr className="table-head-row">
-                                <th className="table-head-cell">Tên người đăng</th>
+                                <th className="table-head-cell">
+                                    Tên người đăng
+                                </th>
                                 <th className="table-head-cell">
                                     Ngày đăng bài
                                 </th>
@@ -91,9 +91,9 @@ const StaffListPostPage: FC = () => {
                                         <td className="table-body-cell">
                                             <button
                                                 className="view-btn"
-                                                // onClick={() =>
-                                                //     handleToDetail(item.newId)
-                                                // }
+                                                onClick={() =>
+                                                    handleToDetail(item.postId)
+                                                }
                                             >
                                                 Xem chi tiết
                                             </button>

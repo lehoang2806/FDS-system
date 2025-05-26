@@ -16,6 +16,7 @@ interface Props {
     selectedUserId?: string;
     title?: string;
     preselectedEmail?: string;
+    unreadUsers?: Record<string, boolean>;
 }
 
 const getToken = (): string | null => {
@@ -34,6 +35,7 @@ const UserList = ({
     selectedUserId,
     title,
     preselectedEmail,
+    unreadUsers,
 }: Props) => {
     const [users, setUsers] = useState<User[]>([]);
     const userLogin = useAppSelector(selectUserLogin);
@@ -112,7 +114,14 @@ const UserList = ({
                 >
                     <img src={AvatarIcon} alt="" />
                     <div>
-                        <h2>{u.fullName}</h2>
+                        <h2>
+                            {u.fullName}
+                            {unreadUsers?.[u.userId] && (
+                                <span style={{ color: "red", marginLeft: 8 }}>
+                                    (chưa đọc)
+                                </span>
+                            )}
+                        </h2>
                         {(userLogin?.roleId === 1 ||
                             userLogin?.roleId === 2) && (
                             <p style={{ fontSize: "14px", marginTop: "5px" }}>
