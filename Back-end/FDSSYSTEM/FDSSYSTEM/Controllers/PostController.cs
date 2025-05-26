@@ -152,8 +152,8 @@ namespace FDSSYSTEM.Controllers
         }
 
         [HttpDelete("DeletePost/{id}")]
-        [Authorize(Roles = "Admin,Staff,Donor,Staff")]
-        public async Task<ActionResult> DeletePost(string id, PostDto post)
+        [Authorize(Roles = "Admin,Staff,Donor,Recipient")]
+        public async Task<ActionResult> DeletePost(string id)
         {
             try
             {
@@ -168,7 +168,7 @@ namespace FDSSYSTEM.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest();
+                return BadRequest(ex.Message);
             }
         }
 

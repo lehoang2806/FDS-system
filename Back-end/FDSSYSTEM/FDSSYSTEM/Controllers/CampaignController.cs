@@ -115,24 +115,24 @@ namespace FDSSYSTEM.Controllers
             }
         }
 
-        [HttpDelete("DeleteCampaign/{id}")]
+        [HttpDelete("DeleteCampaign/{campaignId}")]
         [Authorize(Roles = "Staff,Admin,Recipient,Donor")]
-        public async Task<ActionResult> DeleteCampaign(string id)
+        public async Task<ActionResult> DeleteCampaign(string campaignId)
         {
             try
             {
-                var existingCampaign = await _campaignService.GetCampaignById(id);
+                var existingCampaign = await _campaignService.GetCampaignById(campaignId);
                 if (existingCampaign == null)
                 {
-                    return NotFound();
+                    return NotFound(new { message = "Không tìm thấy chiến dịch." });
                 }
 
-                await _campaignService.Delete(id);
-                return Ok();
+                await _campaignService.DeleteByCampaignId(campaignId);
+                return Ok(new { message = "Xóa chiến dịch thành công." });
             }
             catch (Exception ex)
             {
-                return BadRequest();
+                return BadRequest(new { message = ex.Message });
             }
         }
 

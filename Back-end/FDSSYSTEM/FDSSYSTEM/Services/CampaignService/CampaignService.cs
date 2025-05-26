@@ -272,9 +272,72 @@ namespace FDSSYSTEM.Services.CampaignService
         }
 
 
-        public async Task Delete(string id)
+        public async Task DeleteByCampaignId(string campaignId)
         {
-            await _campaignRepository.DeleteAsync(id);
+            // Lấy campaign bằng CampaignId
+            var campaign = await GetCampaignById(campaignId, true);
+            if (campaign == null)
+            {
+                throw new Exception("Không tìm thấy chiến dịch để xóa.");
+            }
+
+            // Kiểm tra quyền
+            var userId = _userContextService.UserId;
+            var userRole = _userContextService.Role;
+            if (campaign.AccountId != userId && userRole != "Admin" && userRole != "Staff")
+            {
+                throw new Exception("Bạn không có quyền xóa chiến dịch này.");
+            }
+
+            // Xử lý RequestSupport nếu có
+            if (!string.IsNullOrEmpty(campaign.CampaignRequestSupportId))
+            {
+                var request = await _requestSupportRepository.GetByRequestSupportIdAsync(campaign.CampaignRequestSupportId);
+                if (request != null)
+                {
+                    request.ApprovedQuantity -= campaign.LimitedQuantity;
+                    await _requestSupportRepository.UpdateAsync(request.Id, request);
+                }
+            }
+
+            // Xóa campaign bằng CampaignId
+            await _campaignRepository.DeleteByCampaignIdAsync(campaignId);
+
+         /*   // Gửi thông báo
+            var userReceiveNotifications = await _userService.GetAllAdminAndStaffId();
+            foreach (var user in userReceiveNotifications)
+            {
+                var notificationDto = new NotificationDto
+                {
+                    Title = "Chiến dịch đã bị xóa",
+                    Content = $"Chiến dịch {campaign.CampaignName} đã bị xóa.",
+                    NotificationType = "Delete",
+                    ObjectType = "Campaign",
+                    OjectId = campaign.CampaignId,
+                    AccountId = user
+                };
+                await _notificationService.AddNotificationAsync(notificationDto);
+                await _hubNotificationContext.Clients.User(notificationDto.AccountId).SendAsync("ReceiveNotification", notificationDto);
+            }
+
+            // Gửi email cho donor
+            var donor = await _userService.GetAccountById(campaign.AccountId);
+            if (donor != null && !string.IsNullOrEmpty(donor.Email))
+            {
+                string filePath = Path.Combine(_env.ContentRootPath, "EmailTemplates", "DeleteCampaign.html");
+                if (!System.IO.File.Exists(filePath))
+                {
+                    throw new FileNotFoundException("Không tìm thấy file template email.", filePath);
+                }
+
+                string htmlBody = await System.IO.File.ReadAllTextAsync(filePath);
+                string body = htmlBody
+                    .Replace("{{UserName}}", donor.FullName)
+                    .Replace("{{CampaignName}}", campaign.CampaignName);
+
+                string subject = "Chiến dịch của bạn đã bị xóa - FDS-System";
+                await _emailHeper.SendEmailAsync(subject, body, new List<string> { donor.Email }, true);
+            }*/
         }
 
         public async Task Approve(ApproveCampaignDto approveCampaignDto)

@@ -92,9 +92,31 @@ namespace FDSSYSTEM.Services.PostService
             return await GetPostDetail(newPost.PostId);
         }
 
-        public Task Delete(string id)
+        public async Task Delete(string id)
         {
-            throw new NotImplementedException();
+            var post = await _postRepository.GetByPostIdAsync(id);
+            if (post == null)
+            {
+                throw new Exception("Post not found");
+            }
+
+            await _postRepository.DeleteAsync(post.Id);
+
+            var userReceiveNotifications = await _userService.GetAllAdminAndStaffId();
+            foreach (var userId in userReceiveNotifications)
+            {
+                var notificationDto = new NotificationDto
+                {
+                    Title = "Bài đăng đã bị xóa",
+                    Content = "Bài đăng đã bị xóa",
+                    NotificationType = "Delete",
+                    ObjectType = "Post",
+                    OjectId = id,
+                    AccountId = userId
+                };
+                await _notificationService.AddNotificationAsync(notificationDto);
+                await _hubNotificationContext.Clients.User(notificationDto.AccountId).SendAsync("ReceiveNotification", notificationDto);
+            }
         }
 
 

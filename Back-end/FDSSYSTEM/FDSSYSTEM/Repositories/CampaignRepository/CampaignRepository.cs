@@ -21,5 +21,15 @@ namespace FDSSYSTEM.Repositories.CampaignRepository
             var all = await GetAllAsync();
             return all.OrderByDescending(x => x.CreatedDate).FirstOrDefault();
         }
+
+        public async Task DeleteByCampaignIdAsync(string campaignId)
+        {
+            var filter = Builders<Campaign>.Filter.Eq(c => c.CampaignId, campaignId);
+            var result = await _collection.DeleteOneAsync(filter);
+            if (result.DeletedCount == 0)
+            {
+                throw new Exception($"Không tìm thấy chiến dịch với CampaignId: {campaignId} để xóa.");
+            }
+        }
     }
 }

@@ -8,5 +8,6 @@ namespace FDSSYSTEM.Repositories.CampaignRepository
     public interface ICampaignRepository : IMongoRepository<Campaign>
     {
         Task<Campaign> GetLatestAsync();
+        Task DeleteByCampaignIdAsync(string campaignId); // Thêm phương thức mới
     }
 }
