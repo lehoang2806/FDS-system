@@ -212,13 +212,33 @@ const StaffListCampaignUserPage: FC = () => {
                                 type="date"
                                 className="pr-input"
                                 value={startDate}
-                                onChange={(e) => setStartDate(e.target.value)}
+                                onChange={(e) => {
+                                    setStartDate(e.target.value);
+                                    // Reset endDate nếu nó đang nhỏ hơn startDate
+                                    if (
+                                        endDate &&
+                                        new Date(e.target.value) >
+                                            new Date(endDate)
+                                    ) {
+                                        setEndDate("");
+                                    }
+                                }}
                             />
                             -
                             <input
                                 type="date"
                                 className="pr-input"
                                 value={endDate}
+                                min={
+                                    startDate
+                                        ? new Date(
+                                              new Date(startDate).getTime() +
+                                                  86400000
+                                          ) // +1 ngày
+                                              .toISOString()
+                                              .split("T")[0]
+                                        : undefined
+                                }
                                 onChange={(e) => setEndDate(e.target.value)}
                             />
                         </div>

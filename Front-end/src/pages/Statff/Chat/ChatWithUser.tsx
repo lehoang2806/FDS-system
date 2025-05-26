@@ -1,7 +1,8 @@
 import { selectUserLogin } from "@/app/selector";
 import { useAppSelector } from "@/app/store";
 import { ChatBox, UserList } from "@/components/Elements";
-import { useState } from "react";
+import chatConnection, { startChatConnection } from "@/SignalRChatService";
+import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 
 interface User {
@@ -17,6 +18,40 @@ const StaffChatWithUserPage = () => {
     const preselectedEmail = location.state?.email;
     const userLogin = useAppSelector(selectUserLogin);
     const [selectedUser, setSelectedUser] = useState<User | null>(null);
+    const [unreadUsers, setUnreadUsers] = useState<Record<string, boolean>>({});
+
+    // Kết nối SignalR và lắng nghe tin nhắn đến
+    useEffect(() => {
+        const handleReceiveMessage = (msg: any) => {
+            const isFromOther =
+                msg.senderId !== selectedUser?.userId &&
+                msg.senderId !== userLogin?.accountId;
+
+            if (isFromOther) {
+                setUnreadUsers((prev) => ({
+                    ...prev,
+                    [msg.senderId]: true,
+                }));
+            }
+        };
+
+        startChatConnection().then(() => {
+            chatConnection.on("ReceiveMessage", handleReceiveMessage);
+        });
+
+        return () => {
+            chatConnection.off("ReceiveMessage", handleReceiveMessage);
+        };
+    }, [selectedUser, userLogin]);
+
+    // Khi chọn user thì bỏ trạng thái chưa đọc của họ
+    const handleSelectUser = (user: User) => {
+        setSelectedUser(user);
+        setUnreadUsers((prev) => ({
+            ...prev,
+            [user.userId]: false,
+        }));
+    };
 
     return (
         <section id="staff-chat-with-user" className="staff-section">
@@ -31,10 +66,11 @@ const StaffChatWithUserPage = () => {
                 <div className="scwucr2">
                     <div className="scwucr2c1">
                         <UserList
-                            onSelectUser={setSelectedUser}
+                            onSelectUser={handleSelectUser}
                             selectedUserId={selectedUser?.userId}
                             title="Danh sách người dùng"
                             preselectedEmail={preselectedEmail}
+                            unreadUsers={unreadUsers}
                         />
                     </div>
                     <div className="scwucr2c2">

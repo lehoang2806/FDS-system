@@ -525,7 +525,7 @@ const DetailCampaignPage: React.FC = () => {
                                             Number(
                                                 currentCampaign?.limitedQuantity
                                             ) ? (
-                                                <p className="sc-text">
+                                                <p className="sc-text" style={{ textAlign: "center", padding: "10px 0" }}>
                                                     Đã đăng ký đủ số lượng
                                                 </p>
                                             ) : (

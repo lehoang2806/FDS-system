@@ -44,8 +44,16 @@ const UserList = ({
     const filteredUsers = users
         .filter((u) => u.email.toLowerCase().includes(searchTerm.toLowerCase()))
         .sort((a, b) => {
+            const aUnread = unreadUsers?.[a.userId] ? 1 : 0;
+            const bUnread = unreadUsers?.[b.userId] ? 1 : 0;
+
+            // Ưu tiên user có tin nhắn chưa đọc
+            if (bUnread !== aUnread) return bUnread - aUnread;
+
+            // Nếu bằng nhau thì đưa selectedUser lên đầu
             if (a.userId === selectedUserId) return -1;
             if (b.userId === selectedUserId) return 1;
+
             return 0;
         });
 
@@ -111,16 +119,22 @@ const UserList = ({
                         selectedUserId === u.userId ? "active" : ""
                     }`}
                     onClick={() => onSelectUser(u)}
+                    style={{
+                        backgroundColor: unreadUsers?.[u.userId]
+                            ? "#ffe9c6"
+                            : "",
+                    }}
                 >
                     <img src={AvatarIcon} alt="" />
                     <div>
-                        <h2>
+                        <h2
+                            style={{
+                                fontWeight: unreadUsers?.[u.userId]
+                                    ? "bold"
+                                    : "normal",
+                            }}
+                        >
                             {u.fullName}
-                            {unreadUsers?.[u.userId] && (
-                                <span style={{ color: "red", marginLeft: 8 }}>
-                                    (chưa đọc)
-                                </span>
-                            )}
                         </h2>
                         {(userLogin?.roleId === 1 ||
                             userLogin?.roleId === 2) && (

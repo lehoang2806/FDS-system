@@ -45,6 +45,8 @@ dayjs.extend(relativeTime);
 const UserPersonalPage = () => {
     const dispatch = useAppDispatch();
 
+    const [searchTermDonor, setSearchTermDonor] = useState("");
+
     // Lấy dữ liệu từ Redux store
     const profileUser = useAppSelector(selectGetProfileUser);
     const isAuthenticated = useAppSelector(selectIsAuthenticated);
@@ -218,11 +220,17 @@ const UserPersonalPage = () => {
     //Campaign
     const [currentCampaignPage, setCurrentCampaignPage] = useState(1);
 
-    const totalCampaignPages = Math.ceil(
-        currentCampaigns.length / ITEMS_PER_PAGE
+    const filteredCampaigns = currentCampaigns.filter((campaign) =>
+        campaign.campaignName
+            .toLowerCase()
+            .includes(searchTermDonor.toLowerCase())
     );
 
-    const currentCampaignsPage = currentCampaigns.slice(
+    const totalCampaignPages = Math.ceil(
+        filteredCampaigns.length / ITEMS_PER_PAGE
+    );
+
+    const currentCampaignsPage = filteredCampaigns.slice(
         (currentCampaignPage - 1) * ITEMS_PER_PAGE,
         currentCampaignPage * ITEMS_PER_PAGE
     );
@@ -443,12 +451,40 @@ const UserPersonalPage = () => {
                             <div className="upps2cr3">
                                 {activeTab === "chiendich" ? (
                                     <div className="upp-content">
-                                        <button
-                                            className="pr-btn"
-                                            onClick={handleCreateCampaign}
+                                        <div
+                                            style={{
+                                                display: "flex",
+                                                justifyContent: "space-between",
+                                                alignItems: "center",
+                                                marginBottom: "20px",
+                                            }}
                                         >
-                                            Tạo chiến dịch
-                                        </button>
+                                            <button
+                                                className="pr-btn"
+                                                onClick={handleCreateCampaign}
+                                            >
+                                                Tạo chiến dịch
+                                            </button>
+                                            <div className="search-container">
+                                                <p style={{ textAlign: "right", fontWeight: "bold", fontSize: "16px" }}>Tìm kiếm</p>
+                                                <input
+                                                    className="pr-input search-input"
+                                                    placeholder="Tìm kiếm theo tên chiến dịch"
+                                                    value={searchTermDonor}
+                                                    style={{
+                                                        width: "400px",
+                                                    }}
+                                                    onChange={(e) => {
+                                                        setSearchTermDonor(
+                                                            e.target.value
+                                                        );
+                                                        setCurrentCampaignPage(
+                                                            1
+                                                        );
+                                                    }}
+                                                />
+                                            </div>
+                                        </div>
                                         {currentCampaigns.length === 0 ? (
                                             <>
                                                 <figure>

@@ -84,8 +84,6 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
     const [isNotifOpen, setIsNotifOpen] = useState(false);
     const notifications = useAppSelector(selectNotifications);
 
-    console.log(notifications)
-
     const handleNewNotification = (notification: any) => {
         const correctedNotification: NotificationDto = {
             ...notification,
@@ -97,21 +95,8 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
         };
 
         dispatch(addNotification(correctedNotification));
-
-        // 👉 Lưu nội dung cần hiện toast vào localStorage
-        localStorage.setItem(
-            "pendingToastMessage",
-            correctedNotification.content
-        );
+        toast.info(`🔔 ${correctedNotification.content}`);
     };
-
-    useEffect(() => {
-        const pendingToast = localStorage.getItem("pendingToastMessage");
-        if (pendingToast) {
-            toast.info(`🔔 ${pendingToast}`);
-            localStorage.removeItem("pendingToastMessage"); // Xóa để tránh toast lặp lại
-        }
-    }, []);
 
     useEffect(() => {
         if (!isAuthenticated) return;
