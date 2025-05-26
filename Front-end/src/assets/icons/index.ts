@@ -29,6 +29,8 @@ import MailIcon from "./mail-icon.svg?react";
 import ManageIcon from "./manage-icon.svg?react";
 import RegisterPersonIcon from "./register-person-icon.svg?react";
 import ChatIconBox from "./chat-icon.svg?react";
+import EditIcon from "./edit-icon.svg?react";
+import DonateIcon from "./donate-icon.svg?react";
 
 export {
     MenuIcon,
@@ -62,4 +64,6 @@ export {
     ManageIcon,
     RegisterPersonIcon,
     ChatIconBox,
+    EditIcon,
+    DonateIcon,
 };

@@ -104,9 +104,6 @@ const DetailCampaignPage: React.FC = () => {
         (sum, r) => sum + (parseInt(r.quantity) || 0),
         0
     );
-console.log(currentCampaign?.limitedQuantity)
-    // console.log(totalQuantityByCurrentUser)
-    // console.log(totalRegisteredQuantity)
 
     // Formatted date/time
     const formattedDate = currentCampaign?.implementationTime

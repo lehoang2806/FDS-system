@@ -1,0 +1,29 @@
+#request-donor-modal {
+    h1 {
+        font-size: 40px;
+        font-weight: 700;
+        color: var(--main-color);
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .group-filter {
+        display: flex;
+        align-items: start;
+        margin-bottom: 20px;
+
+        .gfc1,
+        .gfc2 {
+            flex: 1;
+        }
+    }
+
+    .pr-input {
+        appearance: none;
+    }
+
+    .sc-btn {
+        padding: 8px 30px;
+        margin: 0 auto;
+    }
+}

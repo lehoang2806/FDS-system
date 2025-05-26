@@ -2,6 +2,7 @@ import { selectUserLogin } from "@/app/selector";
 import { useAppSelector } from "@/app/store";
 import { ChatBox, UserList } from "@/components/Elements";
 import { useState } from "react";
+import { useLocation } from "react-router-dom";
 
 interface User {
     userId: string;
@@ -12,8 +13,10 @@ interface User {
 }
 
 const StaffChatWithUserPage = () => {
-    const [selectedUser, setSelectedUser] = useState<User | null>(null);
+    const location = useLocation();
+    const preselectedEmail = location.state?.email;
     const userLogin = useAppSelector(selectUserLogin);
+    const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
     return (
         <section id="staff-chat-with-user" className="staff-section">
@@ -31,6 +34,7 @@ const StaffChatWithUserPage = () => {
                             onSelectUser={setSelectedUser}
                             selectedUserId={selectedUser?.userId}
                             title="Danh sách người dùng"
+                            preselectedEmail={preselectedEmail}
                         />
                     </div>
                     <div className="scwucr2c2">

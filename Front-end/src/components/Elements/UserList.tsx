@@ -15,6 +15,7 @@ interface Props {
     onSelectUser: (user: User) => void;
     selectedUserId?: string;
     title?: string;
+    preselectedEmail?: string;
 }
 
 const getToken = (): string | null => {
@@ -28,14 +29,35 @@ const getToken = (): string | null => {
     }
 };
 
-const UserList = ({ onSelectUser, selectedUserId, title }: Props) => {
+const UserList = ({
+    onSelectUser,
+    selectedUserId,
+    title,
+    preselectedEmail,
+}: Props) => {
     const [users, setUsers] = useState<User[]>([]);
     const userLogin = useAppSelector(selectUserLogin);
     const [searchTerm, setSearchTerm] = useState("");
 
-    const filteredUsers = users.filter((u) =>
-        u.email.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    const filteredUsers = users
+        .filter((u) => u.email.toLowerCase().includes(searchTerm.toLowerCase()))
+        .sort((a, b) => {
+            if (a.userId === selectedUserId) return -1;
+            if (b.userId === selectedUserId) return 1;
+            return 0;
+        });
+
+    useEffect(() => {
+        if (preselectedEmail && users.length > 0) {
+            const matchedUser = users.find(
+                (u) => u.email.toLowerCase() === preselectedEmail.toLowerCase()
+            );
+            if (matchedUser) {
+                onSelectUser(matchedUser);
+            }
+        }
+    }, [users, preselectedEmail]);
+
     useEffect(() => {
         const fetchUsers = async () => {
             const token = getToken();

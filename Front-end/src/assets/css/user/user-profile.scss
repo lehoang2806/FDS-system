@@ -9,12 +9,45 @@
             margin: 0 auto;
             text-align: center;
 
+            .up-avatar-wrapper {
+                width: 150px;
+                height: 150px;
+                position: relative;
+                margin: 0 auto;
+                cursor: pointer;
+
+                &:hover .up-edit-overlay {
+                    opacity: 1;
+                }
+            }
+
             .up-avatar {
                 width: 150px;
                 height: 150px;
-                border-radius: 60px;
-                background: #000;
-                margin: 0 auto;
+                border-radius: var(--border-radius-circle);
+                object-fit: cover;
+                display: block;
+            }
+
+            .up-edit-overlay {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 150px;
+                height: 150px;
+                background-color: rgba(0, 0, 0, 0.4); // lớp phủ tối
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: var(--border-radius-circle);
+                opacity: 0;
+                transition: opacity 0.3s ease;
+            }
+
+            .up-edit-icon {
+                fill: #fff;
+                width: 40px;
+                height: 40px;
             }
 
             h1 {

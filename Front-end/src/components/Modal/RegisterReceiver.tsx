@@ -13,7 +13,7 @@ import {
     getAllRegisterReceiversApiThunk,
 } from "@/services/registerReceive/registerReceiveThunk";
 import { setLoading } from "@/services/app/appSlice";
-import { selectGetAllRegisterReceivers } from "@/app/selector";
+import { selectGetAllRegisterReceivers, selectUserLogin } from "@/app/selector";
 
 const RegisterReceiverModal: FC<RegisterReceiverModalProps> = ({
     isOpen,
@@ -22,11 +22,18 @@ const RegisterReceiverModal: FC<RegisterReceiverModalProps> = ({
     registeredReceiver,
 }) => {
     const dispatch = useAppDispatch();
+    const userLogin = useAppSelector(selectUserLogin);
 
     const registerReceivers = useAppSelector(selectGetAllRegisterReceivers);
+
     const currentRegisterReceivers = registerReceivers.filter(
         (registerReceiver) =>
             registerReceiver.campaignId === campaign?.campaignId
+    );
+
+    const currentRegiterReceiver = currentRegisterReceivers.filter(
+        (registerReceiver) =>
+            registerReceiver.accountId === userLogin?.accountId
     );
 
     const totalQuantityByCurrentUser = registeredReceiver?.reduce(
@@ -49,7 +56,8 @@ const RegisterReceiverModal: FC<RegisterReceiverModalProps> = ({
     }, [dispatch]);
 
     const initialValues: CreateRegisterReceiver = {
-        registerReceiverName: "",
+        registerReceiverName:
+            currentRegiterReceiver[0]?.registerReceiverName || "",
         quantity: 0,
         creatAt: new Date().toISOString(),
         campaignId: campaign?.campaignId,

@@ -1,4 +1,4 @@
-$button-width: 120px;
+$button-width: 150px;
 $button-height: 32px;
 $border-radius: 12px;
 $gradient-start: #ff6c57;
@@ -148,6 +148,10 @@ $glow-color: rgba(255, 157, 46, 0.7); // Màu hào quang
             }
 
             .sdrscr2r3 {
+                display: flex;
+                justify-content: space-between;
+                align-items: start;
+
                 h3 {
                     font-size: 15px;
                     font-weight: 700;

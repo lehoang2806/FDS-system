@@ -42,6 +42,7 @@ interface Post {
     publicDate: string;
     likes: PostLike[];
     comments: PostComment[];
+    hashtags: string[];
 }
 
 interface PostInfo {

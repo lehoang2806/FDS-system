@@ -11,6 +11,11 @@ export const updateCampaignApi = async (params: UpdateCampaign, campaignId: stri
     return data.data;
 };
 
+export const deleteCampaignApi = async (id: string) => {
+    const data = await request.delete(`api/campaign/DeleteCampaign/${id}`);
+    return data.data;
+}
+
 export const getAllCampaignApi = async () => {
     const data = await request.get('api/campaign/GetAllCampaigns');
     return data.data;

@@ -82,7 +82,7 @@
         margin-bottom: 15px;
 
         .pcr2-content {
-            padding: 0 20px 30px;
+            padding: 0 20px 10px;
             font-size: 14px;
             font-weight: 400;
             color: #393939;
@@ -102,6 +102,21 @@
             /* Đảm bảo ảnh không bị biến dạng */
             border-radius: 8px;
             /* Optional, để ảnh mềm mại hơn */
+        }
+
+        .p-hashtag {
+            width: fit-content;
+            padding: 5px 10px;
+            border-radius: var(--border-radius-16);
+            background-color: #ff9d2e;
+            color: #460d02;
+            font-size: 14px;
+            cursor: pointer;
+
+            &:hover {
+                background-color: #ffd088;
+                color: #460d02;
+            }
         }
     }
 
