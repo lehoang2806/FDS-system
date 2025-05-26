@@ -86,7 +86,10 @@ export const routes = {
             detail: "/staff/news/:id/detail",
             update: "/staff/news/:id/update",
         },
-        post: "/staff/post",
+        post: {
+            list: "/staff/post",
+            detail: "/staff/post/:id/detail",
+        },
         certificate: {
             donor: {
                 list: "/staff/certificate/donor",

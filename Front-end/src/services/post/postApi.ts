@@ -15,6 +15,11 @@ export const getPostByIdApi = async (postId: string) => {
     return data.data;
 }
 
+export const deletePostApi = async (postId: string) => {
+    const data = await request.delete(`api/forum/DeletePost/${postId}`);
+    return data.data;
+}
+
 export const approvePostApi = async (params: ApprovePost) => {
     const data = await request.put('api/forum/Approve', params);
     return data.data;

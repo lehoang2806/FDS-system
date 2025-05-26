@@ -121,6 +121,7 @@ const StaffAddNewsPage: FC = () => {
                 toast.success("Tạo tin tức thành công");
                 helpers.resetForm();
                 setImagePreview([]);
+                navigateHook(routes.staff.news.list);
             })
             .catch((error) => {
                 const errorData = get(error, "data", null);

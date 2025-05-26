@@ -101,3 +101,8 @@ interface PostCommentDto {
     replies: PostCommentDto[] | null;
     images: string[]; // base64 hoặc URL ảnh
 }
+
+interface LikeComment {
+    postCommentId: string | null;
+    replyPostCommentId: string | null;
+}

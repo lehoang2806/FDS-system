@@ -1,72 +1,74 @@
 import { selectIsAuthenticated, selectNotifications } from "@/app/selector";
 import { useAppDispatch, useAppSelector } from "@/app/store";
-import { CampaignIcon, CertificateIcon, MenuIcon, NotificationIcon } from "@/assets/icons";
+import {
+    CampaignIcon,
+    CertificateIcon,
+    MenuIcon,
+    NotificationIcon,
+} from "@/assets/icons";
 import { navigateHook } from "@/routes/RouteApp";
 import { routes } from "@/routes/routeName";
-import { addNotification, setNotifications } from "@/services/notification/notificationSlice";
+import {
+    addNotification,
+    setNotifications,
+} from "@/services/notification/notificationSlice";
 import { readNotificationApiThunk } from "@/services/notification/notificationThunk";
 import connection, { startConnection } from "@/signalRService";
 import { FC, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import dayjs from 'dayjs';
-import relativeTime from 'dayjs/plugin/relativeTime';
-import 'dayjs/locale/vi';
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+import "dayjs/locale/vi";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
-dayjs.locale('vi');
+dayjs.locale("vi");
 dayjs.extend(relativeTime);
 
 const StaffHeader: FC = () => {
     const [isNotifOpen, setIsNotifOpen] = useState(false);
     const dispatch = useAppDispatch();
-    const notifications = useAppSelector(selectNotifications)
+    const notifications = useAppSelector(selectNotifications);
     const isAuthenticated = useAppSelector(selectIsAuthenticated);
-
-    console.log(notifications)
 
     const handleNewNotification = (notification: any) => {
         const correctedNotification: NotificationDto = {
             ...notification,
-            notificationId: notification.notificationId || notification.id || notification._id,
+            notificationId:
+                notification.notificationId ||
+                notification.id ||
+                notification._id,
             objectId: notification.objectId || notification.ojectId,
         };
 
         dispatch(addNotification(correctedNotification));
-
-        // 👉 Lưu nội dung cần hiện toast vào localStorage
-        localStorage.setItem("pendingToastMessage", correctedNotification.content);
+        toast.info(`🔔 ${correctedNotification.content}`);
     };
-
-    useEffect(() => {
-        const pendingToast = localStorage.getItem("pendingToastMessage");
-        if (pendingToast) {
-            toast.info(`🔔 ${pendingToast}`);
-            localStorage.removeItem("pendingToastMessage"); // Xóa để tránh toast lặp lại
-        }
-    }, []);
 
     useEffect(() => {
         if (!isAuthenticated) return;
 
         // Kiểm tra xem kết nối SignalR có tồn tại không, nếu không, tạo kết nối mới
         if (!connection?.state || connection?.state === "Disconnected") {
-            startConnection();  // Tạo kết nối nếu chưa có
+            startConnection(); // Tạo kết nối nếu chưa có
         }
 
         // Đăng ký các sự kiện SignalR
         connection.on("ReceiveNotification", handleNewNotification);
         connection.on("LoadOldNotifications", (oldNotifications: any[]) => {
-            dispatch(setNotifications(
-                oldNotifications.map((notif) => ({
-                    ...notif,
-                    notificationId: notif.notificationId || notif.id || notif._id,
-                    ojectId: notif.ojectId || notif.ojectId,
-                }))
-            ));
+            dispatch(
+                setNotifications(
+                    oldNotifications.map((notif) => ({
+                        ...notif,
+                        notificationId:
+                            notif.notificationId || notif.id || notif._id,
+                        ojectId: notif.ojectId || notif.ojectId,
+                    }))
+                )
+            );
         });
 
         return () => {
@@ -74,8 +76,7 @@ const StaffHeader: FC = () => {
             connection.off("ReceiveNotification", handleNewNotification);
             connection.off("LoadOldNotifications");
         };
-    }, [isAuthenticated, connection]);  // Thêm connection vào dependency array
-
+    }, [isAuthenticated, connection]); // Thêm connection vào dependency array
 
     const markAsRead = (notificationId: string) => {
         // Cập nhật UI ngay lập tức
@@ -107,33 +108,50 @@ const StaffHeader: FC = () => {
             })
             .catch((error) => {
                 // Hiển thị thông báo lỗi nếu có
-                toast.error(error?.errorMessage || "Có lỗi xảy ra khi đánh dấu thông báo là đã đọc.");
+                toast.error(
+                    error?.errorMessage ||
+                        "Có lỗi xảy ra khi đánh dấu thông báo là đã đọc."
+                );
             });
     };
 
     const unreadCount = notifications.filter((notif) => !notif.isRead).length;
 
-    const unReadCampaignCount = notifications.filter((notif) => notif.objectType === "Campain").length;
+    const unReadCampaignCount = notifications.filter(
+        (notif) => notif.objectType === "Campain"
+    ).length;
 
-    const unReadRequestSupportCount = notifications.filter((notif) => notif.objectType === "Yêu cầu trợ giúp").length;
+    const unReadRequestSupportCount = notifications.filter(
+        (notif) => notif.objectType === "Yêu cầu trợ giúp"
+    ).length;
 
-    const unReadPostCount = notifications.filter((notif) => notif.objectType === "Post").length;
+    const unReadPostCount = notifications.filter(
+        (notif) => notif.objectType === "Post"
+    ).length;
 
     const unReadCertificateCount = notifications.filter((notif) =>
         [
             "Personal Donor Certificate",
             "Organization Donor Certificate",
-            "Recipient Certificate"
+            "Recipient Certificate",
         ].includes(notif.objectType)
     ).length;
 
     const toggleSidebar = () => {
-        document.getElementById("staff-sidebar")?.classList.toggle("ss-expanded");
-        document.getElementById("staff-sidebar")?.classList.toggle("ss-collapsed");
+        document
+            .getElementById("staff-sidebar")
+            ?.classList.toggle("ss-expanded");
+        document
+            .getElementById("staff-sidebar")
+            ?.classList.toggle("ss-collapsed");
         document.getElementById("staff")?.classList.toggle("staff-expanded");
         document.getElementById("staff")?.classList.toggle("staff-collapsed");
-        document.getElementById("staff-header")?.classList.toggle("sh-expanded");
-        document.getElementById("staff-header")?.classList.toggle("sh-collapsed");
+        document
+            .getElementById("staff-header")
+            ?.classList.toggle("sh-expanded");
+        document
+            .getElementById("staff-header")
+            ?.classList.toggle("sh-collapsed");
     };
 
     const toggleNotifications = () => {
@@ -144,7 +162,10 @@ const StaffHeader: FC = () => {
         if (!campaignId) {
             return;
         }
-        const url = routes.staff.campaign.user.detail.replace(":id", campaignId);
+        const url = routes.staff.campaign.user.detail.replace(
+            ":id",
+            campaignId
+        );
         navigateHook(url);
     };
 
@@ -152,11 +173,17 @@ const StaffHeader: FC = () => {
         if (!requestSupportId) {
             return;
         }
-        const url = routes.staff.request_support.detail.replace(":id", requestSupportId);
+        const url = routes.staff.request_support.detail.replace(
+            ":id",
+            requestSupportId
+        );
         navigateHook(url);
-    }
+    };
 
-    const handleToDetailDonorCertificate = (certificateId?: string, type?: string) => {
+    const handleToDetailDonorCertificate = (
+        certificateId?: string,
+        type?: string
+    ) => {
         if (!certificateId) {
             return;
         }
@@ -165,7 +192,10 @@ const StaffHeader: FC = () => {
             return;
         }
 
-        const url = routes.staff.certificate.donor.detail.replace(":id", certificateId);
+        const url = routes.staff.certificate.donor.detail.replace(
+            ":id",
+            certificateId
+        );
         const fullUrl = `${url}?type=${encodeURIComponent(type)}`;
 
         navigateHook(fullUrl);
@@ -176,9 +206,12 @@ const StaffHeader: FC = () => {
             return;
         }
 
-        const url = routes.staff.certificate.recipient.detail.replace(":id", certificateId);
+        const url = routes.staff.certificate.recipient.detail.replace(
+            ":id",
+            certificateId
+        );
         navigateHook(url);
-    }
+    };
 
     const [notificationTab, setNotificationTab] = useState("chiendich");
 
@@ -189,253 +222,553 @@ const StaffHeader: FC = () => {
                     <MenuIcon className="sh-icon" onClick={toggleSidebar} />
                     <div className="notification-wrapper">
                         <div className="notification-icon-wrapper">
-                            <NotificationIcon className="sh-icon" onClick={toggleNotifications} />
-                            {unreadCount > 0 && <span className="notification-badge">{unreadCount > 9 ? "9+" : unreadCount}</span>}
+                            <NotificationIcon
+                                className="sh-icon"
+                                onClick={toggleNotifications}
+                            />
+                            {unreadCount > 0 && (
+                                <span className="notification-badge">
+                                    {unreadCount > 9 ? "9+" : unreadCount}
+                                </span>
+                            )}
                         </div>
                         {isNotifOpen && (
                             <div className="notification-dropdown">
                                 <div className="nd-tabs">
                                     <div
-                                        className={`nd-tabs-item ${notificationTab === "chiendich" ? "nd-tabs-item-actived" : ""}`}
-                                        onClick={() => setNotificationTab("chiendich")}
+                                        className={`nd-tabs-item ${
+                                            notificationTab === "chiendich"
+                                                ? "nd-tabs-item-actived"
+                                                : ""
+                                        }`}
+                                        onClick={() =>
+                                            setNotificationTab("chiendich")
+                                        }
                                     >
                                         Chiến dịch
-                                        {unReadCampaignCount > 0 && <span className="notification-badge">{unReadCampaignCount > 9 ? "9+" : unReadCampaignCount}</span>}
+                                        {unReadCampaignCount > 0 && (
+                                            <span className="notification-badge">
+                                                {unReadCampaignCount > 9
+                                                    ? "9+"
+                                                    : unReadCampaignCount}
+                                            </span>
+                                        )}
                                     </div>
                                     <div
-                                        className={`nd-tabs-item ${notificationTab === "chungnhan" ? "nd-tabs-item-actived" : ""}`}
-                                        onClick={() => setNotificationTab("chungnhan")}
+                                        className={`nd-tabs-item ${
+                                            notificationTab === "chungnhan"
+                                                ? "nd-tabs-item-actived"
+                                                : ""
+                                        }`}
+                                        onClick={() =>
+                                            setNotificationTab("chungnhan")
+                                        }
                                     >
                                         Chứng nhận
-                                        {unReadCertificateCount > 0 && <span className="notification-badge">{unReadCertificateCount > 9 ? "9+" : unReadCertificateCount}</span>}
+                                        {unReadCertificateCount > 0 && (
+                                            <span className="notification-badge">
+                                                {unReadCertificateCount > 9
+                                                    ? "9+"
+                                                    : unReadCertificateCount}
+                                            </span>
+                                        )}
                                     </div>
                                     <div
-                                        className={`nd-tabs-item ${notificationTab === "baiviet" ? "nd-tabs-item-actived" : ""}`}
-                                        onClick={() => setNotificationTab("baiviet")}
+                                        className={`nd-tabs-item ${
+                                            notificationTab === "baiviet"
+                                                ? "nd-tabs-item-actived"
+                                                : ""
+                                        }`}
+                                        onClick={() =>
+                                            setNotificationTab("baiviet")
+                                        }
                                     >
                                         Bài viết
-                                        {unReadPostCount > 0 && <span className="notification-badge">{unReadPostCount > 9 ? "9+" : unReadPostCount}</span>}
+                                        {unReadPostCount > 0 && (
+                                            <span className="notification-badge">
+                                                {unReadPostCount > 9
+                                                    ? "9+"
+                                                    : unReadPostCount}
+                                            </span>
+                                        )}
                                     </div>
                                     <div
-                                        className={`nd-tabs-item ${notificationTab === "yeucau" ? "nd-tabs-item-actived" : ""}`}
-                                        onClick={() => setNotificationTab("yeucau")}
+                                        className={`nd-tabs-item ${
+                                            notificationTab === "yeucau"
+                                                ? "nd-tabs-item-actived"
+                                                : ""
+                                        }`}
+                                        onClick={() =>
+                                            setNotificationTab("yeucau")
+                                        }
                                     >
                                         Yêu cầu trợ giúp
-                                        {unReadRequestSupportCount > 0 && <span className="notification-badge">{unReadRequestSupportCount > 9 ? "9+" : unReadRequestSupportCount}</span>}
+                                        {unReadRequestSupportCount > 0 && (
+                                            <span className="notification-badge">
+                                                {unReadRequestSupportCount > 9
+                                                    ? "9+"
+                                                    : unReadRequestSupportCount}
+                                            </span>
+                                        )}
                                     </div>
                                 </div>
 
                                 {notifications.length > 0 ? (
                                     notifications
                                         .filter((notif) => {
-                                            if (notificationTab === "chiendich") {
-                                                return notif.objectType === "Campaign" || notif.objectType === "RegisterReceiver";
-                                            } else if (notificationTab === "chungnhan") {
+                                            if (
+                                                notificationTab === "chiendich"
+                                            ) {
+                                                return (
+                                                    notif.objectType ===
+                                                        "Campaign" ||
+                                                    notif.objectType ===
+                                                        "RegisterReceiver"
+                                                );
+                                            } else if (
+                                                notificationTab === "chungnhan"
+                                            ) {
                                                 return [
                                                     "Personal Donor Certificate",
                                                     "Recipient Certificate",
                                                     "Organization Donor Certificate",
                                                 ].includes(notif.objectType);
-                                            } else if (notificationTab === "yeucau") {
-                                                return notif.objectType === "Yêu cầu trợ giúp";
-                                            } else if (notificationTab === "baiviet") {
-                                                return notif.objectType === "Post";
+                                            } else if (
+                                                notificationTab === "yeucau"
+                                            ) {
+                                                return (
+                                                    notif.objectType ===
+                                                    "Yêu cầu trợ giúp"
+                                                );
+                                            } else if (
+                                                notificationTab === "baiviet"
+                                            ) {
+                                                return (
+                                                    notif.objectType === "Post"
+                                                );
                                             }
                                         })
                                         .map((notif) => {
                                             let actionText = "";
 
-                                            if (notif.objectType === "Campaign") {
-                                                if (notif.notificationType === "Pending") actionText = "Có chiến dịch được tạo";
-                                                if (notif.notificationType === "Update") actionText = "Có chiến dịch được cập nhật";
+                                            if (
+                                                notif.objectType === "Campaign"
+                                            ) {
+                                                if (
+                                                    notif.notificationType ===
+                                                    "Pending"
+                                                )
+                                                    actionText =
+                                                        "Có chiến dịch được tạo";
+                                                if (
+                                                    notif.notificationType ===
+                                                    "Update"
+                                                )
+                                                    actionText =
+                                                        "Có chiến dịch được cập nhật";
                                                 return (
                                                     <div
-                                                        key={notif.notificationId}
-                                                        className={`notification-item ${notif.isRead ? "read" : "unread"}`}
+                                                        key={
+                                                            notif.notificationId
+                                                        }
+                                                        className={`notification-item ${
+                                                            notif.isRead
+                                                                ? "read"
+                                                                : "unread"
+                                                        }`}
                                                         onClick={() => {
-                                                            markAsRead(notif.notificationId);
-                                                            handleToDetailUserCampaign(notif.ojectId);
+                                                            markAsRead(
+                                                                notif.notificationId
+                                                            );
+                                                            handleToDetailUserCampaign(
+                                                                notif.ojectId
+                                                            );
                                                         }}
                                                     >
                                                         <CampaignIcon className="notification-icon" />
                                                         <div>
-                                                            <strong>{notif.content}</strong>
+                                                            <strong>
+                                                                {notif.content}
+                                                            </strong>
                                                             <p>{actionText}</p>
                                                             <p>
                                                                 {notif?.createdDate
-                                                                    ? dayjs.utc(notif.createdDate).tz("Asia/Ho_Chi_Minh").fromNow()
-                                                                    : ''}
+                                                                    ? dayjs
+                                                                          .utc(
+                                                                              notif.createdDate
+                                                                          )
+                                                                          .tz(
+                                                                              "Asia/Ho_Chi_Minh"
+                                                                          )
+                                                                          .fromNow()
+                                                                    : ""}
                                                             </p>
                                                         </div>
                                                     </div>
                                                 );
                                             }
 
-                                            if (notif.objectType === "RegisterReceiver") {
+                                            if (
+                                                notif.objectType ===
+                                                "RegisterReceiver"
+                                            ) {
                                                 let actionText = "";
-                                                if (notif.notificationType === "Pending") actionText = "Có người đăng ký chiến dịch của bạn.";
+                                                if (
+                                                    notif.notificationType ===
+                                                    "Pending"
+                                                )
+                                                    actionText =
+                                                        "Có người đăng ký chiến dịch của bạn.";
 
                                                 if (actionText) {
                                                     return (
                                                         <div
-                                                            key={notif.notificationId}
-                                                            className={`notification-item ${notif.isRead ? "read" : "unread"}`}
+                                                            key={
+                                                                notif.notificationId
+                                                            }
+                                                            className={`notification-item ${
+                                                                notif.isRead
+                                                                    ? "read"
+                                                                    : "unread"
+                                                            }`}
                                                             onClick={() => {
-                                                                markAsRead(notif.notificationId);
-                                                                handleToDetailUserCampaign(notif.ojectId);
+                                                                markAsRead(
+                                                                    notif.notificationId
+                                                                );
+                                                                handleToDetailUserCampaign(
+                                                                    notif.ojectId
+                                                                );
                                                             }}
                                                         >
                                                             <CampaignIcon className="notification-icon" />
                                                             <div>
-                                                                <strong>{notif.content}</strong>
-                                                                <p>Xem chi tiết</p>
+                                                                <strong>
+                                                                    {
+                                                                        notif.content
+                                                                    }
+                                                                </strong>
+                                                                <p>
+                                                                    Xem chi tiết
+                                                                </p>
                                                                 <p>
                                                                     {notif?.createdDate
-                                                                        ? dayjs.utc(notif.createdDate).tz("Asia/Ho_Chi_Minh").fromNow()
-                                                                        : ''}
+                                                                        ? dayjs
+                                                                              .utc(
+                                                                                  notif.createdDate
+                                                                              )
+                                                                              .tz(
+                                                                                  "Asia/Ho_Chi_Minh"
+                                                                              )
+                                                                              .fromNow()
+                                                                        : ""}
                                                                 </p>
                                                             </div>
                                                         </div>
                                                     );
                                                 }
                                             } else {
-                                                <div className="notification-empty">Không có thông báo</div>
+                                                <div className="notification-empty">
+                                                    Không có thông báo
+                                                </div>;
                                             }
 
                                             if (notif.objectType === "Post") {
                                                 let actionText = "";
-                                                if (notif.notificationType === "pending") actionText = "Có một bài đăng mới được tạo ra.";
+                                                if (
+                                                    notif.notificationType ===
+                                                    "pending"
+                                                )
+                                                    actionText =
+                                                        "Có một bài đăng mới được tạo ra.";
 
                                                 if (actionText) {
                                                     return (
                                                         <div
-                                                            key={notif.notificationId}
-                                                            className={`notification-item ${notif.isRead ? "read" : "unread"}`}
+                                                            key={
+                                                                notif.notificationId
+                                                            }
+                                                            className={`notification-item ${
+                                                                notif.isRead
+                                                                    ? "read"
+                                                                    : "unread"
+                                                            }`}
                                                             onClick={() => {
-                                                                markAsRead(notif.notificationId);
-                                                                navigateHook(routes.staff.post);
+                                                                markAsRead(
+                                                                    notif.notificationId
+                                                                );
+                                                                navigateHook(
+                                                                    routes.staff
+                                                                        .post
+                                                                        .list
+                                                                );
                                                             }}
                                                         >
                                                             <CampaignIcon className="notification-icon" />
                                                             <div>
-                                                                <strong>{notif.content}</strong>
-                                                                <p>Xem chi tiết</p>
+                                                                <strong>
+                                                                    {
+                                                                        notif.content
+                                                                    }
+                                                                </strong>
+                                                                <p>
+                                                                    Xem chi tiết
+                                                                </p>
                                                                 <p>
                                                                     {notif?.createdDate
-                                                                        ? dayjs.utc(notif.createdDate).tz("Asia/Ho_Chi_Minh").fromNow()
-                                                                        : ''}
+                                                                        ? dayjs
+                                                                              .utc(
+                                                                                  notif.createdDate
+                                                                              )
+                                                                              .tz(
+                                                                                  "Asia/Ho_Chi_Minh"
+                                                                              )
+                                                                              .fromNow()
+                                                                        : ""}
                                                                 </p>
                                                             </div>
                                                         </div>
                                                     );
                                                 }
                                             } else {
-                                                <div className="notification-empty">Không có thông báo</div>
+                                                <div className="notification-empty">
+                                                    Không có thông báo
+                                                </div>;
                                             }
 
-                                            if (notif.objectType === "Yêu cầu trợ giúp") {
+                                            if (
+                                                notif.objectType ===
+                                                "Yêu cầu trợ giúp"
+                                            ) {
                                                 let actionText = "";
-                                                if (notif.notificationType === "Yêu cầu trợ giúp") actionText = "Có người đang yêu cầu hỗ trợ.";
+                                                if (
+                                                    notif.notificationType ===
+                                                    "Yêu cầu trợ giúp"
+                                                )
+                                                    actionText =
+                                                        "Có người đang yêu cầu hỗ trợ.";
 
                                                 if (actionText) {
                                                     return (
                                                         <div
-                                                            key={notif.notificationId}
-                                                            className={`notification-item ${notif.isRead ? "read" : "unread"}`}
+                                                            key={
+                                                                notif.notificationId
+                                                            }
+                                                            className={`notification-item ${
+                                                                notif.isRead
+                                                                    ? "read"
+                                                                    : "unread"
+                                                            }`}
                                                             onClick={() => {
-                                                                markAsRead(notif.notificationId);
-                                                                handleToDetailRequestSupport(notif.ojectId);
+                                                                markAsRead(
+                                                                    notif.notificationId
+                                                                );
+                                                                handleToDetailRequestSupport(
+                                                                    notif.ojectId
+                                                                );
                                                             }}
                                                         >
                                                             <CampaignIcon className="notification-icon" />
                                                             <div>
-                                                                <strong>{notif.content}</strong>
-                                                                <p>Xem chi tiết</p>
+                                                                <strong>
+                                                                    {
+                                                                        notif.content
+                                                                    }
+                                                                </strong>
+                                                                <p>
+                                                                    Xem chi tiết
+                                                                </p>
                                                                 <p>
                                                                     {notif?.createdDate
-                                                                        ? dayjs.utc(notif.createdDate).tz("Asia/Ho_Chi_Minh").fromNow()
-                                                                        : ''}
+                                                                        ? dayjs
+                                                                              .utc(
+                                                                                  notif.createdDate
+                                                                              )
+                                                                              .tz(
+                                                                                  "Asia/Ho_Chi_Minh"
+                                                                              )
+                                                                              .fromNow()
+                                                                        : ""}
                                                                 </p>
                                                             </div>
                                                         </div>
                                                     );
                                                 }
                                             } else {
-                                                <div className="notification-empty">Không có thông báo</div>
+                                                <div className="notification-empty">
+                                                    Không có thông báo
+                                                </div>;
                                             }
 
-                                            if (notif.objectType === "Personal Donor Certificate") {
-                                                if (notif.notificationType === "Pending") actionText = "Có chứng nhận mới được tạo";
-                                                if (notif.notificationType === "Update") actionText = "Có chứng nhận mới được cập nhật";
+                                            if (
+                                                notif.objectType ===
+                                                "Personal Donor Certificate"
+                                            ) {
+                                                if (
+                                                    notif.notificationType ===
+                                                    "Pending"
+                                                )
+                                                    actionText =
+                                                        "Có chứng nhận mới được tạo";
+                                                if (
+                                                    notif.notificationType ===
+                                                    "Update"
+                                                )
+                                                    actionText =
+                                                        "Có chứng nhận mới được cập nhật";
                                                 return (
                                                     <div
-                                                        key={notif.notificationId}
-                                                        className={`notification-item ${notif.isRead ? "read" : "unread"}`}
+                                                        key={
+                                                            notif.notificationId
+                                                        }
+                                                        className={`notification-item ${
+                                                            notif.isRead
+                                                                ? "read"
+                                                                : "unread"
+                                                        }`}
                                                         onClick={() => {
-                                                            markAsRead(notif.notificationId);
-                                                            handleToDetailDonorCertificate(notif.ojectId, "Personal");
+                                                            markAsRead(
+                                                                notif.notificationId
+                                                            );
+                                                            handleToDetailDonorCertificate(
+                                                                notif.ojectId,
+                                                                "Personal"
+                                                            );
                                                         }}
                                                     >
                                                         <CertificateIcon className="notification-icon" />
                                                         <div>
-                                                            <strong>{notif.content}</strong>
+                                                            <strong>
+                                                                {notif.content}
+                                                            </strong>
                                                             <p>{actionText}</p>
                                                             <p>
                                                                 {notif?.createdDate
-                                                                    ? dayjs.utc(notif.createdDate).tz("Asia/Ho_Chi_Minh").fromNow()
-                                                                    : ''}
+                                                                    ? dayjs
+                                                                          .utc(
+                                                                              notif.createdDate
+                                                                          )
+                                                                          .tz(
+                                                                              "Asia/Ho_Chi_Minh"
+                                                                          )
+                                                                          .fromNow()
+                                                                    : ""}
                                                             </p>
                                                         </div>
                                                     </div>
                                                 );
                                             }
 
-                                            if (notif.objectType === "Recipient Certificate") {
-                                                if (notif.notificationType === "Pending") actionText = "Có chứng nhận mới được tạo";
-                                                if (notif.notificationType === "Update") actionText = "Có chứng nhận mới được cập nhật";
+                                            if (
+                                                notif.objectType ===
+                                                "Recipient Certificate"
+                                            ) {
+                                                if (
+                                                    notif.notificationType ===
+                                                    "Pending"
+                                                )
+                                                    actionText =
+                                                        "Có chứng nhận mới được tạo";
+                                                if (
+                                                    notif.notificationType ===
+                                                    "Update"
+                                                )
+                                                    actionText =
+                                                        "Có chứng nhận mới được cập nhật";
                                                 return (
                                                     <div
-                                                        key={notif.notificationId}
-                                                        className={`notification-item ${notif.isRead ? "read" : "unread"}`}
+                                                        key={
+                                                            notif.notificationId
+                                                        }
+                                                        className={`notification-item ${
+                                                            notif.isRead
+                                                                ? "read"
+                                                                : "unread"
+                                                        }`}
                                                         onClick={() => {
-                                                            markAsRead(notif.notificationId);
-                                                            handleToDetailRecipientCertificate(notif.ojectId);
+                                                            markAsRead(
+                                                                notif.notificationId
+                                                            );
+                                                            handleToDetailRecipientCertificate(
+                                                                notif.ojectId
+                                                            );
                                                         }}
                                                     >
                                                         <CertificateIcon className="notification-icon" />
                                                         <div>
-                                                            <strong>{notif.content}</strong>
+                                                            <strong>
+                                                                {notif.content}
+                                                            </strong>
                                                             <p>{actionText}</p>
                                                             <p>
                                                                 {notif?.createdDate
-                                                                    ? dayjs.utc(notif.createdDate).tz("Asia/Ho_Chi_Minh").fromNow()
-                                                                    : ''}
+                                                                    ? dayjs
+                                                                          .utc(
+                                                                              notif.createdDate
+                                                                          )
+                                                                          .tz(
+                                                                              "Asia/Ho_Chi_Minh"
+                                                                          )
+                                                                          .fromNow()
+                                                                    : ""}
                                                             </p>
                                                         </div>
                                                     </div>
                                                 );
                                             }
 
-                                            if (notif.objectType === "Organization Donor Certificate") {
-                                                if (notif.notificationType === "Pending") actionText = "Có chứng nhận mới được tạo";
-                                                if (notif.notificationType === "Update") actionText = "Có chứng nhận mới được cập nhật";
+                                            if (
+                                                notif.objectType ===
+                                                "Organization Donor Certificate"
+                                            ) {
+                                                if (
+                                                    notif.notificationType ===
+                                                    "Pending"
+                                                )
+                                                    actionText =
+                                                        "Có chứng nhận mới được tạo";
+                                                if (
+                                                    notif.notificationType ===
+                                                    "Update"
+                                                )
+                                                    actionText =
+                                                        "Có chứng nhận mới được cập nhật";
                                                 return (
                                                     <div
-                                                        key={notif.notificationId}
-                                                        className={`notification-item ${notif.isRead ? "read" : "unread"}`}
+                                                        key={
+                                                            notif.notificationId
+                                                        }
+                                                        className={`notification-item ${
+                                                            notif.isRead
+                                                                ? "read"
+                                                                : "unread"
+                                                        }`}
                                                         onClick={() => {
-                                                            markAsRead(notif.notificationId);
-                                                            handleToDetailDonorCertificate(notif.ojectId, "Organization");
+                                                            markAsRead(
+                                                                notif.notificationId
+                                                            );
+                                                            handleToDetailDonorCertificate(
+                                                                notif.ojectId,
+                                                                "Organization"
+                                                            );
                                                         }}
                                                     >
                                                         <CertificateIcon className="notification-icons" />
                                                         <div>
-                                                            <strong>{notif.content}</strong>
+                                                            <strong>
+                                                                {notif.content}
+                                                            </strong>
                                                             <p>{actionText}</p>
                                                             <p>
                                                                 {notif?.createdDate
-                                                                    ? dayjs.utc(notif.createdDate).tz("Asia/Ho_Chi_Minh").fromNow()
-                                                                    : ''}
+                                                                    ? dayjs
+                                                                          .utc(
+                                                                              notif.createdDate
+                                                                          )
+                                                                          .tz(
+                                                                              "Asia/Ho_Chi_Minh"
+                                                                          )
+                                                                          .fromNow()
+                                                                    : ""}
                                                             </p>
                                                         </div>
                                                     </div>
@@ -445,10 +778,11 @@ const StaffHeader: FC = () => {
                                             return null;
                                         })
                                 ) : (
-                                    <div className="notification-empty">Không có thông báo</div>
+                                    <div className="notification-empty">
+                                        Không có thông báo
+                                    </div>
                                 )}
                             </div>
-
                         )}
                     </div>
                 </div>
