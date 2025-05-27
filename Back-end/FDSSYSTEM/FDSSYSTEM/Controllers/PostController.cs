@@ -151,7 +151,7 @@ namespace FDSSYSTEM.Controllers
             }
         }
 
-        [HttpDelete("DeletePost/{id}")]
+        [HttpDelete("DeletePost/{postid}")]
         [Authorize(Roles = "Admin,Staff,Donor,Recipient")]
         public async Task<ActionResult> DeletePost(string id)
         {

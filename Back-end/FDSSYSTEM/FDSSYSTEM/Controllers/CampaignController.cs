@@ -116,7 +116,7 @@ namespace FDSSYSTEM.Controllers
         }
 
         [HttpDelete("DeleteCampaign/{campaignId}")]
-        [Authorize(Roles = "Staff,Admin,Recipient,Donor")]
+        /*[Authorize(Roles = "Staff,Admin,Recipient,Donor")]*/
         public async Task<ActionResult> DeleteCampaign(string campaignId)
         {
             try
