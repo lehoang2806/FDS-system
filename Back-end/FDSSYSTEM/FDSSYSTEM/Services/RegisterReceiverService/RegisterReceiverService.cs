@@ -15,6 +15,7 @@ using FDSSYSTEM.SignalR;
 using Microsoft.AspNetCore.SignalR;
 using FDSSYSTEM.Helper;
 using FDSSYSTEM.Repositories.OtpRepository;
+using FDSSYSTEM.DTOs.CampaignDonorSupport;
 
 namespace FDSSYSTEM.Services.RegisterReceiverService
 {
@@ -149,10 +150,10 @@ namespace FDSSYSTEM.Services.RegisterReceiverService
             var existingRegisterReceiver = await GetById(id);
             if (existingRegisterReceiver != null)
             {
-/*                existingRegisterReceiver.RegisterReceiverName = registerReceiver.RegisterReceiverName;*/
+                existingRegisterReceiver.RegisterReceiverName = registerReceiver.RegisterReceiverName;
                 existingRegisterReceiver.Quantity = registerReceiver.Quantity;
-                /*existingRegisterReceiver.CreatAt = registerReceiver.CreatAt;
-                existingRegisterReceiver.CampaignId = registerReceiver.CampaignId;*/
+                existingRegisterReceiver.CreatAt = registerReceiver.CreatAt;
+                existingRegisterReceiver.CampaignId = registerReceiver.CampaignId;
                 await _registerReceiverRepository.UpdateAsync(existingRegisterReceiver.Id, existingRegisterReceiver);
             }
 
@@ -190,18 +191,12 @@ namespace FDSSYSTEM.Services.RegisterReceiverService
         }
 
 
-        public async Task DonorUpdate(string id, RegisterReceiverDto registerReceiverDto)
+        public async Task DonorUpdate(string id, DonorRegisterReceiverUpdateDto donorRegisterReceiverUpdateDto)
         {
             var existingRegisterReceiver = await GetById(id);
             if (existingRegisterReceiver != null)
             {
-                existingRegisterReceiver.RegisterReceiverName = registerReceiverDto.RegisterReceiverName;
-                existingRegisterReceiver.Quantity = registerReceiverDto.Quantity;
-                existingRegisterReceiver.CreatAt = registerReceiverDto.CreatAt;
-                existingRegisterReceiver.CampaignId = registerReceiverDto.CampaignId;
-                existingRegisterReceiver.UpdatedByDonorId = _userContextService.UserId;
-                existingRegisterReceiver.DateUpdated = DateTime.Now;
-
+                existingRegisterReceiver.Quantity = donorRegisterReceiverUpdateDto.Quantity;
                 // Ghi nhận cập nhật bởi Donor (nếu cần có thêm field)
                 await _registerReceiverRepository.UpdateAsync(existingRegisterReceiver.Id, existingRegisterReceiver);
             }

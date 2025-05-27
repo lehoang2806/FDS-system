@@ -151,19 +151,19 @@ namespace FDSSYSTEM.Controllers
             }
         }
 
-        [HttpDelete("DeletePost/{postid}")]
+        [HttpDelete("DeletePost/{postId}")]
         [Authorize(Roles = "Admin,Staff,Donor,Recipient")]
-        public async Task<ActionResult> DeletePost(string id)
+        public async Task<ActionResult> DeletePost(string postId)
         {
             try
             {
-                var existingPost = await _postService.GetById(id);
+                var existingPost = await _postService.GetById(postId);
                 if (existingPost == null)
                 {
                     return NotFound();
                 }
 
-                await _postService.Delete(id);
+                await _postService.Delete(postId);
                 return Ok();
             }
             catch (Exception ex)
