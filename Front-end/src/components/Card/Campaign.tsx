@@ -1,4 +1,4 @@
-import { FC } from "react"
+import { FC } from "react";
 import { CampaignCardProps } from "./type";
 
 const CampaignCard: FC<CampaignCardProps> = ({ onClickDetail, campaign }) => {
@@ -17,21 +17,20 @@ const CampaignCard: FC<CampaignCardProps> = ({ onClickDetail, campaign }) => {
 
     // Xử lý status dựa trên thời gian
     const campaignDate = new Date(campaign.implementationTime);
+    // Set giờ về cuối ngày
+    campaignDate.setHours(23, 59, 59, 999);
+
     const currentDate = new Date();
 
     let status = "";
-    if (campaignDate.getTime() < currentDate.getTime()) {
+    if (campaignDate < currentDate) {
         status = "Đã kết thúc";
     } else if (
         campaignDate.getFullYear() === currentDate.getFullYear() &&
         campaignDate.getMonth() === currentDate.getMonth() &&
         campaignDate.getDate() === currentDate.getDate()
     ) {
-        if (campaignDate.getTime() > currentDate.getTime()) {
-            status = "Sắp diễn ra";
-        } else {
-            status = "Đang diễn ra";
-        }
+        status = "Đang diễn ra";
     } else {
         status = "Sắp diễn ra";
     }
@@ -45,19 +44,26 @@ const CampaignCard: FC<CampaignCardProps> = ({ onClickDetail, campaign }) => {
                 </div>
             </div>
             <h4>{campaign.campaignName}</h4>
-            <p>{formattedDate} - {formattedTime}</p>
             <p>
-                {campaign.limitedQuantity} Phần quà
+                {formattedDate} - {formattedTime}
             </p>
+            <p>{campaign.limitedQuantity} Phần quà</p>
             <p>
                 {campaign.location}, {campaign.district}
             </p>
-            <p className={`cc-status ${status === "Đã kết thúc" ? "ended" : status === "Đang diễn ra" ? "ongoing" : "upcoming"}`}>
+            <p
+                className={`cc-status ${
+                    status === "Đã kết thúc"
+                        ? "ended"
+                        : status === "Đang diễn ra"
+                        ? "ongoing"
+                        : "upcoming"
+                }`}
+            >
                 {status}
             </p>
         </div>
-
     );
-}
+};
 
 export default CampaignCard;

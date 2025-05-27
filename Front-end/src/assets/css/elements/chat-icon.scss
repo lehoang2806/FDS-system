@@ -56,6 +56,7 @@
             display: flex;
             align-items: center;
             justify-content: start;
+            border-radius: var(--border-radius-12);
 
             img {
                 width: 40px;
@@ -68,7 +69,6 @@
                 background: #ff9d2e;
                 color: #fff;
                 transition: all 0.2s ease-in-out;
-                border-radius: var(--border-radius-12);
             }
 
             &:not(.active):hover {
@@ -146,7 +146,7 @@
                 display: flex;
                 flex-direction: column;
                 align-items: start;
-                
+
                 .text-left {
                     width: fit-content;
                     padding: 10px 15px;
@@ -178,4 +178,31 @@
             }
         }
     }
+}
+
+@keyframes blink-bounce {
+    0% {
+        transform: translateY(0);
+        box-shadow: 0 0 10px #f97107;
+    }
+    25% {
+        transform: translateY(-10px);
+        box-shadow: 0 0 20px #ff9d2e;
+    }
+    50% {
+        transform: translateY(0);
+        box-shadow: 0 0 10px #f97107;
+    }
+    75% {
+        transform: translateY(0);
+        box-shadow: 0 0 20px #ff9d2e;
+    }
+    100% {
+        transform: translateY(0);
+        box-shadow: 0 0 10px #f97107;
+    }
+}
+
+.chat-icon.blinking {
+    animation: blink-bounce 1s infinite ease-in-out;
 }

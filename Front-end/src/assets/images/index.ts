@@ -13,4 +13,19 @@ import Logo from "./logo.png";
 import LogoLanding from "./logo-landing.png";
 import RemindLogin from "./remind-login.webp";
 
-export { SupporterLogo, SupporterAvatar, SupporterImage, AvatarUser, NoResult, ImageCarousel1, ImageCarousel2, ImageCarousel3, LS2, CampaignImage, Logo, LogoLanding, RemindLogin, LS3 };
+export {
+    SupporterLogo,
+    SupporterAvatar,
+    SupporterImage,
+    AvatarUser,
+    NoResult,
+    ImageCarousel1,
+    ImageCarousel2,
+    ImageCarousel3,
+    LS2,
+    CampaignImage,
+    Logo,
+    LogoLanding,
+    RemindLogin,
+    LS3,
+};

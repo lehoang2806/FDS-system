@@ -29,7 +29,6 @@ const StaffDashboardPage: FC = () => {
     const approvedCampaigns = sortedCampaigns.filter(
         (campaign) => campaign.status === "Approved"
     );
-    const fiveCampaigns = approvedCampaigns.slice(0, 5);
 
     // Function to get campaigns by month for a specific year
     const getCampaignsByMonth = (year: number) => {
@@ -112,7 +111,23 @@ const StaffDashboardPage: FC = () => {
             }
         });
 
-        return Object.keys(monthlyData).map((month) => ({
+        // ✅ Trả về dữ liệu theo đúng thứ tự từ T01 đến T12
+        const monthsOrder = [
+            "01",
+            "02",
+            "03",
+            "04",
+            "05",
+            "06",
+            "07",
+            "08",
+            "09",
+            "10",
+            "11",
+            "12",
+        ];
+
+        return monthsOrder.map((month) => ({
             month: "T" + month,
             ...monthlyData[month],
         }));
@@ -222,43 +237,6 @@ const StaffDashboardPage: FC = () => {
                             allYears={availableYears}
                             dataGenerator={generateComparisonData}
                         />
-                        {/* <h3>Danh sách chiến dịch</h3>
-                        <table className="table">
-                            <thead className="table-head">
-                                <tr className="table-head-row">
-                                    <th className="table-head-cell">
-                                        Tên chiến dịch
-                                    </th>
-                                    <th className="table-head-cell">
-                                        Trạng thái
-                                    </th>
-                                    <th className="table-head-cell">
-                                        Thời gian tạo
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody className="table-body">
-                                {fiveCampaigns.map((campaign, index) => (
-                                    <tr className="table-body-row" key={index}>
-                                        <td className='table-body-cell'>{campaign.campaignName}</td>
-                                        <td className='table-body-cell'>
-                                            {campaign.status === "Pending" ? (
-                                                <span className='status-pending'>Đang chờ phê duyệt</span>
-                                            ) : campaign.status === "Approved" ? (
-                                                <span className='status-approve'>Đã được phê duyệt</span>
-                                            ) : campaign.status === "Rejected" ? (
-                                                <span className='status-reject'>Đã bị từ chối</span>
-                                            ) : campaign.status === "Canceled" ? (
-                                                <span className='status-reject'>Đã huỷ</span>
-                                            ) : null}
-                                        </td>
-                                        <td className='table-body-cell'>
-                                            {campaign?.createdDate ? dayjs(campaign.createdDate).fromNow() : ''}
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table> */}
                     </div>
                     <div className="sdcr2c2"></div>
                 </div>

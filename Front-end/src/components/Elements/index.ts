@@ -18,6 +18,7 @@ import ChatBox from "./ChatBox";
 import UserList from "./UserList";
 import ChatIcon from "./ChatIcon";
 import CampaignComparisonChart from "./CampaignComparisonChart";
+import CommentPost from "./CommentPost";
 
 export {
     OTPInput,
@@ -39,5 +40,6 @@ export {
     ChatBox,
     UserList,
     ChatIcon,
-    CampaignComparisonChart
+    CampaignComparisonChart,
+    CommentPost
 };

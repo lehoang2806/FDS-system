@@ -156,10 +156,10 @@ const StaffSidebar: FC = () => {
                         </div>
                     </Link>
                     <Link
-                        to={routes.staff.post}
+                        to={routes.staff.post.list}
                         className={classNames("sscr2-nav-item", {
                             "nav-active": location.pathname.startsWith(
-                                routes.staff.post
+                                routes.staff.post.list
                             ),
                         })}
                     >

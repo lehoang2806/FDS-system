@@ -7,7 +7,6 @@ import {
     CameraIcon,
     CommentIcon,
     FarvoriteIcon,
-    FavoriteIcon,
     SendIcon,
 } from "@/assets/icons";
 import { useAppDispatch, useAppSelector } from "@/app/store";
@@ -24,9 +23,11 @@ import { Field, Form, Formik, FormikHelpers } from "formik";
 import { setLoading } from "@/services/app/appSlice";
 import { commentPostApiThunk } from "@/services/post/comment/commentPostThunk";
 import * as Yup from "yup";
-import { selectIsAuthenticated } from "@/app/selector";
+import { selectIsAuthenticated, selectUserLogin } from "@/app/selector";
 import Lightbox from "react-awesome-lightbox";
 import PostContent from "./PostContent";
+import CommentPost from "./CommentPost";
+import { UserProfile } from "@/types/auth";
 
 dayjs.locale("vi");
 dayjs.extend(relativeTime);
@@ -37,6 +38,7 @@ const ApprovedPost: FC<ApprovedPostProps> = ({
     onClickHashtag,
 }) => {
     const dispatch = useAppDispatch();
+    const userLogin = useAppSelector(selectUserLogin);
 
     const isFavoritePost =
         Array.isArray(post.likes) &&
@@ -315,21 +317,11 @@ const ApprovedPost: FC<ApprovedPostProps> = ({
             <div className="pcr5">
                 {post?.comments && post.comments.length > 0 ? (
                     post.comments.map((item, index) => (
-                        <div
-                            key={item.postCommentId || index}
-                            className="feedback-item"
-                        >
-                            <h4 className="ft-name">{item.fullName}</h4>
-                            <p className="ft-content">{item.content}</p>
-                            <div className="ft-info">
-                                <p className="ft-time">
-                                    {item?.createdDate
-                                        ? dayjs(item.createdDate).fromNow()
-                                        : ""}
-                                </p>
-                                <FavoriteIcon className="ft-favorite-icon" />
-                            </div>
-                        </div>
+                        <CommentPost
+                            key={index}
+                            comment={item}
+                            user={userLogin as UserProfile}
+                        />
                     ))
                 ) : (
                     <div className="feedback-item">

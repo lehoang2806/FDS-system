@@ -1,0 +1,107 @@
+#staff-detail-post {
+    .sdp-container {
+        .sdpcr1 {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 30px;
+            background: #fff;
+            border-radius: var(--border-radius-12);
+            margin-bottom: 30px;
+
+            h1 {
+                font-size: 18px;
+                font-weight: 700;
+                color: #29343d;
+            }
+
+            p {
+                font-size: 14px;
+                font-weight: 400;
+                color: #29343d;
+
+                .staff-tag {
+                    font-size: 12px;
+                    font-weight: 500;
+                    color: var(--main-color);
+                    padding: 10px 15px;
+                    background: rgba(255, 157, 46, 0.1);
+                    border-radius: var(--border-radius-12);
+                    margin-left: 10px;
+                }
+            }
+        }
+
+        .sdpcr2 {
+            padding: 20px 30px;
+            background: #fff;
+            border-radius: var(--border-radius-12);
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: end;
+            align-items: center;
+
+            button {
+                padding: 15px 20px;
+                font-size: 14px;
+                font-weight: 500;
+                color: #fff;
+                border: none;
+                border-radius: var(--border-radius-12);
+                cursor: pointer;
+
+                &:first-child {
+                    background: #ff6692;
+                    margin-right: 10px;
+                }
+
+                &:last-child {
+                    background: #36c76c;
+                    margin: 0;
+                }
+            }
+        }
+    }
+
+    .confirm-delete-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 0px 30px;
+
+        h1 {
+            font-size: 30px;
+            font-weight: 700;
+            color: #ff6304;
+            margin-bottom: 30px;
+        }
+
+        .group-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+
+            button {
+                padding: 15px 20px;
+                font-size: 14px;
+                font-weight: 500;
+                color: #fff;
+                border: none;
+                border-radius: var(--border-radius-12);
+                cursor: pointer;
+
+                &:first-child {
+                    background: #36c76c;
+                    margin-right: 10px;
+                }
+
+                &:last-child {
+                    background: #ff6692;
+                    margin: 0;
+                }
+            }
+        }
+    }
+}

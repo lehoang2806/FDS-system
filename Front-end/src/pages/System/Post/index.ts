@@ -1,3 +1,3 @@
 import PostForumPage from "./Forum";
 
-export { PostForumPage }
+export { PostForumPage };
