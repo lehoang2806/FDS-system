@@ -1,4 +1,5 @@
 ﻿using FDSSYSTEM.DTOs;
+using FDSSYSTEM.DTOs.CampaignDonorSupport;
 using FDSSYSTEM.Models;
 
 namespace FDSSYSTEM.Services.RegisterReceiverService
@@ -10,7 +11,7 @@ namespace FDSSYSTEM.Services.RegisterReceiverService
         Task Create(RegisterReceiverDto registerReceiver);
         Task Update(string id, RegisterReceiverDto registerReceiver);
         Task<int> GetTotalRegisteredQuantityAsync(string campaignId, string accountId);
-        Task DonorUpdate(string id, RegisterReceiverDto registerReceiverDto);
+        Task DonorUpdate(string id, DonorRegisterReceiverUpdateDto donorRegisterReceiverUpdateDto);
 
 
     }

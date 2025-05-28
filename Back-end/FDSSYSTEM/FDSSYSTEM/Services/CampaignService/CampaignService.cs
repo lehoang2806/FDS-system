@@ -284,10 +284,11 @@ namespace FDSSYSTEM.Services.CampaignService
             // Kiểm tra quyền
             var userId = _userContextService.UserId;
             var userRole = _userContextService.Role;
-            if (campaign.AccountId != userId && userRole != "Admin" && userRole != "Staff")
+            if (campaign.AccountId != userId && !(userRole == "Admin" || userRole == "Staff" || (userRole == "Donor" && campaign.AccountId == userId)))
             {
                 throw new Exception("Bạn không có quyền xóa chiến dịch này.");
             }
+
 
             // Xử lý RequestSupport nếu có
             if (!string.IsNullOrEmpty(campaign.CampaignRequestSupportId))

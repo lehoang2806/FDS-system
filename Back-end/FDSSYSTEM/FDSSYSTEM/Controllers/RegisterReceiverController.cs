@@ -1,4 +1,5 @@
 ﻿using FDSSYSTEM.DTOs;
+using FDSSYSTEM.DTOs.CampaignDonorSupport;
 using FDSSYSTEM.Models;
 using FDSSYSTEM.Services.RegisterReceiverService;
 using Mapster;
@@ -117,7 +118,7 @@ namespace FDSSYSTEM.Controllers
 
         [HttpPut("UpdateStatus/{registerReceiverId}")]
         [Authorize(Roles = "Staff,Admin")]
-        public async Task<IActionResult> UpdateStatus(string registerReceiverId, [FromBody] string status)
+        public async Task<IActionResult> UpdateStatus(string registerReceiverId)
         {
             try
             {
@@ -125,7 +126,7 @@ namespace FDSSYSTEM.Controllers
                 if (registerReceiver == null)
                     return NotFound(new { message = "RegisterReceiver không tồn tại." });
 
-                registerReceiver.Status = status;
+                registerReceiver.Status = "Đã nhận"; // Gán cố định
                 registerReceiver.DateUpdated = DateTime.Now;
 
                 await _registerReceiverService.Update(registerReceiver.Id, registerReceiver.Adapt<RegisterReceiverDto>());
@@ -138,9 +139,10 @@ namespace FDSSYSTEM.Controllers
         }
 
 
+
         [HttpPut("DonorUpdateRegisterReceiver/{id}")]
         [Authorize(Roles = "Donor")]
-        public async Task<ActionResult> DonorUpdateRegisterReceiver(string id, RegisterReceiverDto registerReceiverDto)
+        public async Task<ActionResult> DonorUpdateRegisterReceiver(string id, DonorRegisterReceiverUpdateDto donorRegisterReceiverUpdateDto)
         {
             try
             {
@@ -151,7 +153,7 @@ namespace FDSSYSTEM.Controllers
                 }
 
                 // Gọi hàm service chuyên biệt cho Donor cập nhật
-                await _registerReceiverService.DonorUpdate(id, registerReceiverDto);
+                await _registerReceiverService.DonorUpdate(id, donorRegisterReceiverUpdateDto);
                 return Ok(new { message = "Donor cập nhật thành công." });
             }
             catch (Exception ex)
