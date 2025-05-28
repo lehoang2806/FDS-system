@@ -1,6 +1,6 @@
 #landing {
     background-color: #fff7eb;
-    
+
     h2 {
         font-size: 40px;
         font-weight: 700;
@@ -21,7 +21,6 @@
     }
 
     #landing-s2 {
-
         h3 {
             font-size: 35px;
             font-weight: 600;
@@ -67,12 +66,9 @@
 
             .ls3r1c1,
             .ls3r1c2 {
-                .ls3-img {
-
-                    img {
-                        width: 110%;
-                        object-fit: cover;
-                    }
+                img {
+                    width: 100%;
+                    object-fit: cover;
                 }
             }
 
