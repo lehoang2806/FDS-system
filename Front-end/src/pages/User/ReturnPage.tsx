@@ -1,3 +1,5 @@
+import { navigateHook } from "@/routes/RouteApp";
+import { routes } from "@/routes/routeName";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
@@ -30,7 +32,11 @@ const ReturnPage = () => {
                 fontFamily: "Arial, sans-serif",
                 padding: "100px 20px",
                 backgroundColor: "#f0f2f5",
-                textAlign: "center",
+                height: "calc(100vh - 471px)",
+                display: "flex",
+                justifyContent: "center",
+                flexDirection: "column",
+                alignItems: "center",
             }}
         >
             <div
@@ -55,6 +61,8 @@ const ReturnPage = () => {
                     </p>
                 )}
             </div>
+
+            <button className="sc-btn" onClick={() => navigateHook(routes.user.home)} style={{ marginTop: "20px", padding: "10px 20px" }}>Quay về trang chủ</button>
         </div>
     );
 };
