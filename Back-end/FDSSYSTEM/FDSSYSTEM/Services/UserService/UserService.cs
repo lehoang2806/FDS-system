@@ -88,11 +88,14 @@ public class UserService : IUserService
 
     public async Task<Account> GetUserByUsernameAsync(string userEmail)
     {
-
         userEmail = userEmail.ToLower();
         var allUser = await _userRepository.GetAllAsync();
-        return allUser.FirstOrDefault(x => x.Email?.ToLower() == userEmail);
-
+        var user = allUser.FirstOrDefault(x => x.Email?.ToLower() == userEmail);
+        if (user != null && user.IsBanned)
+        {
+            throw new Exception("Tài khoản của bạn đã bị cấm.");
+        }
+        return user;
     }
 
     public async Task CreateUserAsync(RegisterUserDto user, bool verifyOtp, bool isGoogleAccount)
@@ -1061,4 +1064,97 @@ public class UserService : IUserService
         }
         return null;
     }
+
+    public async Task BanAccount(string accountId, string reason)
+    {
+        var account = await GetAccountById(accountId);
+        if (account.IsBanned)
+        {
+            throw new Exception("Tài khoản đã bị cấm.");
+        }
+
+        account.IsBanned = true;
+        await _userRepository.UpdateAsync(account.Id, account);
+
+        var notificationDto = new NotificationDto
+        {
+            Title = "Tài khoản bị cấm",
+            Content = $"Tài khoản của bạn đã bị cấm. Lý do: {reason}",
+            NotificationType = "Ban",
+            ObjectType = "Account",
+            OjectId = accountId,
+            AccountId = accountId
+        };
+
+        // Lưu thông báo vào cơ sở dữ liệu
+        await _notificationService.AddNotificationAsync(notificationDto);
+        // Gửi thông báo qua SignalR
+        await _hubNotificationContext.Clients.User(notificationDto.AccountId).SendAsync("ReceiveNotification", notificationDto);
+
+        if (account.RoleId == 4) // Recipient
+        {
+            _smsHeper.SendSMS(account.Phone, $"FDS-System: Tài khoản của bạn đã bị cấm. Lý do: {reason}");
+        }
+        else // Donor
+        {
+            string filePath = Path.Combine(_env.ContentRootPath, "EmailTemplates", "BanAccount.html");
+            if (!System.IO.File.Exists(filePath))
+            {
+                throw new FileNotFoundException("Không tìm thấy file template email.", filePath);
+            }
+            string htmlBody = await System.IO.File.ReadAllTextAsync(filePath);
+            string body = htmlBody.Replace("{{UserName}}", account.FullName)
+                                 .Replace("{{Reason}}", reason)
+                                 .Replace("{{Hompage}}", _emailConfig.HomePage);
+            string subject = "Tài khoản của bạn đã bị cấm";
+            await _emailHeper.SendEmailAsync(subject, body, new List<string> { account.Email }, true);
+        }
+    }
+
+    public async Task UnbanAccount(string accountId)
+    {
+        var account = await GetAccountById(accountId);
+        if (!account.IsBanned)
+        {
+            throw new Exception("Tài khoản không bị cấm.");
+        }
+
+        account.IsBanned = false;
+        await _userRepository.UpdateAsync(account.Id, account);
+
+        var notificationDto = new NotificationDto
+        {
+            Title = "Tài khoản được bỏ cấm",
+            Content = "Tài khoản của bạn đã được bỏ cấm.",
+            NotificationType = "Unban",
+            ObjectType = "Account",
+            OjectId = accountId,
+            AccountId = accountId
+        };
+
+        // Lưu thông báo vào cơ sở dữ liệu
+        await _notificationService.AddNotificationAsync(notificationDto);
+        // Gửi thông báo qua SignalR
+        await _hubNotificationContext.Clients.User(notificationDto.AccountId).SendAsync("ReceiveNotification", notificationDto);
+
+        if (account.RoleId == 4) // Recipient
+        {
+            _smsHeper.SendSMS(account.Phone, "FDS-System: Tài khoản của bạn đã được bỏ cấm.");
+        }
+        else // Donor
+        {
+            string filePath = Path.Combine(_env.ContentRootPath, "EmailTemplates", "UnbanAccount.html");
+            if (!System.IO.File.Exists(filePath))
+            {
+                throw new FileNotFoundException("Không tìm thấy file template email.", filePath);
+            }
+            string htmlBody = await System.IO.File.ReadAllTextAsync(filePath);
+            string body = htmlBody.Replace("{{UserName}}", account.FullName)
+                                 .Replace("{{Hompage}}", _emailConfig.HomePage);
+            string subject = "Tài khoản của bạn đã được bỏ cấm";
+            await _emailHeper.SendEmailAsync(subject, body, new List<string> { account.Email }, true);
+        }
+    }
+
+
 }

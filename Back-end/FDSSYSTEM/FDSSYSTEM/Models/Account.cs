@@ -54,5 +54,6 @@ public partial class Account
     public string Type { get; set; }
     public string DonorType { get; set; }
     public DateTime CreatedDate { get; set; } = DateTime.Now;
+    public bool IsBanned { get; set; }
 
 }

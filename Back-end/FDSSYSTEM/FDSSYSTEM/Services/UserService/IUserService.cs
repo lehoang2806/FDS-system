@@ -53,4 +53,6 @@ public interface IUserService
     Task<List<Account>> GetAllDonorConfirmed();
     Task<List<Account>> GetAllRecipientConfirmed();
     Task<GoogleJsonWebSignature.Payload> VerifyGoogleTokenAsync(string idToken);
+    Task BanAccount(string accountId, string reason); 
+    Task UnbanAccount(string accountId); 
 }

@@ -420,5 +420,23 @@ namespace FDSSYSTEM.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+
+        [HttpPost("ban-account")]
+        [Authorize(Roles = "Staff")]
+        public async Task<IActionResult> BanAccount([FromBody] BanAccountDto banAccountDto)
+        {
+            await _userService.BanAccount(banAccountDto.AccountId, banAccountDto.Reason);
+            return Ok("Tài khoản đã bị cấm.");
+        }
+
+        [HttpPost("unban-account")]
+        [Authorize(Roles = "Staff")]
+        public async Task<IActionResult> UnbanAccount([FromBody] UnbanAccountDto unbanAccountDto)
+        {
+            await _userService.UnbanAccount(unbanAccountDto.AccountId);
+            return Ok("Tài khoản đã được bỏ cấm.");
+        }
+
     }
 }
