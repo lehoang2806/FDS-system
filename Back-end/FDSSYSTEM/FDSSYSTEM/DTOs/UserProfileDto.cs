@@ -12,7 +12,7 @@
 
         public string? FullName { get; set; }
 
-        public DateOnly? BirthDay { get; set; }
+        public string? BirthDay { get; set; }
 
         public string? Phone { get; set; }
 
@@ -41,5 +41,6 @@
         public string? Address { get; set; }
         public bool IsConfirm { get; set; }
         public string Type { get; set; }
+        public bool IsBanned { get; set; }
     }
 }

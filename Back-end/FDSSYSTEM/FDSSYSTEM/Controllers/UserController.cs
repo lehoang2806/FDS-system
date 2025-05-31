@@ -44,9 +44,7 @@ namespace FDSSYSTEM.Controllers
             }
             catch (Exception ex)
             {
-
-                return BadRequest();
-
+                return BadRequest(new { message = ex.Message });
             }
         }
 
