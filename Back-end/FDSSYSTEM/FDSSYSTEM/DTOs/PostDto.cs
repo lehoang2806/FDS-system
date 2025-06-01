@@ -9,6 +9,7 @@ namespace FDSSYSTEM.DTOs
         public List<string>? Images { get; set; }
         public string PosterName { get; set; }
         public List<string> Hashtags { get; set; } = new List<string>();
+        public string? ArticleTitle { get; set; }
 
     }
 }

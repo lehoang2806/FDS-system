@@ -21,7 +21,7 @@ public partial class Post
     public DateTime CreatedDate { get; set; } = DateTime.Now;
     public List<string> Images { get; set; }
     public string RejectComment { get; set; }
-
+    public string ArticleTitle { get; set; }
     public string PosterName { get; set; }
 
     public string PostContent { get; set; } = null!;

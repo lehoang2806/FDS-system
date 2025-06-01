@@ -67,6 +67,7 @@ namespace FDSSYSTEM.Services.PostService
                 PosterName = post.PosterName,
                 PostContent = post.PostContent,
                 Hashtags = post.Hashtags,
+                ArticleTitle = post.ArticleTitle,
             };
             await _postRepository.AddAsync(newPost);
 
@@ -134,7 +135,7 @@ namespace FDSSYSTEM.Services.PostService
             post.PostContent = postDto.PostContent;
             post.PosterName = postDto.PosterName;
             post.Hashtags = postDto.Hashtags;
-
+            post.ArticleTitle = postDto.ArticleTitle;
 
             await _postRepository.UpdateAsync(post.Id, post);
 
