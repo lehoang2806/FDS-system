@@ -420,7 +420,7 @@ namespace FDSSYSTEM.Controllers
         }
 
 
-        [HttpPost("ban-account")]
+        [HttpPut("ban-account")]
         [Authorize(Roles = "Staff")]
         public async Task<IActionResult> BanAccount([FromBody] BanAccountDto banAccountDto)
         {
@@ -428,7 +428,7 @@ namespace FDSSYSTEM.Controllers
             return Ok("Tài khoản đã bị cấm.");
         }
 
-        [HttpPost("unban-account")]
+        [HttpPut("unban-account")]
         [Authorize(Roles = "Staff")]
         public async Task<IActionResult> UnbanAccount([FromBody] UnbanAccountDto unbanAccountDto)
         {

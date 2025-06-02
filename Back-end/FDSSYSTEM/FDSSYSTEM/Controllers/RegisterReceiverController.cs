@@ -40,7 +40,7 @@ namespace FDSSYSTEM.Controllers
 
         // Lấy RegisterReceiver theo ID
         [HttpGet("GetRegisterReceiverById/{id}")]
-       /* [Authorize(Roles = "Admin,Staff,Recipient")]*/
+        /* [Authorize(Roles = "Admin,Staff,Recipient")]*/
         public async Task<ActionResult> GetRegisterReceiverById(string id)
         {
             try
@@ -126,15 +126,20 @@ namespace FDSSYSTEM.Controllers
                 if (registerReceiver == null)
                     return NotFound(new { message = "RegisterReceiver không tồn tại." });
 
-                registerReceiver.Status = "Đã nhận"; // Gán cố định
+                if (registerReceiver.Status == "Đã nhận")
+                    return BadRequest(new { message = "RegisterReceiver đã ở trạng thái 'Đã nhận'." });
+
+                registerReceiver.Status = "Đã nhận";
                 registerReceiver.DateUpdated = DateTime.Now;
 
-                await _registerReceiverService.Update(registerReceiver.Id, registerReceiver.Adapt<RegisterReceiverDto>());
+                var dto = registerReceiver.Adapt<RegisterReceiverDto>();
+                await _registerReceiverService.Update(registerReceiverId, dto);
+
                 return Ok(new { message = "Cập nhật trạng thái thành công." });
             }
             catch (Exception ex)
             {
-                return BadRequest(new { message = ex.Message });
+                return BadRequest(new { message = $"Cập nhật trạng thái thất bại: {ex.Message}" });
             }
         }
 

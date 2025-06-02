@@ -148,33 +148,38 @@ namespace FDSSYSTEM.Services.RegisterReceiverService
         public async Task Update(string id, RegisterReceiverDto registerReceiver)
         {
             var existingRegisterReceiver = await GetById(id);
-            if (existingRegisterReceiver != null)
+            if (existingRegisterReceiver == null)
             {
-                existingRegisterReceiver.RegisterReceiverName = registerReceiver.RegisterReceiverName;
-                existingRegisterReceiver.Quantity = registerReceiver.Quantity;
-                existingRegisterReceiver.CreatAt = registerReceiver.CreatAt;
-                existingRegisterReceiver.CampaignId = registerReceiver.CampaignId;
-                await _registerReceiverRepository.UpdateAsync(existingRegisterReceiver.Id, existingRegisterReceiver);
+                throw new Exception("Không tìm thấy RegisterReceiver với ID đã cung cấp.");
             }
+
+            existingRegisterReceiver.RegisterReceiverName = registerReceiver.RegisterReceiverName;
+            existingRegisterReceiver.Quantity = registerReceiver.Quantity;
+            existingRegisterReceiver.CreatAt = registerReceiver.CreatAt;
+            existingRegisterReceiver.CampaignId = registerReceiver.CampaignId;
+            await _registerReceiverRepository.UpdateAsync(existingRegisterReceiver.Id, existingRegisterReceiver);
 
             var userReceiveNotifications = await _userService.GetAllDonorAndStaffId();
-            foreach (var userId in userReceiveNotifications)
+            if (userReceiveNotifications != null)
             {
-                var notificationDto = new NotificationDto
+                foreach (var userId in userReceiveNotifications)
                 {
-                    Title = "Có một chiến dịch hỗ trợ mới được cập nhật",
-                    Content = "có người đăng ký chiến dịch vừa  cập nhật",
-                    NotificationType = "Update",
-                    ObjectType = "RegisterReceiver",
-                    OjectId = existingRegisterReceiver.RegisterReceiverId,
-                    AccountId = userId
-                };
-                //save notifiation to db
-                await _notificationService.AddNotificationAsync(notificationDto);
-                //send notification via signalR
-                await _hubNotificationContext.Clients.User(notificationDto.AccountId).SendAsync("ReceiveNotification", notificationDto);
+                    if (!string.IsNullOrEmpty(userId))
+                    {
+                        var notificationDto = new NotificationDto
+                        {
+                            Title = "Có một chiến dịch hỗ trợ mới được cập nhật",
+                            Content = "có người đăng ký chiến dịch vừa cập nhật",
+                            NotificationType = "Update",
+                            ObjectType = "RegisterReceiver",
+                            OjectId = existingRegisterReceiver.RegisterReceiverId,
+                            AccountId = userId
+                        };
+                        await _notificationService.AddNotificationAsync(notificationDto);
+                        await _hubNotificationContext.Clients.User(notificationDto.AccountId).SendAsync("ReceiveNotification", notificationDto);
+                    }
+                }
             }
-
         }
 
 
