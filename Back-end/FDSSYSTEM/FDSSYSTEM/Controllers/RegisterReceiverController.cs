@@ -117,7 +117,7 @@ namespace FDSSYSTEM.Controllers
 
 
         [HttpPut("UpdateStatus/{registerReceiverId}")]
-        [Authorize(Roles = "Staff,Admin")]
+        [Authorize(Roles = "Donor")]
         public async Task<IActionResult> UpdateStatus(string registerReceiverId)
         {
             try

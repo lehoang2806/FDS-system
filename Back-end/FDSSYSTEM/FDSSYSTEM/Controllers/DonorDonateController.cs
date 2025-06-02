@@ -77,7 +77,7 @@ namespace FDSSYSTEM.Controllers
 
 
         [HttpGet("GetAllDonorDonates")]
-        [Authorize(Roles = "Staff,Admin")]
+        [Authorize(Roles = "Staff,Admin,Donor")]
         public async Task<ActionResult> GetAllDonorDonates()
         {
             try
@@ -92,7 +92,7 @@ namespace FDSSYSTEM.Controllers
         }
 
         [HttpGet("GetDonorDonateById/{donorDonateId}")]
-        [Authorize(Roles = "Staff,Admin")]
+        [Authorize(Roles = "Staff,Admin,Donor")]
         public async Task<ActionResult> GetDonorDonateById(string donorDonateId)
         {
             try

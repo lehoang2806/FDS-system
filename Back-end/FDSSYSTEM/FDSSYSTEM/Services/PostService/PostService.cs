@@ -251,6 +251,7 @@ namespace FDSSYSTEM.Services.PostService
                     PostId = p.PostId,
                     PublicDate = p.PublicDate,
                     Hashtags = p.Hashtags,
+                    ArticleTitle = p.ArticleTitle,
                 };
 
                 //Lấy thông tin Like của bài post

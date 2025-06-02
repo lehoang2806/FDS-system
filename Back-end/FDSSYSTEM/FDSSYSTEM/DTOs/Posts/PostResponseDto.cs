@@ -13,6 +13,7 @@
         public string PosterApproverId { get; set; }
         public string PosterApproverName { get; set; }
         public string PublicDate { get; set; }
+        public string ArticleTitle { get; set; }
 
         public List<PostLikeResponseDto> Likes { get; set; }
         public List<PostCommentResponseDto> Comments { get; set; }
