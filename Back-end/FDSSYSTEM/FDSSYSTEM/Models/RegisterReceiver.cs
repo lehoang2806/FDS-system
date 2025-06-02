@@ -21,7 +21,7 @@ namespace FDSSYSTEM.Models
         public string OTP { get; set; }
 
         public string Code { get; set; }
-        public string Status { get; set; } // ví dụ: "Pending", "Approved", "Rejected"
+        public string Status { get; set; } // ví dụ: "Pending", "Received"
         public string? UpdatedByDonorId { get; set; }
 
     }

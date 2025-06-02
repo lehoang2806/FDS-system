@@ -182,6 +182,18 @@ namespace FDSSYSTEM.Services.RegisterReceiverService
             }
         }
 
+        public async Task UpdateStatusToReceived(string registerReceiverId)
+        {
+            var existingRegisterReceiver = await GetById(registerReceiverId);
+            if (existingRegisterReceiver == null)
+            {
+                throw new Exception("Không tìm thấy RegisterReceiver với ID đã cung cấp.");
+            }
+            existingRegisterReceiver.Status = "Received";
+            existingRegisterReceiver.DateUpdated = DateTime.Now;
+            await _registerReceiverRepository.UpdateAsync(existingRegisterReceiver.Id, existingRegisterReceiver);
+        }
+
 
         public async Task<int> GetTotalRegisteredQuantityAsync(string campaignId, string accountId)
         {

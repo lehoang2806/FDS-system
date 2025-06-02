@@ -126,15 +126,10 @@ namespace FDSSYSTEM.Controllers
                 if (registerReceiver == null)
                     return NotFound(new { message = "RegisterReceiver không tồn tại." });
 
-                if (registerReceiver.Status == "Đã nhận")
+                if (registerReceiver.Status == "Received")
                     return BadRequest(new { message = "RegisterReceiver đã ở trạng thái 'Đã nhận'." });
 
-                registerReceiver.Status = "Đã nhận";
-                registerReceiver.DateUpdated = DateTime.Now;
-
-                var dto = registerReceiver.Adapt<RegisterReceiverDto>();
-                await _registerReceiverService.Update(registerReceiverId, dto);
-
+                await _registerReceiverService.UpdateStatusToReceived(registerReceiverId);
                 return Ok(new { message = "Cập nhật trạng thái thành công." });
             }
             catch (Exception ex)

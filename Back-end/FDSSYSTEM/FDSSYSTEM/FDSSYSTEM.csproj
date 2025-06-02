@@ -69,4 +69,13 @@
     </Content>
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="EmailTemplates\BanAccount.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="EmailTemplates\UnbanAccount.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
