@@ -43,6 +43,7 @@
         public bool CommitmentToAccuracy { get; set; }
         public string? SignatureImage { get; set; }
         public string Status { get; set; }
+        public int DesiredQuantity { get; set; }
 
         // Danh sách nhà tài trợ
         public List<SupportDonorDto> SupportDonors { get; set; } = new List<SupportDonorDto>(); // Thêm trường này

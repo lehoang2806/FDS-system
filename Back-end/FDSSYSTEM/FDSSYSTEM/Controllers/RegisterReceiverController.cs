@@ -164,5 +164,27 @@ namespace FDSSYSTEM.Controllers
 
 
 
+        [HttpPut("UpdateActualQuantity")]
+        [Authorize(Roles = "Donor")]
+        public async Task<IActionResult> UpdateActualQuantity(RegisterReceiverUpdateActualQuantityDto registerReceiverUpdateActualQuantityDto)
+        {
+            try
+            {
+                var registerReceiver = await _registerReceiverService.GetById(registerReceiverUpdateActualQuantityDto.RegisterReceiverId);
+                if (registerReceiver == null)
+                    return NotFound(new { message = "RegisterReceiver không tồn tại." });
+
+            
+
+                await _registerReceiverService.UpdateActualQuantity(registerReceiverUpdateActualQuantityDto);
+                return Ok(new { message = "Cập nhật số lượng thành công." });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = $"Cập nhật số lượng thất bại: {ex.Message}" });
+            }
+        }
+
+
     }
 }

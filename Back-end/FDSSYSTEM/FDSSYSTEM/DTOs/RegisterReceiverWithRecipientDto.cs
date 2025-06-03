@@ -15,5 +15,6 @@
         public string RegisterReceiverName { get; set; }
         public string Code { get; set; }
         public string Status { get; set; }
+        public int ActualQuantity { get; set; }
     }
 }

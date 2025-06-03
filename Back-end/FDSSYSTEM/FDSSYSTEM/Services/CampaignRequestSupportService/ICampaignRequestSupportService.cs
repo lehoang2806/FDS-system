@@ -7,8 +7,8 @@ namespace FDSSYSTEM.Services.CampaignRequestSupportService
 {
     public interface ICampaignRequestSupportService
     {
-        Task<List<CampaignWithCreatorDto>> GetAll();
-        Task<CampaignWithCreatorDto> GetCampaignRequestSupportById(string id);
+        Task<List<CampaignRequestSupportWithCreatorDto>> GetAll();
+        Task<CampaignRequestSupportWithCreatorDto> GetCampaignRequestSupportById(string id);
         Task<CampaignRequestSupport> GetCampaignRequestSupportById(string id, bool isRaw);
         Task Create(CampaignRequestSupportDto campaignRequestSupportDto);
         Task Update(string id, CampaignRequestSupportDto campaignRequestSupportDto);

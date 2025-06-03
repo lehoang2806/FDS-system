@@ -24,7 +24,7 @@ namespace FDSSYSTEM.Repositories.CampaignRepository
 
         public async Task DeleteByCampaignRequestSupportIdAsync(string campaignRequestSupportId)
         {
-            var filter = Builders<CampaignRequestSupport>.Filter.Eq(c => c.CampaignRequetSupportId, campaignRequestSupportId);
+            var filter = Builders<CampaignRequestSupport>.Filter.Eq(c => c.CampaignRequestSupportId, campaignRequestSupportId);
             var result = await _collection.DeleteOneAsync(filter);
             if (result.DeletedCount == 0)
             {

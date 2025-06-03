@@ -233,7 +233,17 @@ namespace FDSSYSTEM.Services.RegisterReceiverService
             await _hubNotificationContext.Clients.User(notificationDto.AccountId).SendAsync("ReceiveNotification", notificationDto);
         }
 
-
+        public async Task UpdateActualQuantity(RegisterReceiverUpdateActualQuantityDto registerReceiverUpdateActualQuantityDto)
+        {
+            var existingRegisterReceiver = await GetById(registerReceiverUpdateActualQuantityDto.RegisterReceiverId);
+            if (existingRegisterReceiver == null)
+            {
+                throw new Exception("Không tìm thấy RegisterReceiver với ID đã cung cấp.");
+            }
+            existingRegisterReceiver.ActualQuantity = registerReceiverUpdateActualQuantityDto.ActualQuantity;
+            existingRegisterReceiver.DateUpdated = DateTime.Now;
+            await _registerReceiverRepository.UpdateAsync(existingRegisterReceiver.Id, existingRegisterReceiver);
+        }
 
     }
 }

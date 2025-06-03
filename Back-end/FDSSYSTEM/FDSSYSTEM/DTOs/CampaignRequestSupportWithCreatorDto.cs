@@ -1,17 +1,15 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
-using MongoDB.Bson;
-using System;
-namespace FDSSYSTEM.Models
+﻿namespace FDSSYSTEM.DTOs
 {
-    public class CampaignRequestSupport
+    public class CampaignRequestSupportWithCreatorDto
     {
-        [BsonId]
-        [BsonRepresentation(BsonType.ObjectId)]
-        public string Id { get; set; }
-
         public string CampaignRequestSupportId { get; set; }
 
         public string AccountId { get; set; }
+        public string FullName { get; set; }
+        public string Email { get; set; }
+        public string Phone { get; set; }
+
+        public int RoleId { get; set; }
 
         public string CampaignRequestSupportName { get; set; }
 
@@ -28,16 +26,14 @@ namespace FDSSYSTEM.Models
         public string ImplementationMethod { get; set; }
         public string Communication { get; set; }
         public int LimitedQuantity { get; set; }
-        public string Status { get; set; } = "Pending";  // Mặc định là chờ duyệt
-        public string RejectComment { get; set; }
-        public string TypeAccount { get; set; } //staff, personal, organization
-        /* public string CampaignType { get; set; }*/ // giới hạn quà tặng, đăng ký thoải mái
-        public List<CampainNotificaiton> ReviewComments { get; set; }
-        public string CancelComment { get; set; }
+        /*public string CampaignType { get; set; } // giới hạn quà tặng, đăng ký thoải mái*/
         /* public string StartRegisterDate { get; set; }*/
         /* public string EndRegisterDate { get; set; }*/
         public List<string> Images { get; set; }
-        public DateTime CreatedDate { get; set; } = DateTime.Now;
-        public string? RequestSupportId { get; set; }
+        public string RejectComment { get; set; }
+        public string CancelComment { get; set; }
+        public string TypeAccount { get; set; }
+        public string Status { get; set; }
+        public DateTime CreatedDate { get; set; }
     }
 }

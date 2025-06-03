@@ -25,6 +25,7 @@
         public List<string> RequestedItems { get; set; }
         public DateTime CreatedDate { get; set; }
         public List<string>? Images { get; set; }
+        public int DesiredQuantity { get; set; }
 
 
 

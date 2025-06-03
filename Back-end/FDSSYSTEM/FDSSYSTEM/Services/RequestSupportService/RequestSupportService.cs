@@ -246,20 +246,23 @@ namespace FDSSYSTEM.Services.RequestSupportService
             await _requestSupportRepository.UpdateAsync(request.Id, request);
 
             // Gửi thông báo cho donor
-            var userReceiveNotifications = await _userService.GetAllDonorConfirmedId();
-            foreach (var userId in userReceiveNotifications)
+            var userReceiveNotifications = await _userService.GetAllDonorConfirmed();
+            foreach (var user in userReceiveNotifications)
             {
-                var notificationDto = new NotificationDto
+                if(donorSupportDto.Emails.Contains(user.Email, StringComparer.OrdinalIgnoreCase))
                 {
-                    Title = "Yêu cầu hỗ trợ đã được gửi đến nhà tài trợ",
-                    Content = $"Yêu cầu hỗ trợ {requestSupportId} đã được gửi đến các nhà tài trợ.",
-                    NotificationType = "Gửi yêu cầu",
-                    ObjectType = "Yêu cầu hỗ trợ",
-                    OjectId = requestSupportId,
-                    AccountId = userId
-                };
-                await _notificationService.AddNotificationAsync(notificationDto);
-                await _hubNotificationContext.Clients.User(notificationDto.AccountId).SendAsync("ReceiveNotification", notificationDto);
+                    var notificationDto = new NotificationDto
+                    {
+                        Title = "Yêu cầu hỗ trợ đã được gửi đến nhà tài trợ",
+                        Content = $"Yêu cầu hỗ trợ {requestSupportId} đã được gửi đến các nhà tài trợ.",
+                        NotificationType = "Gửi yêu cầu",
+                        ObjectType = "Yêu cầu hỗ trợ",
+                        OjectId = requestSupportId,
+                        AccountId = user.AccountId
+                    };
+                    await _notificationService.AddNotificationAsync(notificationDto);
+                    await _hubNotificationContext.Clients.User(notificationDto.AccountId).SendAsync("ReceiveNotification", notificationDto);
+                }
             }
         }
 

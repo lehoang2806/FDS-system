@@ -23,6 +23,6 @@ namespace FDSSYSTEM.Models
         public string Code { get; set; }
         public string Status { get; set; } // ví dụ: "Pending", "Received"
         public string? UpdatedByDonorId { get; set; }
-
+        public int ActualQuantity { get; set; } = 0;
     }
 }

@@ -64,7 +64,6 @@ namespace FDSSYSTEM.Services.CampaignService
         public async Task Create(CampaignRequestSupportDto campaignRequestSupportDto)
         {
             var donorType = _userContextService.Role ?? "";
-            bool isDonorCreate = false;
             if (!string.IsNullOrEmpty(donorType) && donorType.Equals("Donor"))
             {
                 var user = await _userService.GetAccountById(_userContextService.UserId ?? "");
@@ -72,14 +71,13 @@ namespace FDSSYSTEM.Services.CampaignService
                 {
                     donorType = user.DonorType;
                 }
-                isDonorCreate = true;
             }
 
             var newCampaignRequestSupport = new CampaignRequestSupport
             {
-                CampaignRequetSupportId = Guid.NewGuid().ToString(),
+                CampaignRequestSupportId = Guid.NewGuid().ToString(),
                 AccountId = _userContextService.UserId ?? "",
-                CampaignReqeustSupportName = campaignRequestSupportDto.CampaignRequestSupportName,
+                CampaignRequestSupportName = campaignRequestSupportDto.CampaignRequestSupportName,
                 CampaignRequestSupportDescription = campaignRequestSupportDto.CampaignRequestSupportDescription,
                 Location = campaignRequestSupportDto.Location,
                 ImplementationTime = campaignRequestSupportDto.ImplementationTime,
@@ -108,9 +106,8 @@ namespace FDSSYSTEM.Services.CampaignService
             await _campaignRequestSupportRepository.AddAsync(newCampaignRequestSupport);
 
             // Gửi thông báo
-            var userReceiveNotifications = isDonorCreate ?
-                await _userService.GetAllAdminAndStaffId() :
-                await _userService.GetAllAdminAndDnonorId();
+            var userReceiveNotifications = await _userService.GetAllAdminAndStaffId();
+
 
             foreach (var userId in userReceiveNotifications) // Sửa cú pháp foreach
             {
@@ -121,7 +118,7 @@ namespace FDSSYSTEM.Services.CampaignService
                               (string.IsNullOrEmpty(newCampaignRequestSupport.RequestSupportId) ? "" : " liên quan đến đơn yêu cầu hỗ trợ"),
                     NotificationType = "Pending",
                     ObjectType = "CampaignRequestSupport",
-                    OjectId = newCampaignRequestSupport.CampaignRequetSupportId,
+                    OjectId = newCampaignRequestSupport.CampaignRequestSupportId,
                     AccountId = userId
                 };
                 await _notificationService.AddNotificationAsync(notificationDto);
@@ -162,7 +159,7 @@ namespace FDSSYSTEM.Services.CampaignService
 
             if (existingCampaignRequestSupport != null)
             {
-                existingCampaignRequestSupport.CampaignReqeustSupportName = campaignRequestSupportDto.CampaignRequestSupportName;
+                existingCampaignRequestSupport.CampaignRequestSupportName = campaignRequestSupportDto.CampaignRequestSupportName;
                 existingCampaignRequestSupport.CampaignRequestSupportDescription = campaignRequestSupportDto.CampaignRequestSupportDescription;
                 existingCampaignRequestSupport.Location = campaignRequestSupportDto.Location;
                 existingCampaignRequestSupport.ImplementationTime = campaignRequestSupportDto.ImplementationTime;
@@ -190,7 +187,7 @@ namespace FDSSYSTEM.Services.CampaignService
                         Content = "Có chiến dịch mới vừa được cập nhật",
                         NotificationType = "Update",
                         ObjectType = "CampainRequestSupport",
-                        OjectId = existingCampaignRequestSupport.CampaignRequetSupportId,
+                        OjectId = existingCampaignRequestSupport.CampaignRequestSupportId,
                         AccountId = userId
                     };
 
@@ -209,20 +206,20 @@ namespace FDSSYSTEM.Services.CampaignService
         // Trả về Campaign thuần cho Update
         public async Task<CampaignRequestSupport> GetCampaignRequestSupportById(string id, bool isRaw = true)
         {
-            var filter = Builders<CampaignRequestSupport>.Filter.Eq(c => c.CampaignRequetSupportId, id);
+            var filter = Builders<CampaignRequestSupport>.Filter.Eq(c => c.CampaignRequestSupportId, id);
             var getbyId = await _campaignRequestSupportRepository.GetAllAsync(filter);
             return getbyId.FirstOrDefault();
         }
 
         // Trả về CampaignWithCreatorDto khi cần hiển thị
-        public async Task<CampaignWithCreatorDto> GetCampaignRequestSupportById(string id)
+        public async Task<CampaignRequestSupportWithCreatorDto> GetCampaignRequestSupportById(string id)
         {
             var campaign = await GetCampaignRequestSupportById(id, true); // dùng hàm raw
 
             if (campaign == null)
                 return null;
 
-            var campaignDto = campaign.Adapt<CampaignWithCreatorDto>();
+            var campaignDto = campaign.Adapt<CampaignRequestSupportWithCreatorDto>();
 
             var creatorFilter = Builders<Account>.Filter.Eq(a => a.AccountId, campaign.AccountId);
             var creatorList = await _userRepository.GetAllAsync(creatorFilter);
@@ -243,9 +240,9 @@ namespace FDSSYSTEM.Services.CampaignService
 
 
 
-        public async Task<List<CampaignWithCreatorDto>> GetAll()
+        public async Task<List<CampaignRequestSupportWithCreatorDto>> GetAll()
         {
-            var rs = new List<CampaignWithCreatorDto>();
+            var rs = new List<CampaignRequestSupportWithCreatorDto>();
 
             var allCampaign = await _campaignRequestSupportRepository.GetAllAsync();
             var listCreatorId = allCampaign.Select(c => c.AccountId).Distinct().ToList();
@@ -255,7 +252,7 @@ namespace FDSSYSTEM.Services.CampaignService
 
             foreach (var cp in allCampaign)
             {
-                var cpDto = cp.Adapt<CampaignWithCreatorDto>();
+                var cpDto = cp.Adapt<CampaignRequestSupportWithCreatorDto>();
                 var cretor = allCreator.FirstOrDefault(x => x.AccountId == cp.AccountId);
                 if (cretor != null)
                 {
@@ -342,7 +339,7 @@ namespace FDSSYSTEM.Services.CampaignService
 
         public async Task Approve(ApproveCampaignRequestSupportDto approveCampaignRequestSupportDto)
         {
-            var filter = Builders<CampaignRequestSupport>.Filter.Eq(c => c.CampaignRequetSupportId, approveCampaignRequestSupportDto.CampaignRequestSupportId);
+            var filter = Builders<CampaignRequestSupport>.Filter.Eq(c => c.CampaignRequestSupportId, approveCampaignRequestSupportDto.CampaignRequestSupportId);
             var campaign = (await _campaignRequestSupportRepository.GetAllAsync(filter)).FirstOrDefault();
 
             if (campaign == null)
@@ -379,46 +376,44 @@ namespace FDSSYSTEM.Services.CampaignService
                     currentDonor.Status = "Participating";
                     await _requestSupportRepository.UpdateAsync(request.Id, request);
                 }
-            }
 
-            // Gửi thông báo cho donor
-            var donorNotification = new NotificationDto
-            {
-                Title = "Phê duyệt chiến dịch thành công",
-                Content = "Chiến dịch của bạn đã được phê duyệt thành công",
-                NotificationType = "Approve",
-                ObjectType = "CampaignRequestSupport",
-                OjectId = campaign.CampaignRequetSupportId,
-                AccountId = campaign.AccountId
-            };
-            await _notificationService.AddNotificationAsync(donorNotification);
-            await _hubNotificationContext.Clients.User(donorNotification.AccountId).SendAsync("ReceiveNotification", donorNotification);
-
-            // Gửi email cho donor
-            var donor = await _userService.GetAccountById(campaign.AccountId);
-            if (donor != null && !string.IsNullOrEmpty(donor.Email))
-            {
-                string filePath = Path.Combine(_env.ContentRootPath, "EmailTemplates", "ApproveCampaign.html");
-                if (!System.IO.File.Exists(filePath))
+                // Gửi thông báo cho donor
+                var donorNotification = new NotificationDto
                 {
-                    throw new FileNotFoundException("Không tìm thấy file template email.", filePath);
+                    Title = "Phê duyệt chiến dịch thành công",
+                    Content = "Chiến dịch của bạn đã được phê duyệt thành công",
+                    NotificationType = "Approve",
+                    ObjectType = "CampaignRequestSupport",
+                    OjectId = campaign.CampaignRequestSupportId,
+                    AccountId = campaign.AccountId
+                };
+                await _notificationService.AddNotificationAsync(donorNotification);
+                await _hubNotificationContext.Clients.User(donorNotification.AccountId).SendAsync("ReceiveNotification", donorNotification);
+
+                // Gửi email cho donor
+                var donor = await _userService.GetAccountById(campaign.AccountId);
+                if (donor != null && !string.IsNullOrEmpty(donor.Email))
+                {
+                    string filePath = Path.Combine(_env.ContentRootPath, "EmailTemplates", "ApproveCampaign.html");
+                    if (!System.IO.File.Exists(filePath))
+                    {
+                        throw new FileNotFoundException("Không tìm thấy file template email.", filePath);
+                    }
+
+                    string htmlBody = await System.IO.File.ReadAllTextAsync(filePath);
+                    string campaignLink = $"{_emailConfig.HomePage}/campaigns/{campaign.CampaignRequestSupportId}";
+                    string body = htmlBody
+                        .Replace("{{UserName}}", donor.FullName)
+                        .Replace("{{CampaignName}}", campaign.CampaignRequestSupportName)
+                        .Replace("{{CampaignLink}}", campaignLink);
+
+                    string subject = "Chiến dịch của bạn đã được duyệt - FDS-System";
+                    await _emailHeper.SendEmailAsync(subject, body, new List<string> { donor.Email }, true);
                 }
 
-                string htmlBody = await System.IO.File.ReadAllTextAsync(filePath);
-                string campaignLink = $"{_emailConfig.HomePage}/campaigns/{campaign.CampaignRequetSupportId}";
-                string body = htmlBody
-                    .Replace("{{UserName}}", donor.FullName)
-                    .Replace("{{CampaignName}}", campaign.CampaignReqeustSupportName)
-                    .Replace("{{CampaignLink}}", campaignLink);
+                // Gửi SMS và thông báo cho recipient
+                var recipient = await _userService.GetAccountById(request.AccountId);
 
-                string subject = "Chiến dịch của bạn đã được duyệt - FDS-System";
-                await _emailHeper.SendEmailAsync(subject, body, new List<string> { donor.Email }, true);
-            }
-
-            // Gửi SMS và thông báo cho recipient
-            var userReceiveSms = await _userService.GetAllRecipientConfirmed();
-            foreach (var recipient in userReceiveSms)
-            {
                 if (!string.IsNullOrEmpty(recipient.Phone))
                 {
                     _smsHeper.SendSMS(recipient.Phone, "Có chiến dịch vừa được tạo ra trên Website. Bạn có thể vào đăng ký ngay");
@@ -430,7 +425,7 @@ namespace FDSSYSTEM.Services.CampaignService
                     Content = "Bạn có thể tham gia đăng ký tại hệ thống",
                     NotificationType = "Notification",
                     ObjectType = "CampaignRequestSupport",
-                    OjectId = campaign.CampaignRequetSupportId,
+                    OjectId = campaign.CampaignRequestSupportId,
                     AccountId = recipient.AccountId
                 };
                 await _notificationService.AddNotificationAsync(recipientNotification);
@@ -440,7 +435,7 @@ namespace FDSSYSTEM.Services.CampaignService
 
         public async Task Reject(RejectCampaignRequestSupportDto rejectCampaignRequestSupportDto)
         {
-            var filter = Builders<CampaignRequestSupport>.Filter.Eq(c => c.CampaignRequetSupportId, rejectCampaignRequestSupportDto.CampaignRequestSupportId);
+            var filter = Builders<CampaignRequestSupport>.Filter.Eq(c => c.CampaignRequestSupportId, rejectCampaignRequestSupportDto.CampaignRequestSupportId);
             var campain = (await _campaignRequestSupportRepository.GetAllAsync(filter)).FirstOrDefault();
 
             campain.Status = "Rejected";
@@ -453,7 +448,7 @@ namespace FDSSYSTEM.Services.CampaignService
                 Content = "Rất tiếc chiến dịch của bạn không phù hợp.Bạn có thể xem lý do ",
                 NotificationType = "Reject",
                 ObjectType = "CampainRequestSupport",
-                OjectId = campain.CampaignRequetSupportId,
+                OjectId = campain.CampaignRequestSupportId,
                 AccountId = campain.AccountId
             };
             //save notifiation to db
@@ -472,10 +467,10 @@ namespace FDSSYSTEM.Services.CampaignService
                 }
 
                 string htmlBody = await System.IO.File.ReadAllTextAsync(filePath);
-                string campaignLink = $"{_emailConfig.HomePage}/campaigns/{campain.CampaignRequetSupportId}";
+                string campaignLink = $"{_emailConfig.HomePage}/campaigns/{campain.CampaignRequestSupportId}";
                 string body = htmlBody
                     .Replace("{{UserName}}", donor.FullName)
-                    .Replace("{{CampaignName}}", campain.CampaignReqeustSupportName)
+                    .Replace("{{CampaignName}}", campain.CampaignRequestSupportName)
                     .Replace("{{RejectReason}}", rejectCampaignRequestSupportDto.Comment)
                     .Replace("{{CampaignLink}}", campaignLink);
 
@@ -487,7 +482,7 @@ namespace FDSSYSTEM.Services.CampaignService
 
         public async Task AddReviewComment(ReviewCommentCampaignRequestSupportDto reviewCommentCampaignRequestSupportDto)
         {
-            var filter = Builders<CampaignRequestSupport>.Filter.Eq(c => c.CampaignRequetSupportId, reviewCommentCampaignRequestSupportDto.CampaignRequestSupportId);
+            var filter = Builders<CampaignRequestSupport>.Filter.Eq(c => c.CampaignRequestSupportId, reviewCommentCampaignRequestSupportDto.CampaignRequestSupportId);
             var campain = (await _campaignRequestSupportRepository.GetAllAsync(filter)).FirstOrDefault();
 
             if (campain != null)
@@ -511,7 +506,7 @@ namespace FDSSYSTEM.Services.CampaignService
                 Content = "Chiến dịch của bạn cần bổ sung thêm.Bạn có thể xem lý do",
                 NotificationType = "Review",
                 ObjectType = "Campain",
-                OjectId = campain.CampaignRequetSupportId,
+                OjectId = campain.CampaignRequestSupportId,
                 AccountId = campain.AccountId
             };
             //save notifiation to db
@@ -530,10 +525,10 @@ namespace FDSSYSTEM.Services.CampaignService
                 }
 
                 string htmlBody = await System.IO.File.ReadAllTextAsync(filePath);
-                string campaignLink = $"{_emailConfig.HomePage}/campaigns/{campain.CampaignRequetSupportId}";
+                string campaignLink = $"{_emailConfig.HomePage}/campaigns/{campain.CampaignRequestSupportId}";
                 string body = htmlBody
                     .Replace("{{UserName}}", donor.FullName)
-                    .Replace("{{CampaignName}}", campain.CampaignReqeustSupportName)
+                    .Replace("{{CampaignName}}", campain.CampaignRequestSupportName)
                     .Replace("{{CampaignLink}}", campaignLink);
 
                 string subject = "Chiến dịch của bạn cần được bổ sung thêm - FDS-System";
@@ -544,7 +539,7 @@ namespace FDSSYSTEM.Services.CampaignService
 
         public async Task Cancel(CancelCampaignRequestSupportDto cancelCampaignRequestSupportDto)
         {
-            var filter = Builders<CampaignRequestSupport>.Filter.Eq(c => c.CampaignRequetSupportId, cancelCampaignRequestSupportDto.CampaignRequestSupportId);
+            var filter = Builders<CampaignRequestSupport>.Filter.Eq(c => c.CampaignRequestSupportId, cancelCampaignRequestSupportDto.CampaignRequestSupportId);
             var campain = (await _campaignRequestSupportRepository.GetAllAsync(filter)).FirstOrDefault();
 
             campain.Status = "Canceled";
@@ -560,7 +555,7 @@ namespace FDSSYSTEM.Services.CampaignService
                     Content = "có chiến dịch mới vừa được cập nhật",
                     NotificationType = "Cancel",
                     ObjectType = "CampainRequestSupport",
-                    OjectId = campain.CampaignRequetSupportId,
+                    OjectId = campain.CampaignRequestSupportId,
                     AccountId = user.AccountId
                 };
                 //save notifiation to db
