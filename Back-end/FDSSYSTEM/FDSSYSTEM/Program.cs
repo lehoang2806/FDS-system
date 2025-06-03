@@ -31,6 +31,7 @@ using FDSSYSTEM.Repositories.UserRepository;
 
 using FDSSYSTEM.SeedData;
 using FDSSYSTEM.Services.CampaignDonorSupportService;
+using FDSSYSTEM.Services.CampaignRequestSupportService;
 using FDSSYSTEM.Services.CampaignService;
 using FDSSYSTEM.Services.ChatService;
 using FDSSYSTEM.Services.DonorDonateService;
@@ -137,6 +138,9 @@ builder.Services.AddScoped<IDonorDonateService, DonorDonateService>();
 builder.Services.AddScoped<IStatisticService, StatisticService>();
 builder.Services.AddScoped<IChatMessageRepository, ChatMessageRepository>();
 builder.Services.AddScoped<IChatService, ChatService>();
+
+builder.Services.AddScoped<ICampaignRequestSupportRepository, CampaignRequestSupportRepository>();
+builder.Services.AddScoped<ICampaignRequestSupportService, CampaignRequestSupportService>();
 
 
 builder.Services.AddScoped<IOtpRepository, OtpRepository>();
