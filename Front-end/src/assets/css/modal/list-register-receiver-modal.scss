@@ -9,3 +9,48 @@
         border-radius: 24px;
     }
 }
+
+.confirm-receive-modal {
+    width: 700px;
+
+    h2 {
+        font-size: 30px;
+        font-weight: 700;
+    }
+
+    .confirm-receiver {
+        font-size: 20px;
+        font-weight: 500;
+        margin-bottom: 10px;
+
+        strong {
+            color: #ff9d2e;
+            font-size: 22px;
+            font-weight: 700;
+        }
+    }
+
+    .form-label, .form-input {
+        font-size: 20px;
+    }
+
+    .confirm-actions {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+    }
+
+    .pr-btn {
+        font-size: 20px;
+        font-weight: 600;
+        color: #fff;
+        padding: 10px 20px;
+        margin-top: 10px;
+        border-radius: 24px;
+        border: none;
+
+        &.cancel {
+            background: #460d02;
+        }
+    }
+}

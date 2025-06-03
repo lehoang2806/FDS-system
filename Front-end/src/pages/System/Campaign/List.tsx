@@ -47,9 +47,13 @@ const ListCampaignPage: FC = () => {
     const [dateRangePersonalCampaigns, setDateRangePersonalCampaigns] =
         useState({ from: "", to: "" });
 
+        console.log(dateRangePersonalCampaigns)
+
     // Organization Campaigns
     const [dateRangeOrganizationCampaigns, setDateRangeOrganizationCampaigns] =
         useState({ from: "", to: "" });
+
+        console.log(dateRangeOrganizationCampaigns)
 
     useEffect(() => {
         dispatch(setLoading(true));
@@ -73,13 +77,39 @@ const ListCampaignPage: FC = () => {
 
     const [activeTab, setActiveTab] = useState<number>(getActiveTabFromURL());
 
+    const resetFiltersByTab = (tabIndex: number) => {
+        setSearchTerm("");
+        setStatusFilter("");
+
+        // Reset từng date range đúng với tab
+        if (tabIndex === 0) {
+            setDateRangeAllCampaigns({ from: "", to: "" });
+            setDateRangePersonalCampaigns({ from: "", to: "" });
+            setDateRangeOrganizationCampaigns({ from: "", to: "" });
+            setVisibleAllCampaignsCount(6);
+        } else if (tabIndex === 1) {
+            setDateRangeAllCampaigns({ from: "", to: "" });
+            setDateRangePersonalCampaigns({ from: "", to: "" });
+            setDateRangeOrganizationCampaigns({ from: "", to: "" });
+            setVisiblePersonalCampaignsCount(6);
+        } else if (tabIndex === 2) {
+            setDateRangeAllCampaigns({ from: "", to: "" });
+            setDateRangePersonalCampaigns({ from: "", to: "" });
+            setDateRangeOrganizationCampaigns({ from: "", to: "" });
+            setVisibleOrganizationCampaignsCount(6);
+        }
+    };
+
     const handleTabChange = (tabIndex: number) => {
+        resetFiltersByTab(tabIndex); // 👈 Reset bộ lọc
         setActiveTab(tabIndex);
         navigate(`?tab=${tabIndex}`);
     };
 
     useEffect(() => {
-        setActiveTab(getActiveTabFromURL());
+        const tab = getActiveTabFromURL();
+        setActiveTab(tab);
+        resetFiltersByTab(tab); // 👈 Reset lại filter khi reload với URL có ?tab
     }, [location.search]);
 
     //All campaigns
@@ -342,7 +372,10 @@ const ListCampaignPage: FC = () => {
                             </div>
                             <div className="cscr2r1r3">
                                 {activeTab === 0 && (
-                                    <div className="form date-filter-container">
+                                    <div
+                                        className="form date-filter-container"
+                                        key={`all-date-${dateRangeAllCampaigns.from}-${dateRangeAllCampaigns.to}`}
+                                    >
                                         <div className="form-field">
                                             <label className="form-label">
                                                 Từ ngày:
@@ -351,7 +384,8 @@ const ListCampaignPage: FC = () => {
                                                 type="date"
                                                 className="form-input"
                                                 value={
-                                                    dateRangeAllCampaigns.from
+                                                    dateRangeAllCampaigns.from ||
+                                                    ""
                                                 }
                                                 onChange={(e) =>
                                                     setDateRangeAllCampaigns(
@@ -371,7 +405,14 @@ const ListCampaignPage: FC = () => {
                                             <input
                                                 type="date"
                                                 className="form-input"
-                                                value={dateRangeAllCampaigns.to}
+                                                value={
+                                                    dateRangeAllCampaigns.to ||
+                                                    ""
+                                                }
+                                                min={
+                                                    dateRangeAllCampaigns.from ||
+                                                    ""
+                                                }
                                                 onChange={(e) =>
                                                     setDateRangeAllCampaigns(
                                                         (prev) => ({
@@ -386,7 +427,10 @@ const ListCampaignPage: FC = () => {
                                 )}
 
                                 {activeTab === 1 && (
-                                    <div className="form date-filter-container">
+                                    <div
+                                        className="form date-filter-container"
+                                        key={`personal-date-${dateRangePersonalCampaigns.from}-${dateRangePersonalCampaigns.to}`}
+                                    >
                                         <div className="form-field">
                                             <label className="form-label">
                                                 Từ ngày:
@@ -395,7 +439,8 @@ const ListCampaignPage: FC = () => {
                                                 type="date"
                                                 className="form-input"
                                                 value={
-                                                    dateRangePersonalCampaigns.from
+                                                    dateRangePersonalCampaigns.from ||
+                                                    ""
                                                 }
                                                 onChange={(e) =>
                                                     setDateRangePersonalCampaigns(
@@ -416,7 +461,12 @@ const ListCampaignPage: FC = () => {
                                                 type="date"
                                                 className="form-input"
                                                 value={
-                                                    dateRangePersonalCampaigns.to
+                                                    dateRangePersonalCampaigns.to ||
+                                                    ""
+                                                }
+                                                min={
+                                                    dateRangePersonalCampaigns.from ||
+                                                    ""
                                                 }
                                                 onChange={(e) =>
                                                     setDateRangePersonalCampaigns(
@@ -432,7 +482,10 @@ const ListCampaignPage: FC = () => {
                                 )}
 
                                 {activeTab === 2 && (
-                                    <div className="form date-filter-container">
+                                    <div
+                                        className="form date-filter-container"
+                                        key={`org-date-${dateRangeOrganizationCampaigns.from}-${dateRangeOrganizationCampaigns.to}`}
+                                    >
                                         <div className="form-field">
                                             <label className="form-label">
                                                 Từ ngày:
@@ -441,7 +494,8 @@ const ListCampaignPage: FC = () => {
                                                 type="date"
                                                 className="form-input"
                                                 value={
-                                                    dateRangeOrganizationCampaigns.from
+                                                    dateRangeOrganizationCampaigns.from ||
+                                                    ""
                                                 }
                                                 onChange={(e) =>
                                                     setDateRangeOrganizationCampaigns(
@@ -462,7 +516,12 @@ const ListCampaignPage: FC = () => {
                                                 type="date"
                                                 className="form-input"
                                                 value={
-                                                    dateRangeOrganizationCampaigns.to
+                                                    dateRangeOrganizationCampaigns.to ||
+                                                    ""
+                                                }
+                                                min={
+                                                    dateRangeOrganizationCampaigns.from ||
+                                                    ""
                                                 }
                                                 onChange={(e) =>
                                                     setDateRangeOrganizationCampaigns(

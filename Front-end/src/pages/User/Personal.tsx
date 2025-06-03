@@ -1,5 +1,6 @@
 import {
     selectGetAllCampaign,
+    selectGetAllDonate,
     selectGetAllDonorCertificate,
     selectGetAllRecipientCertificate,
     selectGetAllRegisterReceivers,
@@ -38,6 +39,7 @@ import { formatDater, formatTime } from "@/utils/helper";
 import { getAllRequestSupportApiThunk } from "@/services/requestSupport/requestSupportThunk";
 import classNames from "classnames";
 import { toast } from "react-toastify";
+import { getAllDonateApiThunk } from "@/services/donate/donateThunk";
 
 dayjs.locale("vi");
 dayjs.extend(relativeTime);
@@ -69,6 +71,9 @@ const UserPersonalPage = () => {
     const requestSupport = useAppSelector(selectGetAllRequestSupport);
     const sortedRequestSupport = [...requestSupport].reverse();
 
+    const donates = useAppSelector(selectGetAllDonate);
+    const sortedDonates = [...donates].reverse();
+
     // Lọc dữ liệu theo tài khoản đăng nhập
     const currentCampaigns = sortedCampaigns.filter(
         (campaign) => campaign.accountId === userLogin?.accountId
@@ -90,6 +95,10 @@ const UserPersonalPage = () => {
 
     const currentRequestDonor = sortedRequestSupport.filter(
         (requestSupport) => requestSupport.accountId === userLogin?.accountId
+    );
+
+    const currentDonates = sortedDonates.filter(
+        (donate) => donate.donorId === userLogin?.accountId
     );
 
     // State quản lý modal
@@ -151,6 +160,7 @@ const UserPersonalPage = () => {
             dispatch(getAllRecipientCertificateApiThunk()).unwrap(),
             dispatch(getAllCampaignApiThunk()).unwrap(),
             dispatch(getAllRequestSupportApiThunk()).unwrap(),
+            dispatch(getAllDonateApiThunk()).unwrap(),
         ])
             .catch(() => {})
             .finally(() => {
@@ -289,6 +299,28 @@ const UserPersonalPage = () => {
     const onNextRegisterReceiverPage = () => {
         if (currentRegisterReceiverPage < totalRegisterReceiverPages)
             setCurrentRegisterReceiverPage(currentRegisterReceiverPage + 1);
+    };
+
+    //Donor donate
+    const [currentDonorDonatePage, setCurrentDonorDonatePage] = useState(1);
+
+    const totalDonorDonatePages = Math.ceil(
+        currentDonates.length / ITEMS_PER_PAGE
+    );
+
+    const currentDonorDonatesPage = currentDonates.slice(
+        (currentDonorDonatePage - 1) * ITEMS_PER_PAGE,
+        currentDonorDonatePage * ITEMS_PER_PAGE
+    );
+
+    const onPreviousDonorDonatePage = () => {
+        if (currentDonorDonatePage > 1)
+            setCurrentDonorDonatePage(currentDonorDonatePage - 1);
+    };
+
+    const onNextDonorDonatePage = () => {
+        if (currentDonorDonatePage < totalDonorDonatePages)
+            setCurrentDonorDonatePage(currentDonorDonatePage + 1);
     };
 
     //Recipient certificate
@@ -446,10 +478,23 @@ const UserPersonalPage = () => {
                                     >
                                         Xác nhận danh tính
                                     </div>
+                                    <div
+                                        className={`upp-tabs-item ${
+                                            activeTab === "ungho"
+                                                ? "upp-tabs-item-actived"
+                                                : ""
+                                        }`}
+                                        onClick={() => {
+                                            handleTabChange("ungho"),
+                                                handleFilter();
+                                        }}
+                                    >
+                                        Ủng hộ
+                                    </div>
                                 </div>
                             </div>
                             <div className="upps2cr3">
-                                {activeTab === "chiendich" ? (
+                                {activeTab === "chiendich" && (
                                     <div className="upp-content">
                                         <div
                                             style={{
@@ -466,7 +511,15 @@ const UserPersonalPage = () => {
                                                 Tạo chiến dịch
                                             </button>
                                             <div className="search-container">
-                                                <p style={{ textAlign: "right", fontWeight: "bold", fontSize: "16px" }}>Tìm kiếm</p>
+                                                <p
+                                                    style={{
+                                                        textAlign: "right",
+                                                        fontWeight: "bold",
+                                                        fontSize: "16px",
+                                                    }}
+                                                >
+                                                    Tìm kiếm
+                                                </p>
                                                 <input
                                                     className="pr-input search-input"
                                                     placeholder="Tìm kiếm theo tên chiến dịch"
@@ -651,7 +704,8 @@ const UserPersonalPage = () => {
                                             </>
                                         )}
                                     </div>
-                                ) : (
+                                )}
+                                {activeTab === "chungchi" && (
                                     <div className="upp-content">
                                         <button
                                             className={classNames("pr-btn", {
@@ -803,6 +857,130 @@ const UserPersonalPage = () => {
                                                                 <ArrowRight
                                                                     className={`pcc3-icon ${
                                                                         currentDonorCertificatePage >=
+                                                                        totalDonorCertificatePages
+                                                                            ? "pcc3-icon-disabled"
+                                                                            : ""
+                                                                    }`}
+                                                                />
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </>
+                                        )}
+                                    </div>
+                                )}
+                                {activeTab === "ungho" && (
+                                    <div className="upp-content">
+                                        <button
+                                            className="pr-btn"
+                                            onClick={() =>
+                                                navigateHook(routes.user.donate)
+                                            }
+                                        >
+                                            Ủng hộ hệ thống
+                                        </button>
+                                        {currentDonates.length === 0 ? (
+                                            <>
+                                                <figure>
+                                                    <img
+                                                        src={NoResult}
+                                                        alt=""
+                                                    />
+                                                </figure>
+                                                <h1>Chưa có dữ liệu</h1>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <table className="table">
+                                                    <thead className="table-head">
+                                                        <tr className="table-head-row">
+                                                            <th className="table-head-cell">
+                                                                Số tiền ủng hộ
+                                                            </th>
+                                                            <th className="table-head-cell">
+                                                                Trạng thái
+                                                            </th>
+                                                            <th className="table-head-cell">
+                                                                Thời gian ủng hộ
+                                                            </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody className="table-body">
+                                                        {currentDonorDonatesPage.map(
+                                                            (row, index) => (
+                                                                <tr
+                                                                    key={index}
+                                                                    className="table-body-row"
+                                                                >
+                                                                    <td className="table-body-cell">
+                                                                        {
+                                                                            row.amount
+                                                                        }
+                                                                    </td>
+                                                                    <td className="table-body-cell">
+                                                                        {row.isPaid ===
+                                                                        true ? (
+                                                                            <span className="status-approve">
+                                                                                Thanh
+                                                                                toán
+                                                                                thành
+                                                                                công
+                                                                            </span>
+                                                                        ) : (
+                                                                            <span className="status-reject">
+                                                                                Thanh
+                                                                                toán
+                                                                                thất
+                                                                                bại
+                                                                            </span>
+                                                                        )}
+                                                                    </td>
+                                                                    <td className="table-body-cell">
+                                                                        {formatDater(
+                                                                            row.createdAt
+                                                                        )}
+                                                                    </td>
+                                                                </tr>
+                                                            )
+                                                        )}
+                                                    </tbody>
+                                                </table>
+                                                <div className="paginator">
+                                                    <div className="p-container">
+                                                        <div className="pcc2">
+                                                            {
+                                                                currentDonorDonatePage
+                                                            }{" "}
+                                                            of{" "}
+                                                            {
+                                                                totalDonorCertificatePages
+                                                            }
+                                                        </div>
+                                                        <div className="pcc3">
+                                                            <button
+                                                                disabled={
+                                                                    currentDonorDonatePage ===
+                                                                    1
+                                                                }
+                                                                onClick={
+                                                                    onPreviousDonorDonatePage
+                                                                }
+                                                            >
+                                                                <ArrowLeft className="pcc3-icon" />
+                                                            </button>
+                                                            <button
+                                                                disabled={
+                                                                    currentDonorDonatePage >=
+                                                                    totalDonorCertificatePages
+                                                                }
+                                                                onClick={
+                                                                    onNextDonorDonatePage
+                                                                }
+                                                            >
+                                                                <ArrowRight
+                                                                    className={`pcc3-icon ${
+                                                                        currentDonorDonatePage >=
                                                                         totalDonorCertificatePages
                                                                             ? "pcc3-icon-disabled"
                                                                             : ""

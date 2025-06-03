@@ -5,22 +5,24 @@ export const routes = {
     forgot_pass: "/forgot-pass",
     new_pass: "/new-pass",
     admin_login: "/manage/login",
+    about: "/about",
+    contact: "/contact",
     user: {
         home: "/",
         campaign: {
             list: "/campaigns",
-            detail: "/campaign/:id/detail"
+            detail: "/campaign/:id/detail",
         },
         supporter: {
             list: "/supporters",
-            detail: "/supporter/:id/detail"
+            detail: "/supporter/:id/detail",
         },
         news: {
             list: "/news",
-            detail: "/news/:id/detail"
+            detail: "/news/:id/detail",
         },
         post: {
-            forum: "/posts"
+            forum: "/posts",
         },
         profile: "/user/profile",
         personal: "/user/personal",
@@ -30,38 +32,39 @@ export const routes = {
         detail_campaign: "/user/campaign/:id/detail",
         detail_certificate: "/user/certificate/:id/detail",
         detail_request_support: "/user/requestSupport/:id/detail",
-        participate_request_support: "/user/participateRequestSupport/:id/detail",
+        participate_request_support:
+            "/user/participateRequestSupport/:id/detail",
         donate: "/user/donate",
-        return: "/user/return"
+        return: "/user/return",
     },
     admin: {
         dashboard: "/admin",
         staff: {
             list: "/admin/staff",
             add: "/admin/staff/add",
-            detail: "/admin/staff/:id/detail"
+            detail: "/admin/staff/:id/detail",
         },
         campaign: {
             list: "/admin/campaign",
             detail: "/admin/campaign/:id/detail",
             staff: {
                 list: "/admin/campaign/staff",
-                detail: "/admin/campaign/staff/:id/detail"
+                detail: "/admin/campaign/staff/:id/detail",
             },
             donor: {
                 list: "/admin/campaign/donor",
-                detail: "/admin/campaign/donor/:id/detail"
-            }
+                detail: "/admin/campaign/donor/:id/detail",
+            },
         },
         news: {
             list: "/admin/news",
-            detail: "/admin/news/:id/detail"
+            detail: "/admin/news/:id/detail",
         },
         post: {
             forum: "/admin/post",
             user: "/admin/post/user",
             staff: "/admin/post/staff",
-        }
+        },
     },
     staff: {
         dashboard: "/staff",
@@ -69,12 +72,12 @@ export const routes = {
             staff: {
                 list: "/staff/campaign/staff",
                 detail: "/staff/campaign/staff/:id/detail",
-                add: "/staff/campaign/staff/add"
+                add: "/staff/campaign/staff/add",
             },
             user: {
                 list: "/staff/campaign/user",
-                detail: "/staff/campaign/user/:id/detail"
-            }
+                detail: "/staff/campaign/user/:id/detail",
+            },
         },
         user: {
             list: "/staff/user",
@@ -98,7 +101,7 @@ export const routes = {
             recipient: {
                 list: "/staff/certificate/recipient",
                 detail: "/staff/certificate/recipient/:id/detail",
-            }
+            },
         },
         request_support: {
             list: "/staff/requestSupport",
@@ -108,6 +111,6 @@ export const routes = {
         donate: {
             list: "/staff/donate",
             detail: "/staff/donate/:id/detail",
-        }
-    }
-}
+        },
+    },
+};

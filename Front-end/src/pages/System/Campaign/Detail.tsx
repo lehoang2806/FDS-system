@@ -503,7 +503,9 @@ const DetailCampaignPage: React.FC = () => {
                                 <div>
                                     <h4>Số lượng còn lại</h4>
                                     <p>
-                                        {Number(currentCampaign?.limitedQuantity) - totalRegisteredQuantity}
+                                        {Number(
+                                            currentCampaign?.limitedQuantity
+                                        ) - totalRegisteredQuantity}
                                     </p>
                                 </div>
                                 <div>
@@ -519,33 +521,50 @@ const DetailCampaignPage: React.FC = () => {
                                 </div>
                                 {userLogin?.roleId === 4 && currentCampaign && (
                                     <>
+                                        {/* Ẩn nếu đã đến thời gian triển khai */}
                                         {implementationDate &&
-                                            implementationDate > today &&
-                                            (totalRegisteredQuantity >=
-                                            Number(
-                                                currentCampaign?.limitedQuantity
-                                            ) ? (
-                                                <p className="sc-text" style={{ textAlign: "center", padding: "10px 0" }}>
-                                                    Đã đăng ký đủ số lượng
-                                                </p>
-                                            ) : (
-                                                <button
-                                                    className={classNames(
-                                                        "sc-btn",
-                                                        {
-                                                            "disabled-btn":
-                                                                registeredReceiver &&
-                                                                totalQuantityByCurrentUser ===
-                                                                    10,
+                                        implementationDate <= today ? null : (
+                                            <>
+                                                {/* Đã đăng ký đủ số lượng */}
+                                                {totalRegisteredQuantity >=
+                                                Number(
+                                                    currentCampaign?.limitedQuantity
+                                                ) ? (
+                                                    <p
+                                                        className="sc-text"
+                                                        style={{
+                                                            textAlign: "center",
+                                                            padding: "10px 0",
+                                                        }}
+                                                    >
+                                                        Đã đăng ký đủ số lượng
+                                                    </p>
+                                                ) : (
+                                                    // Hiển thị nút nếu chưa đến ngày triển khai và chưa đủ số lượng
+                                                    <button
+                                                        className={classNames(
+                                                            "sc-btn",
+                                                            {
+                                                                "disabled-btn":
+                                                                    registeredReceiver &&
+                                                                    totalQuantityByCurrentUser ===
+                                                                        10,
+                                                            }
+                                                        )}
+                                                        onClick={
+                                                            handleRegisterReceiver
                                                         }
-                                                    )}
-                                                    onClick={
-                                                        handleRegisterReceiver
-                                                    }
-                                                >
-                                                    Đăng ký nhận hỗ trợ
-                                                </button>
-                                            ))}
+                                                        disabled={
+                                                            registeredReceiver &&
+                                                            totalQuantityByCurrentUser ===
+                                                                10
+                                                        }
+                                                    >
+                                                        Đăng ký nhận hỗ trợ
+                                                    </button>
+                                                )}
+                                            </>
+                                        )}
                                     </>
                                 )}
                             </div>

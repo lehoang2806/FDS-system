@@ -37,6 +37,9 @@ const ManageLogin = () => {
         if (isAuthenticated && userProfile?.roleId === 2) {
             navigateHook(routes.staff.dashboard);
         }
+        if (userProfile?.roleId === 3 || userProfile?.roleId === 4) {
+            navigateHook("/403");
+        }
     }, [isAuthenticated]);
 
     const onSubmit = async (

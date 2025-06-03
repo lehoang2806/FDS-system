@@ -196,6 +196,7 @@ const StaffDetailPostPage = () => {
                         </div>
 
                         <div className="pcr2">
+                            {post?.articleTitle && <h4>{post?.articleTitle}</h4>}
                             <PostContent content={String(post?.postContent)} />
                             {post?.hashtags && post.hashtags.length > 0 && (
                                 <div

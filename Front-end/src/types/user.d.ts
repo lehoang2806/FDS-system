@@ -31,6 +31,7 @@ export type UserInfo = {
     type?: string | null;
     donorType?: string | null;
     createdDate: string;
+    isBanned: boolean;
 };
 
 interface AddStaff {
@@ -233,4 +234,13 @@ interface currentRecipientCertificate {
     otherImages: string[];    
     createdDate: string;
     reviewComments?: ReviewComment[] | null;
+}
+
+interface BanAccountParams {
+    accountId: string;
+    reason: string;
+}
+
+interface UnBanAccountParams {
+    accountId: string;
 }

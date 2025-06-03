@@ -1,20 +1,29 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { getAllDonateApiThunk } from "./donateThunk";
+import { getAllDonateApiThunk, getDonateByIdApiThunk } from "./donateThunk";
 
 const initialState: DonateState = {
     donates: [],
+    donate: null,
 };
 
 export const donateSlice = createSlice({
-    name: 'donate',
+    name: "donate",
     initialState,
-    reducers: {
-    },
-    extraReducers: builder => {
+    reducers: {},
+    extraReducers: (builder) => {
         builder
-        .addCase(getAllDonateApiThunk.fulfilled, (state, action: PayloadAction<Donate[]>) => {
-            state.donates = action.payload;
-        })
+            .addCase(
+                getAllDonateApiThunk.fulfilled,
+                (state, action: PayloadAction<Donate[]>) => {
+                    state.donates = action.payload;
+                }
+            )
+            .addCase(
+                getDonateByIdApiThunk.fulfilled,
+                (state, action: PayloadAction<Donate>) => {
+                    state.donate = action.payload;
+                }
+            );
     },
 });
 

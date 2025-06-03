@@ -9,6 +9,8 @@ import dayjs from "dayjs";
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 import weekday from "dayjs/plugin/weekday";
 import utc from "dayjs/plugin/utc";
+import { routes } from "@/routes/routeName";
+import { navigateHook } from "@/routes/RouteApp";
 
 dayjs.extend(isSameOrAfter);
 dayjs.extend(weekday);
@@ -81,6 +83,11 @@ const StaffListDonatePage = () => {
             setCurrentDonatePage(currentDonatePage + 1);
     };
 
+    const handleToDetail = (donorDonateId: string) => {
+        const url = routes.staff.donate.detail.replace(":id", donorDonateId);
+        return navigateHook(url);
+    };
+
     return (
         <section id="staff-list-donate" className="staff-section">
             <div className="staff-container sld-container">
@@ -143,9 +150,9 @@ const StaffListDonatePage = () => {
                                         <td className="table-body-cell">
                                             <button
                                                 className="view-btn"
-                                                // onClick={() =>
-                                                //     handleToDetail(item.newId)
-                                                // }
+                                                onClick={() =>
+                                                    handleToDetail(item.donorDonateId)
+                                                }
                                             >
                                                 Xem chi tiết
                                             </button>

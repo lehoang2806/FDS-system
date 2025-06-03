@@ -77,6 +77,7 @@ export default function () {
 
     const users = useAppSelector(selectGetAllUser);
     const confirmedUsers = users.filter((user) => user.isConfirm === true);
+    console.log(users)
     const confirmedPersonalDonors = confirmedUsers.filter(
         (user) => user.type === "1"
     );
@@ -134,10 +135,10 @@ export default function () {
                 <div className="landing-container ls3-container">
                     <h2>Đồng Hành Cùng Chúng Tôi</h2>
                     <div className="ls3r1">
-                        <div className="ls3r1c1">
+                        <div className="col-flex ls3r1c1">
                             <img src={LS3} alt="" />
                         </div>
-                        <div className="ls3r1c2">
+                        <div className="col-flex ls3r1c2">
                             <div className="ls3r1c2c1">
                                 <div className="ls3r1c2-item">
                                     <div

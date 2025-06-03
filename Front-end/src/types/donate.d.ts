@@ -13,4 +13,5 @@ interface Donate {
 
 interface DonateState {
     donates: Donate[];
+    donate: Donate | null;
 }

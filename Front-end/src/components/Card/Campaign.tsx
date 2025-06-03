@@ -16,23 +16,19 @@ const CampaignCard: FC<CampaignCardProps> = ({ onClickDetail, campaign }) => {
         .join(":");
 
     // Xử lý status dựa trên thời gian
-    const campaignDate = new Date(campaign.implementationTime);
-    // Set giờ về cuối ngày
-    campaignDate.setHours(23, 59, 59, 999);
+    const startDate = new Date(campaign.implementationTime);
+    const endDate = new Date(startDate);
+    endDate.setHours(23, 59, 59, 999);
 
-    const currentDate = new Date();
+    const now = new Date();
 
     let status = "";
-    if (campaignDate < currentDate) {
-        status = "Đã kết thúc";
-    } else if (
-        campaignDate.getFullYear() === currentDate.getFullYear() &&
-        campaignDate.getMonth() === currentDate.getMonth() &&
-        campaignDate.getDate() === currentDate.getDate()
-    ) {
+    if (now < startDate) {
+        status = "Sắp diễn ra";
+    } else if (now >= startDate && now <= endDate) {
         status = "Đang diễn ra";
     } else {
-        status = "Sắp diễn ra";
+        status = "Đã kết thúc";
     }
 
     return (

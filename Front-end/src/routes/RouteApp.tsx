@@ -1,10 +1,25 @@
 import { createBrowserRouter, RouterProvider, To } from "react-router-dom";
 import { Fragment } from "react/jsx-runtime";
 import routeStatff from "./RouteStaff";
-import { ForgotPasswordPage, LandingPage, LoginPage, ManageLogin, NewPasswordPage, NotFoundPage, OTPAuthPage, RegisterPage, UnauthorizedPage } from "../pages/System/index";
+import {
+    About,
+    Contact,
+    ForgotPasswordPage,
+    LandingPage,
+    LoginPage,
+    ManageLogin,
+    NewPasswordPage,
+    NotFoundPage,
+    OTPAuthPage,
+    RegisterPage,
+    UnauthorizedPage,
+} from "../pages/System/index";
 import LandingBasicLayout from "../layout/System/LandingBasicLayout";
 import { DetailCampaignPage, ListCampaignPage } from "@/pages/System/Campaign";
-import { DetailSupporterPage, ListSupporterPage } from "@/pages/System/Supporter";
+import {
+    DetailSupporterPage,
+    ListSupporterPage,
+} from "@/pages/System/Supporter";
 import { DetailNewsPage, ListNewsPage } from "@/pages/System/News";
 import routeUser from "./RouteUser";
 import { PostForumPage } from "@/pages/System/Post";
@@ -20,54 +35,62 @@ export default function () {
             <Loading loading={loading} isFullPage />
             <RouterProvider router={routerRoot} />
         </Fragment>
-    )
+    );
 }
 
 export const routerRoot = createBrowserRouter([
     {
         path: "",
-        element: <LandingBasicLayout/>,
+        element: <LandingBasicLayout />,
         children: [
             {
                 path: "",
-                element: <LandingPage/>
+                element: <LandingPage />,
             },
             {
                 path: "campaigns",
-                element: <ListCampaignPage/>
+                element: <ListCampaignPage />,
             },
             {
                 path: "campaign/:id/detail",
-                element: <DetailCampaignPage/>
+                element: <DetailCampaignPage />,
             },
             {
                 path: "supporters",
-                element: <ListSupporterPage/>
+                element: <ListSupporterPage />,
             },
             {
                 path: "supporter/:id/detail",
-                element: <DetailSupporterPage/>
+                element: <DetailSupporterPage />,
             },
             {
                 path: "news",
-                element: <ListNewsPage/>
+                element: <ListNewsPage />,
             },
             {
                 path: "news/:id/detail",
-                element: <DetailNewsPage/>
+                element: <DetailNewsPage />,
             },
             {
                 path: "posts",
-                element: <PostForumPage/>
-            }
-        ]
+                element: <PostForumPage />,
+            },
+            {
+                path: "about",
+                element: <About />,
+            },
+            {
+                path: "contact",
+                element: <Contact />,
+            },
+        ],
     },
     ...routeStatff,
     ...routeUser,
     ...routeAdmin,
     {
         path: "403",
-        element: <UnauthorizedPage />
+        element: <UnauthorizedPage />,
     },
     {
         path: "*",
@@ -75,30 +98,30 @@ export const routerRoot = createBrowserRouter([
     },
     {
         path: "login",
-        element: <LoginPage/>
+        element: <LoginPage />,
     },
     {
         path: "manage/login",
-        element: <ManageLogin/>
+        element: <ManageLogin />,
     },
     {
         path: "register",
-        element: <RegisterPage/>
+        element: <RegisterPage />,
     },
     {
         path: "otp-auth",
-        element: <OTPAuthPage/>
+        element: <OTPAuthPage />,
     },
     {
         path: "forgot-pass",
-        element: <ForgotPasswordPage/>
+        element: <ForgotPasswordPage />,
     },
     {
         path: "new-pass",
-        element: <NewPasswordPage/>
+        element: <NewPasswordPage />,
     },
-])
+]);
 
 export const navigateHook = (path: To, opts?: any) => {
     routerRoot.navigate(path, opts);
-}
+};

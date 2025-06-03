@@ -12,13 +12,13 @@
             h1 {
                 font-size: 18px;
                 font-weight: 700;
-                color: #29343D;
+                color: #29343d;
             }
 
             p {
                 font-size: 14px;
                 font-weight: 400;
-                color: #29343D;
+                color: #29343d;
 
                 .admin-tag {
                     font-size: 12px;
@@ -40,10 +40,52 @@
             margin-bottom: 30px;
         }
 
-        .alcscr3 {
+        .alcscr3,
+        .alcscr4 {
             padding: 30px;
             background: #fff;
             border-radius: var(--border-radius-12);
+        }
+
+        .alcscr4 {
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+
+            .alcscr4c1,
+            .alcscr4c2,
+            .alcscr4c3 {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                align-items: start;
+
+                label {
+                    font-size: 16px;
+                    font-weight: 600;
+                }
+
+                .pr-input {
+                    width: 100%;
+                }
+
+                select {
+                    appearance: none;
+                    cursor: pointer;
+                }
+            }
+
+            .alcscr4c3 {
+                flex: 2;
+
+                .group-input {
+                    width: 100%;
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                }
+            }
         }
     }
 }

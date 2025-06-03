@@ -14,6 +14,8 @@ import { Link, useLocation } from "react-router-dom";
 import {
     CreateCampaignModal,
     CreateRequestSupportModal,
+    DonorGuideModal,
+    RecipientGuideModal,
     SubmitCertificateModal,
 } from "../Modal";
 import { useAppDispatch, useAppSelector } from "@/app/store";
@@ -66,6 +68,11 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
         useState(false);
 
     const [isRequestSupportModalOpen, setIsRequestSupportModalOpen] =
+        useState(false);
+
+    const [isDonorGuildModalOpen, setIsDonorGuildModalOpen] = useState(false);
+
+    const [isRecipientGuildModalOpen, setIsRecipientGuildModalOpen] =
         useState(false);
 
     const handleCreateCampaign = () => {
@@ -216,8 +223,8 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
         {
             name: "Giới thiệu",
             subMenu: [
-                { title: "Về chúng tôi", to: "" },
-                { title: "Liên hệ", to: "" },
+                { title: "Về chúng tôi", to: routes.about },
+                { title: "Liên hệ", to: routes.contact },
                 ...(userLogin?.roleId === 3 && isAuthenticated
                     ? [{ title: "Ủng hộ chúng tôi", to: routes.user.donate }]
                     : []),
@@ -364,13 +371,23 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
                                         Tạo chiến dịch
                                     </button>
                                 ) : (
-                                    <p className="note">
+                                    <p
+                                        className="note"
+                                        onClick={() =>
+                                            setIsDonorGuildModalOpen(true)
+                                        }
+                                    >
                                         Tài khoản chưa được xác thực
                                     </p>
                                 ))}
                             {userLogin?.roleId === 4 &&
                                 (profileUser?.isConfirm === false ? (
-                                    <p className="note">
+                                    <p
+                                        className="note"
+                                        onClick={() =>
+                                            setIsRecipientGuildModalOpen(true)
+                                        }
+                                    >
                                         Tài khoản chưa được xác thực
                                     </p>
                                 ) : (
@@ -959,6 +976,14 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
             <CreateRequestSupportModal
                 isOpen={isRequestSupportModalOpen}
                 setIsOpen={setIsRequestSupportModalOpen}
+            />
+            <DonorGuideModal
+                isOpen={isDonorGuildModalOpen}
+                setIsOpen={setIsDonorGuildModalOpen}
+            />
+            <RecipientGuideModal
+                isOpen={isRecipientGuildModalOpen}
+                setIsOpen={setIsRecipientGuildModalOpen}
             />
         </header>
     );

@@ -21,6 +21,9 @@ import RejectPostModal from "./RejectPost";
 import CreateRequestSupportModal from "./RequestSupport";
 import RemindLoginModal from "./RemindLogin";
 import ListRegisterReceiverModal from "./ListRegisterReceiver";
+import ConfirmReceiveModal from "./ConfirmReceiveModal";
+import DonorGuideModal from "./DonorGuild";
+import RecipientGuideModal from "./RecipientGuild";
 
 export {
     Modal,
@@ -45,5 +48,8 @@ export {
     RejectPostModal,
     CreateRequestSupportModal,
     RemindLoginModal,
-    ListRegisterReceiverModal
+    ListRegisterReceiverModal,
+    ConfirmReceiveModal,
+    DonorGuideModal,
+    RecipientGuideModal
 };
