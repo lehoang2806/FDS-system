@@ -35,5 +35,13 @@
         public string TypeAccount { get; set; }
         public string Status { get; set; }
         public DateTime CreatedDate { get; set; }
+        public string RequestSupportId { get; set; }
+        public List<CampaignRequestSupportReViewComment> ReviewComments { get; set; }
     }
+    public class CampaignRequestSupportReViewComment
+    {
+        public DateTime CreatedDate { get; set; }
+        public string Content { get; set; }
+    }
+
 }

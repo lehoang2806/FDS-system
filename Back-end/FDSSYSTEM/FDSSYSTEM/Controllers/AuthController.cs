@@ -28,21 +28,28 @@ namespace FDSSYSTEM.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginUserDto loginRequest)
         {
-            var user = await _userService.GetUserByUsernameAsync(loginRequest.UserEmail);
-            if (user == null || !_userService.VerifyPassword(loginRequest.Password, user.Password))
-                return Unauthorized("Invalid credentials.");
-
-
-            var role = await _roleService.GetRoleById(user.RoleId);
-
-            var token = _jwtHelper.GenerateToken(new UserTokenDto
+            try
             {
-                Id = user.AccountId,
-                UserEmail = user.Email,
-                Role = role.RoleName
-            });
+                var user = await _userService.GetUserByUsernameAsync(loginRequest.UserEmail);
+                if (user == null || !_userService.VerifyPassword(loginRequest.Password, user.Password))
+                    return Unauthorized("Email hoặc mật khẩu không đúng.");
 
-            return Ok(new { token, UserInfo = user.Adapt<UserProfileDto>() });
+
+                var role = await _roleService.GetRoleById(user.RoleId);
+
+                var token = _jwtHelper.GenerateToken(new UserTokenDto
+                {
+                    Id = user.AccountId,
+                    UserEmail = user.Email,
+                    Role = role.RoleName
+                });
+
+                return Ok(new { token, UserInfo = user.Adapt<UserProfileDto>() });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
 
         [HttpPost("logingoogle")]
@@ -106,7 +113,7 @@ namespace FDSSYSTEM.Controllers
 
             try
             {
-                await _userService.CreateUserAsync(user, true,false);
+                await _userService.CreateUserAsync(user, true, false);
                 return Ok("User registered successfully.");
             }
             catch (Exception ex)

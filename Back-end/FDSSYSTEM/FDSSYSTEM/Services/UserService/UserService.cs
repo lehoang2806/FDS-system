@@ -91,10 +91,7 @@ public class UserService : IUserService
         userEmail = userEmail.ToLower();
         var allUser = await _userRepository.GetAllAsync();
         var user = allUser.FirstOrDefault(x => x.Email?.ToLower() == userEmail);
-        if (user != null && user.IsBanned)
-        {
-            throw new Exception("Tài khoản của bạn đã bị cấm.");
-        }
+       
         return user;
     }
 
