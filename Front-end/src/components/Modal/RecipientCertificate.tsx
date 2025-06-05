@@ -64,21 +64,15 @@ const RecipientCertificateModal: FC<RecipientCertificateModalProps> = ({
             )
             .required("Vui lòng nhập số điện thoại"),
         address: Yup.string().required("Vui lòng nhập địa chỉ"),
-        birthDay: Yup.string()
+        birthDay: Yup.date()
             .required("Vui lòng nhập ngày sinh")
-            .test(
-                "is-18",
-                "Bạn cần đủ 18 tuổi để xác minh tài khoản",
-                function (value) {
-                    if (!value) return false;
-                    const birthDate = new Date(value);
-                    const today = new Date();
-                    const age = today.getFullYear() - birthDate.getFullYear();
-                    const m = today.getMonth() - birthDate.getMonth();
-                    const d = today.getDate() - birthDate.getDate();
-                    const isBirthdayPassed = m > 0 || (m === 0 && d >= 0);
-                    return age > 18 || (age === 18 && isBirthdayPassed);
-                }
+            .min(
+                new Date(new Date().setFullYear(new Date().getFullYear() - 80)),
+                "Tuổi phải nhỏ hơn 80"
+            )
+            .max(
+                new Date(new Date().setFullYear(new Date().getFullYear() - 18)),
+                "Bạn cần đủ 18 tuổi để xác minh tài khoản"
             ),
         circumstances: Yup.string().required("Vui lòng nhập hoàn cảnh"),
         monthlyIncome: Yup.string().test(
@@ -260,6 +254,16 @@ const RecipientCertificateModal: FC<RecipientCertificateModalProps> = ({
                                         <Field
                                             name="birthDay"
                                             type="date"
+                                            min={
+                                                new Date(
+                                                    new Date().setFullYear(
+                                                        new Date().getFullYear() -
+                                                            80
+                                                    )
+                                                )
+                                                    .toISOString()
+                                                    .split("T")[0]
+                                            }
                                             max={
                                                 new Date(
                                                     new Date().setFullYear(

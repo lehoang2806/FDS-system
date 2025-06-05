@@ -17,10 +17,6 @@ const StaffDetailDonatePage = () => {
     const donate = useAppSelector(selectGetDonateById);
     const userProfile = useAppSelector(selectGetProfileUser);
 
-    console.log(donate?.donorId);
-
-    console.log(userProfile);
-
     useEffect(() => {
         dispatch(setLoading(true));
         dispatch(getDonateByIdApiThunk(String(id)))

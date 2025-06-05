@@ -34,7 +34,8 @@
                         margin-bottom: 30px;
                     }
 
-                    p, .form-input {
+                    p,
+                    .form-input {
                         color: var(--main-black);
                         font-size: 17px;
                         font-weight: 500;
@@ -42,6 +43,26 @@
 
                     p {
                         margin-bottom: 22px;
+                    }
+
+                    .form-field {
+                        position: relative;
+
+                        .form-input {
+                            width: 100%;
+                            padding-right: 60px; // Để chừa chỗ cho nút hiển thị
+                        }
+
+                        .toggle-password {
+                            position: absolute;
+                            top: 22px;
+                            right: 16px;
+                            font-size: 14px;
+                            color: #555;
+                            cursor: pointer;
+                            user-select: none;
+                            transition: color 0.2s;
+                        }
                     }
                 }
             }

@@ -1,72 +1,53 @@
-import {
-    selectCurrentCampaign,
-    selectGetAllRegisterReceivers,
-} from "@/app/selector";
+import { selectGetCampaignRequestSupportById } from "@/app/selector";
 import { useAppDispatch, useAppSelector } from "@/app/store";
 import {
-    AdditionalCampaignModal,
+    AdditionalCampaignRequestSupportModal,
     Modal,
-    RejectCampaignModal,
+    RejectCampaignRequestSupportModal,
 } from "@/components/Modal";
 import { navigateHook } from "@/routes/RouteApp";
 import { routes } from "@/routes/routeName";
 import { setLoading } from "@/services/app/appSlice";
-import {
-    approveCampaignApiThunk,
-    deleteCampaignApiThunk,
-    getAllCampaignApiThunk,
-    getCampaignByIdApiThunk,
-} from "@/services/campaign/campaignThunk";
-import { getAllRegisterReceiversApiThunk } from "@/services/registerReceive/registerReceiveThunk";
-import {
-    AdditionalCampaign,
-    ApproveCampaign,
-    RejectCampaign,
-} from "@/types/campaign";
 import { FC, useEffect, useState } from "react";
 import Lightbox from "react-awesome-lightbox";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import dayjs from "dayjs";
 import { formatDater, formatTime } from "@/utils/helper";
 import Button from "@/components/Elements/Button";
+import {
+    approveCampaignRequestSupportApiThunk,
+    deleteCampaignRequestSupportApiThunk,
+    getAllCampaignRequestSupportApiThunk,
+    getCampaignRequestSupportByIdApiThunk,
+} from "@/services/campaignRequestSupport/campaignRequestSupportThunk";
+import {
+    AdditionalCampaignRequestSupport,
+    ApproveCampaignRequestSupport,
+    RejectCampaignRequestSupport,
+} from "@/types/campaignRequestSupport";
 
-const StaffDetailCampaignUserPage: FC = () => {
+const StaffDetailCampaignRequestSupportPage: FC = () => {
     const { id } = useParams<{ id: string }>();
 
     const dispatch = useAppDispatch();
 
-    const currentCampaign = useAppSelector(selectCurrentCampaign);
-
-    const registerReceivers = useAppSelector(selectGetAllRegisterReceivers);
+    const currentCampaign = useAppSelector(selectGetCampaignRequestSupportById);
 
     const [showModalConfirm, setShowModalConfirm] = useState<boolean>(false);
 
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
-    const currentRegisterReceivers = registerReceivers.filter(
-        (registerReceiver) => registerReceiver.campaignId === id
-    );
-
     const [selectedRejectCampaign, setSelectedRejectCampaign] =
-        useState<RejectCampaign | null>(null);
+        useState<RejectCampaignRequestSupport | null>(null);
 
     const [selectedAdditionalCampaign, setSelectedAdditionalCampaign] =
-        useState<AdditionalCampaign | null>(null);
+        useState<AdditionalCampaignRequestSupport | null>(null);
 
     const [isRejectCampaignModalOpen, setIsRejectCampaignModalOpen] =
         useState(false);
 
     const [isAdditionalCampaignModalOpen, setIsAdditionalCampaignModalOpen] =
         useState(false);
-
-    const date = dayjs(currentCampaign?.implementationTime).format(
-        "DD/MM/YYYY"
-    );
-    const time = currentCampaign?.implementationTime
-        .split("T")[1]
-        .replace("Z", "");
-    const dateCreate = dayjs(currentCampaign?.createdDate).format("DD/MM/YYYY");
 
     const [imagePreview, setImagePreview] = useState<string[]>([]);
     const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
@@ -82,10 +63,8 @@ const StaffDetailCampaignUserPage: FC = () => {
     useEffect(() => {
         if (id) {
             dispatch(setLoading(true));
-            Promise.all([
-                dispatch(getAllRegisterReceiversApiThunk()).unwrap(),
-                dispatch(getCampaignByIdApiThunk(id)).unwrap(),
-            ])
+            dispatch(getCampaignRequestSupportByIdApiThunk(id))
+                .unwrap()
                 .then(() => {})
                 .catch(() => {})
                 .finally(() => {
@@ -96,14 +75,17 @@ const StaffDetailCampaignUserPage: FC = () => {
         }
     }, [id, dispatch]);
 
-    const handleApproveCampaign = async (values: ApproveCampaign) => {
+    const handleApproveCampaign = async (
+        values: ApproveCampaignRequestSupport
+    ) => {
         try {
             dispatch(setLoading(true));
-            await dispatch(approveCampaignApiThunk(values))
+            await dispatch(approveCampaignRequestSupportApiThunk(values))
                 .unwrap()
                 .then(() => {
                     toast.success("Phê duyệt thành công");
-                    navigateHook(routes.staff.campaign.user.list);
+                    dispatch(getAllCampaignRequestSupportApiThunk());
+                    navigateHook(routes.staff.campaign.request_support.list);
                 })
                 .finally(() => {
                     setTimeout(() => {
@@ -115,24 +97,31 @@ const StaffDetailCampaignUserPage: FC = () => {
         }
     };
 
-    const handleRejectCampaign = (campaignId: string) => {
-        setSelectedRejectCampaign({ campaignId, comment: "" });
+    const handleRejectCampaign = (campaignRequestSupportId: string) => {
+        setSelectedRejectCampaign({ campaignRequestSupportId, comment: "" });
         setIsRejectCampaignModalOpen(true);
     };
 
-    const handleAdditionalCampaign = (campaignId: string) => {
-        setSelectedAdditionalCampaign({ campaignId, content: "" });
+    const handleAdditionalCampaign = (campaignRequestSupportId: string) => {
+        setSelectedAdditionalCampaign({
+            campaignRequestSupportId,
+            content: "",
+        });
         setIsAdditionalCampaignModalOpen(true);
     };
 
     const handleDeleteCampaign = async () => {
         setIsSubmitting(true);
-        dispatch(deleteCampaignApiThunk(String(currentCampaign?.campaignId)))
+        dispatch(
+            deleteCampaignRequestSupportApiThunk(
+                String(currentCampaign?.campaignRequestSupportId)
+            )
+        )
             .unwrap()
             .then(() => {
-                navigateHook(routes.staff.campaign.user.list);
+                navigateHook(routes.staff.campaign.request_support.list);
                 toast.success("Xóa chiến dịch thành công");
-                dispatch(getAllCampaignApiThunk());
+                dispatch(getAllCampaignRequestSupportApiThunk());
                 setIsSubmitting(false);
             })
             .catch()
@@ -159,7 +148,8 @@ const StaffDetailCampaignUserPage: FC = () => {
                             <button
                                 onClick={() =>
                                     navigateHook(
-                                        routes.staff.campaign.user.list
+                                        routes.staff.campaign.request_support
+                                            .list
                                     )
                                 }
                             >
@@ -187,7 +177,11 @@ const StaffDetailCampaignUserPage: FC = () => {
                         </div>
                         <div className="col-flex sdcucr2r2c2">
                             <h3>Ngày được tạo:</h3>
-                            <p>{dateCreate}</p>
+                            <p>
+                                {formatDater(
+                                    String(currentCampaign?.createdDate)
+                                )}
+                            </p>
                         </div>
                     </div>
                     <hr />
@@ -196,27 +190,33 @@ const StaffDetailCampaignUserPage: FC = () => {
                             <h2>Thông tin chiến dịch</h2>
                             <h3>
                                 Tên chiến dịch:{" "}
-                                <span>{currentCampaign?.campaignName}</span>
-                            </h3>
-                            <h3>
-                                Mô tả:{" "}
-                                <span style={{ whiteSpace: "pre-line" }}>
-                                    {currentCampaign?.campaignDescription}
+                                <span>
+                                    {
+                                        currentCampaign?.campaignRequestSupportName
+                                    }
                                 </span>
                             </h3>
                         </div>
                         <div className="col-flex sdcucr2r3c2">
+                            <h2>Thông tin quà tặng</h2>
                             <h3>
                                 Địa điểm phát quà:{" "}
-                                <span>
-                                    {currentCampaign?.location},{" "}
-                                    {currentCampaign?.district}
-                                </span>
+                                <span>{currentCampaign?.location}</span>
                             </h3>
                             <h3>
                                 Thời gian diễn ra:{" "}
                                 <span>
-                                    {date} & {time}
+                                    {formatDater(
+                                        String(
+                                            currentCampaign?.implementationTime
+                                        )
+                                    )}{" "}
+                                    &{" "}
+                                    {formatTime(
+                                        String(
+                                            currentCampaign?.implementationTime
+                                        )
+                                    )}
                                 </span>
                             </h3>
                             <h3>
@@ -229,64 +229,6 @@ const StaffDetailCampaignUserPage: FC = () => {
                                 Số lượng quà tặng:{" "}
                                 <span>{currentCampaign?.limitedQuantity}</span>
                             </h3>
-                            {currentCampaign?.estimatedBudget ||
-                            currentCampaign?.averageCostPerGift ? (
-                                <>
-                                    <h2>Thông tin tài chính</h2>
-                                    {currentCampaign?.estimatedBudget && (
-                                        <>
-                                            <h3>
-                                                Ngân sách ước tính:{" "}
-                                                <span>
-                                                    {
-                                                        currentCampaign?.estimatedBudget
-                                                    }
-                                                </span>
-                                            </h3>
-                                        </>
-                                    )}
-                                    {currentCampaign?.averageCostPerGift && (
-                                        <>
-                                            <h3>
-                                                Giá trung bình mỗi phần quà:{" "}
-                                                <span>
-                                                    {
-                                                        currentCampaign?.averageCostPerGift
-                                                    }
-                                                </span>
-                                            </h3>
-                                        </>
-                                    )}
-                                </>
-                            ) : null}
-                            {currentCampaign?.sponsors ||
-                            currentCampaign?.communication ? (
-                                <>
-                                    <h2>Thông tin truyền thông</h2>
-                                    {currentCampaign?.sponsors && (
-                                        <>
-                                            <h3>
-                                                Nhà tài trợ:{" "}
-                                                <span>
-                                                    {currentCampaign?.sponsors}
-                                                </span>
-                                            </h3>
-                                        </>
-                                    )}
-                                    {currentCampaign?.communication && (
-                                        <>
-                                            <h3>
-                                                Truyền thông:{" "}
-                                                <span>
-                                                    {
-                                                        currentCampaign?.communication
-                                                    }
-                                                </span>
-                                            </h3>
-                                        </>
-                                    )}
-                                </>
-                            ) : null}
                         </div>
                     </div>
                     <div className="sdcucr2r4">
@@ -343,7 +285,7 @@ const StaffDetailCampaignUserPage: FC = () => {
                                 className="approve-btn"
                                 onClick={() =>
                                     handleApproveCampaign({
-                                        campaignId: String(id),
+                                        campaignRequestSupportId: String(id),
                                     })
                                 }
                             >
@@ -372,66 +314,16 @@ const StaffDetailCampaignUserPage: FC = () => {
                         </>
                     )}
                 </div>
-                <div className="sdcucr2">
-                    <h2>Danh sách người đăng ký</h2>
-                    {currentCampaign?.status === "Approved" && (
-                        <div className="sdcucr2r3">
-                            <table className="table">
-                                <thead className="table-head">
-                                    <tr className="table-head-row">
-                                        <th className="table-head-cell">
-                                            Tên người đại diện
-                                        </th>
-                                        <th className="table-head-cell">
-                                            Số lượng đăng ký
-                                        </th>
-                                        <th className="table-head-cell">
-                                            Thời gian đăng ký
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody className="table-body">
-                                    {currentRegisterReceivers.map(
-                                        (registerReceiver, index) => (
-                                            <tr
-                                                className="table-body-row"
-                                                key={index}
-                                            >
-                                                <td className="table-body-cell">
-                                                    {
-                                                        registerReceiver.registerReceiverName
-                                                    }
-                                                </td>
-                                                <td className="table-body-cell">
-                                                    {registerReceiver.quantity}
-                                                </td>
-                                                <td className="table-body-cell">
-                                                    {formatDater(
-                                                        registerReceiver.creatAt
-                                                    )}{" "}
-                                                    -{" "}
-                                                    {formatTime(
-                                                        registerReceiver.creatAt
-                                                    )}
-                                                </td>
-                                            </tr>
-                                        )
-                                    )}
-                                </tbody>
-                            </table>
-                        </div>
-                    )}
-                </div>
             </div>
-            <RejectCampaignModal
+            <RejectCampaignRequestSupportModal
                 isOpen={isRejectCampaignModalOpen}
                 setIsOpen={setIsRejectCampaignModalOpen}
-                selectedCampaign={selectedRejectCampaign}
+                selectedCampaignRequestSupport={selectedRejectCampaign}
             />
-            <AdditionalCampaignModal
+            <AdditionalCampaignRequestSupportModal
                 isOpen={isAdditionalCampaignModalOpen}
                 setIsOpen={setIsAdditionalCampaignModalOpen}
-                selectedCampaign={selectedAdditionalCampaign}
+                selectedCampaignRequestSupport={selectedAdditionalCampaign}
             />
             <Modal isOpen={showModalConfirm} setIsOpen={setShowModalConfirm}>
                 <div className="confirm-delete-container">
@@ -455,4 +347,4 @@ const StaffDetailCampaignUserPage: FC = () => {
     );
 };
 
-export default StaffDetailCampaignUserPage;
+export default StaffDetailCampaignRequestSupportPage;

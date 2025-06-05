@@ -51,6 +51,10 @@ const PersonalDonorModal: FC<PersonalDonorModalProps> = ({
         fullName: Yup.string().required("Họ và tên không được để trống"),
         birthDay: Yup.date()
             .required("Ngày sinh không được để trống")
+            .min(
+                new Date(new Date().setFullYear(new Date().getFullYear() - 80)),
+                "Bạn phải nhỏ hơn 80 tuổi"
+            )
             .max(
                 new Date(new Date().setFullYear(new Date().getFullYear() - 18)),
                 "Bạn phải từ 18 tuổi trở lên"
@@ -256,6 +260,16 @@ const PersonalDonorModal: FC<PersonalDonorModalProps> = ({
                                                     .toISOString()
                                                     .split("T")[0]
                                             }
+                                            min={
+                                                new Date(
+                                                    new Date().setFullYear(
+                                                        new Date().getFullYear() -
+                                                            80
+                                                    )
+                                                )
+                                                    .toISOString()
+                                                    .split("T")[0]
+                                            }
                                             className={classNames(
                                                 "form-input",
                                                 {
@@ -265,6 +279,7 @@ const PersonalDonorModal: FC<PersonalDonorModalProps> = ({
                                                 }
                                             )}
                                         />
+
                                         <p
                                             className="note"
                                             style={{

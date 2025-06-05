@@ -36,6 +36,10 @@ export const routes = {
             "/user/participateRequestSupport/:id/detail",
         donate: "/user/donate",
         return: "/user/return",
+        detail_campaign_request_support:
+            "/user/campaignRequestSupport/:id/detail",
+        detail_campaign_request_support_for_recipient:
+            "/user/recipient/campaignRequestSupport/:id/detail",
     },
     admin: {
         dashboard: "/admin",
@@ -77,6 +81,10 @@ export const routes = {
             user: {
                 list: "/staff/campaign/user",
                 detail: "/staff/campaign/user/:id/detail",
+            },
+            request_support: {
+                list: "/staff/campaign/requestSupport",
+                detail: "/staff/campaign/requestSupport/:id/detail",
             },
         },
         user: {

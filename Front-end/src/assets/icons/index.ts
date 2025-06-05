@@ -31,6 +31,8 @@ import RegisterPersonIcon from "./register-person-icon.svg?react";
 import ChatIconBox from "./chat-icon.svg?react";
 import EditIcon from "./edit-icon.svg?react";
 import DonateIcon from "./donate-icon.svg?react";
+import EyeIcon from "./eye-icon.svg?react";
+import EyeCloseIcon from "./eyeclose-icon.svg?react";
 
 export {
     MenuIcon,
@@ -66,4 +68,6 @@ export {
     ChatIconBox,
     EditIcon,
     DonateIcon,
+    EyeIcon,
+    EyeCloseIcon
 };

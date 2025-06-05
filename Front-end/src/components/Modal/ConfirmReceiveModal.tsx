@@ -5,8 +5,8 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { toast } from "react-toastify";
 import {
-    donorUpdateRegisterReceiverApiThunk,
     getAllRegisterReceiversApiThunk,
+    updateActualQuantityApiThunk,
     updateRegisterReceiverApiThunk,
 } from "@/services/registerReceive/registerReceiveThunk";
 
@@ -25,15 +25,17 @@ const ConfirmReceiveModal: FC<ConfirmReceiveModalProps> = ({
 
     const formik = useFormik({
         initialValues: {
-            quantity: 1,
+            actualQuantity: 1,
         },
         validationSchema: Yup.object().shape({
-            quantity: Yup.number()
+            actualQuantity: Yup.number()
                 .required("Vui lòng nhập số lượng")
                 .min(1, "Tối thiểu là 1 phần")
                 .max(
                     selectedReceiver?.quantity || 10,
-                    `Số lượng bạn đăng ký chỉ có ${selectedReceiver?.quantity || 10} phần`
+                    `Số lượng bạn đăng ký chỉ có ${
+                        selectedReceiver?.quantity || 10
+                    } phần`
                 ),
         }),
         onSubmit: async (values, { setSubmitting }) => {
@@ -45,9 +47,10 @@ const ConfirmReceiveModal: FC<ConfirmReceiveModalProps> = ({
                         )
                     ).unwrap(),
                     dispatch(
-                        donorUpdateRegisterReceiverApiThunk({
-                            id: selectedReceiver?.registerReceiverId,
-                            params: { quantity: values.quantity },
+                        updateActualQuantityApiThunk({
+                            registerReceiverId:
+                                selectedReceiver?.registerReceiverId,
+                            actualQuantity: values.actualQuantity,
                         })
                     ).unwrap(),
                 ]);
@@ -66,7 +69,7 @@ const ConfirmReceiveModal: FC<ConfirmReceiveModalProps> = ({
         if (!isOpen) {
             formik.resetForm(); // reset lại giá trị quantity về 1
         }
-    }, [isOpen]);    
+    }, [isOpen]);
 
     return (
         <Modal isOpen={isOpen} setIsOpen={setIsOpen}>
@@ -82,24 +85,25 @@ const ConfirmReceiveModal: FC<ConfirmReceiveModalProps> = ({
                 </p>
 
                 <form className="form" onSubmit={formik.handleSubmit}>
-                    <label className="form-label" htmlFor="quantity">
+                    <label className="form-label" htmlFor="actualQuantity">
                         Nhập số lượng thực nhận:
                     </label>
                     <input
-                        id="quantity"
-                        name="quantity"
+                        id="actualQuantity"
+                        name="actualQuantity"
                         type="number"
                         className="form-input"
                         style={{ width: "100%", margin: "10px 0" }}
-                        value={formik.values.quantity}
+                        value={formik.values.actualQuantity}
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                     />
-                    {formik.touched.quantity && formik.errors.quantity && (
-                        <div className="text-error">
-                            {formik.errors.quantity}
-                        </div>
-                    )}
+                    {formik.touched.actualQuantity &&
+                        formik.errors.actualQuantity && (
+                            <div className="text-error">
+                                {formik.errors.actualQuantity}
+                            </div>
+                        )}
 
                     <div className="confirm-actions">
                         <button

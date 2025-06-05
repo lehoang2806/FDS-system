@@ -5,6 +5,7 @@ import { RequestDonorModalProps } from "./type";
 import { selectGetAllCampaign, selectGetAllDonorSupport } from "@/app/selector";
 import {
     getAllDonorSupportApiThunk,
+    getRequestSupportByIdApiThunk,
     requestDonorSupportApiThunk,
 } from "@/services/requestSupport/requestSupportThunk";
 import { ArrowLeft, ArrowRight } from "@/assets/icons";
@@ -136,9 +137,10 @@ const RequestDonorModal: FC<RequestDonorModalProps> = ({
             )
                 .unwrap()
                 .then(() => {
+                    dispatch(getRequestSupportByIdApiThunk(String(requestSupportId)))
                     toast.success("Gửi thành công!");
                     setIsOpen(false);
-                    setSelectedDonors([]); // Reset selected checkbox
+                    setSelectedDonors([]);
                     setIsAllSelected(false);
                 })
                 .catch(() => {})

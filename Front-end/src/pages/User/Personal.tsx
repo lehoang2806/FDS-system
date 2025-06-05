@@ -1,5 +1,6 @@
 import {
     selectGetAllCampaign,
+    selectGetAllCampaignRequestSupport,
     selectGetAllDonate,
     selectGetAllDonorCertificate,
     selectGetAllRecipientCertificate,
@@ -40,6 +41,7 @@ import { getAllRequestSupportApiThunk } from "@/services/requestSupport/requestS
 import classNames from "classnames";
 import { toast } from "react-toastify";
 import { getAllDonateApiThunk } from "@/services/donate/donateThunk";
+import { getAllCampaignRequestSupportApiThunk } from "@/services/campaignRequestSupport/campaignRequestSupportThunk";
 
 dayjs.locale("vi");
 dayjs.extend(relativeTime);
@@ -74,6 +76,11 @@ const UserPersonalPage = () => {
     const donates = useAppSelector(selectGetAllDonate);
     const sortedDonates = [...donates].reverse();
 
+    const campaignsRequestSupport = useAppSelector(
+        selectGetAllCampaignRequestSupport
+    );
+    const sortedCampaignsRequestSupport = [...campaignsRequestSupport].reverse();
+
     // Lọc dữ liệu theo tài khoản đăng nhập
     const currentCampaigns = sortedCampaigns.filter(
         (campaign) => campaign.accountId === userLogin?.accountId
@@ -99,6 +106,11 @@ const UserPersonalPage = () => {
 
     const currentDonates = sortedDonates.filter(
         (donate) => donate.donorId === userLogin?.accountId
+    );
+
+    const currentCampaignsRequestSupport = sortedCampaignsRequestSupport.filter(
+        (campaignRequestSupport) =>
+            campaignRequestSupport.accountId === userLogin?.accountId
     );
 
     // State quản lý modal
@@ -161,6 +173,7 @@ const UserPersonalPage = () => {
             dispatch(getAllCampaignApiThunk()).unwrap(),
             dispatch(getAllRequestSupportApiThunk()).unwrap(),
             dispatch(getAllDonateApiThunk()).unwrap(),
+            dispatch(getAllCampaignRequestSupportApiThunk()).unwrap(),
         ])
             .catch(() => {})
             .finally(() => {
@@ -187,6 +200,11 @@ const UserPersonalPage = () => {
 
     const handleToDetailCampaign = (campaignId: string) => {
         const url = routes.user.detail_campaign.replace(":id", campaignId);
+        return navigateHook(url);
+    };
+
+    const handleToDetailCampaignRequestSupport = (campaignRequestSupportId: string) => {
+        const url = routes.user.detail_campaign_request_support.replace(":id", campaignRequestSupportId);
         return navigateHook(url);
     };
 
@@ -276,6 +294,33 @@ const UserPersonalPage = () => {
     const onNextDonorCertificatePage = () => {
         if (currentDonorCertificatePage < totalDonorCertificatePages)
             setCurrentDonorCertificatePage(currentDonorCertificatePage + 1);
+    };
+
+    //Campaign request support
+    const [currentCampaignRequestSupportPage, setCurrentCampaignRequestSupportPage] =
+        useState(1);
+
+    const totalCampaignRequestSupportPages = Math.ceil(
+        currentCampaignsRequestSupport.length / ITEMS_PER_PAGE
+    );
+
+    const currentCampaignRequestSupportsPage = currentCampaignsRequestSupport.slice(
+        (currentCampaignRequestSupportPage - 1) * ITEMS_PER_PAGE,
+        currentCampaignRequestSupportPage * ITEMS_PER_PAGE
+    );
+
+    const onPreviousCampaignRequestSupportPage = () => {
+        if (currentCampaignRequestSupportPage > 1)
+            setCurrentCampaignRequestSupportPage(
+                currentCampaignRequestSupportPage - 1
+            );
+    };
+
+    const onNextCampaignRequestSupportPage = () => {
+        if (currentCampaignRequestSupportPage < totalCampaignRequestSupportPages)
+            setCurrentCampaignRequestSupportPage(
+                currentCampaignRequestSupportPage + 1
+            );
     };
 
     //Register Receiver
@@ -490,6 +535,19 @@ const UserPersonalPage = () => {
                                         }}
                                     >
                                         Ủng hộ
+                                    </div>
+                                    <div
+                                        className={`upp-tabs-item ${
+                                            activeTab === "chiendichhotro"
+                                                ? "upp-tabs-item-actived"
+                                                : ""
+                                        }`}
+                                        onClick={() => {
+                                            handleTabChange("chiendichhotro"),
+                                                handleFilter();
+                                        }}
+                                    >
+                                        Chiến dịch hỗ trợ
                                     </div>
                                 </div>
                             </div>
@@ -982,6 +1040,211 @@ const UserPersonalPage = () => {
                                                                     className={`pcc3-icon ${
                                                                         currentDonorDonatePage >=
                                                                         totalDonorCertificatePages
+                                                                            ? "pcc3-icon-disabled"
+                                                                            : ""
+                                                                    }`}
+                                                                />
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </>
+                                        )}
+                                    </div>
+                                )}
+                                {activeTab === "chiendichhotro" && (
+                                    <div className="upp-content">
+                                        <div
+                                            style={{
+                                                display: "flex",
+                                                justifyContent: "space-between",
+                                                alignItems: "center",
+                                                marginBottom: "20px",
+                                            }}
+                                        >
+                                            <div className="search-container">
+                                                <p
+                                                    style={{
+                                                        textAlign: "left",
+                                                        fontWeight: "bold",
+                                                        fontSize: "16px",
+                                                    }}
+                                                >
+                                                    Tìm kiếm
+                                                </p>
+                                                <input
+                                                    className="pr-input search-input"
+                                                    placeholder="Tìm kiếm theo tên chiến dịch"
+                                                    value={searchTermDonor}
+                                                    style={{
+                                                        width: "400px",
+                                                    }}
+                                                    onChange={(e) => {
+                                                        setSearchTermDonor(
+                                                            e.target.value
+                                                        );
+                                                        setCurrentCampaignPage(
+                                                            1
+                                                        );
+                                                    }}
+                                                />
+                                            </div>
+                                        </div>
+                                        {currentCampaignsRequestSupport.length === 0 ? (
+                                            <>
+                                                <figure>
+                                                    <img
+                                                        src={NoResult}
+                                                        alt=""
+                                                    />
+                                                </figure>
+                                                <h1>Chưa có dữ liệu</h1>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <table className="table">
+                                                    <thead className="table-head">
+                                                        <tr className="table-head-row">
+                                                            <th className="table-head-cell">
+                                                                Tên chiến dịch
+                                                            </th>
+                                                            <th className="table-head-cell">
+                                                                Trạng thái
+                                                            </th>
+                                                            <th className="table-head-cell">
+                                                                Thời gian tạo
+                                                            </th>
+                                                            <th className="table-head-cell">
+                                                                Hành động
+                                                            </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody className="table-body">
+                                                        {currentCampaignRequestSupportsPage.map(
+                                                            (
+                                                                campaign,
+                                                                index
+                                                            ) => (
+                                                                <tr
+                                                                    className="table-body-row"
+                                                                    key={index}
+                                                                >
+                                                                    <td className="table-body-cell">
+                                                                        {
+                                                                            campaign.campaignRequestSupportName
+                                                                        }
+                                                                    </td>
+                                                                    <td className="table-body-cell">
+                                                                        {campaign.status ===
+                                                                        "Pending" ? (
+                                                                            <span className="status-pending">
+                                                                                Đang
+                                                                                chờ
+                                                                                phê
+                                                                                duyệt
+                                                                            </span>
+                                                                        ) : campaign.status ===
+                                                                          "Approved" ? (
+                                                                            <span className="status-approve">
+                                                                                Đã
+                                                                                được
+                                                                                phê
+                                                                                duyệt
+                                                                            </span>
+                                                                        ) : campaign.status ===
+                                                                          "Rejected" ? (
+                                                                            <span className="status-reject">
+                                                                                Đã
+                                                                                bị
+                                                                                từ
+                                                                                chối
+                                                                            </span>
+                                                                        ) : campaign.status ===
+                                                                          "Canceled" ? (
+                                                                            <span className="status-reject">
+                                                                                Đã
+                                                                                huỷ
+                                                                            </span>
+                                                                        ) : null}
+                                                                    </td>
+                                                                    <td className="table-body-cell">
+                                                                        {campaign?.createdDate
+                                                                            ? dayjs(
+                                                                                  campaign.createdDate
+                                                                              ).fromNow()
+                                                                            : ""}
+                                                                    </td>
+                                                                    <td className="table-body-cell">
+                                                                        <button
+                                                                            className="view-btn"
+                                                                            onClick={() =>
+                                                                                handleToDetailCampaignRequestSupport(
+                                                                                    String(campaign.campaignRequestSupportId)
+                                                                                )
+                                                                            }
+                                                                        >
+                                                                            Xem
+                                                                            chi
+                                                                            tiết
+                                                                        </button>
+                                                                        {(campaign.status ===
+                                                                            "Pending" ||
+                                                                            campaign.status ===
+                                                                                "Approved") && (
+                                                                            <button
+                                                                                className="reject-btn"
+                                                                                // onClick={() =>
+                                                                                //     handleCancelClick(
+                                                                                //         campaign.campaignRequestSupportId,
+                                                                                //         campaign.createdDate
+                                                                                //     )
+                                                                                // }
+                                                                            >
+                                                                                Hủy
+                                                                                chiến
+                                                                                dịch
+                                                                            </button>
+                                                                        )}
+                                                                    </td>
+                                                                </tr>
+                                                            )
+                                                        )}
+                                                    </tbody>
+                                                </table>
+                                                <div className="paginator">
+                                                    <div className="p-container">
+                                                        <div className="pcc2">
+                                                            {
+                                                                currentCampaignRequestSupportPage
+                                                            }{" "}
+                                                            of{" "}
+                                                            {totalCampaignRequestSupportPages}
+                                                        </div>
+                                                        <div className="pcc3">
+                                                            <button
+                                                                disabled={
+                                                                    currentCampaignRequestSupportPage ===
+                                                                    1
+                                                                }
+                                                                onClick={
+                                                                    onPreviousCampaignRequestSupportPage
+                                                                }
+                                                            >
+                                                                <ArrowLeft className="pcc3-icon" />
+                                                            </button>
+                                                            <button
+                                                                disabled={
+                                                                    currentCampaignRequestSupportPage >=
+                                                                    totalCampaignRequestSupportPages
+                                                                }
+                                                                onClick={
+                                                                    onNextCampaignRequestSupportPage
+                                                                }
+                                                            >
+                                                                <ArrowRight
+                                                                    className={`pcc3-icon ${
+                                                                        currentCampaignRequestSupportPage >=
+                                                                        totalCampaignPages
                                                                             ? "pcc3-icon-disabled"
                                                                             : ""
                                                                     }`}

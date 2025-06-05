@@ -37,6 +37,7 @@ interface RequestSupportInfo {
     requestedItems: string[]; // Mảng các phần quà yêu cầu
     specialMembers: string;
     supportDonors: DonorSupport[] | null; // Mảng các nhà tài trợ hỗ trợ
+    desiredQuantity: number;
 }
 
 interface RequestDonor {

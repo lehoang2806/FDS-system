@@ -31,4 +31,9 @@ export const resetPasswordApi = async (email: string, newPassword: string, otp: 
     return data.data;
 };
 
+export const changePasswordApi = async (oldPassword: string, newPassword: string) => {
+    const data = await request.put('api/Auth/ChangePassword', { oldPassword, newPassword });
+    return data.data;
+};
+
 

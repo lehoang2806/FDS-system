@@ -43,7 +43,18 @@ const UserProfilePage = () => {
             .min(2, "Tên phải có ít nhất 2 ký tự")
             .required("Tên là bắt buộc"),
         address: Yup.string().nullable(),
-        birthDay: Yup.date().nullable().typeError("Ngày sinh không hợp lệ"),
+        birthDay: Yup.date()
+            .nullable()
+            .typeError("Ngày sinh không hợp lệ")
+            .max(
+                new Date(new Date().setFullYear(new Date().getFullYear() - 18)),
+                "Bạn phải từ 18 tuổi trở lên"
+            )
+            .min(
+                new Date(new Date().setFullYear(new Date().getFullYear() - 80)),
+                "Tuổi không được vượt quá 80"
+            ),
+
         gender: Yup.string()
             .oneOf(["male", "female", "other"], "Giới tính không hợp lệ")
             .required("Giới tính là bắt buộc"),
@@ -228,6 +239,26 @@ const UserProfilePage = () => {
                                             type="date"
                                             name="birthDay"
                                             className="form-input"
+                                            min={
+                                                new Date(
+                                                    new Date().setFullYear(
+                                                        new Date().getFullYear() -
+                                                            80
+                                                    )
+                                                )
+                                                    .toISOString()
+                                                    .split("T")[0]
+                                            }
+                                            max={
+                                                new Date(
+                                                    new Date().setFullYear(
+                                                        new Date().getFullYear() -
+                                                            18
+                                                    )
+                                                )
+                                                    .toISOString()
+                                                    .split("T")[0]
+                                            }
                                         />
                                         {errors.birthDay &&
                                             touched.birthDay && (

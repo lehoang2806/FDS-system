@@ -55,4 +55,11 @@ export type UserProfile = {
     address?: string | null;
     isConfirm?: boolean | null;
     type?: string | null;
+    isBanned?: boolean | null;
 };
+
+interface IChangePassword {
+    oldPassword: string;
+    newPassword: string;
+    confirmPassword: string;
+}

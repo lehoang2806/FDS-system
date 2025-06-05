@@ -173,10 +173,10 @@ const StaffListUserPage = () => {
                             <tr className="table-head-row">
                                 <th className="table-head-cell">Họ và tên</th>
                                 <th className="table-head-cell">Trạng thái</th>
+                                <th className="table-head-cell">Vai trò</th>
                                 <th className="table-head-cell">
                                     Trạng thái tài khoản
                                 </th>
-                                <th className="table-head-cell">Vai trò</th>
                                 <th className="table-head-cell">Hành động</th>
                             </tr>
                         </thead>

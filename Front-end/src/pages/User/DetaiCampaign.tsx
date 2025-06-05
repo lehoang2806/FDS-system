@@ -36,9 +36,11 @@ const UserDetailCampaignPage: React.FC = () => {
 
     const [isUpdateCampaignModalOpend, setIsUpdateCampaignModalOpend] =
         useState(false);
-    
-    const [isListRegisterReceiverModalOpend, setIsListRegisterReceiverModalOpend] =
-        useState(false);
+
+    const [
+        isListRegisterReceiverModalOpend,
+        setIsListRegisterReceiverModalOpend,
+    ] = useState(false);
 
     const registerReceivers = useAppSelector(selectGetAllRegisterReceivers);
 
@@ -138,29 +140,22 @@ const UserDetailCampaignPage: React.FC = () => {
                                 ))}
                             </div>
                             <div className="udcscr1c1r1">
-                                <h1>
-                                    {currentCampaign?.campaignName}
-                                </h1>
+                                <h1>{currentCampaign?.campaignName}</h1>
                                 {currentCampaign?.status === "Pending" ? (
-                                        <p className="status-pending">
-                                            Đang chờ phê duyệt
-                                        </p>
-                                    ) : currentCampaign?.status ===
-                                      "Approved" ? (
-                                        <p className="status-approve">
-                                            Đã được phê duyệt
-                                        </p>
-                                    ) : currentCampaign?.status ===
-                                      "Rejected" ? (
-                                        <p className="status-reject">
-                                            Đã bị từ chối
-                                        </p>
-                                    ) : currentCampaign?.status ===
-                                      "Canceled" ? (
-                                        <p className="status-reject">
-                                            Đã huỷ
-                                        </p>
-                                    ) : null}
+                                    <p className="status-pending">
+                                        Đang chờ phê duyệt
+                                    </p>
+                                ) : currentCampaign?.status === "Approved" ? (
+                                    <p className="status-approve">
+                                        Đã được phê duyệt
+                                    </p>
+                                ) : currentCampaign?.status === "Rejected" ? (
+                                    <p className="status-reject">
+                                        Đã bị từ chối
+                                    </p>
+                                ) : currentCampaign?.status === "Canceled" ? (
+                                    <p className="status-reject">Đã huỷ</p>
+                                ) : null}
                             </div>
                             <div className="udcscr1c1r3">
                                 <div
@@ -184,7 +179,7 @@ const UserDetailCampaignPage: React.FC = () => {
                             </div>
                         </div>
                         <div className="udcscr1c2">
-                            {currentCampaign?.status === "Pending"  && (
+                            {currentCampaign?.status === "Pending" && (
                                 <button
                                     className="pr-btn"
                                     onClick={() =>
@@ -211,6 +206,8 @@ const UserDetailCampaignPage: React.FC = () => {
                             )}
                             <div className="udcscr1c2r1">
                                 <div>
+                                    <h4>Số lượng đã đăng ký</h4>
+                                    <p>{totalRegisteredQuantity}</p>
                                     <h4>Số lượng còn lại</h4>
                                     <p>
                                         {!isNaN(
@@ -240,7 +237,16 @@ const UserDetailCampaignPage: React.FC = () => {
                                 <div className="udcscr1c2r2">
                                     <h3>Danh sách dăng ký nhận hỗ trợ</h3>
                                     {currentRegisterReceivers.length > 0 && (
-                                        <p className="view-list" onClick={() => setIsListRegisterReceiverModalOpend(true)}>Xem danh sách</p>
+                                        <p
+                                            className="view-list"
+                                            onClick={() =>
+                                                setIsListRegisterReceiverModalOpend(
+                                                    true
+                                                )
+                                            }
+                                        >
+                                            Xem danh sách
+                                        </p>
                                     )}
                                     <div className="udcscr1c2r2-lists">
                                         {currentRegisterReceivers.length > 0 ? (
@@ -265,25 +271,30 @@ const UserDetailCampaignPage: React.FC = () => {
                                     </div>
                                 </div>
                             )}
-                            {currentCampaign?.status === "Pending" && (
-                                <>
-                                    <div className="sdcucr2r5">
-                                        <h3>Cần bổ sung các thông tin sau:</h3>
-                                        {currentCampaign.reviewComments?.map(
-                                            (comment, index) => (
-                                                <p
-                                                    key={index}
-                                                    style={{
-                                                        whiteSpace: "pre-line",
-                                                    }}
-                                                >
-                                                    {comment.content}
-                                                </p>
-                                            )
-                                        )}
-                                    </div>
-                                </>
-                            )}
+                            {currentCampaign?.status === "Pending" &&
+                                currentCampaign.reviewComments &&
+                                currentCampaign.reviewComments?.length > 0 && (
+                                    <>
+                                        <div className="sdcucr2r5">
+                                            <h3>
+                                                Cần bổ sung các thông tin sau:
+                                            </h3>
+                                            {currentCampaign.reviewComments?.map(
+                                                (comment, index) => (
+                                                    <p
+                                                        key={index}
+                                                        style={{
+                                                            whiteSpace:
+                                                                "pre-line",
+                                                        }}
+                                                    >
+                                                        {comment.content}
+                                                    </p>
+                                                )
+                                            )}
+                                        </div>
+                                    </>
+                                )}
                             {currentCampaign?.status === "Rejected" && (
                                 <>
                                     <h3>Lí do bị từ chối</h3>

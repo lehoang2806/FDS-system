@@ -77,7 +77,6 @@ export default function () {
 
     const users = useAppSelector(selectGetAllUser);
     const confirmedUsers = users.filter((user) => user.isConfirm === true);
-    console.log(users)
     const confirmedPersonalDonors = confirmedUsers.filter(
         (user) => user.type === "1"
     );

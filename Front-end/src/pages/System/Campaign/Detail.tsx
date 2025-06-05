@@ -3,6 +3,7 @@ import {
     selectGetAllCampaign,
     selectGetAllFeedbackCampaign,
     selectGetAllRegisterReceivers,
+    selectIsAuthenticated,
     selectUserLogin,
 } from "@/app/selector";
 import { useAppDispatch, useAppSelector } from "@/app/store";
@@ -18,6 +19,7 @@ import { FeedbackCampaign, Subscriber } from "@/components/Elements/index";
 import {
     RegisterReceiverModal,
     RemindCertificateModal,
+    RemindLoginModal,
 } from "@/components/Modal";
 import { navigateHook } from "@/routes/RouteApp";
 import { routes } from "@/routes/routeName";
@@ -56,6 +58,7 @@ const DetailCampaignPage: React.FC = () => {
 
     // Selectors
     const userLogin = useAppSelector(selectUserLogin);
+    const isAuthenticated = useAppSelector(selectIsAuthenticated);
     const campaigns = useAppSelector(selectGetAllCampaign);
     const currentCampaign = useAppSelector(selectCurrentCampaign);
     const registerReceivers = useAppSelector(selectGetAllRegisterReceivers);
@@ -65,6 +68,8 @@ const DetailCampaignPage: React.FC = () => {
 
     // States
     const [activeTab, setActiveTab] = useState<"mota" | "dangky">("mota");
+    const [isRemindLoginModalOpend, setIsRemindLoginModalOpend] =
+        useState(false);
     const [selectedImage, setSelectedImage] = useState(
         currentCampaign?.images?.[0] || ""
     );
@@ -340,7 +345,18 @@ const DetailCampaignPage: React.FC = () => {
                                                     name="feedbackContent"
                                                     type="text"
                                                     placeholder="Thêm nhận xét"
-                                                    className={"input-feedback"}
+                                                    className="input-feedback"
+                                                    autoComplete="off"
+                                                    onClick={(
+                                                        e: React.MouseEvent<HTMLInputElement>
+                                                    ) => {
+                                                        if (!isAuthenticated) {
+                                                            e.preventDefault();
+                                                            setIsRemindLoginModalOpend(
+                                                                true
+                                                            );
+                                                        }
+                                                    }}
                                                 />
 
                                                 {/* Submit */}
@@ -501,6 +517,8 @@ const DetailCampaignPage: React.FC = () => {
                             </div>
                             <div className="dcscr1c2r1">
                                 <div>
+                                    <h4>Số lượng đã đăng ký</h4>
+                                    <p>{totalRegisteredQuantity}</p>
                                     <h4>Số lượng còn lại</h4>
                                     <p>
                                         {Number(
@@ -560,7 +578,7 @@ const DetailCampaignPage: React.FC = () => {
                                                                 10
                                                         }
                                                     >
-                                                        Đăng ký nhận hỗ trợ
+                                                        Đăng ký nhận thực phẩm
                                                     </button>
                                                 )}
                                             </>
@@ -569,7 +587,7 @@ const DetailCampaignPage: React.FC = () => {
                                 )}
                             </div>
                             <div className="dcscr1c2r2">
-                                <h3>Danh sách dăng ký nhận hỗ trợ</h3>
+                                <h3>Danh sách dăng ký nhận thực phẩm</h3>
                                 <div className="dcscr1c2r2-lists">
                                     {currentRegisterReceivers.length > 0 ? (
                                         currentRegisterReceivers.map(
@@ -629,6 +647,10 @@ const DetailCampaignPage: React.FC = () => {
                 setIsOpen={setIsRegisterReceiverModalOpend}
                 campaign={currentCampaign}
                 registeredReceiver={registeredReceiver}
+            />
+            <RemindLoginModal
+                isOpen={isRemindLoginModalOpend}
+                setIsOpen={setIsRemindLoginModalOpend}
             />
         </main>
     );

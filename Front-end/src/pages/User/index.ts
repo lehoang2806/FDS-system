@@ -9,6 +9,8 @@ import DetailRequestSupport from "./DetailRequestSupport";
 import ParticipateRequestSupport from "./ParticipateRequestSupport";
 import DonatePage from "./DonatePage";
 import ReturnPage from "./ReturnPage";
+import UserDetailCampaignRequestSupportPage from "./DetailCampaignRequestSupport";
+import UserDetailCampaignRequestSupportForRecipientPage from "./DetailCampaignRequestSupportForRecipient";
 
 export {
     UserProfilePage,
@@ -21,5 +23,7 @@ export {
     DetailRequestSupport,
     ParticipateRequestSupport,
     DonatePage,
-    ReturnPage
+    ReturnPage,
+    UserDetailCampaignRequestSupportPage,
+    UserDetailCampaignRequestSupportForRecipientPage
 };

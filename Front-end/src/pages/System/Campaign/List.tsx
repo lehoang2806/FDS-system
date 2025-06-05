@@ -47,13 +47,9 @@ const ListCampaignPage: FC = () => {
     const [dateRangePersonalCampaigns, setDateRangePersonalCampaigns] =
         useState({ from: "", to: "" });
 
-        console.log(dateRangePersonalCampaigns)
-
     // Organization Campaigns
     const [dateRangeOrganizationCampaigns, setDateRangeOrganizationCampaigns] =
         useState({ from: "", to: "" });
-
-        console.log(dateRangeOrganizationCampaigns)
 
     useEffect(() => {
         dispatch(setLoading(true));

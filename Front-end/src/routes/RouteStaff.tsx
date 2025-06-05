@@ -11,6 +11,8 @@ import { StaffDetailCertificateRecipient, StaffListRecipientCertificate } from "
 import { StaffDetailRequestSupportPage, StaffListRequestSupportPage } from "@/pages/Statff/RequestSupport";
 import { StaffChatWithUserPage } from "@/pages/Statff/Chat";
 import { StaffDetailDonatePage, StaffListDonatePage } from "@/pages/Statff/Donate";
+import { StaffListCampaignRequestSupportPage } from "@/pages/Statff/Campaign/RequestDonor";
+import StaffDetailCampaignRequestSupportPage from "@/pages/Statff/Campaign/RequestDonor/Detail";
 
 const routeStatff: RouteObject[] = [
     {
@@ -48,6 +50,14 @@ const routeStatff: RouteObject[] = [
             {
                 path: "campaign/user/:id/detail",
                 element: <StaffDetailCampaignUserPage />,
+            },
+            {
+                path: "campaign/requestSupport",
+                element: <StaffListCampaignRequestSupportPage />,
+            },
+            {
+                path: "campaign/requestSupport/:id/detail",
+                element: <StaffDetailCampaignRequestSupportPage />,
             },
             {
                 path: "news",

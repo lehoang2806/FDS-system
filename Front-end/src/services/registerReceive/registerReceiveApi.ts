@@ -34,3 +34,12 @@ export const donorUpdateRegisterReceiverApi = async (
     );
     return data.data;
 };
+
+export const updateActualQuantityApi = async (params: UpdateActualQuantity
+) => {
+    const data = await request.put(
+        `api/RegisterReceiver/UpdateActualQuantity`,
+        params
+    );
+    return data.data;
+};
