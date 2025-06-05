@@ -106,12 +106,7 @@ const StaffHeader: FC = () => {
                 );
                 setIsNotifOpen(false);
             })
-            .catch((error) => {
-                // Hiển thị thông báo lỗi nếu có
-                toast.error(
-                    error?.errorMessage ||
-                        "Có lỗi xảy ra khi đánh dấu thông báo là đã đọc."
-                );
+            .catch(() => {
             });
     };
 

@@ -3,6 +3,7 @@ import { UserProfile } from "@/types/auth";
 import { RootState } from "./reducer";
 import { currentOrganizationDonorCertificate, currentPersonalDonorCertificate, currentRecipientCertificate, DonorCertificate, RecipientCertificate, UserInfo } from "@/types/user";
 import { CampaignInfo, CurrentCampaign, FeedbackCampaign, FeedbackDetail } from "@/types/campaign";
+import { CampaignRequestSupport } from "@/types/campaignRequestSupport";
 
 export const selectLoading: Selector<boolean> = (state: RootState) => {
     return state.app.loading;
@@ -110,4 +111,17 @@ export const selectGetAllDonorSupport: Selector<DonorSupport[]> = (state: RootSt
 //Donate
 export const selectGetAllDonate: Selector<Donate[]> = (state: RootState) => {
     return state.donate.donates;
+}
+
+export const selectGetDonateById: Selector<Donate | null> = (state: RootState) => {
+    return state.donate.donate;
+}
+
+//Campaign Request Support
+export const selectGetAllCampaignRequestSupport: Selector<CampaignRequestSupport[]> = (state: RootState) => {
+    return state.campaignRequestSupport.listCampaignsRequestSupport;
+}
+
+export const selectGetCampaignRequestSupportById: Selector<CampaignRequestSupport | null> = (state: RootState) => {
+    return state.campaignRequestSupport.campaignRequestSupportDetail;
 }

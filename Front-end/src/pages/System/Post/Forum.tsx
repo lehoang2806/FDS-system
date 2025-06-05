@@ -284,7 +284,7 @@ const PostForumPage = () => {
                                     ) : (
                                         <div className="no-post">
                                             <PostIcon className="no-post-icon" />
-                                            <h2>Chưa có bài viết</h2>
+                                            <h2>bạn chưa đăng tải bài viết nào</h2>
                                         </div>
                                     )}
                                 </>
@@ -305,7 +305,7 @@ const PostForumPage = () => {
                                     ) : (
                                         <div className="no-post">
                                             <PostIcon className="no-post-icon" />
-                                            <h2>Chưa có bài viết</h2>
+                                            <h2>Chauw có bài viết bị từ chối</h2>
                                         </div>
                                     )}
                                 </>

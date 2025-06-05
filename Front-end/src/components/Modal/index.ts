@@ -21,6 +21,13 @@ import RejectPostModal from "./RejectPost";
 import CreateRequestSupportModal from "./RequestSupport";
 import RemindLoginModal from "./RemindLogin";
 import ListRegisterReceiverModal from "./ListRegisterReceiver";
+import ConfirmReceiveModal from "./ConfirmReceiveModal";
+import DonorGuideModal from "./DonorGuild";
+import RecipientGuideModal from "./RecipientGuild";
+import CreateCampaignRequestSupportModal from "./CreateCampaignRequestSupport";
+import UpdateCampaignRequestSupportModal from "./UpdateCampaignRequestSupport";
+import AdditionalCampaignRequestSupportModal from "./AdditionalCampaignRequestSupport";
+import RejectCampaignRequestSupportModal from "./RejectCampaignRequestSupport";
 
 export {
     Modal,
@@ -45,5 +52,12 @@ export {
     RejectPostModal,
     CreateRequestSupportModal,
     RemindLoginModal,
-    ListRegisterReceiverModal
+    ListRegisterReceiverModal,
+    ConfirmReceiveModal,
+    DonorGuideModal,
+    RecipientGuideModal,
+    CreateCampaignRequestSupportModal,
+    UpdateCampaignRequestSupportModal,
+    AdditionalCampaignRequestSupportModal,
+    RejectCampaignRequestSupportModal
 };

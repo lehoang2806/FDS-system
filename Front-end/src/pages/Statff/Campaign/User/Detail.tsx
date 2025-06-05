@@ -37,7 +37,6 @@ const StaffDetailCampaignUserPage: FC = () => {
     const dispatch = useAppDispatch();
 
     const currentCampaign = useAppSelector(selectCurrentCampaign);
-    console.log(currentCampaign)
 
     const registerReceivers = useAppSelector(selectGetAllRegisterReceivers);
 
@@ -128,7 +127,7 @@ const StaffDetailCampaignUserPage: FC = () => {
 
     const handleDeleteCampaign = async () => {
         setIsSubmitting(true);
-        dispatch(deleteCampaignApiThunk(String(currentCampaign?.id)))
+        dispatch(deleteCampaignApiThunk(String(currentCampaign?.campaignId)))
             .unwrap()
             .then(() => {
                 navigateHook(routes.staff.campaign.user.list);

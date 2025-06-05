@@ -11,7 +11,6 @@ const uploadImage = async (file: File): Promise<string> => {
     // Lấy URL của ảnh đã tải lên
     const url = await getDownloadURL(storageRef);
 
-    console.log("Image uploaded to Firebase, URL:", url); // Kiểm tra URL trả về
     return url;  // Trả về URL dưới dạng string
 };
 

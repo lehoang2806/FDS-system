@@ -1,5 +1,5 @@
 import { FC, useState } from "react";
-import { Formik, Form, FormikHelpers } from "formik";
+import { Formik, Form, FormikHelpers, Field } from "formik";
 import * as Yup from "yup";
 import { useAppDispatch, useAppSelector } from "@/app/store";
 import { selectUserLogin } from "@/app/selector";
@@ -32,6 +32,7 @@ const CreatePostModal: FC<CreatePostModalProps> = ({ isOpen, setIsOpen }) => {
     const dispatch = useAppDispatch();
 
     const initialValues: ActionParamPost = {
+        articleTitle: "",
         postContent: "",
         images: [],
         posterName: userLogin?.fullName,
@@ -39,9 +40,15 @@ const CreatePostModal: FC<CreatePostModalProps> = ({ isOpen, setIsOpen }) => {
     };
 
     const CreatePostModalSchema = Yup.object().shape({
+        articleTitle: Yup.string()
+            .required("Tiêu đề không được để trống")
+            .min(5, "Nội dung phải có ít nhất 5 ký tự"),
         postContent: Yup.string()
             .required("Nội dung không được để trống")
             .min(10, "Nội dung phải có ít nhất 10 ký tự"),
+        hashtags: Yup.array()
+            .of(Yup.string().trim().min(1, "Hashtag không được rỗng"))
+            .min(1, "Bài viết cần ít nhất 1 hashtag"),
     });
 
     const handleFileChange = async (
@@ -168,15 +175,31 @@ const CreatePostModal: FC<CreatePostModalProps> = ({ isOpen, setIsOpen }) => {
                         }) => (
                             <Form className="form">
                                 <div className="form-field">
+                                    <label className="form-label">
+                                        Tiêu đề bài viết
+                                    </label>
+                                    <Field
+                                        name="articleTitle"
+                                        placeholder="Nhập tiêu đề bài viết"
+                                        className="form-input"
+                                    />
+                                    {errors.articleTitle &&
+                                        touched.articleTitle && (
+                                            <div className="form-error">
+                                                {errors.articleTitle}
+                                            </div>
+                                        )}
+                                </div>
+                                <div className="form-field">
                                     <label
                                         className="form-label"
                                         style={{ marginBottom: "8px" }}
                                     >
-                                        Nhập nội dung bài viết
+                                        Nội dung bài viết
                                     </label>
                                     <RichTextField
                                         name="postContent"
-                                        placeholder="Nội dung bài viết"
+                                        placeholder="Nhập nội dung bài viết"
                                     />
                                 </div>
                                 <div className="form-field">
@@ -187,7 +210,12 @@ const CreatePostModal: FC<CreatePostModalProps> = ({ isOpen, setIsOpen }) => {
                                         <div
                                             key={index}
                                             className="flex items-center gap-2 mb-2"
-                                            style={{display: "flex", alignItems: "center", gap: "8px", marginBottom: "8px"}}
+                                            style={{
+                                                display: "flex",
+                                                alignItems: "center",
+                                                gap: "8px",
+                                                marginBottom: "8px",
+                                            }}
                                         >
                                             <input
                                                 type="text"
@@ -211,7 +239,6 @@ const CreatePostModal: FC<CreatePostModalProps> = ({ isOpen, setIsOpen }) => {
                                             />
                                             <button
                                                 type="button"
-                                                
                                                 onClick={() => {
                                                     const updatedTags =
                                                         values.hashtags.filter(
@@ -239,11 +266,17 @@ const CreatePostModal: FC<CreatePostModalProps> = ({ isOpen, setIsOpen }) => {
                                             ])
                                         }
                                     />
+                                    {errors.hashtags &&
+                                        typeof errors.hashtags === "string" && (
+                                            <div className="text-error">
+                                                {errors.hashtags}
+                                            </div>
+                                        )}
                                 </div>
 
                                 <div className="form-field">
                                     <label className="form-label">
-                                        Tải ảnh lên<span>*</span>
+                                        Tải ảnh lên
                                     </label>
                                     <input
                                         type="file"

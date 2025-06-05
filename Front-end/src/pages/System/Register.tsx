@@ -1,5 +1,5 @@
-import { routes } from "@/routes/routeName"
-import { navigateHook } from "../../routes/RouteApp"
+import { routes } from "@/routes/routeName";
+import { navigateHook } from "../../routes/RouteApp";
 import { IRegisterEmail } from "@/types/auth";
 import { useAppDispatch, useAppSelector } from "@/app/store";
 import * as Yup from "yup";
@@ -11,20 +11,21 @@ import Button from "@/components/Elements/Button";
 import classNames from "classnames";
 import { selectIsAuthenticated } from "@/app/selector";
 import { useEffect, useState } from "react";
-import { RightIcon } from "@/assets/icons";
+import { EyeCloseIcon, EyeIcon, RightIcon } from "@/assets/icons";
 
 const RegisterPage = () => {
     const dispatch = useAppDispatch();
     const isAuthenticated = useAppSelector(selectIsAuthenticated);
 
     const [isSelectRoleOpen, setIsSelectRoleOpen] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
 
     const initialValues: IRegisterEmail = {
         userEmail: "",
         password: "",
         fullName: "",
         phone: "",
-        roleId: 0
+        roleId: 0,
     };
 
     useEffect(() => {
@@ -60,16 +61,23 @@ const RegisterPage = () => {
             ),
     });
 
-    const onSubmit = async (values: IRegisterEmail, helpers: FormikHelpers<IRegisterEmail>) => {
-        await dispatch(requestOTPApiThunk(values.userEmail)).unwrap().then(() => {
-            toast.success("Đã gữi mã OTP đến email");
-            navigateHook(routes.otp_auth, { state: values });
-        }).catch((error) => {
-            const errorMessage = get(error, 'data', 'An error occurred');
-            toast.error(errorMessage);
-        }).finally(() => {
-            helpers.setSubmitting(false);
-        });
+    const onSubmit = async (
+        values: IRegisterEmail,
+        helpers: FormikHelpers<IRegisterEmail>
+    ) => {
+        await dispatch(requestOTPApiThunk(values.userEmail))
+            .unwrap()
+            .then(() => {
+                toast.success("Đã gữi mã OTP đến email");
+                navigateHook(routes.otp_auth, { state: values });
+            })
+            .catch((error) => {
+                const errorMessage = get(error, "data", "An error occurred");
+                toast.error(errorMessage);
+            })
+            .finally(() => {
+                helpers.setSubmitting(false);
+            });
     };
 
     return (
@@ -89,57 +97,209 @@ const RegisterPage = () => {
                                     handleSubmit,
                                     errors,
                                     touched,
-                                    isSubmitting
+                                    isSubmitting,
                                 }) => (
-                                    <Form onSubmit={handleSubmit} className="form">
+                                    <Form
+                                        onSubmit={handleSubmit}
+                                        className="form"
+                                    >
                                         <div className="form-field">
-                                            <label className="form-label">Email<span>*</span></label>
-                                            <Field name="userEmail" type="email" placeholder="Hãy nhập email của bạn" className={classNames("form-input", { "is-error": errors.userEmail && touched.userEmail })} />
-                                            {errors.userEmail && touched.userEmail && <span className="text-error">{errors.userEmail}</span>}
+                                            <label className="form-label">
+                                                Email<span>*</span>
+                                            </label>
+                                            <Field
+                                                name="userEmail"
+                                                type="email"
+                                                placeholder="Hãy nhập email của bạn"
+                                                className={classNames(
+                                                    "form-input",
+                                                    {
+                                                        "is-error":
+                                                            errors.userEmail &&
+                                                            touched.userEmail,
+                                                    }
+                                                )}
+                                            />
+                                            {errors.userEmail &&
+                                                touched.userEmail && (
+                                                    <span className="text-error">
+                                                        {errors.userEmail}
+                                                    </span>
+                                                )}
                                         </div>
                                         <div className="form-field">
-                                            <label className="form-label">Họ Và Tên<span>*</span></label>
-                                            <Field name="fullName" type="text" placeholder="Hãy nhập tên của bạn" className={classNames("form-input", { "is-error": errors.fullName && touched.fullName })} />
-                                            {errors.fullName && touched.fullName && <span className="text-error">{errors.fullName}</span>}
+                                            <label className="form-label">
+                                                Họ Và Tên<span>*</span>
+                                            </label>
+                                            <Field
+                                                name="fullName"
+                                                type="text"
+                                                placeholder="Hãy nhập tên của bạn"
+                                                className={classNames(
+                                                    "form-input",
+                                                    {
+                                                        "is-error":
+                                                            errors.fullName &&
+                                                            touched.fullName,
+                                                    }
+                                                )}
+                                            />
+                                            {errors.fullName &&
+                                                touched.fullName && (
+                                                    <span className="text-error">
+                                                        {errors.fullName}
+                                                    </span>
+                                                )}
+                                        </div>
+                                        <div
+                                            className="form-field"
+                                            style={{ position: "relative" }}
+                                        >
+                                            <label className="form-label">
+                                                Mật Khẩu<span>*</span>
+                                            </label>
+                                            <Field
+                                                name="password"
+                                                type={
+                                                    showPassword
+                                                        ? "text"
+                                                        : "password"
+                                                }
+                                                placeholder="Hãy nhập mật khẩu của bạn"
+                                                className={classNames(
+                                                    "form-input",
+                                                    {
+                                                        "is-error":
+                                                            errors.password &&
+                                                            touched.password,
+                                                    }
+                                                )}
+                                            />
+                                            <span
+                                                onClick={() =>
+                                                    setShowPassword(
+                                                        !showPassword
+                                                    )
+                                                }
+                                                className="toggle-password"
+                                                style={{
+                                                    position: "absolute",
+                                                    right: "16px",
+                                                    top: "45px",
+                                                    cursor: "pointer",
+                                                    fontSize: "14px",
+                                                    color: "#888",
+                                                    userSelect: "none",
+                                                }}
+                                            >
+                                                {showPassword ? (
+                                                    <EyeIcon />
+                                                ) : (
+                                                    <EyeCloseIcon />
+                                                )}
+                                            </span>
+                                            {errors.password &&
+                                                touched.password && (
+                                                    <span className="text-error">
+                                                        {errors.password}
+                                                    </span>
+                                                )}
+                                        </div>
+
+                                        <div className="form-field">
+                                            <label className="form-label">
+                                                Số điện thoại<span>*</span>
+                                            </label>
+                                            <Field
+                                                name="phone"
+                                                type="text"
+                                                placeholder="Hãy nhập số điện thoại của bạn"
+                                                className={classNames(
+                                                    "form-input",
+                                                    {
+                                                        "is-error":
+                                                            errors.phone &&
+                                                            touched.phone,
+                                                    }
+                                                )}
+                                            />
+                                            {errors.phone && touched.phone && (
+                                                <span className="text-error">
+                                                    {errors.phone}
+                                                </span>
+                                            )}
                                         </div>
                                         <div className="form-field">
-                                            <label className="form-label">Mật Khẩu<span>*</span></label>
-                                            <Field name="password" type="password" placeholder="Hãy nhập mật khẩu của bạn" className={classNames("form-input", { "is-error": errors.password && touched.password })} />
-                                            {errors.password && touched.password && <span className="text-error">{errors.password}</span>}
-                                        </div>
-                                        <div className="form-field">
-                                            <label className="form-label">Số điện thoại<span>*</span></label>
-                                            <Field name="phone" type="text" placeholder="Hãy nhập số điện thoại của bạn" className={classNames("form-input", { "is-error": errors.phone && touched.phone })} />
-                                            {errors.phone && touched.phone && <span className="text-error">{errors.phone}</span>}
-                                        </div>
-                                        <div className="form-field">
-                                            <label className="form-label">Lựa chọn vai trò<span>*</span></label>
+                                            <label className="form-label">
+                                                Lựa chọn vai trò<span>*</span>
+                                            </label>
                                             <div className="form-input-select-container">
                                                 <Field
                                                     as="select"
                                                     name="roleId"
-                                                    className={classNames("form-input-select form-input", { "is-error": errors.roleId && touched.roleId })}
-                                                    onClick={() => setIsSelectRoleOpen(!isSelectRoleOpen)}
+                                                    className={classNames(
+                                                        "form-input-select form-input",
+                                                        {
+                                                            "is-error":
+                                                                errors.roleId &&
+                                                                touched.roleId,
+                                                        }
+                                                    )}
+                                                    onClick={() =>
+                                                        setIsSelectRoleOpen(
+                                                            !isSelectRoleOpen
+                                                        )
+                                                    }
                                                 >
-                                                    <option value={0}>Chọn vai trò</option>
-                                                    <option value={3}>Người tặng thực phẩm</option>
-                                                    <option value={4}>Người nhận hỗ trợ</option>
+                                                    <option value={0}>
+                                                        Chọn vai trò
+                                                    </option>
+                                                    <option value={3}>
+                                                        Người tặng thực phẩm
+                                                    </option>
+                                                    <option value={4}>
+                                                        Người nhận hỗ trợ
+                                                    </option>
                                                 </Field>
-                                                <RightIcon className={classNames("form-icon-select", { "rotate-45": isSelectRoleOpen })} />
+                                                <RightIcon
+                                                    className={classNames(
+                                                        "form-icon-select",
+                                                        {
+                                                            "rotate-45":
+                                                                isSelectRoleOpen,
+                                                        }
+                                                    )}
+                                                />
                                             </div>
-                                            {errors.roleId && touched.roleId && <span className="text-error">{errors.roleId}</span>}
+                                            {errors.roleId &&
+                                                touched.roleId && (
+                                                    <span className="text-error">
+                                                        {errors.roleId}
+                                                    </span>
+                                                )}
                                         </div>
-                                        <Button loading={isSubmitting} type="submit" title="Đăng ký" />
+                                        <Button
+                                            loading={isSubmitting}
+                                            type="submit"
+                                            title="Đăng ký"
+                                        />
                                     </Form>
                                 )}
                             </Formik>
-                            <p>Bạn đã có tài khoản? <span onClick={() => navigateHook(routes.login)}>Đăng nhập</span></p>
+                            <p>
+                                Bạn đã có tài khoản?{" "}
+                                <span
+                                    onClick={() => navigateHook(routes.login)}
+                                >
+                                    Đăng nhập
+                                </span>
+                            </p>
                         </div>
                     </div>
                 </div>
             </section>
         </main>
-    )
-}
+    );
+};
 
-export default RegisterPage
+export default RegisterPage;

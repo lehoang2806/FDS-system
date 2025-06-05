@@ -1,4 +1,5 @@
 interface ActionParamPost {
+    articleTitle?: string;
     postContent?: string;
     images: string[];
     posterName?: string;
@@ -43,6 +44,7 @@ interface Post {
     likes: PostLike[];
     comments: PostComment[];
     hashtags: string[];
+    articleTitle: string | null;
 }
 
 interface PostInfo {

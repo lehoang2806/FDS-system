@@ -43,8 +43,6 @@ const StaffDetailPostPage = () => {
     const post = posts.find((post) => post.postId === id);
     const userLogin = useAppSelector(selectUserLogin);
 
-    console.log(post);
-
     useEffect(() => {
         dispatch(setLoading(true));
         Promise.all([dispatch(getAllPostsApiThunk()).unwrap()])
@@ -150,8 +148,8 @@ const StaffDetailPostPage = () => {
         dispatch(deletePostApiThunk(String(id)))
             .unwrap()
             .then(() => {
-                navigateHook(routes.staff.news.list);
-                toast.success("Xóa tin tức thành công");
+                navigateHook(routes.staff.post.list);
+                toast.success("Xóa bài đăng thành công thành công");
                 dispatch(getAllPostsApiThunk());
             })
             .catch()
@@ -196,6 +194,7 @@ const StaffDetailPostPage = () => {
                         </div>
 
                         <div className="pcr2">
+                            {post?.articleTitle && <h4>{post?.articleTitle}</h4>}
                             <PostContent content={String(post?.postContent)} />
                             {post?.hashtags && post.hashtags.length > 0 && (
                                 <div

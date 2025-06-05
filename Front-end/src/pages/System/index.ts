@@ -7,5 +7,19 @@ import OTPAuthPage from "./OTPAuth";
 import ForgotPasswordPage from "./ForgotPassword";
 import NewPasswordPage from "./NewPassword";
 import ManageLogin from "./ManageLogin";
+import About from "./About";
+import Contact from "./Contact";
 
-export { NotFoundPage, UnauthorizedPage, LandingPage, LoginPage, RegisterPage, OTPAuthPage, ForgotPasswordPage, NewPasswordPage, ManageLogin };
+export {
+    NotFoundPage,
+    UnauthorizedPage,
+    LandingPage,
+    LoginPage,
+    RegisterPage,
+    OTPAuthPage,
+    ForgotPasswordPage,
+    NewPasswordPage,
+    ManageLogin,
+    About,
+    Contact
+};

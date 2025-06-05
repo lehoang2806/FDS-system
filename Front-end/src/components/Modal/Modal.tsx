@@ -1,15 +1,35 @@
-import { FC } from 'react';
-import { ModalProps } from './type';
+import { FC } from "react";
+import { ModalProps } from "./type";
 
-const Modal: FC<ModalProps> = ({ isOpen, setIsOpen, title, children }) => {
+const Modal: FC<ModalProps> = ({
+    isOpen,
+    setIsOpen,
+    title,
+    children,
+    disableOutsideClick,
+}) => {
+    const handleClickOutside = (
+        _: React.MouseEvent<HTMLDivElement, MouseEvent>
+    ) => {
+        if (!disableOutsideClick) {
+            setIsOpen(false);
+        }
+    };
+
     if (!isOpen) return null;
 
     return (
-        <div className="modal-overlay" onClick={() => setIsOpen(false)}>
-            <div className="modal-container" onClick={(e) => e.stopPropagation()}>
+        <div className="modal-overlay" onClick={handleClickOutside}>
+            <div
+                className="modal-container"
+                onClick={(e) => e.stopPropagation()}
+            >
                 <div className="modal-header">
                     <h2 className="mg-r30 modal-title">{title}</h2>
-                    <button className="modal-close-btn" onClick={() => setIsOpen(false)}>
+                    <button
+                        className="modal-close-btn"
+                        onClick={() => setIsOpen(false)}
+                    >
                         &times;
                     </button>
                 </div>

@@ -1,38 +1,26 @@
 import { FC } from "react";
+import dayjs from "dayjs";
 import { CampaignCardProps } from "./type";
 
 const CampaignCard: FC<CampaignCardProps> = ({ onClickDetail, campaign }) => {
-    // Formated Date
-    const dateStr = campaign?.implementationTime.split("T")[0];
-    const [year, month, day] = dateStr.split("-");
-    const formattedDate = `${day}-${month}-${year}`;
+    // Format ngày và giờ
+    const date = dayjs(campaign?.implementationTime);
+    const formattedDate = date.format("DD-MM-YYYY");
+    const formattedTime = date.format("HH:mm");
 
-    // Formated Time
-    const formattedTime = campaign?.implementationTime
-        .split("T")[1]
-        .replace("Z", "")
-        .split(":")
-        .slice(0, 2)
-        .join(":");
+    // Tính thời gian bắt đầu và kết thúc
+    const startDate = dayjs(campaign?.implementationTime);
+    const endDate = startDate.endOf("day"); // hết ngày hôm đó
+    const now = dayjs(); // thời gian hiện tại
 
-    // Xử lý status dựa trên thời gian
-    const campaignDate = new Date(campaign.implementationTime);
-    // Set giờ về cuối ngày
-    campaignDate.setHours(23, 59, 59, 999);
-
-    const currentDate = new Date();
-
+    // Xác định trạng thái chiến dịch
     let status = "";
-    if (campaignDate < currentDate) {
-        status = "Đã kết thúc";
-    } else if (
-        campaignDate.getFullYear() === currentDate.getFullYear() &&
-        campaignDate.getMonth() === currentDate.getMonth() &&
-        campaignDate.getDate() === currentDate.getDate()
-    ) {
-        status = "Đang diễn ra";
-    } else {
+    if (now.isBefore(startDate)) {
         status = "Sắp diễn ra";
+    } else if (now.isAfter(endDate)) {
+        status = "Đã kết thúc";
+    } else {
+        status = "Đang diễn ra";
     }
 
     return (

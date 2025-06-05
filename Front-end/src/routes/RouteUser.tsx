@@ -6,6 +6,8 @@ import {
     ReturnPage,
     UserChangePasswordPage,
     UserDetailCampaignPage,
+    UserDetailCampaignRequestSupportForRecipientPage,
+    UserDetailCampaignRequestSupportPage,
     UserDetailCertificate,
     UserNewPasswordPage,
     UserPersonalPage,
@@ -116,6 +118,26 @@ const routeUser: RouteObject[] = [
             {
                 path: "new-pass",
                 element: <UserNewPasswordPage />,
+            },
+            {
+                path: "campaignRequestSupport/:id/detail",
+                element: <LandingBasicLayout />,
+                children: [
+                    {
+                        path: "",
+                        element: <UserDetailCampaignRequestSupportPage />,
+                    },
+                ],
+            },
+            {
+                path: "recipient/campaignRequestSupport/:id/detail",
+                element: <LandingBasicLayout />,
+                children: [
+                    {
+                        path: "",
+                        element: <UserDetailCampaignRequestSupportForRecipientPage />,
+                    },
+                ],
             },
         ],
     },

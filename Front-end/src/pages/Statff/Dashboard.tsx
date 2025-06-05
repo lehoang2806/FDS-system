@@ -1,4 +1,8 @@
-import { selectGetAllCampaign, selectGetAllUser } from "@/app/selector";
+import {
+    selectGetAllCampaign,
+    selectGetAllDonate,
+    selectGetAllUser,
+} from "@/app/selector";
 import { useAppDispatch, useAppSelector } from "@/app/store";
 import { CampaignIcon, OrganizationIcon, PersonalIcon } from "@/assets/icons";
 import { setLoading } from "@/services/app/appSlice";
@@ -8,7 +12,11 @@ import { FC, useEffect, useState } from "react";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import "dayjs/locale/vi";
-import { CampaignComparisonChart } from "@/components/Elements";
+import {
+    CampaignComparisonChart,
+    DonationLineChart,
+} from "@/components/Elements";
+import { getAllDonateApiThunk } from "@/services/donate/donateThunk";
 
 dayjs.locale("vi");
 dayjs.extend(relativeTime);
@@ -74,6 +82,7 @@ const StaffDashboardPage: FC = () => {
         Promise.all([
             dispatch(getAllCampaignApiThunk()).unwrap(),
             dispatch(getAllUserApiThunk()).unwrap(),
+            dispatch(getAllDonateApiThunk()).unwrap(),
         ])
             .catch(() => {})
             .finally(() => {
@@ -132,6 +141,34 @@ const StaffDashboardPage: FC = () => {
             ...monthlyData[month],
         }));
     };
+
+    const donates = useAppSelector(selectGetAllDonate);
+    const paidDonates = donates.filter((donate) => donate.isPaid === true);
+
+    const getMonthlyDonationData = (
+        donates: typeof paidDonates,
+        year: number
+    ) => {
+        const months = Array.from({ length: 12 }, (_, i) => ({
+            month: `Tháng ${i + 1}`,
+            total: 0,
+        }));
+
+        donates.forEach((donate) => {
+            const date = new Date(donate.createdAt);
+            if (date.getFullYear() === year) {
+                const monthIndex = date.getMonth(); // 0-based
+                months[monthIndex].total += donate.amount;
+            }
+        });
+
+        return months;
+    };
+
+    const donationByMonthData = getMonthlyDonationData(
+        paidDonates,
+        selectedYear
+    );
 
     return (
         <section id="staff-dashboard" className="staff-section">
@@ -228,7 +265,13 @@ const StaffDashboardPage: FC = () => {
                         </div>
                         <div className="sdcr1c1r3"></div>
                     </div>
-                    <div className="sdcr1c2"></div>
+                    <div className="sdcr1c2">
+                        <h3>
+                            Thống kê tổng tiền ủng hộ theo tháng ({selectedYear}
+                            )
+                        </h3>
+                        <DonationLineChart data={donationByMonthData} />
+                    </div>
                 </div>
                 <div className="sdcr2">
                     <div className="sdcr2c1">

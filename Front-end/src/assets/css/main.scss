@@ -23,6 +23,10 @@
 
 @use "./paginator.scss";
 
+@use "./about.scss";
+
+@use "./contact.scss";
+
 @use "admin/header/admin-header.scss";
 @use "admin/sidebar/admin-sidebar.scss";
 @use "admin/admin.scss";
@@ -124,3 +128,4 @@
 @use "./modal/remind-login-modal.scss";
 @use "./modal/list-register-receiver-modal.scss";
 @use "./modal/request-donor-modal.scss";
+@use "./modal/account-permission-modal.scss";

@@ -3,7 +3,6 @@
     overflow-y: auto;
 
     .sd-container {
-
         .sdcr1c1,
         .sdcr1c3,
         .sdcr2c1,
@@ -34,12 +33,17 @@
                 .sdcr3-card-icon {
                     width: 27px;
                     height: 27px;
-                    fill: #fff
+                    fill: #fff;
                 }
             }
 
             &.sdcr3-card-1 {
-                background: linear-gradient(to bottom, #ff9d2ed2 0%, #ffe3c2 40%, #fff8f0 100%);
+                background: linear-gradient(
+                    to bottom,
+                    #ff9d2ed2 0%,
+                    #ffe3c2 40%,
+                    #fff8f0 100%
+                );
 
                 .sdcr3-card-img-1 {
                     background: var(--main-color);
@@ -47,38 +51,44 @@
             }
 
             &.sdcr3-card-2 {
-                background: linear-gradient(to bottom,
-                        #36C76C 0%,
-                        #67D69B 30%,
-                        #A8E6C5 60%,
-                        #E5F7EC 100%);
+                background: linear-gradient(
+                    to bottom,
+                    #36c76c 0%,
+                    #67d69b 30%,
+                    #a8e6c5 60%,
+                    #e5f7ec 100%
+                );
 
                 .sdcr3-card-img-2 {
-                    background: #36C76C;
+                    background: #36c76c;
                 }
             }
 
             &.sdcr3-card-3 {
-                background: linear-gradient(to bottom,
-                        #f7d566 0%,
-                        #ffdc69 30%,
-                        #FFE899 60%,
-                        #FFF5D1 100%);
+                background: linear-gradient(
+                    to bottom,
+                    #f7d566 0%,
+                    #ffdc69 30%,
+                    #ffe899 60%,
+                    #fff5d1 100%
+                );
 
                 .sdcr3-card-img-3 {
-                    background: #F8C20A;
+                    background: #f8c20a;
                 }
             }
 
             &.sdcr3-card-4 {
-                background: linear-gradient(to bottom,
-                        #FF6692 0%,
-                        #FF99B5 30%,
-                        #FFC9DA 60%,
-                        #FFE5ED 100%);
+                background: linear-gradient(
+                    to bottom,
+                    #ff6692 0%,
+                    #ff99b5 30%,
+                    #ffc9da 60%,
+                    #ffe5ed 100%
+                );
 
                 .sdcr3-card-img-4 {
-                    background: #FF6692;
+                    background: #ff6692;
                 }
             }
 
@@ -109,7 +119,10 @@
             .sdcr1c2,
             .sdcr1c3 {
                 padding: 24px;
-                height: 330px;
+                margin: 0 15px;
+                border-radius: 12px;
+                background: #fff;
+                box-shadow: 0 2px 4px -1px #afb6c933 !important;
             }
 
             .sdcr1c2 {
@@ -212,7 +225,6 @@
         }
 
         .sdcr2 {
-
             .sdcr2c1,
             .sdcr2c2 {
                 padding: 24px;

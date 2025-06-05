@@ -46,11 +46,16 @@
             }
 
             .drsr2c1,
-            .drsr2c2 {
+            .drsr2c2r1,
+            .drsr2c2r2 {
                 padding: 24px;
                 border-radius: var(--border-radius-16);
                 box-shadow: 0px 1px 16px 0px rgba(0, 0, 0, 0.15);
+                background: #fff;
+            }
 
+            .drsr2c2r1 {
+                margin-bottom: 20px;
             }
         }
     }

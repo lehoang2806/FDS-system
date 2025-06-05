@@ -142,13 +142,16 @@ const ApprovedPost: FC<ApprovedPostProps> = ({
                     <h5 className="p-name">{post.posterName}</h5>
                     <p className="p-time">
                         {post?.publicDate
-                            ? dayjs(post.publicDate).fromNow()
+                            ? dayjs(post.publicDate).add(7, "hour").fromNow()
                             : ""}
                     </p>
                 </div>
             </div>
 
             <div className="pcr2">
+                {post?.articleTitle && (
+                    <h4>{post?.articleTitle}</h4>
+                )}
                 <PostContent content={post.postContent} />
                 {post.hashtags.length > 0 && (
                     <div

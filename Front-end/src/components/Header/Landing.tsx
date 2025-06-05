@@ -14,6 +14,8 @@ import { Link, useLocation } from "react-router-dom";
 import {
     CreateCampaignModal,
     CreateRequestSupportModal,
+    DonorGuideModal,
+    RecipientGuideModal,
     SubmitCertificateModal,
 } from "../Modal";
 import { useAppDispatch, useAppSelector } from "@/app/store";
@@ -66,6 +68,11 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
         useState(false);
 
     const [isRequestSupportModalOpen, setIsRequestSupportModalOpen] =
+        useState(false);
+
+    const [isDonorGuildModalOpen, setIsDonorGuildModalOpen] = useState(false);
+
+    const [isRecipientGuildModalOpen, setIsRecipientGuildModalOpen] =
         useState(false);
 
     const handleCreateCampaign = () => {
@@ -216,8 +223,8 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
         {
             name: "Giới thiệu",
             subMenu: [
-                { title: "Về chúng tôi", to: "" },
-                { title: "Liên hệ", to: "" },
+                { title: "Về chúng tôi", to: routes.about },
+                { title: "Liên hệ", to: routes.contact },
                 ...(userLogin?.roleId === 3 && isAuthenticated
                     ? [{ title: "Ủng hộ chúng tôi", to: routes.user.donate }]
                     : []),
@@ -235,8 +242,11 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
         }
     };
 
-    const handleGoToCampaign = (campaignId: string) => {
-        const url = routes.user.campaign.detail.replace(":id", campaignId);
+    const handleGoToRequestSupport = (requestSupportId: string) => {
+        const url = routes.user.participate_request_support.replace(
+            ":id",
+            requestSupportId
+        );
         return navigateHook(url);
     };
 
@@ -364,13 +374,23 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
                                         Tạo chiến dịch
                                     </button>
                                 ) : (
-                                    <p className="note">
+                                    <p
+                                        className="note"
+                                        onClick={() =>
+                                            setIsDonorGuildModalOpen(true)
+                                        }
+                                    >
                                         Tài khoản chưa được xác thực
                                     </p>
                                 ))}
                             {userLogin?.roleId === 4 &&
                                 (profileUser?.isConfirm === false ? (
-                                    <p className="note">
+                                    <p
+                                        className="note"
+                                        onClick={() =>
+                                            setIsRecipientGuildModalOpen(true)
+                                        }
+                                    >
                                         Tài khoản chưa được xác thực
                                     </p>
                                 ) : (
@@ -488,6 +508,20 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
                                                     </span>
                                                 )}
                                             </div>
+                                            <div
+                                                className={`nd-tabs-item ${
+                                                    notificationTab === "yeucau"
+                                                        ? "nd-tabs-item-actived"
+                                                        : ""
+                                                }`}
+                                                onClick={() => {
+                                                    setNotificationTab(
+                                                        "yeucau"
+                                                    );
+                                                }}
+                                            >
+                                                Yêu cầu hỗ trợ
+                                            </div>
                                         </div>
                                         {notifications.length > 0 ? (
                                             notifications.map((notif) => {
@@ -520,8 +554,10 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
                                                                             markAsRead(
                                                                                 notif.notificationId
                                                                             );
-                                                                            handleGoToCampaign(
-                                                                                notif.ojectId
+                                                                            handleToDetailCampaign(
+                                                                                notif.ojectId ||
+                                                                                    "",
+                                                                                notif.notificationType
                                                                             );
                                                                         }}
                                                                     >
@@ -536,6 +572,69 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
                                                                                 {
                                                                                     actionText
                                                                                 }
+                                                                            </p>
+                                                                            <p>
+                                                                                {notif?.createdDate
+                                                                                    ? dayjs
+                                                                                          .utc(
+                                                                                              notif.createdDate
+                                                                                          )
+                                                                                          .tz(
+                                                                                              "Asia/Ho_Chi_Minh"
+                                                                                          )
+                                                                                          .fromNow()
+                                                                                    : ""}
+                                                                            </p>
+                                                                        </div>
+                                                                    </div>
+                                                                );
+                                                            }
+                                                        }
+                                                        return null;
+                                                    case "Yêu cầu hỗ trợ":
+                                                        if (
+                                                            notificationTab ===
+                                                            "yeucau"
+                                                        ) {
+                                                            let actionText = "";
+                                                            if (
+                                                                notif.notificationType ===
+                                                                "Gửi yêu cầu"
+                                                            )
+                                                                actionText =
+                                                                    "Có yêu cầu hỗ trợ đã được gửi đến bạn.";
+
+                                                            if (actionText) {
+                                                                return (
+                                                                    <div
+                                                                        key={
+                                                                            notif.notificationId
+                                                                        }
+                                                                        className={`notification-item ${
+                                                                            notif.isRead
+                                                                                ? "read"
+                                                                                : "unread"
+                                                                        }`}
+                                                                        onClick={() => {
+                                                                            markAsRead(
+                                                                                notif.notificationId
+                                                                            );
+                                                                            handleGoToRequestSupport(
+                                                                                notif.ojectId
+                                                                            );
+                                                                        }}
+                                                                    >
+                                                                        <PostIcon className="notification-icon" />
+                                                                        <div>
+                                                                            <strong>
+                                                                                {
+                                                                                    actionText
+                                                                                }
+                                                                            </strong>
+                                                                            <p>
+                                                                                Xem
+                                                                                chi
+                                                                                tiết
                                                                             </p>
                                                                             <p>
                                                                                 {notif?.createdDate
@@ -922,17 +1021,38 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
                                 <div className="sub-menu-profile">
                                     <ul>
                                         <li>
-                                            <Link to={routes.user.personal}>
+                                            <Link
+                                                to={routes.user.personal}
+                                                onClick={() =>
+                                                    setIsSubMenuProfileOpen(
+                                                        false
+                                                    )
+                                                }
+                                            >
                                                 Xem trang cá nhân
                                             </Link>
                                         </li>
                                         <li>
-                                            <Link to={routes.user.profile}>
+                                            <Link
+                                                to={routes.user.profile}
+                                                onClick={() =>
+                                                    setIsSubMenuProfileOpen(
+                                                        false
+                                                    )
+                                                }
+                                            >
                                                 Chỉnh sửa thông tin
                                             </Link>
                                         </li>
                                         <li>
-                                            <Link to={routes.user.change_pass}>
+                                            <Link
+                                                to={routes.user.change_pass}
+                                                onClick={() =>
+                                                    setIsSubMenuProfileOpen(
+                                                        false
+                                                    )
+                                                }
+                                            >
                                                 Đổi mật khẩu
                                             </Link>
                                         </li>
@@ -959,6 +1079,14 @@ const HeaderLanding: FC<LandingHeaderProps> = ({ isLogin }) => {
             <CreateRequestSupportModal
                 isOpen={isRequestSupportModalOpen}
                 setIsOpen={setIsRequestSupportModalOpen}
+            />
+            <DonorGuideModal
+                isOpen={isDonorGuildModalOpen}
+                setIsOpen={setIsDonorGuildModalOpen}
+            />
+            <RecipientGuideModal
+                isOpen={isRecipientGuildModalOpen}
+                setIsOpen={setIsRecipientGuildModalOpen}
             />
         </header>
     );

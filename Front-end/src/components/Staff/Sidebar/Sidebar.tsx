@@ -141,6 +141,22 @@ const StaffSidebar: FC = () => {
                                 <span>Người tặng thực phẩm</span>
                             </div>
                         </Link>
+                        <Link
+                            to={routes.staff.campaign.request_support.list}
+                            className={classNames("sscr2-nav-item", {
+                                "nav-active": location.pathname.startsWith(
+                                    routes.staff.campaign.request_support.list
+                                ),
+                            })}
+                        >
+                            <div
+                                className="sscr2-nav-link"
+                                style={{ marginLeft: "20px" }}
+                            >
+                                <PostIcon className="sscr2-nav-icon" />
+                                <span>Theo đơn yêu cầu</span>
+                            </div>
+                        </Link>
                     </div>
                     <Link
                         to={routes.staff.news.list}

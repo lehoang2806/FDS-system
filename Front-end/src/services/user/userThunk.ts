@@ -2,6 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import {
     additionalCertificateApi,
     approveCertificateApi,
+    banAccountApi,
     confirmUserApi,
     createOrganizationDonorCertificateApi,
     createPersonalDonorCertificateApi,
@@ -14,6 +15,7 @@ import {
     getProfileApi,
     getRecipientCertificateByIdApi,
     rejectCertificateApi,
+    unbanAccountApi,
     updateOrganizationDonorCertificateApi,
     updatePersonalDonorCertificateApi,
     updateRecipientCertificateApi,
@@ -22,6 +24,7 @@ import {
 import {
     AddRecipientCertificate,
     ApproveCertificate,
+    BanAccountParams,
     ConfirmUser,
     currentOrganizationDonorCertificate,
     currentPersonalDonorCertificate,
@@ -32,6 +35,7 @@ import {
     RecipientCertificate,
     RejectCertificate,
     ReviewCertificate,
+    UnBanAccountParams,
     UserInfo,
     UserUpdate,
 } from "@/types/user";
@@ -60,6 +64,8 @@ const UPDATE_PERSONAL_DONOR_CERTIFICATE = "UPDATE_PERSONAL_DONOR_CERTIFICATE";
 const UPDATE_ORGANIZATION_DONOR_CERTIFICATE =
     "UPDATE_ORGANIZATION_DONOR_CERTIFICATE";
 const UPDATE_RECIPIENT_CERTIFICATE = "UPDATE_RECIPIENT_CERTIFICATE";
+const BAN_ACCOUNT = "BAN_ACCOUNT";
+const UNBAN_ACCOUNT = "UNBAN_ACCOUNT";
 
 export const getAllUserApiThunk = createAsyncThunk<UserInfo[]>(
     GET_ALL_USER,
@@ -345,6 +351,36 @@ export const updateRecipientCertificateApiThunk = createAsyncThunk<
             payload.id,
             payload.params
         );
+        return response;
+    } catch (err: any) {
+        return rejectWithValue({
+            errorMessage: err.message,
+            data: err.response.data,
+        });
+    }
+});
+
+export const banAccountApiThunk = createAsyncThunk<
+    ResponseFromServer<TextResponse>,
+    BanAccountParams
+>(BAN_ACCOUNT, async (payload, { rejectWithValue }) => {
+    try {
+        const response = await banAccountApi(payload);
+        return response;
+    } catch (err: any) {
+        return rejectWithValue({
+            errorMessage: err.message,
+            data: err.response.data,
+        });
+    }
+});
+
+export const unbanAccountApiThunk = createAsyncThunk<
+    ResponseFromServer<TextResponse>,
+    UnBanAccountParams
+>(UNBAN_ACCOUNT, async (payload, { rejectWithValue }) => {
+    try {
+        const response = await unbanAccountApi(payload);
         return response;
     } catch (err: any) {
         return rejectWithValue({

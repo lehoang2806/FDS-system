@@ -18,8 +18,14 @@ interface RegisterReceiver {
     registerReceiverName: string;
     code: string;
     status: string;
+    actualQuantity: number;
 }
 
 interface RegisterReceiverState {
     listRegisterReceivers: RegisterReceiver[];
+}
+
+interface UpdateActualQuantity {
+    registerReceiverId: string;
+    actualQuantity: number;
 }

@@ -2,6 +2,8 @@ import { FC, useState } from "react";
 import { ListRegisterReceiverModalProps } from "./type";
 import Modal from "./Modal";
 import { ArrowLeft, ArrowRight } from "@/assets/icons";
+import ConfirmReceiveModal from "./ConfirmReceiveModal";
+import dayjs from "dayjs";
 
 const ListRegisterReceiverModal: FC<ListRegisterReceiverModalProps> = ({
     isOpen,
@@ -10,20 +12,19 @@ const ListRegisterReceiverModal: FC<ListRegisterReceiverModalProps> = ({
     implementTime,
 }) => {
     const [searchTerm, setSearchTerm] = useState("");
+    const [isModalConfirmOpen, setIsModalConfirmOpen] = useState(false);
+    const [selectedReceiver, setSelectedReceiver] = useState<any>(null);
 
     const filteredRegisterReceiver = (registeredReceiver ?? []).filter(
         (donor) => donor.code.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     const ITEMS_PER_PAGE = 5;
-
     const [currentListRegisterReceiver, setCurrentListRegisterReceiver] =
         useState(1);
-
     const totalNewsPages = Math.ceil(
         filteredRegisterReceiver.length / ITEMS_PER_PAGE
     );
-
     const currentRegisterReceiveresPage = filteredRegisterReceiver.slice(
         (currentListRegisterReceiver - 1) * ITEMS_PER_PAGE,
         currentListRegisterReceiver * ITEMS_PER_PAGE
@@ -54,12 +55,18 @@ const ListRegisterReceiverModal: FC<ListRegisterReceiverModalProps> = ({
                     }}
                     style={{ width: "400px", marginBottom: "20px" }}
                 />
+
                 <table className="table">
                     <thead className="table-head">
                         <tr className="table-head-row">
-                            <th className="table-head-cell">Họ và tên</th>
+                            <th className="table-head-cell">
+                                Tên người dại diện
+                            </th>
                             <th className="table-head-cell">
                                 Số lượng đăng ký
+                            </th>
+                            <th className="table-head-cell">
+                                Số lượng thực nhận
                             </th>
                             <th className="table-head-cell">Mã nhận quà</th>
                             <th className="table-head-cell">Trạng thái</th>
@@ -68,41 +75,62 @@ const ListRegisterReceiverModal: FC<ListRegisterReceiverModalProps> = ({
                     </thead>
                     <tbody className="table-body">
                         {registeredReceiver &&
-                            currentRegisterReceiveresPage.map((receiver) => (
-                                <tr
-                                    className="table-body-row"
-                                    key={receiver.registerReceiverId}
-                                >
-                                    <td className="table-body-cell">
-                                        {receiver.registerReceiverName}
-                                    </td>
-                                    <td className="table-body-cell">
-                                        {receiver.quantity}
-                                    </td>
-                                    <td className="table-body-cell">
-                                        {receiver.code}
-                                    </td>
-                                    <td className="table-body-cell">
-                                        {receiver.status === "Pending"
-                                            ? "Chưa nhận quà"
-                                            : "Đã nhận quà"}
-                                    </td>
-                                    <td className="table-body-cell">
-                                        <button
-                                            className={`pr-btn ${
-                                                new Date() <
-                                                new Date(implementTime)
-                                                    ? "disabled-btn"
-                                                    : ""
-                                            }`}
-                                        >
-                                            Đã nhận
-                                        </button>
-                                    </td>
-                                </tr>
-                            ))}
+                            currentRegisterReceiveresPage.map((receiver) => {
+                                const now = dayjs();
+                                const start = dayjs(implementTime);
+                                const end = start.endOf("day");
+
+                                const isDisabled =
+                                    now.isBefore(start) ||
+                                    now.isAfter(end) ||
+                                    receiver.status !== "Pending";
+
+                                return (
+                                    <tr
+                                        className="table-body-row"
+                                        key={receiver.registerReceiverId}
+                                    >
+                                        <td className="table-body-cell">
+                                            {receiver.registerReceiverName}
+                                        </td>
+                                        <td className="table-body-cell">
+                                            {receiver.quantity}
+                                        </td>
+                                        <td className="table-body-cell">
+                                            {receiver.actualQuantity}
+                                        </td>
+                                        <td className="table-body-cell">
+                                            {receiver.code}
+                                        </td>
+                                        <td className="table-body-cell">
+                                            {receiver.status === "Pending"
+                                                ? "Chưa nhận quà"
+                                                : "Đã nhận quà"}
+                                        </td>
+                                        <td className="table-body-cell">
+                                            <button
+                                                className={`pr-btn ${
+                                                    isDisabled
+                                                        ? "disabled-btn"
+                                                        : ""
+                                                }`}
+                                                disabled={isDisabled}
+                                                onClick={() => {
+                                                    setSelectedReceiver(
+                                                        receiver
+                                                    );
+                                                    setIsModalConfirmOpen(true);
+                                                }}
+                                            >
+                                                Xác nhận
+                                            </button>
+                                        </td>
+                                    </tr>
+                                );
+                            })}
                     </tbody>
                 </table>
+
                 <div className="paginator">
                     <div className="p-container">
                         <div className="pcc2">
@@ -135,6 +163,13 @@ const ListRegisterReceiverModal: FC<ListRegisterReceiverModalProps> = ({
                     </div>
                 </div>
             </div>
+
+            {/* Modal xác nhận riêng */}
+            <ConfirmReceiveModal
+                isOpen={isModalConfirmOpen}
+                setIsOpen={setIsModalConfirmOpen}
+                selectedReceiver={selectedReceiver}
+            />
         </Modal>
     );
 };

@@ -100,49 +100,56 @@
 //Rebond_Grotesque
 @font-face {
     font-family: "Rebond Grotesque";
-    src: url("../fonts/rebond_grotesque/Rebond\ Grotesque\ Extralight.otf") format("truetype");
+    src: url("../fonts/rebond_grotesque/Rebond\ Grotesque\ Extralight.otf")
+        format("truetype");
     font-weight: 200;
     font-style: normal;
 }
 
 @font-face {
     font-family: "Rebond Grotesque";
-    src: url("../fonts/rebond_grotesque/Rebond\ Grotesque\ Light.otf") format("truetype");
+    src: url("../fonts/rebond_grotesque/Rebond\ Grotesque\ Light.otf")
+        format("truetype");
     font-weight: 300;
     font-style: normal;
 }
 
 @font-face {
     font-family: "Rebond Grotesque";
-    src: url("../fonts/rebond_grotesque/Rebond\ Grotesque\ Regular.otf") format("truetype");
+    src: url("../fonts/rebond_grotesque/Rebond\ Grotesque\ Regular.otf")
+        format("truetype");
     font-weight: 400;
     font-style: normal;
 }
 
 @font-face {
     font-family: "Rebond Grotesque";
-    src: url("../fonts/rebond_grotesque/Rebond\ Grotesque\ Medium.otf") format("truetype");
+    src: url("../fonts/rebond_grotesque/Rebond\ Grotesque\ Medium.otf")
+        format("truetype");
     font-weight: 500;
     font-style: normal;
 }
 
 @font-face {
     font-family: "Rebond Grotesque";
-    src: url("../fonts/rebond_grotesque/Rebond\ Grotesque\ SemiBold.otf") format("truetype");
+    src: url("../fonts/rebond_grotesque/Rebond\ Grotesque\ SemiBold.otf")
+        format("truetype");
     font-weight: 600;
     font-style: normal;
 }
 
 @font-face {
     font-family: "Rebond Grotesque";
-    src: url("../fonts/rebond_grotesque/Rebond\ Grotesque\ Bold.otf") format("truetype");
+    src: url("../fonts/rebond_grotesque/Rebond\ Grotesque\ Bold.otf")
+        format("truetype");
     font-weight: 700;
     font-style: normal;
 }
 
 @font-face {
     font-family: "Rebond Grotesque";
-    src: url("../fonts/rebond_grotesque/Rebond\ Grotesque\ Extrabold.otf") format("truetype");
+    src: url("../fonts/rebond_grotesque/Rebond\ Grotesque\ Extrabold.otf")
+        format("truetype");
     font-weight: 800;
     font-style: normal;
 }
@@ -226,7 +233,7 @@ input.is-error {
     &:hover,
     &:focus {
         outline: unset !important;
-        outline-color: unset !important
+        outline-color: unset !important;
     }
 }
 
@@ -344,15 +351,15 @@ input.is-error {
 }
 
 .status-approve {
-    background: #36C76C;
+    background: #36c76c;
 }
 
 .status-reject {
-    background: #FF6692;
+    background: #ff6692;
 }
 
 .status-pending {
-    background: #F8C20A;
+    background: #f8c20a;
 }
 
 .reject-btn,
@@ -366,17 +373,17 @@ input.is-error {
     padding: 8px 12px;
     margin: 5px;
     border-radius: var(--border-radius-12);
-    background: #FF6692;
+    background: #ff6692;
     border: none;
     cursor: pointer;
 }
 
 .approve-btn {
-    background: #36C76C;
+    background: #36c76c;
 }
 
 .additional-btn {
-    background: #F8C20A;
+    background: #f8c20a;
 }
 
 .view-btn {
@@ -388,4 +395,46 @@ input.is-error {
     align-items: center;
     justify-content: center;
     gap: 20px;
+}
+
+.banned-account {
+    width: 700px;
+    text-align: center;
+
+    h2 {
+        font-size: 35px;
+        font-weight: 700;
+        color: #ff9d2e;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    p {
+        font-size: 25px;
+        font-weight: 500;
+        color: #444444;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .contact-info {
+        margin-bottom: 20px;
+        
+        li {
+            margin-left: 70px;
+            font-size: 18px;
+            font-weight: 500;
+            text-align: start;
+
+            strong {
+                font-size: 20px;
+                color: #ff9d2e;
+            }
+        }
+    }
+
+    .sc-btn {
+        margin: 0 auto;
+        padding: 10px 30px;
+    }
 }

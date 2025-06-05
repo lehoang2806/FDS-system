@@ -1,0 +1,350 @@
+import { selectGetCampaignRequestSupportById } from "@/app/selector";
+import { useAppDispatch, useAppSelector } from "@/app/store";
+import {
+    AdditionalCampaignRequestSupportModal,
+    Modal,
+    RejectCampaignRequestSupportModal,
+} from "@/components/Modal";
+import { navigateHook } from "@/routes/RouteApp";
+import { routes } from "@/routes/routeName";
+import { setLoading } from "@/services/app/appSlice";
+import { FC, useEffect, useState } from "react";
+import Lightbox from "react-awesome-lightbox";
+import { useParams } from "react-router-dom";
+import { toast } from "react-toastify";
+import { formatDater, formatTime } from "@/utils/helper";
+import Button from "@/components/Elements/Button";
+import {
+    approveCampaignRequestSupportApiThunk,
+    deleteCampaignRequestSupportApiThunk,
+    getAllCampaignRequestSupportApiThunk,
+    getCampaignRequestSupportByIdApiThunk,
+} from "@/services/campaignRequestSupport/campaignRequestSupportThunk";
+import {
+    AdditionalCampaignRequestSupport,
+    ApproveCampaignRequestSupport,
+    RejectCampaignRequestSupport,
+} from "@/types/campaignRequestSupport";
+
+const StaffDetailCampaignRequestSupportPage: FC = () => {
+    const { id } = useParams<{ id: string }>();
+
+    const dispatch = useAppDispatch();
+
+    const currentCampaign = useAppSelector(selectGetCampaignRequestSupportById);
+
+    const [showModalConfirm, setShowModalConfirm] = useState<boolean>(false);
+
+    const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+
+    const [selectedRejectCampaign, setSelectedRejectCampaign] =
+        useState<RejectCampaignRequestSupport | null>(null);
+
+    const [selectedAdditionalCampaign, setSelectedAdditionalCampaign] =
+        useState<AdditionalCampaignRequestSupport | null>(null);
+
+    const [isRejectCampaignModalOpen, setIsRejectCampaignModalOpen] =
+        useState(false);
+
+    const [isAdditionalCampaignModalOpen, setIsAdditionalCampaignModalOpen] =
+        useState(false);
+
+    const [imagePreview, setImagePreview] = useState<string[]>([]);
+    const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+
+    useEffect(() => {
+        if (currentCampaign?.images?.length) {
+            setImagePreview(currentCampaign.images);
+        } else {
+            setImagePreview([]);
+        }
+    }, [currentCampaign]);
+
+    useEffect(() => {
+        if (id) {
+            dispatch(setLoading(true));
+            dispatch(getCampaignRequestSupportByIdApiThunk(id))
+                .unwrap()
+                .then(() => {})
+                .catch(() => {})
+                .finally(() => {
+                    setTimeout(() => {
+                        dispatch(setLoading(false));
+                    }, 1000);
+                });
+        }
+    }, [id, dispatch]);
+
+    const handleApproveCampaign = async (
+        values: ApproveCampaignRequestSupport
+    ) => {
+        try {
+            dispatch(setLoading(true));
+            await dispatch(approveCampaignRequestSupportApiThunk(values))
+                .unwrap()
+                .then(() => {
+                    toast.success("Phê duyệt thành công");
+                    dispatch(getAllCampaignRequestSupportApiThunk());
+                    navigateHook(routes.staff.campaign.request_support.list);
+                })
+                .finally(() => {
+                    setTimeout(() => {
+                        dispatch(setLoading(false));
+                    }, 1000);
+                });
+        } catch (error) {
+            toast.error("An error occurred while approving the certificate.");
+        }
+    };
+
+    const handleRejectCampaign = (campaignRequestSupportId: string) => {
+        setSelectedRejectCampaign({ campaignRequestSupportId, comment: "" });
+        setIsRejectCampaignModalOpen(true);
+    };
+
+    const handleAdditionalCampaign = (campaignRequestSupportId: string) => {
+        setSelectedAdditionalCampaign({
+            campaignRequestSupportId,
+            content: "",
+        });
+        setIsAdditionalCampaignModalOpen(true);
+    };
+
+    const handleDeleteCampaign = async () => {
+        setIsSubmitting(true);
+        dispatch(
+            deleteCampaignRequestSupportApiThunk(
+                String(currentCampaign?.campaignRequestSupportId)
+            )
+        )
+            .unwrap()
+            .then(() => {
+                navigateHook(routes.staff.campaign.request_support.list);
+                toast.success("Xóa chiến dịch thành công");
+                dispatch(getAllCampaignRequestSupportApiThunk());
+                setIsSubmitting(false);
+            })
+            .catch()
+            .finally(() => {});
+    };
+
+    return (
+        <section id="staff-detail-campaign-user" className="staff-section">
+            <div className="staff-container sdcu-container">
+                <div className="sdcucr1">
+                    <h1>Người hiến tặng thực phẩm</h1>
+                    <p>
+                        Trang tổng quát
+                        <span className="staff-tag">Chi tiết chiến dịch</span>
+                    </p>
+                </div>
+                <div className="sdcucr2">
+                    <div className="sdcucr2r1">
+                        <h2></h2>
+                        <div className="group-btn">
+                            <button onClick={() => setShowModalConfirm(true)}>
+                                Xoá
+                            </button>
+                            <button
+                                onClick={() =>
+                                    navigateHook(
+                                        routes.staff.campaign.request_support
+                                            .list
+                                    )
+                                }
+                            >
+                                Quay lại trang danh sách
+                            </button>
+                        </div>
+                    </div>
+                    <hr />
+                    <div className="sdcucr2r2">
+                        <div className="col-flex sdcucr2r2c1">
+                            <h3>Trạng thái:</h3>
+                            <p>
+                                {currentCampaign?.status === "Pending" ? (
+                                    <span>Đang chờ phê duyệt</span>
+                                ) : currentCampaign?.status === "Approved" ? (
+                                    <span>Đã được phê duyệt</span>
+                                ) : currentCampaign?.status === "Rejected" ? (
+                                    <span>Đã bị từ chối</span>
+                                ) : currentCampaign?.status === "Canceled" ? (
+                                    <span>Đã huỷ</span>
+                                ) : (
+                                    <span>Không xác định</span>
+                                )}
+                            </p>
+                        </div>
+                        <div className="col-flex sdcucr2r2c2">
+                            <h3>Ngày được tạo:</h3>
+                            <p>
+                                {formatDater(
+                                    String(currentCampaign?.createdDate)
+                                )}
+                            </p>
+                        </div>
+                    </div>
+                    <hr />
+                    <div className="sdcucr2r3">
+                        <div className="col-flex sdcucr2r3c1">
+                            <h2>Thông tin chiến dịch</h2>
+                            <h3>
+                                Tên chiến dịch:{" "}
+                                <span>
+                                    {
+                                        currentCampaign?.campaignRequestSupportName
+                                    }
+                                </span>
+                            </h3>
+                        </div>
+                        <div className="col-flex sdcucr2r3c2">
+                            <h2>Thông tin quà tặng</h2>
+                            <h3>
+                                Địa điểm phát quà:{" "}
+                                <span>{currentCampaign?.location}</span>
+                            </h3>
+                            <h3>
+                                Thời gian diễn ra:{" "}
+                                <span>
+                                    {formatDater(
+                                        String(
+                                            currentCampaign?.implementationTime
+                                        )
+                                    )}{" "}
+                                    &{" "}
+                                    {formatTime(
+                                        String(
+                                            currentCampaign?.implementationTime
+                                        )
+                                    )}
+                                </span>
+                            </h3>
+                            <h3>
+                                Cách thực hiện:{" "}
+                                <span>
+                                    {currentCampaign?.implementationMethod}
+                                </span>
+                            </h3>
+                            <h3>
+                                Số lượng quà tặng:{" "}
+                                <span>{currentCampaign?.limitedQuantity}</span>
+                            </h3>
+                        </div>
+                    </div>
+                    <div className="sdcucr2r4">
+                        {imagePreview.length > 0 && (
+                            <div className="image-preview-container">
+                                {imagePreview.map((img, index) => (
+                                    <img
+                                        key={index}
+                                        src={img}
+                                        alt={`Preview ${index}`}
+                                        className="image-preview"
+                                        style={{
+                                            width: "245px",
+                                            height: "245px",
+                                            cursor: "pointer",
+                                        }}
+                                        onClick={() => setLightboxIndex(index)} // Thêm dòng này để mở Lightbox
+                                    />
+                                ))}
+                            </div>
+                        )}
+
+                        {lightboxIndex !== null && (
+                            <Lightbox
+                                images={imagePreview.map((src) => ({
+                                    url: src,
+                                }))}
+                                startIndex={lightboxIndex}
+                                onClose={() => setLightboxIndex(null)}
+                            />
+                        )}
+                    </div>
+                    {currentCampaign?.status === "Pending" && (
+                        <>
+                            {currentCampaign.reviewComments &&
+                                currentCampaign.reviewComments?.length > 0 && (
+                                    <div className="sdcucr2r5">
+                                        <h3>Yêu cầu bổ sung thêm:</h3>
+                                        {currentCampaign.reviewComments?.map(
+                                            (comment, index) => (
+                                                <p
+                                                    key={index}
+                                                    style={{
+                                                        whiteSpace: "pre-line",
+                                                    }}
+                                                >
+                                                    {comment.content}
+                                                </p>
+                                            )
+                                        )}
+                                    </div>
+                                )}
+                            <button
+                                className="approve-btn"
+                                onClick={() =>
+                                    handleApproveCampaign({
+                                        campaignRequestSupportId: String(id),
+                                    })
+                                }
+                            >
+                                Phê duyệt
+                            </button>
+                            <button
+                                className="reject-btn"
+                                onClick={() => handleRejectCampaign(String(id))}
+                            >
+                                Từ chối
+                            </button>
+                            <button
+                                className="additional-btn"
+                                onClick={() =>
+                                    handleAdditionalCampaign(String(id))
+                                }
+                            >
+                                Yêu cầu bổ sung
+                            </button>
+                        </>
+                    )}
+                    {currentCampaign?.status === "Rejected" && (
+                        <>
+                            <h3>Lý do từ chối:</h3>
+                            <p>{currentCampaign?.rejectComment}</p>
+                        </>
+                    )}
+                </div>
+            </div>
+            <RejectCampaignRequestSupportModal
+                isOpen={isRejectCampaignModalOpen}
+                setIsOpen={setIsRejectCampaignModalOpen}
+                selectedCampaignRequestSupport={selectedRejectCampaign}
+            />
+            <AdditionalCampaignRequestSupportModal
+                isOpen={isAdditionalCampaignModalOpen}
+                setIsOpen={setIsAdditionalCampaignModalOpen}
+                selectedCampaignRequestSupport={selectedAdditionalCampaign}
+            />
+            <Modal isOpen={showModalConfirm} setIsOpen={setShowModalConfirm}>
+                <div className="confirm-delete-container">
+                    <h1>
+                        Bạn có chắc chắn muốn xoá chiến dịch này không này
+                        không?
+                    </h1>
+                    <div className="group-btn">
+                        <Button
+                            title="Chắc chắn"
+                            loading={isSubmitting}
+                            onClick={() => handleDeleteCampaign()}
+                        />
+                        <button onClick={() => setShowModalConfirm(false)}>
+                            Huỷ
+                        </button>
+                    </div>
+                </div>
+            </Modal>
+        </section>
+    );
+};
+
+export default StaffDetailCampaignRequestSupportPage;
